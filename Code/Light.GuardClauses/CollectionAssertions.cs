@@ -25,12 +25,11 @@ namespace Light.GuardClauses
         /// <param name="exception">
         ///     The exception that is thrown when the specified <paramref name="parameter" /> is not part of
         ///     <paramref name="items" /> (optional). Please note that <paramref name="message" /> and
-        ///     <paramref name="parameterName" /> are
-        ///     both ignored when you specify exception.
+        ///     <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///     Thrown when <paramref name="parameter" /> is not part of
-        ///     <paramref name="items" /> and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is not part of <paramref name="items" /> and no
+        ///     <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="items" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
@@ -45,14 +44,35 @@ namespace Light.GuardClauses
             throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be one of the items ({stringBuilder}), but you specified {parameter}.");
         }
 
+        /// <summary>
+        ///     Ensures that <paramref name="parameter" /> is not one of the specified <paramref name="items" />, or otherwise
+        ///     throws a <see cref="ArgumentOutOfRangeException" />.
+        /// </summary>
+        /// <typeparam name="T">The type of the parameter.</typeparam>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="items">The items where <paramref name="parameter" /> must not be part of.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when the specified <paramref name="parameter" /> is part of
+        ///     <paramref name="items" /> (optional). Please note that <paramref name="message" /> and
+        ///     <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     Thrown when <paramref name="parameter" /> is part of <paramref name="items" /> and no <paramref name="exception" />
+        ///     is specified.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="items" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotBeOneOf<T>(this T parameter, IReadOnlyList<T> items, string parameterName)
+        public static void MustNotBeOneOf<T>(this T parameter, IReadOnlyList<T> items, string parameterName = null, string message = null, Exception exception = null)
         {
+            items.MustNotBeNull(nameof(items), "You called MustNotBeOneOf wrongly by specifying items as null.");
+
             if (items.Contains(parameter) == false)
                 return;
 
             var stringBuilder = new StringBuilder().AppendItems(items);
-            throw new ArgumentOutOfRangeException(parameterName, parameter, $"{parameterName} must be none of the items ({stringBuilder}), but you specified {parameter}.");
+            throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be none of the items ({stringBuilder}), but you specified {parameter}.");
         }
 
         [Conditional(Check.CompileAssertionsSymbol)]
