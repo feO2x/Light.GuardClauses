@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MustBeKeyOfTests.cs" />
     <Compile Include="MustBeNullTests.cs" />
     <Compile Include="MustBeOneOfTests.cs" />
     <Compile Include="MustBeTypeTests.cs" />

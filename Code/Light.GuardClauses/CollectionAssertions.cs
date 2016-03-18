@@ -124,8 +124,8 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> has at least two equal items in it and
         ///     no <paramref name="exception" /> is specified.
         /// </exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
-        /// <exception cref="EmptyCollectionException">Thrown when <paramref name="parameter"/> has no items.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="EmptyCollectionException">Thrown when <paramref name="parameter" /> has no items.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustHaveUniqueItems<T>(this IReadOnlyList<T> parameter, string parameterName = null, string message = null, Exception exception = null)
         {
@@ -144,14 +144,38 @@ namespace Light.GuardClauses
             }
         }
 
+        /// <summary>
+        ///     Ensures that <paramref name="parameter" /> is a key of the specified <paramref name="dictionary" />, or otherwise
+        ///     throws an <see cref="ArgumentOutOfRangeException" />.
+        /// </summary>
+        /// <typeparam name="TKey">The key type of the <paramref name="dictionary" />.</typeparam>
+        /// <typeparam name="TValue">The value type of the <paramref name="dictionary" />.</typeparam>
+        /// <param name="parameter">The value that should be key of the <paramref name="dictionary" />.</param>
+        /// <param name="dictionary">The dictionary whose keys are used for checking.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="ArgumentOutOfRangeException" /> or the
+        ///     (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when the specified <paramref name="parameter" /> is no key of
+        ///     <paramref name="dictionary" /> (optional). Please note that <paramref name="message" /> and
+        ///     <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     Thrown when <paramref name="parameter" /> is no key of
+        ///     <paramref name="dictionary" /> and no <paramref name="exception" /> is specified.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="dictionary" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustBeKeyOf<TKey, TValue>(this TKey parameter, IDictionary<TKey, TValue> dictionary, string parameterName)
+        public static void MustBeKeyOf<TKey, TValue>(this TKey parameter, IDictionary<TKey, TValue> dictionary, string parameterName = null, string message = null, Exception exception = null)
         {
+            dictionary.MustNotBeNull(nameof(dictionary), "You called MustBeKeyOf wrongly by specifying a dictionary that is null.");
+
             if (dictionary.ContainsKey(parameter))
                 return;
 
-            var stringBuilder = new StringBuilder().AppendItems(dictionary.Keys.ToList());
-            throw new ArgumentOutOfRangeException(parameterName, parameter, $"{parameterName} must be one of the dictionary keys ({stringBuilder}), but you specified {parameter}.");
+            throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be one of the dictionary keys ({new StringBuilder().AppendItems(dictionary.Keys.ToList())}), but you specified {parameter}.");
         }
     }
 }
