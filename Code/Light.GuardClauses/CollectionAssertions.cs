@@ -75,14 +75,31 @@ namespace Light.GuardClauses
             throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be none of the items ({stringBuilder}), but you specified {parameter}.");
         }
 
+        /// <summary>
+        ///     Ensures that the specified collection is not null or empty, or otherwise throws an exception.
+        /// </summary>
+        /// <typeparam name="T">The type of the items in the collection.</typeparam>
+        /// <param name="parameter">The collection to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="ArgumentNullException" /> or the
+        ///     <see cref="EmptyCollectionException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when the specified <paramref name="parameter" /> is null or empty
+        ///     (optional). Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored
+        ///     when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null and no <paramref name="exception"/> is specified.</exception>
+        /// <exception cref="EmptyCollectionException">Thrown when <paramref name="parameter"/> is empty and no <paramref name="exception"/> is specified.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotBeNullOrEmpty<T>(this IReadOnlyCollection<T> collection, string parameterName)
+        public static void MustNotBeNullOrEmpty<T>(this IReadOnlyCollection<T> parameter, string parameterName = null, string message = null, Exception exception = null)
         {
-            if (collection == null)
-                throw new ArgumentNullException(parameterName);
+            if (parameter == null)
+                throw exception ?? new ArgumentNullException(parameterName, message);
 
-            if (collection.Count == 0)
-                throw new EmptyCollectionException(parameterName);
+            if (parameter.Count == 0)
+                throw exception ?? (message == null ? new EmptyCollectionException(parameterName) : new EmptyCollectionException(message, parameterName));
         }
 
         [Conditional(Check.CompileAssertionsSymbol)]

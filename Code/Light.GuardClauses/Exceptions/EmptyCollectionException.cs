@@ -13,7 +13,7 @@ namespace Light.GuardClauses.Exceptions
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="innerException">The inner exception that led to this one (optional).</param>
         public EmptyCollectionException(string parameterName, Exception innerException = null)
-            : base($"{parameterName} must not be an empty collection, but you specified one.", parameterName, innerException) { }
+            : base($"{parameterName ?? "The value"} must not be an empty collection.", parameterName, innerException) { }
 
         /// <summary>
         ///     Creates a new instance of <see cref="EmptyCollectionException" />.
