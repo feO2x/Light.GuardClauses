@@ -90,8 +90,14 @@ namespace Light.GuardClauses
         ///     (optional). Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored
         ///     when you specify exception.
         /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null and no <paramref name="exception"/> is specified.</exception>
-        /// <exception cref="EmptyCollectionException">Thrown when <paramref name="parameter"/> is empty and no <paramref name="exception"/> is specified.</exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="parameter" /> is null and no
+        ///     <paramref name="exception" /> is specified.
+        /// </exception>
+        /// <exception cref="EmptyCollectionException">
+        ///     Thrown when <paramref name="parameter" /> is empty and no
+        ///     <paramref name="exception" /> is specified.
+        /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotBeNullOrEmpty<T>(this IReadOnlyCollection<T> parameter, string parameterName = null, string message = null, Exception exception = null)
         {
@@ -102,9 +108,29 @@ namespace Light.GuardClauses
                 throw exception ?? (message == null ? new EmptyCollectionException(parameterName) : new EmptyCollectionException(message, parameterName));
         }
 
+        /// <summary>
+        ///     Ensures that the specified collection has unique items, or otherwise throws a <see cref="CollectionException" />.
+        /// </summary>
+        /// <typeparam name="T">The type of the items in the collection.</typeparam>
+        /// <param name="parameter">The collection to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> or the (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when the specified <paramref name="parameter" /> does not have
+        ///     unique items (optional). Please note that <paramref name="message" /> and <paramref name="parameterName" /> are
+        ///     both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="CollectionException">
+        ///     Thrown when <paramref name="parameter" /> has at least two equal items in it and
+        ///     no <paramref name="exception" /> is specified.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+        /// <exception cref="EmptyCollectionException">Thrown when <paramref name="parameter"/> has no items.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustHaveUniqueItems<T>(this IReadOnlyList<T> parameter, string parameterName)
+        public static void MustHaveUniqueItems<T>(this IReadOnlyList<T> parameter, string parameterName = null, string message = null, Exception exception = null)
         {
+            parameter.MustNotBeNullOrEmpty(parameterName);
+
             for (var i = 0; i < parameter.Count; i++)
             {
                 var itemToCompare = parameter[i];
@@ -113,8 +139,7 @@ namespace Light.GuardClauses
                     if (!itemToCompare.EqualsWithHashCode(parameter[j]))
                         continue;
 
-                    var stringBuilder = new StringBuilder().AppendItems(parameter);
-                    throw new CollectionException($"{parameterName} must be a collection with unique items, but you specified {stringBuilder}.", parameterName);
+                    throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The value"} must be a collection with unique items, but you specified {new StringBuilder().AppendItems(parameter)}.", parameterName);
                 }
             }
         }
