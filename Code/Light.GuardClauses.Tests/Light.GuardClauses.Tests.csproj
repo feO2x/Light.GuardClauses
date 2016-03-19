@@ -63,9 +63,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgainstTests.cs" />
+    <Compile Include="MustBeInTests.cs" />
     <Compile Include="MustBeKeyOfTests.cs" />
     <Compile Include="MustBeNullTests.cs" />
     <Compile Include="MustBeOneOfTests.cs" />
+    <Compile Include="MustBeTests.cs" />
     <Compile Include="MustBeTypeTests.cs" />
     <Compile Include="MustBeValidEnumValueTests.cs" />
     <Compile Include="MustContainTests.cs" />
@@ -73,6 +76,11 @@
     <Compile Include="MustHaveValueTests.cs" />
     <Compile Include="MustMatchTests.cs" />
     <Compile Include="MustNotBeEmptyTests.cs" />
+    <Compile Include="MustNotBeGreaterThanOrEqualToTests.cs" />
+    <Compile Include="MustNotBeGreaterThanTests.cs" />
+    <Compile Include="MustNotBeInTests.cs" />
+    <Compile Include="MustNotBeLessThanOrEqualToTests.cs" />
+    <Compile Include="MustNotBeLessThanTests.cs" />
     <Compile Include="MustNotBeNullOrEmptyTests.cs" />
     <Compile Include="MustNotBeNullOrWhiteSpaceTests.cs" />
     <Compile Include="MustNotBeNullTests.cs" />
@@ -80,6 +88,8 @@
     <Compile Include="MustNotContainNull.cs" />
     <Compile Include="MustNotHaveValueTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RangeTests.cs" />
+    <Compile Include="ThatTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

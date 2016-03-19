@@ -40,6 +40,8 @@
     <Compile Include="Check.cs" />
     <Compile Include="CollectionAssertions.cs" />
     <Compile Include="CommonAssertions.cs" />
+    <Compile Include="ComparableAssertions.cs" />
+    <Compile Include="EqualityAssertions.cs" />
     <Compile Include="Exceptions\ArgumentNotNullException.cs" />
     <Compile Include="Exceptions\CollectionException.cs" />
     <Compile Include="Exceptions\EmptyCollectionException.cs" />
@@ -55,6 +57,7 @@
     <Compile Include="FrameworkExtensions\Equality.cs" />
     <Compile Include="FrameworkExtensions\StringBuilderExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Range.cs" />
     <Compile Include="StringAssertions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
