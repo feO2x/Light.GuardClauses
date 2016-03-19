@@ -114,7 +114,7 @@ namespace Light.GuardClauses
         /// <typeparam name="T">The type of the items in the collection.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> or the (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
         /// <param name="exception">
         ///     The exception that is thrown when the specified <paramref name="parameter" /> does not have
         ///     unique items (optional). Please note that <paramref name="message" /> and <paramref name="parameterName" /> are
@@ -154,8 +154,7 @@ namespace Light.GuardClauses
         /// <param name="dictionary">The dictionary whose keys are used for checking.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="ArgumentOutOfRangeException" /> or the
-        ///     (optional).
+        ///     The message that will be injected into the <see cref="ArgumentOutOfRangeException" /> (optional).
         /// </param>
         /// <param name="exception">
         ///     The exception that is thrown when the specified <paramref name="parameter" /> is no key of
@@ -176,6 +175,42 @@ namespace Light.GuardClauses
                 return;
 
             throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be one of the dictionary keys ({new StringBuilder().AppendItems(dictionary.Keys.ToList())}), but you specified {parameter}.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified collection does not contain any item that is null, or otherwise throws a
+        ///     <see cref="CollectionException" />.
+        /// </summary>
+        /// <typeparam name="T">The type of the items in the collection. This must be a Reference Type.</typeparam>
+        /// <param name="parameter">The collection to be checked.</param>
+        /// <param name="parameterName">The name of the parameter.</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="CollectionException" />
+        ///     (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when the specified <paramref name="parameter" /> has at least one
+        ///     item that is null (optional). Please note that <paramref name="message" /> and <paramref name="parameterName" />
+        ///     are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="CollectionException">Thrown when <paramref name="parameter"/>contains at least one item that is null and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null and no <paramref name="exception"/> is specified.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustNotContainNull<T>(this IReadOnlyCollection<T> parameter, string parameterName = null, string message = null, Exception exception = null) where T : class
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            parameter.MustNotBeNull(parameterName, message, exception);
+
+            var currentIndex = -1;
+            foreach (var item in parameter)
+            {
+                currentIndex++;
+                if (item != null)
+                    continue;
+
+                throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The value"} must be a collection not containing null, but you specified null at index {currentIndex}.{Environment.NewLine}The content of the collection is{Environment.NewLine}{new StringBuilder().AppendItems(parameter, "," + Environment.NewLine)}", parameterName);
+            }
+            // ReSharper restore PossibleMultipleEnumeration
         }
     }
 }
