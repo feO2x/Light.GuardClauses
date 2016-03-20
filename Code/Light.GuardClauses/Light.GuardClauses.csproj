@@ -43,6 +43,7 @@
     <Compile Include="CollectionAssertions.cs" />
     <Compile Include="CommonAssertions.cs" />
     <Compile Include="ComparableAssertions.cs" />
+    <Compile Include="DictionaryAssertions.cs" />
     <Compile Include="EqualityAssertions.cs" />
     <Compile Include="Exceptions\ArgumentNotNullException.cs" />
     <Compile Include="Exceptions\CollectionException.cs" />
