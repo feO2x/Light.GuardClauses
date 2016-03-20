@@ -193,8 +193,14 @@ namespace Light.GuardClauses
         ///     item that is null (optional). Please note that <paramref name="message" /> and <paramref name="parameterName" />
         ///     are both ignored when you specify exception.
         /// </param>
-        /// <exception cref="CollectionException">Thrown when <paramref name="parameter"/>contains at least one item that is null and no <paramref name="exception" /> is specified.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null and no <paramref name="exception"/> is specified.</exception>
+        /// <exception cref="CollectionException">
+        ///     Thrown when <paramref name="parameter" />contains at least one item that is null
+        ///     and no <paramref name="exception" /> is specified.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="parameter" /> is null and no
+        ///     <paramref name="exception" /> is specified.
+        /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotContainNull<T>(this IReadOnlyCollection<T> parameter, string parameterName = null, string message = null, Exception exception = null) where T : class
         {
@@ -211,6 +217,41 @@ namespace Light.GuardClauses
                 throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The value"} must be a collection not containing null, but you specified null at index {currentIndex}.{Environment.NewLine}The content of the collection is{Environment.NewLine}{new StringBuilder().AppendItems(parameter, "," + Environment.NewLine)}", parameterName);
             }
             // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
+        ///     Ensures that the dictionary contains the specified <paramref name="key" />, or otherwise throws a
+        ///     <see cref="KeyNotFoundException" />.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
+        /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="key">The key that should be part of the Keys collection of <paramref name="parameter" />.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="KeyNotFoundException" /> or
+        ///     <see cref="ArgumentNullException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when the specified <paramref name="parameter" /> has does not have
+        ///     the specified key (optional). Please note that <paramref name="message" /> and <paramref name="parameterName" />
+        ///     are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="KeyNotFoundException">
+        ///     Thrown when <paramref name="parameter" /> does not contain the specified
+        ///     <paramref name="key" /> and no <paramref name="exception" /> is specified.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="parameter" /> is null and no
+        ///     <paramref name="exception" /> is specified.
+        /// </exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustHaveKey<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TKey key, string parameterName = null, string message = null, Exception exception = null)
+        {
+            parameter.MustNotBeNull(parameterName, message, exception);
+
+            if (parameter.ContainsKey(key) == false)
+                throw exception ?? new KeyNotFoundException(message ?? $"{parameterName ?? "The dictionary"} must have key \"{key}\".{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairs(parameter, "," + Environment.NewLine)}");
         }
     }
 }

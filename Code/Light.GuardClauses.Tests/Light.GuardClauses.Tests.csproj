@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgainstTests.cs" />
+    <Compile Include="MusHaveKeyTests.cs" />
     <Compile Include="MustBeInTests.cs" />
     <Compile Include="MustBeKeyOfTests.cs" />
     <Compile Include="MustBeNullTests.cs" />

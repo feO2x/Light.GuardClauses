@@ -292,6 +292,7 @@ namespace Light.GuardClauses
         ///     or
         ///     Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
         /// </exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Exception exception = null)
         {
             parameter.MustNotBeNullOrEmpty(parameter, message, exception);
