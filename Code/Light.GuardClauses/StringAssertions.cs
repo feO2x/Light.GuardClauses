@@ -117,6 +117,10 @@ namespace Light.GuardClauses
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="containedText">The text that must be contained in <paramref name="parameter" />.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="compareCaseInsensitive">
+        ///     The value indicating whether the two strings should be compared without regarding
+        ///     case-sensitivity (defaults to false).
+        /// </param>
         /// <param name="message">
         ///     The message that will be injected into the <see cref="StringException" /> or
         ///     <see cref="ArgumentNullException" /> (optional).
@@ -138,10 +142,17 @@ namespace Light.GuardClauses
         /// </exception>
         /// <exception cref="EmptyStringException">Thrown when <paramref name="containedText" /> is an empty string.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustContain(this string parameter, string containedText, string parameterName = null, string message = null, Exception exception = null)
+        public static void MustContain(this string parameter, string containedText, string parameterName = null, bool compareCaseInsensitive = false, string message = null, Exception exception = null)
         {
             parameter.MustNotBeNull(parameterName, message, exception);
-            containedText.MustNotBeNullOrEmpty(nameof(containedText), $"You called MustContain wrongly by specifying {(containedText == null ? "null" : "an empty string")} to containedText.");
+            containedText.MustNotBeNullOrEmpty(nameof(containedText), $"You called MustContain wrongly by specifying {(containedText == null ? "null" : "an empty string")} for containedText.");
+
+            if (compareCaseInsensitive)
+            {
+                parameter = parameter.ToLower();
+                // ReSharper disable once PossibleNullReferenceException
+                containedText = containedText.ToLower();
+            }
 
             if (parameter.Contains(containedText) == false)
                 throw exception ?? new StringException(message ?? $"{parameterName ?? "The string"} must contain the text \"{containedText}\", but you specified \"{parameter}\".", parameterName);
@@ -154,6 +165,10 @@ namespace Light.GuardClauses
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="textToCompare">The text that should not be part of <paramref name="parameter" />.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="compareCaseInsensitive">
+        ///     The value indicating whether the two strings should be compared without regarding
+        ///     case-sensitivity (defaults to false).
+        /// </param>
         /// <param name="message">
         ///     The message that should be injected into the <see cref="StringException" /> or
         ///     <see cref="ArgumentNullException" /> (optional).
@@ -172,9 +187,17 @@ namespace Light.GuardClauses
         ///     <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotContain(this string parameter, string textToCompare, string parameterName = null, string message = null, Exception exception = null)
+        public static void MustNotContain(this string parameter, string textToCompare, string parameterName = null, bool compareCaseInsensitive = false, string message = null, Exception exception = null)
         {
             parameter.MustNotBeNull(parameterName, message, exception);
+            textToCompare.MustNotBeNullOrEmpty(nameof(textToCompare), $"You called MustNotContain wrongly by specifying {(textToCompare == null ? "null" : "an empty string")} for textToCompare.");
+
+            if (compareCaseInsensitive)
+            {
+                parameter = parameter.ToLower();
+                // ReSharper disable once PossibleNullReferenceException
+                textToCompare = textToCompare.ToLower();
+            }
 
             if (parameter.Contains(textToCompare))
                 throw exception ?? new StringException(message ?? $"{parameterName ?? "The string"} must not contain the text \"{textToCompare}\", but you specified \"{parameter}\".", parameterName);

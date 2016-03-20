@@ -62,7 +62,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => "someText".MustContain(null);
 
             act.ShouldThrow<ArgumentNullException>()
-               .And.Message.Should().Contain("You called MustContain wrongly by specifying null to containedText.");
+               .And.Message.Should().Contain("You called MustContain wrongly by specifying null for containedText.");
         }
 
         [Fact(DisplayName = "MustContain must throw an exception when the specified containedText is an empty string.")]
@@ -71,7 +71,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => "someText".MustContain(string.Empty);
 
             act.ShouldThrow<EmptyStringException>()
-               .And.Message.Should().Contain("You called MustContain wrongly by specifying an empty string to containedText.");
+               .And.Message.Should().Contain("You called MustContain wrongly by specifying an empty string for containedText.");
         }
     }
 }

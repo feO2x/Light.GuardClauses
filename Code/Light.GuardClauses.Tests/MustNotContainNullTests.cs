@@ -6,7 +6,7 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustNotContainNull
+    public sealed class MustNotContainNullTests
     {
         [Theory(DisplayName = "MustNotContainNull must throw an exception when the specified collection contains at least one item that is null.")]
         [MemberData(nameof(CollectionWithNullData))]
