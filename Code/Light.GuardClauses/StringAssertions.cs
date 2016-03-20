@@ -217,7 +217,10 @@ namespace Light.GuardClauses
         ///     The value indicating whether the two strings should be compared without regarding
         ///     case-sensitivity (defaults to false).
         /// </param>
-        /// <param name="message">The message that should be injected into the <see cref="StringException" /> (optional).</param>
+        /// <param name="message">
+        ///     The message that should be injected into the <see cref="StringException" /> or
+        ///     <see cref="ArgumentNullException" /> for <paramref name="parameter" /> (optional).
+        /// </param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> is no substring of the
         ///     specified text (optional). Please note that <paramref name="message" /> and
@@ -227,12 +230,20 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> is not a substring of
         ///     <paramref name="text" /> and no <paramref name="exception" /> is specified.
         /// </exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="text" /> is null.</exception>
-        /// <exception cref="EmptyStringException">Thrown when <paramref name="text" /> is an empty string.</exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="text" /> is null.
+        ///     or
+        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
+        /// </exception>
+        /// <exception cref="EmptyStringException">
+        ///     Thrown when <paramref name="text" /> is an empty string
+        ///     or
+        ///     Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
+        /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Exception exception = null)
         {
-            parameter.MustNotBeNull(parameterName, message, exception);
+            parameter.MustNotBeNullOrEmpty(parameterName, message, exception);
             text.MustNotBeNullOrEmpty(nameof(text), $"You called MustBeSubstringOf wrongly by specifying {(text == null ? "null" : "an empty string")} for text.");
 
             if (ignoreCaseSensitivity)
@@ -245,6 +256,57 @@ namespace Light.GuardClauses
             // ReSharper disable once PossibleNullReferenceException
             if (text.Contains(parameter) == false)
                 throw exception ?? new StringException(message ?? $"{parameterName ?? "The string"} must be a substring of \"{text}\", but you specified \"{parameter}\".", parameterName);
+        }
+
+        /// <summary>
+        ///     Ensures that <paramref name="parameter" /> is not a substring of <paramref name="text" />, or otherwise throws a
+        ///     <see cref="StringException" />.
+        /// </summary>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="text">The text <paramref name="parameter" /> is compared with.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="ignoreCaseSensitivity">
+        ///     The value indicating whether the two strings should be compared without regarding
+        ///     case-sensitivity (defaults to false).
+        /// </param>
+        /// <param name="message">
+        ///     The message that should be injected into the <see cref="StringException" /> or
+        ///     <see cref="ArgumentNullException" /> for <paramref name="parameter" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is a substring of the
+        ///     specified text (optional). Please note that <paramref name="message" /> and
+        ///     <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="StringException">
+        ///     Thrown when <paramref name="parameter" /> is a substring of <paramref name="text" />
+        ///     and no <paramref name="exception" /> is specified.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="text" /> is null.
+        ///     or
+        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
+        /// </exception>
+        /// <exception cref="EmptyStringException">
+        ///     Thrown when <paramref name="text" /> is an empty string
+        ///     or
+        ///     Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
+        /// </exception>
+        public static void MustNotBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Exception exception = null)
+        {
+            parameter.MustNotBeNullOrEmpty(parameter, message, exception);
+            text.MustNotBeNullOrEmpty(nameof(text), $"You called MustNotBeSubstringOf wrongly by specifying {(text == null ? "null" : "an empty string")} for text.");
+
+            if (ignoreCaseSensitivity)
+            {
+                parameter = parameter.ToLower();
+                // ReSharper disable once PossibleNullReferenceException
+                text = text.ToLower();
+            }
+
+            // ReSharper disable once PossibleNullReferenceException
+            if (text.Contains(parameter))
+                throw exception ?? new StringException(message ?? $"{parameterName ?? "The string"} must not be a substring of \"{text}\", but you specified \"{parameter}\".", parameterName);
         }
     }
 }
