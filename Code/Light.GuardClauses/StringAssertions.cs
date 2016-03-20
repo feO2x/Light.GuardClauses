@@ -115,9 +115,9 @@ namespace Light.GuardClauses
         ///     <see cref="StringException" />.
         /// </summary>
         /// <param name="parameter">The parameter to be checked.</param>
-        /// <param name="containedText">The text that must be contained in <paramref name="parameter" />.</param>
+        /// <param name="text">The text that must be contained in <paramref name="parameter" />.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="compareCaseInsensitive">
+        /// <param name="ignoreCaseSensitivity">
         ///     The value indicating whether the two strings should be compared without regarding
         ///     case-sensitivity (defaults to false).
         /// </param>
@@ -138,24 +138,24 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> is null and no
         ///     <paramref name="exception" /> is specified.
         ///     or
-        ///     Thrown when <paramref name="containedText" /> is null.
+        ///     Thrown when <paramref name="text" /> is null.
         /// </exception>
-        /// <exception cref="EmptyStringException">Thrown when <paramref name="containedText" /> is an empty string.</exception>
+        /// <exception cref="EmptyStringException">Thrown when <paramref name="text" /> is an empty string.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustContain(this string parameter, string containedText, string parameterName = null, bool compareCaseInsensitive = false, string message = null, Exception exception = null)
+        public static void MustContain(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Exception exception = null)
         {
             parameter.MustNotBeNull(parameterName, message, exception);
-            containedText.MustNotBeNullOrEmpty(nameof(containedText), $"You called MustContain wrongly by specifying {(containedText == null ? "null" : "an empty string")} for containedText.");
+            text.MustNotBeNullOrEmpty(nameof(text), $"You called MustContain wrongly by specifying {(text == null ? "null" : "an empty string")} for text.");
 
-            if (compareCaseInsensitive)
+            if (ignoreCaseSensitivity)
             {
                 parameter = parameter.ToLower();
                 // ReSharper disable once PossibleNullReferenceException
-                containedText = containedText.ToLower();
+                text = text.ToLower();
             }
 
-            if (parameter.Contains(containedText) == false)
-                throw exception ?? new StringException(message ?? $"{parameterName ?? "The string"} must contain the text \"{containedText}\", but you specified \"{parameter}\".", parameterName);
+            if (parameter.Contains(text) == false)
+                throw exception ?? new StringException(message ?? $"{parameterName ?? "The string"} must contain the text \"{text}\", but you specified \"{parameter}\".", parameterName);
         }
 
         /// <summary>
@@ -163,9 +163,9 @@ namespace Light.GuardClauses
         ///     <see cref="StringException" />.
         /// </summary>
         /// <param name="parameter">The parameter to be checked.</param>
-        /// <param name="textToCompare">The text that should not be part of <paramref name="parameter" />.</param>
+        /// <param name="text">The text that should not be part of <paramref name="parameter" />.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="compareCaseInsensitive">
+        /// <param name="ignoreCaseSensitivity">
         ///     The value indicating whether the two strings should be compared without regarding
         ///     case-sensitivity (defaults to false).
         /// </param>
@@ -179,28 +179,72 @@ namespace Light.GuardClauses
         ///     <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="StringException">
-        ///     Thrown when <paramref name="parameter" /> contains <paramref name="textToCompare" />
+        ///     Thrown when <paramref name="parameter" /> contains <paramref name="text" />
         ///     an no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="parameter" /> is null and no
-        ///     <paramref name="exception" /> is specified.
+        ///     <paramref name="exception" /> is specified
+        ///     or
+        ///     Thrown when <paramref name="text" /> is null.
         /// </exception>
+        /// <exception cref="EmptyStringException">Thrown when <paramref name="text" /> is an empty string.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotContain(this string parameter, string textToCompare, string parameterName = null, bool compareCaseInsensitive = false, string message = null, Exception exception = null)
+        public static void MustNotContain(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Exception exception = null)
         {
             parameter.MustNotBeNull(parameterName, message, exception);
-            textToCompare.MustNotBeNullOrEmpty(nameof(textToCompare), $"You called MustNotContain wrongly by specifying {(textToCompare == null ? "null" : "an empty string")} for textToCompare.");
+            text.MustNotBeNullOrEmpty(nameof(text), $"You called MustNotContain wrongly by specifying {(text == null ? "null" : "an empty string")} for text.");
 
-            if (compareCaseInsensitive)
+            if (ignoreCaseSensitivity)
             {
                 parameter = parameter.ToLower();
                 // ReSharper disable once PossibleNullReferenceException
-                textToCompare = textToCompare.ToLower();
+                text = text.ToLower();
             }
 
-            if (parameter.Contains(textToCompare))
-                throw exception ?? new StringException(message ?? $"{parameterName ?? "The string"} must not contain the text \"{textToCompare}\", but you specified \"{parameter}\".", parameterName);
+            if (parameter.Contains(text))
+                throw exception ?? new StringException(message ?? $"{parameterName ?? "The string"} must not contain the text \"{text}\", but you specified \"{parameter}\".", parameterName);
+        }
+
+        /// <summary>
+        ///     Ensures that <paramref name="parameter" /> is a substring of <paramref name="text" />, or otherwise throws a
+        ///     <see cref="StringException" />.
+        /// </summary>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="text">The text that <paramref name="parameter" /> is compared against.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="ignoreCaseSensitivity">
+        ///     The value indicating whether the two strings should be compared without regarding
+        ///     case-sensitivity (defaults to false).
+        /// </param>
+        /// <param name="message">The message that should be injected into the <see cref="StringException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is no substring of the
+        ///     specified text (optional). Please note that <paramref name="message" /> and
+        ///     <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="StringException">
+        ///     Thrown when <paramref name="parameter" /> is not a substring of
+        ///     <paramref name="text" /> and no <paramref name="exception" /> is specified.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="text" /> is null.</exception>
+        /// <exception cref="EmptyStringException">Thrown when <paramref name="text" /> is an empty string.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Exception exception = null)
+        {
+            parameter.MustNotBeNull(parameterName, message, exception);
+            text.MustNotBeNullOrEmpty(nameof(text), $"You called MustBeSubstringOf wrongly by specifying {(text == null ? "null" : "an empty string")} for text.");
+
+            if (ignoreCaseSensitivity)
+            {
+                parameter = parameter.ToLower();
+                // ReSharper disable once PossibleNullReferenceException
+                text = text.ToLower();
+            }
+
+            // ReSharper disable once PossibleNullReferenceException
+            if (text.Contains(parameter) == false)
+                throw exception ?? new StringException(message ?? $"{parameterName ?? "The string"} must be a substring of \"{text}\", but you specified \"{parameter}\".", parameterName);
         }
     }
 }

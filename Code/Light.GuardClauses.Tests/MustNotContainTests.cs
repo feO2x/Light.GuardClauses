@@ -61,33 +61,33 @@ namespace Light.GuardClauses.Tests
                 new object[] { "When you play the game of thrones you win, or you die. There is no middle ground.", "game of thrones"}
             };
 
-        [Theory(DisplayName = "MustNotContain must not throw an exception when the two strings have the same content with different capital letters.")]
+        [Theory(DisplayName = "MustNotContain must throw an exception when the two strings have the same content with different capital letters.")]
         [InlineData("I AM YOUR MASTER", "am your")]
         [InlineData("Where is the LIGHT?", "light")]
         [InlineData("PWND", "pwnd")]
         public void CompareCaseInsensitive(string @string, string comparedText)
         {
-            Action act = () => @string.MustNotContain(comparedText, compareCaseInsensitive: true);
+            Action act = () => @string.MustNotContain(comparedText, ignoreCaseSensitivity: true);
 
             act.ShouldThrow<StringException>();
         }
 
-        [Fact(DisplayName = "MustNotContain must throw an exception when the specified textToCompare is null.")]
+        [Fact(DisplayName = "MustNotContain must throw an exception when the specified text is null.")]
         public void ContainedTextNull()
         {
             Action act = () => "someText".MustNotContain(null);
 
             act.ShouldThrow<ArgumentNullException>()
-               .And.Message.Should().Contain("You called MustNotContain wrongly by specifying null for textToCompare.");
+               .And.Message.Should().Contain("You called MustNotContain wrongly by specifying null for text.");
         }
 
-        [Fact(DisplayName = "MustNotContain must throw an exception when the specified textToCompare is an empty string.")]
+        [Fact(DisplayName = "MustNotContain must throw an exception when the specified text is an empty string.")]
         public void ContainedTextEmpty()
         {
             Action act = () => "someText".MustNotContain(string.Empty);
 
             act.ShouldThrow<EmptyStringException>()
-               .And.Message.Should().Contain("You called MustNotContain wrongly by specifying an empty string for textToCompare.");
+               .And.Message.Should().Contain("You called MustNotContain wrongly by specifying an empty string for text.");
         }
     }
 }

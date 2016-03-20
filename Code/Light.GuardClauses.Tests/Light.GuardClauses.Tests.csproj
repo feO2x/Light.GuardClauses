@@ -68,6 +68,7 @@
     <Compile Include="MustBeKeyOfTests.cs" />
     <Compile Include="MustBeNullTests.cs" />
     <Compile Include="MustBeOneOfTests.cs" />
+    <Compile Include="MustBeSubstringOfTests.cs" />
     <Compile Include="MustBeTests.cs" />
     <Compile Include="MustBeTypeTests.cs" />
     <Compile Include="MustBeValidEnumValueTests.cs" />
