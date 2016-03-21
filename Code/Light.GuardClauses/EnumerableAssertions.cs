@@ -258,5 +258,44 @@ namespace Light.GuardClauses
                 throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The collection"} must not contain value \"{item.ToStringOrNull()}\", but it does.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(parameter)}", parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
+
+        /// <summary>
+        ///     Ensures that the specified collection is a subset of <paramref name="superset" />, or otherwise throws a
+        ///     <see cref="CollectionException" />. This method is not aware of duplicates.
+        /// </summary>
+        /// <typeparam name="T">The type of the items of the collection.</typeparam>
+        /// <param name="parameter">The collection to be checked.</param>
+        /// <param name="superset">The collection that <paramref name="parameter" /> must be a subset of.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that is injected into the <see cref="CollectionException" /> or
+        ///     <see cref="ArgumentNullException" />.
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is not a subset of
+        ///     <paramref name="superset" /> (optional). Please note that <paramref name="parameterName" /> and
+        ///     <paramref name="message" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="CollectionException">
+        ///     Thrown when <paramref name="parameter" /> is not part of
+        ///     <paramref name="superset" /> and no <paramref name="exception" /> is specified.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified
+        ///     or
+        ///     Thrown when <paramref name="superset" /> is null.
+        /// </exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustBeSubsetOf<T>(this IEnumerable<T> parameter, IEnumerable<T> superset, string parameterName = null, string message = null, Exception exception = null)
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            parameter.MustNotBeNull(parameterName, message, exception);
+            superset.MustNotBeNull(nameof(superset), "You called MustBeSubsetOf wrongly by specifying superset as null.");
+
+            if (parameter.All(superset.Contains) == false)
+                throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The collection"} must be a subset of:{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(superset)}{Environment.NewLine}{Environment.NewLine}The actual collection contains:{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(parameter)}", parameterName);
+
+            // ReSharper restore PossibleMultipleEnumeration
+        }
     }
 }
