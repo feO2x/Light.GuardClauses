@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Check.cs" />
-    <Compile Include="CollectionAssertions.cs" />
+    <Compile Include="EnumerableAssertions.cs" />
     <Compile Include="CommonAssertions.cs" />
     <Compile Include="ComparableAssertions.cs" />
     <Compile Include="DictionaryAssertions.cs" />

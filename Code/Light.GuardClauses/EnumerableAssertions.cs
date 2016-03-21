@@ -9,9 +9,9 @@ using Light.GuardClauses.FrameworkExtensions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     The CollectionAssertions class contains extension methods that apply assertions to collections.
+    ///     The EnumerableAssertions class contains extension methods that apply assertions to collections.
     /// </summary>
-    public static class CollectionAssertions
+    public static class EnumerableAssertions
     {
         /// <summary>
         ///     Ensures that <paramref name="parameter" /> is one of the specified <paramref name="items" />, or otherwise throws a
@@ -33,15 +33,14 @@ namespace Light.GuardClauses
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="items" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustBeOneOf<T>(this T parameter, IReadOnlyList<T> items, string parameterName = null, string message = null, Exception exception = null)
+        public static void MustBeOneOf<T>(this T parameter, IEnumerable<T> items, string parameterName = null, string message = null, Exception exception = null)
         {
+            // ReSharper disable PossibleMultipleEnumeration
             items.MustNotBeNull(nameof(items), "You called MustBeOneOf wrongly by specifying items as null.");
 
-            if (items.Contains(parameter))
-                return;
-
-            var stringBuilder = new StringBuilder().AppendItems(items);
-            throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be one of the items ({stringBuilder}), but you specified {parameter}.");
+            if (items.Contains(parameter) == false)
+                throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be one of the items{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(items)}{Environment.NewLine}but you specified {parameter}.");
+            // ReSharper restore PossibleMultipleEnumeration
         }
 
         /// <summary>
@@ -64,15 +63,14 @@ namespace Light.GuardClauses
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="items" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotBeOneOf<T>(this T parameter, IReadOnlyList<T> items, string parameterName = null, string message = null, Exception exception = null)
+        public static void MustNotBeOneOf<T>(this T parameter, IEnumerable<T> items, string parameterName = null, string message = null, Exception exception = null)
         {
+            // ReSharper disable PossibleMultipleEnumeration
             items.MustNotBeNull(nameof(items), "You called MustNotBeOneOf wrongly by specifying items as null.");
 
-            if (items.Contains(parameter) == false)
-                return;
-
-            var stringBuilder = new StringBuilder().AppendItems(items);
-            throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be none of the items ({stringBuilder}), but you specified {parameter}.");
+            if (items.Contains(parameter))
+                throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be none of the items{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(items)}{Environment.NewLine}but you specified {parameter}.");
+            // ReSharper restore PossibleMultipleEnumeration
         }
 
         /// <summary>
@@ -99,12 +97,12 @@ namespace Light.GuardClauses
         ///     <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotBeNullOrEmpty<T>(this IReadOnlyCollection<T> parameter, string parameterName = null, string message = null, Exception exception = null)
+        public static void MustNotBeNullOrEmpty<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Exception exception = null)
         {
             if (parameter == null)
                 throw exception ?? new ArgumentNullException(parameterName, message);
 
-            if (parameter.Count == 0)
+            if (parameter.Any() == false)
                 throw exception ?? (message == null ? new EmptyCollectionException(parameterName) : new EmptyCollectionException(message, parameterName));
         }
 
@@ -127,21 +125,25 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="parameter" /> has no items.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustHaveUniqueItems<T>(this IReadOnlyList<T> parameter, string parameterName = null, string message = null, Exception exception = null)
+        public static void MustHaveUniqueItems<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Exception exception = null)
         {
+            // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNullOrEmpty(parameterName);
 
-            for (var i = 0; i < parameter.Count; i++)
+            var count = parameter.Count();
+            for (var i = 0; i < count; i++)
             {
-                var itemToCompare = parameter[i];
-                for (var j = i + 1; j < parameter.Count; j++)
+                var itemToCompare = parameter.ElementAt(i);
+                for (var j = i + 1; j < count; j++)
                 {
-                    if (!itemToCompare.EqualsWithHashCode(parameter[j]))
+                    if (itemToCompare.EqualsWithHashCode(parameter.ElementAt(j)) == false)
                         continue;
 
-                    throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The value"} must be a collection with unique items, but you specified {new StringBuilder().AppendItems(parameter)}.", parameterName);
+                    throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The value"} must be a collection with unique items, but there is a duplicate at index {j}.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(parameter)}.", parameterName);
                 }
             }
+            // ReSharper restore PossibleMultipleEnumeration
+
         }
 
         /// <summary>
@@ -169,8 +171,9 @@ namespace Light.GuardClauses
         ///     <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotContainNull<T>(this IReadOnlyCollection<T> parameter, string parameterName = null, string message = null, Exception exception = null) where T : class
+        public static void MustNotContainNull<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Exception exception = null) where T : class
         {
+            // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName, message, exception);
 
             var currentIndex = -1;
@@ -180,8 +183,9 @@ namespace Light.GuardClauses
                 if (item != null)
                     continue;
 
-                throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The value"} must be a collection not containing null, but you specified null at index {currentIndex}.{Environment.NewLine}The content of the collection is{Environment.NewLine}{new StringBuilder().AppendItems(parameter, "," + Environment.NewLine)}", parameterName);
+                throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The value"} must be a collection not containing null, but you specified null at index {currentIndex}.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(parameter)}", parameterName);
             }
+            // ReSharper restore PossibleMultipleEnumeration
         }
 
         /// <summary>
@@ -210,12 +214,14 @@ namespace Light.GuardClauses
         ///     <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustContain<T>(this IReadOnlyCollection<T> parameter, T item, string parameterName = null, string message = null, Exception exception = null)
+        public static void MustContain<T>(this IEnumerable<T> parameter, T item, string parameterName = null, string message = null, Exception exception = null)
         {
+            // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName, message, exception);
 
-            if (parameter.Count == 0 || parameter.Contains(item) == false)
-                throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain value \"{(item != null ? item.ToString() : "null")}\", but does not.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItems(parameter, "," + Environment.NewLine)}", parameterName);
+            if (parameter.Contains(item) == false)
+                throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain value \"{item.ToStringOrNull()}\", but does not.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(parameter)}", parameterName);
+            // ReSharper restore PossibleMultipleEnumeration
         }
     }
 }

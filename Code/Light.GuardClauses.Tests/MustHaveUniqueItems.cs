@@ -10,20 +10,20 @@ namespace Light.GuardClauses.Tests
     {
         [Theory(DisplayName = "MustHaveUniqueItems must throw an exception when the collection has duplicates.")]
         [MemberData(nameof(DuplicateItemsTestData))]
-        public void DuplicateItems<T>(T[] collection, string collectionItems)
+        public void DuplicateItems<T>(T[] collection, int duplicateIndex)
         {
             Action act = () => collection.MustHaveUniqueItems(nameof(collection));
 
             act.ShouldThrow<CollectionException>()
-               .And.Message.Should().Contain($"{nameof(collection)} must be a collection with unique items, but you specified {collectionItems}.");
+               .And.Message.Should().Contain($"{nameof(collection)} must be a collection with unique items, but there is a duplicate at index {duplicateIndex}.");
         }
 
         public static readonly TestData DuplicateItemsTestData =
             new[]
             {
-                new object[] { new[] { "1", "2", "3", "1" }, "1, 2, 3, 1" },
-                new object[] { new object[] { 1, 42, 42, 87 }, "1, 42, 42, 87" },
-                new object[] { new[] { "1", null, "1" }, "1, null, 1" }
+                new object[] { new[] { "1", "2", "3", "1" }, 3 },
+                new object[] { new object[] { 1, 42, 42, 87 }, 2 },
+                new object[] { new[] { "1", null, "1" }, 2 }
             };
 
         [Theory(DisplayName = "MustHaveUniqueItems must not throw an exception when the items are unique.")]
