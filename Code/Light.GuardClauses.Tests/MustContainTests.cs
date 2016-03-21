@@ -32,7 +32,7 @@ namespace Light.GuardClauses.Tests
             act.ShouldNotThrow();
         }
 
-        [Theory(DisplayName = "The caller can specify a custom message that MustContain must inject instead of the default one.")]
+        [Theory(DisplayName = "The caller can specify a custom message for the string variant that MustContain must inject instead of the default one.")]
         [InlineData(null, "")]
         [InlineData("", "a")]
         [InlineData("42", "b")]
@@ -46,7 +46,7 @@ namespace Light.GuardClauses.Tests
                .And.Message.Should().Contain(message);
         }
 
-        [Theory(DisplayName = "The caller can specify a custom exception that MustContain must raise instead of the default one.")]
+        [Theory(DisplayName = "The caller can specify a custom exception for the string variant that MustContain must raise instead of the default one.")]
         [InlineData(null, "")]
         [InlineData("Hello there!", "world")]
         public void StringCustomException(string invalidString, string containedText)
@@ -124,7 +124,7 @@ namespace Light.GuardClauses.Tests
                 new object[] { new [] {new DateTime(2016, 3, 21), new DateTime(1987, 2, 12) }, new DateTime(2016, 3, 21) }
             };
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustContain must inject instead of the default one.")]
+        [Fact(DisplayName = "The caller can specify a custom message for the collection variant that MustContain must inject instead of the default one.")]
         public void CustomMessage()
         {
             const string message = "Thou shall have item!";
@@ -135,7 +135,7 @@ namespace Light.GuardClauses.Tests
                .And.Message.Should().Contain(message);
         }
 
-        [Fact(DisplayName = "The caller can specify a custom exception that MustHaveKey must raise instead of the default one.")]
+        [Fact(DisplayName = "The caller can specify a custom exception for the collection variant that MustHaveKey must raise instead of the default one.")]
         public void CustomException()
         {
             var exception = new Exception();
