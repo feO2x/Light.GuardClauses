@@ -143,7 +143,6 @@ namespace Light.GuardClauses
                 }
             }
             // ReSharper restore PossibleMultipleEnumeration
-
         }
 
         /// <summary>
@@ -225,17 +224,22 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that the collection does not contain the specified <paramref name="item"/>, or otherwise throws a <see cref="CollectionException"/>.
+        ///     Ensures that the collection does not contain the specified <paramref name="item" />, or otherwise throws a
+        ///     <see cref="CollectionException" />.
         /// </summary>
         /// <typeparam name="T">The type of the items of the collection.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="item">The item that should not be part of the collection's items.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be injected into the <see cref="StringException" /> or
-        ///     <see cref="ArgumentNullException" /> (optional).</param>
-        /// <param name="exception">The exception that is thrown when <paramref name="parameter" /> does contain
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="StringException" /> or
+        ///     <see cref="ArgumentNullException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> does contain
         ///     <paramref name="item" /> (optional). Please note that <paramref name="parameterName" /> and
-        ///     <paramref name="message" /> are both ignored when you specify exception.</param>
+        ///     <paramref name="message" /> are both ignored when you specify exception.
+        /// </param>
         /// <exception cref="CollectionException">
         ///     Thrown when <paramref name="parameter" /> does contain the specified
         ///     <paramref name="item" /> and no <paramref name="exception" /> is specified.
