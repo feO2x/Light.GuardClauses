@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Xunit;
+using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
@@ -34,7 +36,7 @@ namespace Light.GuardClauses.Tests
         [InlineData(null, "")]
         [InlineData("", "a")]
         [InlineData("42", "b")]
-        public void CustomMessage(string invalidString, string containedText)
+        public void StringCustomMessage(string invalidString, string containedText)
         {
             const string message = "Thou shall have the contained text!";
 
@@ -47,7 +49,7 @@ namespace Light.GuardClauses.Tests
         [Theory(DisplayName = "The caller can specify a custom exception that MustContain must raise instead of the default one.")]
         [InlineData(null, "")]
         [InlineData("Hello there!", "world")]
-        public void CustomException(string invalidString, string containedText)
+        public void StringCustomException(string invalidString, string containedText)
         {
             var exception = new Exception();
 
@@ -72,6 +74,75 @@ namespace Light.GuardClauses.Tests
 
             act.ShouldThrow<EmptyStringException>()
                .And.Message.Should().Contain("You called MustContain wrongly by specifying an empty string for text.");
+        }
+
+        [Theory(DisplayName = "MustContain must throw a CollectionException when the specified value is not part of the collection.")]
+        [MemberData(nameof(CollectionDoesNotContainValueData))]
+        public void CollectionDoesNotContainValue<T>(IReadOnlyCollection<T> collection, T value)
+        {
+            Action act = () => collection.MustContain(value, nameof(collection));
+
+            act.ShouldThrow<CollectionException>()
+               .And.Message.Should().Contain($"{nameof(collection)} must contain value \"{(value != null ? value.ToString() : "null")}\", but does not.");
+        }
+
+        public static readonly TestData CollectionDoesNotContainValueData =
+            new[]
+            {
+                new object[] { new[] { 1, 2, 3 }, 42 },
+                new object[] { new[] { "Hey", "There" }, "World" },
+                new object[] { new[] { true }, false },
+                new object[] { new[] { "Here", "I", "Am" }, null },
+                new[] { new object[0], new object() }
+            };
+
+        [Fact(DisplayName = "MustContain must throw an ArgumentNullException when the specified collection is null.")]
+        public void CollectionNull()
+        {
+            IReadOnlyCollection<string> collection = null;
+
+            // ReSharper disable once ExpressionIsAlwaysNull
+            Action act = () => collection.MustContain("foo");
+
+            act.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Theory(DisplayName = "MustContain must not throw an exception when the specified value is part of the collection.")]
+        [MemberData(nameof(CollectionContainsValueData))]
+        public void CollectionContainsValue<T>(IReadOnlyCollection<T> collection, T value)
+        {
+            Action act = () => collection.MustContain(value);
+
+            act.ShouldNotThrow();
+        }
+
+        public static readonly TestData CollectionContainsValueData =
+            new[]
+            {
+                new object[] { new [] {1, 2, 3}, 1 },
+                new object[] { new [] {"How", "Are", "You"}, "Are" },
+                new object[] { new [] {new DateTime(2016, 3, 21), new DateTime(1987, 2, 12) }, new DateTime(2016, 3, 21) }
+            };
+
+        [Fact(DisplayName = "The caller can specify a custom message that MustContain must inject instead of the default one.")]
+        public void CustomMessage()
+        {
+            const string message = "Thou shall have item!";
+
+            Action act = () => new[] { 1, 2, 3 }.MustContain(42, message: message);
+
+            act.ShouldThrow<CollectionException>()
+               .And.Message.Should().Contain(message);
+        }
+
+        [Fact(DisplayName = "The caller can specify a custom exception that MustHaveKey must raise instead of the default one.")]
+        public void CustomException()
+        {
+            var exception = new Exception();
+
+            Action act = () => new[] { 1, 2, 3 }.MustContain(42, exception: exception);
+
+            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
         }
     }
 }

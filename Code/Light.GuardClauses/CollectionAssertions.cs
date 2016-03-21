@@ -171,7 +171,6 @@ namespace Light.GuardClauses
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotContainNull<T>(this IReadOnlyCollection<T> parameter, string parameterName = null, string message = null, Exception exception = null) where T : class
         {
-            // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName, message, exception);
 
             var currentIndex = -1;
@@ -183,7 +182,40 @@ namespace Light.GuardClauses
 
                 throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The value"} must be a collection not containing null, but you specified null at index {currentIndex}.{Environment.NewLine}The content of the collection is{Environment.NewLine}{new StringBuilder().AppendItems(parameter, "," + Environment.NewLine)}", parameterName);
             }
-            // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
+        ///     Ensures that the collection contains the specified <paramref name="item" />, or otherwise throws a
+        ///     <see cref="CollectionException" />.
+        /// </summary>
+        /// <typeparam name="T">The type of the items of the collection.</typeparam>
+        /// <param name="parameter">The collection to be checked.</param>
+        /// <param name="item">The item that should be part of the collection's items.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected in to the <see cref="StringException" /> or
+        ///     <see cref="ArgumentNullException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> does not contain
+        ///     <paramref name="item" /> (optional). Please note that <paramref name="parameterName" /> and
+        ///     <paramref name="message" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="CollectionException">
+        ///     Thrown when <paramref name="parameter" /> does not contain the specified
+        ///     <paramref name="item" /> and no <paramref name="exception" /> is specified.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="parameter" /> is null and no
+        ///     <paramref name="exception" /> is specified.
+        /// </exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustContain<T>(this IReadOnlyCollection<T> parameter, T item, string parameterName = null, string message = null, Exception exception = null)
+        {
+            parameter.MustNotBeNull(parameterName, message, exception);
+
+            if (parameter.Count == 0 || parameter.Contains(item) == false)
+                throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain value \"{(item != null ? item.ToString() : "null")}\", but does not.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItems(parameter, "," + Environment.NewLine)}", parameterName);
         }
     }
 }
