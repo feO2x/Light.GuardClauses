@@ -43,7 +43,7 @@ namespace Light.GuardClauses
             if (dictionary.ContainsKey(parameter))
                 return;
 
-            throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be one of the dictionary keys{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(dictionary.Keys)}{Environment.NewLine}but you specified {parameter}.");
+            throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be one of the dictionary keys{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(dictionary.Keys)}{Environment.NewLine}but you specified {parameter}.");
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Light.GuardClauses
             dictionary.MustNotBeNull(nameof(dictionary), "You called MustNotBeKeyOf wrongly by specifying dictionary as null.");
 
             if (dictionary.ContainsKey(parameter))
-                throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must not be one of the dictionary keys{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(dictionary.Keys)}{Environment.NewLine}but you specified {parameter}");
+                throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must not be one of the dictionary keys{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(dictionary.Keys)}{Environment.NewLine}but you specified {parameter}");
         }
 
         /// <summary>

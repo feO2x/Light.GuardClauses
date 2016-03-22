@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => collection.MustBeSubsetOf(superset, nameof(collection));
 
             act.ShouldThrow<CollectionException>()
-               .And.Message.Should().Contain($"{nameof(collection)} must be a subset of:{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(superset)}");
+               .And.Message.Should().Contain($"{nameof(collection)} must be a subset of:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(superset)}");
         }
 
         public static readonly TestData IsNotSubsetData =

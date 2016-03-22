@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
+using Light.GuardClauses.FrameworkExtensions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
@@ -32,7 +34,7 @@ namespace Light.GuardClauses.Tests
             act.ShouldNotThrow();
         }
 
-        [Theory(DisplayName = "The caller can specify a custom message for the string variant that MustContain must inject instead of the default one.")]
+        [Theory(DisplayName = "The caller can specify a custom message for the string overload that MustContain must inject instead of the default one.")]
         [InlineData(null, "")]
         [InlineData("", "a")]
         [InlineData("42", "b")]
@@ -46,7 +48,7 @@ namespace Light.GuardClauses.Tests
                .And.Message.Should().Contain(message);
         }
 
-        [Theory(DisplayName = "The caller can specify a custom exception for the string variant that MustContain must raise instead of the default one.")]
+        [Theory(DisplayName = "The caller can specify a custom exception for the string overload that MustContain must raise instead of the default one.")]
         [InlineData(null, "")]
         [InlineData("Hello there!", "world")]
         public void StringCustomException(string invalidString, string containedText)
@@ -119,13 +121,13 @@ namespace Light.GuardClauses.Tests
         public static readonly TestData CollectionContainsValueData =
             new[]
             {
-                new object[] { new [] {1, 2, 3}, 1 },
-                new object[] { new [] {"How", "Are", "You"}, "Are" },
-                new object[] { new [] {new DateTime(2016, 3, 21), new DateTime(1987, 2, 12) }, new DateTime(2016, 3, 21) }
+                new object[] { new[] { 1, 2, 3 }, 1 },
+                new object[] { new[] { "How", "Are", "You" }, "Are" },
+                new object[] { new[] { new DateTime(2016, 3, 21), new DateTime(1987, 2, 12) }, new DateTime(2016, 3, 21) }
             };
 
-        [Fact(DisplayName = "The caller can specify a custom message for the collection variant that MustContain must inject instead of the default one.")]
-        public void CustomMessage()
+        [Fact(DisplayName = "The caller can specify a custom message for the collection overload that MustContain must inject instead of the default one.")]
+        public void CollectionCustomMessage()
         {
             const string message = "Thou shall have item!";
 
@@ -135,12 +137,78 @@ namespace Light.GuardClauses.Tests
                .And.Message.Should().Contain(message);
         }
 
-        [Fact(DisplayName = "The caller can specify a custom exception for the collection variant that MustHaveKey must raise instead of the default one.")]
-        public void CustomException()
+        [Fact(DisplayName = "The caller can specify a custom exception for the collection overload that MustContain must raise instead of the default one.")]
+        public void CollectionCustomException()
         {
             var exception = new Exception();
 
             Action act = () => new[] { 1, 2, 3 }.MustContain(42, exception: exception);
+
+            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+        }
+
+        [Theory(DisplayName = "MustContain must throw a CollectionException when the specified subset is not part of the collection.")]
+        [MemberData(nameof(IsNoSupersetData))]
+        public void IsNotSuperset<T>(T[] collection, T[] invalidSubset)
+        {
+            Action act = () => collection.MustContain(invalidSubset, nameof(collection));
+
+            act.ShouldThrow<CollectionException>()
+               .And.Message.Should().Contain($"{nameof(collection)} must contain the following values{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(invalidSubset)}");
+        }
+
+        public static readonly TestData IsNoSupersetData =
+            new[]
+            {
+                new object[] { new object[] { 1, 2, 3, 4, 5 }, new object[] { 3, 4, 5, 6 } },
+                new object[] { new object[] { 'x', 'z', 'y', 'b' }, new object[] { 'z', 'y', 'f' } }
+            };
+
+        [Theory(DisplayName = "MustContain must not throw an exception when every item in the specified subset is contained in the collection.")]
+        [MemberData(nameof(IsSupersetData))]
+        public void IsSuperset<T>(T[] collection, T[] subset)
+        {
+            Action act = () => collection.MustContain(subset);
+
+            act.ShouldNotThrow();
+        }
+
+        public static readonly TestData IsSupersetData =
+            new[]
+            {
+                new object[] { new object[] { 1, 2, 3, 4 }, new object[] { 2, 3 } },
+                new object[] { new[] { "a", "X", "z" }, new[] { "a", "a", "a" } },
+                new object[] { new[] { "a", null }, new string[] { null } },
+                new object[] { new[] { "1", "2", "3" }, new[] { "3", "1", "2", "3" } }
+            };
+
+        [Theory(DisplayName = "MustContain must throw an ArgumentNullException when either the collection or the subset are null.")]
+        [InlineData(new object[] { }, null)]
+        [InlineData(null, new object[] { })]
+        public void SupersetOrCollectionNull(object[] collection, object[] subset)
+        {
+            Action act = () => collection.MustContain(subset);
+
+            act.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact(DisplayName = "The caller can specify a custom message for the subset overload that MustContain must inject instead of the default one.")]
+        public void SubsetCustomMessage()
+        {
+            const string message = "Thou shall have subset!";
+
+            Action act = () => new[] { 'a', 'b' }.MustContain(new[] { 'c', 'd' }, message: message);
+
+            act.ShouldThrow<CollectionException>()
+               .And.Message.Should().Contain(message);
+        }
+
+        [Fact(DisplayName = "The caller can specify a custom exception for the subset overload that MustContain must raise instead of the default one.")]
+        public void SubsetCustomException()
+        {
+            var exception = new Exception();
+
+            Action act = () => new[] { 'a', 'b' }.MustContain(new[] { 'c', 'd' }, exception: exception);
 
             act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
         }

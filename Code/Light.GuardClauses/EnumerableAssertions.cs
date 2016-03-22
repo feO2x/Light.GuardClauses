@@ -39,7 +39,7 @@ namespace Light.GuardClauses
             items.MustNotBeNull(nameof(items), "You called MustBeOneOf wrongly by specifying items as null.");
 
             if (items.Contains(parameter) == false)
-                throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be one of the items{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(items)}{Environment.NewLine}but you specified {parameter}.");
+                throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be one of the items{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(items)}{Environment.NewLine}but you specified {parameter}.");
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -69,7 +69,7 @@ namespace Light.GuardClauses
             items.MustNotBeNull(nameof(items), "You called MustNotBeOneOf wrongly by specifying items as null.");
 
             if (items.Contains(parameter))
-                throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be none of the items{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(items)}{Environment.NewLine}but you specified {parameter}.");
+                throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be none of the items{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(items)}{Environment.NewLine}but you specified {parameter}.");
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -139,7 +139,7 @@ namespace Light.GuardClauses
                     if (itemToCompare.EqualsWithHashCode(parameter.ElementAt(j)) == false)
                         continue;
 
-                    throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The value"} must be a collection with unique items, but there is a duplicate at index {j}.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(parameter)}.", parameterName);
+                    throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The value"} must be a collection with unique items, but there is a duplicate at index {j}.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}.", parameterName);
                 }
             }
             // ReSharper restore PossibleMultipleEnumeration
@@ -182,7 +182,7 @@ namespace Light.GuardClauses
                 if (item != null)
                     continue;
 
-                throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The value"} must be a collection not containing null, but you specified null at index {currentIndex}.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(parameter)}", parameterName);
+                throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The value"} must be a collection not containing null, but you specified null at index {currentIndex}.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
             }
             // ReSharper restore PossibleMultipleEnumeration
         }
@@ -219,7 +219,7 @@ namespace Light.GuardClauses
             parameter.MustNotBeNull(parameterName, message, exception);
 
             if (parameter.Contains(item) == false)
-                throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain value \"{item.ToStringOrNull()}\", but does not.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(parameter)}", parameterName);
+                throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain value \"{item.ToStringOrNull()}\", but does not.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -255,7 +255,7 @@ namespace Light.GuardClauses
             parameter.MustNotBeNull(parameterName, message, exception);
 
             if (parameter.Contains(item))
-                throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The collection"} must not contain value \"{item.ToStringOrNull()}\", but it does.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(parameter)}", parameterName);
+                throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The collection"} must not contain value \"{item.ToStringOrNull()}\", but it does.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -293,9 +293,59 @@ namespace Light.GuardClauses
             superset.MustNotBeNull(nameof(superset), "You called MustBeSubsetOf wrongly by specifying superset as null.");
 
             if (parameter.All(superset.Contains) == false)
-                throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The collection"} must be a subset of:{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(superset)}{Environment.NewLine}{Environment.NewLine}The actual collection contains:{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(parameter)}", parameterName);
+                throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The collection"} must be a subset of:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(superset)}{Environment.NewLine}{Environment.NewLine}The actual collection contains:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
 
             // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
+        ///     Ensures that the collection contains the specified subset, or otherwise throws a <see cref="CollectionException" />.
+        ///     This method is not aware of duplicates.
+        /// </summary>
+        /// <typeparam name="T">The type of the items of the collection.</typeparam>
+        /// <param name="parameter">The collection to be checked.</param>
+        /// <param name="subset">The subset that must be part of the collection.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="CollectionException" /> or <see cref="ArgumentNullException" />.
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is not a superset of <paramref name="subset" /> (optional). Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="CollectionException">
+        ///     Thrown when there is any item of <paramref name="subset" /> that <paramref name="parameter" /> does not contain and no <paramref name="exception" /> is specified.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified or Thrown when <paramref name="subset" /> is null.
+        /// </exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustContain<T>(this IEnumerable<T> parameter, IEnumerable<T> subset, string parameterName = null, string message = null, Exception exception = null)
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            parameter.MustNotBeNull(parameterName, message, exception);
+            subset.MustNotBeNull(nameof(subset), "You called MustContain wrongly by specifying subset as null.");
+
+            if (subset.All(parameter.Contains) == false)
+                throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain the following values{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(subset)}{Environment.NewLine}but does not.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
+            // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
+        ///     Ensures that the collection contains the specified subset, or otherwise throws a <see cref="CollectionException" />. This method is not aware of duplicates and uses the default exception.
+        /// </summary>
+        /// <typeparam name="T">The type of the items of the collection.</typeparam>
+        /// <param name="parameter">The collection to be checked.</param>
+        /// <param name="subset">The subset that must be part of the collection.</param>
+        /// <exception cref="CollectionException">
+        ///     Thrown when there is any item of <paramref name="subset" /> that <paramref name="parameter" /> does not contain.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown when <paramref name="parameter" /> or <paramref name="subset" /> is null.
+        /// </exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustContain<T>(this IEnumerable<T> parameter, params T[] subset)
+        {
+            MustContain(parameter, (IEnumerable<T>) subset);
         }
     }
 }

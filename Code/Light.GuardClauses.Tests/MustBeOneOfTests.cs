@@ -16,7 +16,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => value.MustBeOneOf(items, nameof(value));
 
             act.ShouldThrow<ArgumentOutOfRangeException>()
-               .And.Message.Should().Contain($"{nameof(value)} must be one of the items{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(items)}{Environment.NewLine}but you specified {value}.");
+               .And.Message.Should().Contain($"{nameof(value)} must be one of the items{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(items)}{Environment.NewLine}but you specified {value}.");
         }
 
         public static readonly TestData NotInItemsTestData =

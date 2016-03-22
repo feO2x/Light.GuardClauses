@@ -63,7 +63,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <param name="items">The items to be appended.</param>
         /// <returns>The string builder to enable method chaining.</returns>
         /// <exception cref="ArgumentNullException">Thrown when any of the parameters is null.</exception>
-        public static StringBuilder AppenItemsWithNewLine<T>(this StringBuilder stringBuilder, IEnumerable<T> items)
+        public static StringBuilder AppendItemsWithNewLine<T>(this StringBuilder stringBuilder, IEnumerable<T> items)
         {
             return stringBuilder.AppendItems(items, DefaultNewLineSeparator);
         }
