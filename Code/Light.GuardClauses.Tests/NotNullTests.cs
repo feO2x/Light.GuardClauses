@@ -14,7 +14,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => new NotNull<object>(null);
 
             act.ShouldThrow<ArgumentNullException>().
-                And.Message.Should().Contain($"You initialized a NotNull with null for type \"{typeof (object).FullName}\"");
+                And.Message.Should().Contain($"You initialized a NotNull with null for type \"{typeof (object).FullName}\".");
         }
 
         [Theory(DisplayName = "The referenced passed to the constructor must be retrievable if it is not null.")]
