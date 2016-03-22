@@ -20,7 +20,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="object"/> is null.</exception>
         public NotNull(T @object)
         {
-            @object.MustNotBeNull(nameof(@object), $"You initialized a NotNull with null for type \"{typeof (T).FullName}\".");
+            @object.MustNotBeNull(nameof(@object));
 
             Object = @object;
         }
