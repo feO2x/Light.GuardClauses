@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
@@ -30,7 +31,7 @@ namespace Light.GuardClauses.Tests
             act.ShouldNotThrow();
         }
 
-        [Theory(DisplayName = "The caller can specify a custom message for the string variant that MustNotContain must inject instead of the default one.")]
+        [Theory(DisplayName = "The caller can specify a custom message for the string overload that MustNotContain must inject instead of the default one.")]
         [MemberData(nameof(CustomTestData))]
         public void StringCustomMessage(string invalidString, string containedText)
         {
@@ -42,7 +43,7 @@ namespace Light.GuardClauses.Tests
                .And.Message.Should().Be(message);
         }
 
-        [Theory(DisplayName = "The caller can specify a custom exception for the string variant that MustNotContain must raise instead of the default one.")]
+        [Theory(DisplayName = "The caller can specify a custom exception for the string overload that MustNotContain must raise instead of the default one.")]
         [MemberData(nameof(CustomTestData))]
         public void StringCustomException(string invalidString, string containedText)
         {
@@ -136,7 +137,7 @@ namespace Light.GuardClauses.Tests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        [Fact(DisplayName = "The caller can specify a custom message for the collection variant that MustNotContain must inject instead of the default one.")]
+        [Fact(DisplayName = "The caller can specify a custom message for the collection overload that MustNotContain must inject instead of the default one.")]
         public void CustomMessage()
         {
             const string message = "Thou shall have not!";
@@ -147,12 +148,77 @@ namespace Light.GuardClauses.Tests
                .And.Message.Should().Contain(message);
         }
 
-        [Fact(DisplayName = "The caller can specify a custom exception for the collection variant that MustNotContain must raise instead of the default one.")]
+        [Fact(DisplayName = "The caller can specify a custom exception for the collection overload that MustNotContain must raise instead of the default one.")]
         public void CustomException()
         {
             var exception = new Exception();
 
             Action act = () => new[] { 1, 2, 3 }.MustNotContain(2, exception: exception);
+
+            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+        }
+
+        [Theory(DisplayName = "MustNotContain must throw a CollectionException when the collection contains any of the items of the specified set.")]
+        [MemberData(nameof(SetContainedData))]
+        public void SetContained<T>(T[] collection, T[] set)
+        {
+            Action act = () => collection.MustNotContain(set, nameof(collection));
+
+            act.ShouldThrow<CollectionException>()
+               .And.Message.Should().Contain($"{nameof(collection)} must not contain any of the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(set)}");
+        }
+
+        public static readonly TestData SetContainedData =
+            new[]
+            {
+                new object[] { new[] { "Hello", "World" }, new[] { "Hello", "There" } },
+                new object[] { new object[] { 1, 2, 3, 4, 5 }, new object[] { 2, 5 } },
+                new object[] { new[] { new object(), null }, new object[] { null } }
+            };
+
+        [Theory(DisplayName = "MustNotContain must not throw an exception when the collection does not contain any items of the specified set.")]
+        [MemberData(nameof(SetNotContainedData))]
+        public void SetNotContained<T>(T[] collection, T[] set)
+        {
+            Action act = () => collection.MustNotContain(set);
+
+            act.ShouldNotThrow();
+        }
+
+        public static readonly TestData SetNotContainedData =
+            new[]
+            {
+                new object[] { new[] { "Hello", "There" }, new[] { "What's", "Up?" } },
+                new object[] { new object[] { 1, 2, 3, 4 }, new object[] { 81, -34445, 20 } }
+            };
+
+        [Theory(DisplayName = "MustNotContain must throw an ArgumentNullException when the specified parameter or set is null.")]
+        [InlineData(new object[0], null)]
+        [InlineData(null, new object[0])]
+        public void SetArgumentsNull(object[] collection, object[] set)
+        {
+            Action act = () => collection.MustNotContain(set);
+
+            act.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact(DisplayName = "The caller can specify a custom message for the set overload that MustNotContain must inject instead of the default one.")]
+        public void SetCustomMessage()
+        {
+            const string message = "Thou shall not have those items!";
+
+            Action act = () => new[] { 'a', 'b' }.MustNotContain(new[] { 'a' }, message: message);
+
+            act.ShouldThrow<CollectionException>()
+               .And.Message.Should().Contain(message);
+        }
+
+        [Fact(DisplayName = "The caller can specify a custom exception for the set overload that MustNotContain must raise instead of the default one.")]
+        public void SetCustomException()
+        {
+            var exception = new Exception();
+
+            Action act = () => new[] { 'a', 'b' }.MustNotContain(new[] { 'a' }, exception: exception);
 
             act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
         }

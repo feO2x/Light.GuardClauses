@@ -279,7 +279,8 @@ namespace Light.GuardClauses
         ///     The message that will be injected into the <see cref="CollectionException" /> or <see cref="ArgumentNullException" />.
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is not a superset of <paramref name="subset" /> (optional). Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
+        ///     The exception that is thrown when <paramref name="parameter" /> is not a superset of <paramref name="subset" /> (optional).
+        ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="CollectionException">
         ///     Thrown when there is any item of <paramref name="subset" /> that <paramref name="parameter" /> does not contain and no <paramref name="exception" /> is specified.
@@ -315,6 +316,46 @@ namespace Light.GuardClauses
         public static void MustContain<T>(this IEnumerable<T> parameter, params T[] subset)
         {
             MustContain(parameter, (IEnumerable<T>) subset);
+        }
+
+        /// <summary>
+        ///     Ensures that the collection does not contain the specified set of values, or otherwise throws a <see cref="CollectionException" />. This method is not aware of duplicates.
+        /// </summary>
+        /// <typeparam name="T">The type of the items of the collection.</typeparam>
+        /// <param name="parameter">The collection to be checked.</param>
+        /// <param name="set">The set that must not be part of the collection.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> or <see cref="ArgumentNullException" />.</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> contains any items of <paramref name="set" /> (optional).
+        ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> contains any items of <paramref name="set" /> and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified or Thrown when <paramref name="set" /> is null.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustNotContain<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Exception exception = null)
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            parameter.MustNotBeNull(parameterName, message, exception);
+            set.MustNotBeNull(nameof(set), "You called MustNotContain wrongly by specifying set as null.");
+
+            if (set.Any(parameter.Contains))
+                throw exception ?? new CollectionException(message ?? $"{parameterName ?? "The collection"} must not contain any of the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(set)}{Environment.NewLine}{Environment.NewLine}The actual content of the collection is:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
+            // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
+        ///     Ensures that the collection does not contain the specified set of values, or otherwise throws a <see cref="CollectionException" />. This method is not aware of duplicates and uses the default exception.
+        /// </summary>
+        /// <typeparam name="T">The type of the items of the collection.</typeparam>
+        /// <param name="parameter">The collection to be checked.</param>
+        /// <param name="set">The set that must not be part of the collection.</param>
+        /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> contains any items of <paramref name="set" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when any of the parameters is null.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustNotContain<T>(this IEnumerable<T> parameter, params T[] set)
+        {
+            MustNotContain(parameter, (IEnumerable<T>) set);
         }
     }
 }
