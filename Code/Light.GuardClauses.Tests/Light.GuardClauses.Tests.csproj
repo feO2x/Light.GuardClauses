@@ -95,6 +95,7 @@
     <Compile Include="MustNotContainTests.cs" />
     <Compile Include="MustNotHaveKeyTests.cs" />
     <Compile Include="MustNotHaveValueTests.cs" />
+    <Compile Include="NotNullTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RangeTests.cs" />
     <Compile Include="ThatTests.cs" />

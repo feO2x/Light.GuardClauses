@@ -59,6 +59,7 @@
     <Compile Include="Exceptions\StringIsOnlyWhiteSpaceException.cs" />
     <Compile Include="Exceptions\TypeMismatchException.cs" />
     <Compile Include="FrameworkExtensions\Equality.cs" />
+    <Compile Include="NotNull.cs" />
     <Compile Include="FrameworkExtensions\StringBuilderExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Range.cs" />
