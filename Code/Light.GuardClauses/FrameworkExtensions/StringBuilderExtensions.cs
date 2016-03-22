@@ -12,6 +12,11 @@ namespace Light.GuardClauses.FrameworkExtensions
     public static class StringBuilderExtensions
     {
         /// <summary>
+        ///     Gets the default NewLineSeparator for <see cref="AppendItems{T}" /> and <see cref="AppendKeyValuePairs{TKey,TValue}" />. This value is ",{Environment.NewLine}".
+        /// </summary>
+        public static readonly string DefaultNewLineSeparator = ',' + Environment.NewLine;
+
+        /// <summary>
         ///     Appends the string representations of the specified items to the string builder.
         /// </summary>
         /// <typeparam name="T">The type of the <paramref name="items" />.</typeparam>
@@ -26,7 +31,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         ///     empty. Defaults to "empty collection".
         /// </param>
         /// <returns>The string builder to enable method chaining.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when any of the parameters but <paramref name="emptyCollectionText"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when any of the parameters but <paramref name="emptyCollectionText" /> is null.</exception>
         public static StringBuilder AppendItems<T>(this StringBuilder stringBuilder, IEnumerable<T> items, string itemSeparator = ", ", string emptyCollectionText = "empty collection")
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -56,7 +61,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
-        /// Appends the string representation of the specified items to the string builder, using <see cref="DefaultNewLineSeparator"/> after each item but the last one, and the default empty collection text.
+        ///     Appends the string representation of the specified items to the string builder, using <see cref="DefaultNewLineSeparator" /> after each item but the last one, and the default empty collection text.
         /// </summary>
         /// <typeparam name="T">The type of the <paramref name="items" />.</typeparam>
         /// <param name="stringBuilder">The string builder where the items will be appended to.</param>
@@ -76,15 +81,13 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <param name="stringBuilder">The string builder where the pairs will be appended to.</param>
         /// <param name="dictionary">The dictionary whose keys and values will be appended.</param>
         /// <param name="pairSeparator">
-        ///     The characters used to separate the entries. Defaults to ", " and is not appended after the
-        ///     last key-value-pair.
+        ///     The characters used to separate the entries. Defaults to ", " and is not appended after the last key-value-pair.
         /// </param>
         /// <param name="emptyDictionaryText">
-        ///     The text that is appended to the string builder when <paramref name="dictionary" />
-        ///     is empty. Defaults to "empty dictionary".
+        ///     The text that is appended to the string builder when <paramref name="dictionary" /> is empty. Defaults to "empty dictionary".
         /// </param>
         /// <returns>The string builder to enable method chaining.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when any of the parameters but <paramref name="emptyDictionaryText"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when any of the parameters but <paramref name="emptyDictionaryText" /> is null.</exception>
         public static StringBuilder AppendKeyValuePairs<TKey, TValue>(this StringBuilder stringBuilder, IDictionary<TKey, TValue> dictionary, string pairSeparator = ", ", string emptyDictionaryText = "empty dictionary")
         {
             stringBuilder.MustNotBeNull(nameof(stringBuilder));
@@ -113,7 +116,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
-        /// Appends the string representation of the keys and values of the specified dictionary to the string builder, using <see cref="DefaultNewLineSeparator"/> after each pair but the last one, and the default empty dictionary text.
+        ///     Appends the string representation of the keys and values of the specified dictionary to the string builder, using <see cref="DefaultNewLineSeparator" /> after each pair but the last one, and the default empty dictionary text.
         /// </summary>
         /// <typeparam name="TKey">The key type of the dictionary.</typeparam>
         /// <typeparam name="TValue">The value type of the dictionary.</typeparam>
@@ -137,10 +140,5 @@ namespace Light.GuardClauses.FrameworkExtensions
         {
             return item == null ? nullText : item.ToString();
         }
-
-        /// <summary>
-        /// Gets the default NewLineSeparator for <see cref="AppendItems{T}"/> and <see cref="AppendKeyValuePairs{TKey,TValue}"/>. This value is ",{Environment.NewLine}".
-        /// </summary>
-        public static readonly string DefaultNewLineSeparator = ',' + Environment.NewLine;
     }
 }

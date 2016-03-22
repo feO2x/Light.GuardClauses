@@ -16,21 +16,17 @@ namespace Light.GuardClauses
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="ArgumentNullException" /> or
-        ///     <see cref="EmptyStringException" /> (optional).
+        ///     The message that will be injected into the <see cref="ArgumentNullException" /> or <see cref="EmptyStringException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is either null or empty (optional). Please
-        ///     note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify
-        ///     exception.
+        ///     The exception that is thrown when <paramref name="parameter" /> is either null or empty (optional). 
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no
-        ///     <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="EmptyStringException">
-        ///     Thrown when <paramref name="parameter" /> is empty and no
-        ///     <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotBeNullOrEmpty(this string parameter, string parameterName = null, string message = null, Exception exception = null)
@@ -48,25 +44,20 @@ namespace Light.GuardClauses
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="ArgumentNullException" />, or
-        ///     the <see cref="EmptyStringException" />, or  the <see cref="StringIsOnlyWhiteSpaceException" /> (optional).
+        ///     The message that will be injected into the <see cref="ArgumentNullException" />, or the <see cref="EmptyStringException" />, or  the <see cref="StringIsOnlyWhiteSpaceException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is either null, empty, or
-        ///     whitespace (optional). Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both
-        ///     ignored when you specify exception.
+        ///     The exception that is thrown when <paramref name="parameter" /> is either null, empty, or whitespace (optional). 
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no
-        ///     <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="EmptyStringException">
-        ///     Thrown when <paramref name="parameter" /> is empty and no
-        ///     <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="StringIsOnlyWhiteSpaceException">
-        ///     Thrown when <paramref name="parameter" /> contains only whitespace and no <paramref name="exception" /> is
-        ///     specified.
+        ///     Thrown when <paramref name="parameter" /> contains only whitespace and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotBeNullOrWhiteSpace(this string parameter, string parameterName = null, string message = null, Exception exception = null)
@@ -83,21 +74,18 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> matches the specified regular expression, or otherwise throws an
-        ///     <see cref="StringDoesNotMatchException" />.
+        ///     Ensures that <paramref name="parameter" /> matches the specified regular expression, or otherwise throws an <see cref="StringDoesNotMatchException" />.
         /// </summary>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="pattern">The regular expression used to evaluate <paramref name="parameter" />.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="StringDoesNotMatchException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> does not match the
-        ///     <paramref name="pattern" /> (optional). Please note that <paramref name="message" /> and
-        ///     <paramref name="parameterName" /> are both ignored when you specify exception.
+        ///     The exception that is thrown when <paramref name="parameter" /> does not match the <paramref name="pattern" /> (optional). 
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="StringDoesNotMatchException">
-        ///     Thrown when <paramref name="parameter" /> does not match the
-        ///     <paramref name="pattern" /> and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> does not match the <paramref name="pattern" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="pattern" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
@@ -111,32 +99,26 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> contains the specified text, or otherwise throws a
-        ///     <see cref="StringException" />.
+        ///     Ensures that <paramref name="parameter" /> contains the specified text, or otherwise throws a <see cref="StringException" />.
         /// </summary>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="text">The text that must be contained in <paramref name="parameter" />.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="ignoreCaseSensitivity">
-        ///     The value indicating whether the two strings should be compared without regarding
-        ///     case-sensitivity (defaults to false).
+        ///     The value indicating whether the two strings should be compared without regarding case-sensitivity (defaults to false).
         /// </param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="StringException" /> or
-        ///     <see cref="ArgumentNullException" /> (optional).
+        ///     The message that will be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> does not contain the
-        ///     specified text (optional). Please note that <paramref name="message" /> and
-        ///     <paramref name="parameterName" /> are both ignored when you specify exception.
+        ///     The exception that is thrown when <paramref name="parameter" /> does not contain the specified text (optional). 
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="StringException">
-        ///     Thrown when <paramref name="parameter" /> does not contain the specified text and no
-        ///     <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> does not contain the specified text and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no
-        ///     <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
         ///     or
         ///     Thrown when <paramref name="text" /> is null.
         /// </exception>
@@ -159,34 +141,26 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> does not contain the specified text, or otherwise throws a
-        ///     <see cref="StringException" />.
+        ///     Ensures that <paramref name="parameter" /> does not contain the specified text, or otherwise throws a <see cref="StringException" />.
         /// </summary>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="text">The text that should not be part of <paramref name="parameter" />.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="ignoreCaseSensitivity">
-        ///     The value indicating whether the two strings should be compared without regarding
-        ///     case-sensitivity (defaults to false).
+        ///     The value indicating whether the two strings should be compared without regarding case-sensitivity (defaults to false).
         /// </param>
         /// <param name="message">
-        ///     The message that should be injected into the <see cref="StringException" /> or
-        ///     <see cref="ArgumentNullException" /> (optional).
+        ///     The message that should be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> does contain the
-        ///     specified text (optional). Please note that <paramref name="message" /> and
-        ///     <paramref name="parameterName" /> are both ignored when you specify exception.
+        ///     The exception that is thrown when <paramref name="parameter" /> does contain the specified text (optional). 
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="StringException">
-        ///     Thrown when <paramref name="parameter" /> contains <paramref name="text" />
-        ///     an no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> contains <paramref name="text" /> an no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no
-        ///     <paramref name="exception" /> is specified
-        ///     or
-        ///     Thrown when <paramref name="text" /> is null.
+        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified or Thrown when <paramref name="text" /> is null.
         /// </exception>
         /// <exception cref="EmptyStringException">Thrown when <paramref name="text" /> is an empty string.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
@@ -207,38 +181,29 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> is a substring of <paramref name="text" />, or otherwise throws a
-        ///     <see cref="StringException" />.
+        ///     Ensures that <paramref name="parameter" /> is a substring of <paramref name="text" />, or otherwise throws a <see cref="StringException" />.
         /// </summary>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="text">The text that <paramref name="parameter" /> is compared against.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="ignoreCaseSensitivity">
-        ///     The value indicating whether the two strings should be compared without regarding
-        ///     case-sensitivity (defaults to false).
+        ///     The value indicating whether the two strings should be compared without regarding case-sensitivity (defaults to false).
         /// </param>
         /// <param name="message">
-        ///     The message that should be injected into the <see cref="StringException" /> or
-        ///     <see cref="ArgumentNullException" /> for <paramref name="parameter" /> (optional).
+        ///     The message that should be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> for <paramref name="parameter" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is no substring of the
-        ///     specified text (optional). Please note that <paramref name="message" /> and
-        ///     <paramref name="parameterName" /> are both ignored when you specify exception.
+        ///     The exception that is thrown when <paramref name="parameter" /> is no substring of the specified text (optional). 
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="StringException">
-        ///     Thrown when <paramref name="parameter" /> is not a substring of
-        ///     <paramref name="text" /> and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is not a substring of <paramref name="text" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="text" /> is null.
-        ///     or
-        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="text" /> is null or Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="EmptyStringException">
-        ///     Thrown when <paramref name="text" /> is an empty string
-        ///     or
-        ///     Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="text" /> is an empty string or Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Exception exception = null)
@@ -259,38 +224,29 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> is not a substring of <paramref name="text" />, or otherwise throws a
-        ///     <see cref="StringException" />.
+        ///     Ensures that <paramref name="parameter" /> is not a substring of <paramref name="text" />, or otherwise throws a <see cref="StringException" />.
         /// </summary>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="text">The text <paramref name="parameter" /> is compared with.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="ignoreCaseSensitivity">
-        ///     The value indicating whether the two strings should be compared without regarding
-        ///     case-sensitivity (defaults to false).
+        ///     The value indicating whether the two strings should be compared without regarding case-sensitivity (defaults to false).
         /// </param>
         /// <param name="message">
-        ///     The message that should be injected into the <see cref="StringException" /> or
-        ///     <see cref="ArgumentNullException" /> for <paramref name="parameter" /> (optional).
+        ///     The message that should be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> for <paramref name="parameter" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is a substring of the
-        ///     specified text (optional). Please note that <paramref name="message" /> and
-        ///     <paramref name="parameterName" /> are both ignored when you specify exception.
+        ///     The exception that is thrown when <paramref name="parameter" /> is a substring of the specified text (optional). 
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="StringException">
-        ///     Thrown when <paramref name="parameter" /> is a substring of <paramref name="text" />
-        ///     and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is a substring of <paramref name="text" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="text" /> is null.
-        ///     or
-        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="text" /> is null or Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="EmptyStringException">
-        ///     Thrown when <paramref name="text" /> is an empty string
-        ///     or
-        ///     Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="text" /> is an empty string or Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Exception exception = null)
