@@ -36,8 +36,7 @@ namespace Light.GuardClauses
         /// <param name="isFromInclusive">The value indicating whether <paramref name="from" /> is part of the range.</param>
         /// <param name="isToInclusive">The value indicating whether <paramref name="to" /> is part of the range.</param>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///     Thrown when <paramref name="to" /> is less than <paramref name="from" />
-        ///     (and COMPILE_ASSERTIONS is activated in build settings).
+        ///     Thrown when <paramref name="to" /> is less than <paramref name="from" />.
         /// </exception>
         public Range(T from, T to, bool isFromInclusive, bool isToInclusive)
         {
@@ -53,7 +52,7 @@ namespace Light.GuardClauses
         ///     Checks if the specified <paramref name="value" /> is within range.
         /// </summary>
         /// <param name="value">The value to be checked.</param>
-        /// <returns><c>true</c> if value is within range, otherwise <c>false</c>.</returns>
+        /// <returns>True if value is within range, otherwise false.</returns>
         public bool IsValueWithinRange(T value)
         {
             var expectedLowerBoundaryResult = IsFromInclusive ? 0 : 1;
@@ -71,8 +70,8 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Use this method to create a Range in a fluent style using method chaining. Defines the lower boundary as an
-        ///     inclusive value.
+        ///     Use this method to create a Range in a fluent style using method chaining. 
+        ///     Defines the lower boundary as an inclusive value.
         /// </summary>
         /// <param name="value">The value that indicates the inclusive lower boundary of the resulting Range.</param>
         /// <returns>A value you can use to fluently define the upper boundary of a new Range.</returns>
@@ -82,8 +81,8 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Use this method to create a Range in a fluent style using method chaining. Defines the lower boundary as an
-        ///     exclusive value.
+        ///     Use this method to create a Range in a fluent style using method chaining. 
+        ///  Defines the lower boundary as an exclusive value.
         /// </summary>
         /// <param name="value">The value that indicates the exclusive lower boundary of the resulting Range.</param>
         /// <returns>A value you can use to fluently define the upper boundary of a new Range.</returns>
@@ -112,14 +111,13 @@ namespace Light.GuardClauses
             }
 
             /// <summary>
-            ///     Use this method to create a Range in a fluent style using method chaining. Defines the upper boundary as an
-            ///     exclusive value.
+            ///     Use this method to create a Range in a fluent style using method chaining. 
+            ///     Defines the upper boundary as an exclusive value.
             /// </summary>
             /// <param name="value">The value that indicates the exclusive upper boundary of the resulting Range.</param>
             /// <returns>A new range with the specified upper and lower boundaries.</returns>
             /// <exception cref="ArgumentOutOfRangeException">
-            ///     Thrown when <paramref name="value" /> is less than the lower boundary value
-            ///     (and COMPILE_ASSERTIONS is activated in build settings).
+            ///     Thrown when <paramref name="value" /> is less than the lower boundary value.
             /// </exception>
             public Range<T> ToExclusive(T value)
             {
@@ -127,14 +125,13 @@ namespace Light.GuardClauses
             }
 
             /// <summary>
-            ///     Use this method to create a Range in a fluent style using method chaining. Defines the upper boundary as an
-            ///     exclusive value.
+            ///     Use this method to create a Range in a fluent style using method chaining. 
+            ///     Defines the upper boundary as an inclusive value.
             /// </summary>
             /// <param name="value">The value that indicates the inclusive upper boundary of the resulting Range.</param>
             /// <returns>A new range with the specified upper and lower boundaries.</returns>
             /// <exception cref="ArgumentOutOfRangeException">
-            ///     Thrown when <paramref name="value" /> is less than the lower boundary value
-            ///     (and COMPILE_ASSERTIONS is activated in build settings).
+            ///     Thrown when <paramref name="value" /> is less than the lower boundary value.
             /// </exception>
             public Range<T> ToInclusive(T value)
             {
