@@ -33,7 +33,7 @@ namespace Light.GuardClauses.Tests
 
             var stringBuilder = new StringBuilder("The following methods are not marked with [Conditional(Check.CompileAssertionsSymbol)]:").AppendLine();
             // ReSharper disable once PossibleNullReferenceException
-            stringBuilder.AppendItems(methodsWithoutConditionalAttribute.Select(m => $"{m.DeclaringType.Name}.{m.Name}").ToList(), $",{Environment.NewLine}");
+            stringBuilder.AppendItemsWithNewLine(methodsWithoutConditionalAttribute.Select(m => $"{m.DeclaringType.Name}.{m.Name}").ToList());
             throw new Exception(stringBuilder.ToString());
         }
     }
