@@ -14,8 +14,7 @@ namespace Light.GuardClauses
     public static class EnumerableAssertions
     {
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> is one of the specified <paramref name="items" />, or otherwise throws a
-        ///     <see cref="ArgumentOutOfRangeException" />.
+        ///     Ensures that <paramref name="parameter" /> is one of the specified <paramref name="items" />, or otherwise throws a <see cref="ArgumentOutOfRangeException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -23,13 +22,11 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that is thrown when the specified <paramref name="parameter" /> is not part of
-        ///     <paramref name="items" /> (optional). Please note that <paramref name="message" /> and
-        ///     <paramref name="parameterName" /> are both ignored when you specify exception.
+        ///     The exception that is thrown when the specified <paramref name="parameter" /> is not part of <paramref name="items" /> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///     Thrown when <paramref name="parameter" /> is not part of <paramref name="items" /> and no
-        ///     <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is not part of <paramref name="items" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="items" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
@@ -44,8 +41,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> is not one of the specified <paramref name="items" />, or otherwise
-        ///     throws a <see cref="ArgumentOutOfRangeException" />.
+        ///     Ensures that <paramref name="parameter" /> is not one of the specified <paramref name="items" />, or otherwise throws a <see cref="ArgumentOutOfRangeException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -53,13 +49,11 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that is thrown when the specified <paramref name="parameter" /> is part of
-        ///     <paramref name="items" /> (optional). Please note that <paramref name="message" /> and
-        ///     <paramref name="parameterName" /> are both ignored when you specify exception.
+        ///     The exception that is thrown when the specified <paramref name="parameter" /> is part of <paramref name="items" /> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///     Thrown when <paramref name="parameter" /> is part of <paramref name="items" /> and no <paramref name="exception" />
-        ///     is specified.
+        ///     Thrown when <paramref name="parameter" /> is part of <paramref name="items" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="items" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
@@ -80,21 +74,17 @@ namespace Light.GuardClauses
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="ArgumentNullException" /> or the
-        ///     <see cref="EmptyCollectionException" /> (optional).
+        ///     The message that will be injected into the <see cref="ArgumentNullException" /> or the <see cref="EmptyCollectionException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when the specified <paramref name="parameter" /> is null or empty
-        ///     (optional). Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored
-        ///     when you specify exception.
+        ///     The exception that is thrown when the specified <paramref name="parameter" /> is null or empty (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no
-        ///     <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="EmptyCollectionException">
-        ///     Thrown when <paramref name="parameter" /> is empty and no
-        ///     <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotBeNullOrEmpty<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Exception exception = null)
@@ -114,23 +104,23 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that is thrown when the specified <paramref name="parameter" /> does not have
-        ///     unique items (optional). Please note that <paramref name="message" /> and <paramref name="parameterName" /> are
-        ///     both ignored when you specify exception.
+        ///     The exception that is thrown when the specified <paramref name="parameter" /> does not have unique items (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="CollectionException">
-        ///     Thrown when <paramref name="parameter" /> has at least two equal items in it and
-        ///     no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> has at least two equal items in it and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        /// <exception cref="EmptyCollectionException">Thrown when <paramref name="parameter" /> has no items.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustHaveUniqueItems<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Exception exception = null)
+        public static void MustHaveNoDuplicates<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Exception exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            parameter.MustNotBeNullOrEmpty(parameterName);
+            parameter.MustNotBeNull(parameterName, message, exception);
 
             var count = parameter.Count();
+            if (count == 0)
+                return;
+
             for (var i = 0; i < count; i++)
             {
                 var itemToCompare = parameter.ElementAt(i);
@@ -146,28 +136,23 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified collection does not contain any item that is null, or otherwise throws a
-        ///     <see cref="CollectionException" />.
+        ///     Ensures that the specified collection does not contain any item that is null, or otherwise throws a <see cref="CollectionException" />.
         /// </summary>
         /// <typeparam name="T">The type of the items in the collection. This must be a Reference Type.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="CollectionException" />
-        ///     (optional).
+        ///     The message that will be injected into the <see cref="CollectionException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when the specified <paramref name="parameter" /> has at least one
-        ///     item that is null (optional). Please note that <paramref name="message" /> and <paramref name="parameterName" />
-        ///     are both ignored when you specify exception.
+        ///     The exception that is thrown when the specified <paramref name="parameter" /> has at least one item that is null (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="CollectionException">
-        ///     Thrown when <paramref name="parameter" />contains at least one item that is null
-        ///     and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" />contains at least one item that is null and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no
-        ///     <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotContainNull<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Exception exception = null) where T : class
@@ -188,29 +173,24 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the collection contains the specified <paramref name="item" />, or otherwise throws a
-        ///     <see cref="CollectionException" />.
+        ///     Ensures that the collection contains the specified <paramref name="item" />, or otherwise throws a <see cref="CollectionException" />.
         /// </summary>
         /// <typeparam name="T">The type of the items of the collection.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="item">The item that should be part of the collection's items.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="StringException" /> or
-        ///     <see cref="ArgumentNullException" /> (optional).
+        ///     The message that will be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> does not contain
-        ///     <paramref name="item" /> (optional). Please note that <paramref name="parameterName" /> and
-        ///     <paramref name="message" /> are both ignored when you specify exception.
+        ///     The exception that is thrown when <paramref name="parameter" /> does not contain <paramref name="item" /> (optional).
+        ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="CollectionException">
-        ///     Thrown when <paramref name="parameter" /> does not contain the specified
-        ///     <paramref name="item" /> and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> does not contain the specified <paramref name="item" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no
-        ///     <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustContain<T>(this IEnumerable<T> parameter, T item, string parameterName = null, string message = null, Exception exception = null)
@@ -224,29 +204,24 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the collection does not contain the specified <paramref name="item" />, or otherwise throws a
-        ///     <see cref="CollectionException" />.
+        ///     Ensures that the collection does not contain the specified <paramref name="item" />, or otherwise throws a <see cref="CollectionException" />.
         /// </summary>
         /// <typeparam name="T">The type of the items of the collection.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="item">The item that should not be part of the collection's items.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="StringException" /> or
-        ///     <see cref="ArgumentNullException" /> (optional).
+        ///     The message that will be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> does contain
-        ///     <paramref name="item" /> (optional). Please note that <paramref name="parameterName" /> and
-        ///     <paramref name="message" /> are both ignored when you specify exception.
+        ///     The exception that is thrown when <paramref name="parameter" /> does contain <paramref name="item" /> (optional).
+        ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="CollectionException">
-        ///     Thrown when <paramref name="parameter" /> does contain the specified
-        ///     <paramref name="item" /> and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> does contain the specified <paramref name="item" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no
-        ///     <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotContain<T>(this IEnumerable<T> parameter, T item, string parameterName = null, string message = null, Exception exception = null)
@@ -260,30 +235,24 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified collection is a subset of <paramref name="superset" />, or otherwise throws a
-        ///     <see cref="CollectionException" />. This method is not aware of duplicates.
+        ///     Ensures that the specified collection is a subset of <paramref name="superset" />, or otherwise throws a <see cref="CollectionException" />. This method is not aware of duplicates.
         /// </summary>
         /// <typeparam name="T">The type of the items of the collection.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="superset">The collection that <paramref name="parameter" /> must be a subset of.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that is injected into the <see cref="CollectionException" /> or
-        ///     <see cref="ArgumentNullException" />.
+        ///     The message that is injected into the <see cref="CollectionException" /> or <see cref="ArgumentNullException" />.
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is not a subset of
-        ///     <paramref name="superset" /> (optional). Please note that <paramref name="parameterName" /> and
-        ///     <paramref name="message" /> are both ignored when you specify exception.
+        ///     The exception that is thrown when <paramref name="parameter" /> is not a subset of <paramref name="superset" /> (optional).
+        ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="CollectionException">
-        ///     Thrown when <paramref name="parameter" /> is not part of
-        ///     <paramref name="superset" /> and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is not part of <paramref name="superset" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified
-        ///     or
-        ///     Thrown when <paramref name="superset" /> is null.
+        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified or Thrown when <paramref name="superset" /> is null.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeSubsetOf<T>(this IEnumerable<T> parameter, IEnumerable<T> superset, string parameterName = null, string message = null, Exception exception = null)

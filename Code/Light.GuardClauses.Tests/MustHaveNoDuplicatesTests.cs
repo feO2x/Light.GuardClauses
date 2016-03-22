@@ -6,13 +6,13 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustHaveUniqueItems
+    public sealed class MustHaveNoDuplicatesTests
     {
         [Theory(DisplayName = "MustHaveUniqueItems must throw an exception when the collection has duplicates.")]
         [MemberData(nameof(DuplicateItemsTestData))]
         public void DuplicateItems<T>(T[] collection, int duplicateIndex)
         {
-            Action act = () => collection.MustHaveUniqueItems(nameof(collection));
+            Action act = () => collection.MustHaveNoDuplicates(nameof(collection));
 
             act.ShouldThrow<CollectionException>()
                .And.Message.Should().Contain($"{nameof(collection)} must be a collection with unique items, but there is a duplicate at index {duplicateIndex}.");
@@ -30,7 +30,7 @@ namespace Light.GuardClauses.Tests
         [MemberData(nameof(UniqueItemsTestData))]
         public void UniqueItems<T>(T[] collection)
         {
-            Action act = () => collection.MustHaveUniqueItems(nameof(collection));
+            Action act = () => collection.MustHaveNoDuplicates(nameof(collection));
 
             act.ShouldNotThrow();
         }
@@ -47,7 +47,7 @@ namespace Light.GuardClauses.Tests
         {
             const string message = "Thou shall have unique items!";
 
-            Action act = () => new[] { 1, 2, 1 }.MustHaveUniqueItems(message: message);
+            Action act = () => new[] { 1, 2, 1 }.MustHaveNoDuplicates(message: message);
 
             act.ShouldThrow<CollectionException>()
                .And.Message.Should().Contain(message);
@@ -58,7 +58,7 @@ namespace Light.GuardClauses.Tests
         {
             var exception = new Exception();
 
-            Action act = () => new[] { 1, 2, 1 }.MustHaveUniqueItems(exception: exception);
+            Action act = () => new[] { 1, 2, 1 }.MustHaveNoDuplicates(exception: exception);
 
             act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
         }
