@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using FluentAssertions;
+using Light.GuardClauses.FrameworkExtensions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
@@ -10,19 +12,19 @@ namespace Light.GuardClauses.Tests
     {
         [Theory(DisplayName = "MustBeKeyOf must throw an exception when the specified value is not within the keys of the given dictionary.")]
         [MemberData(nameof(NotInItemsTestData))]
-        public void NotInItems(string value, Dictionary<string, string> dictionary, string itemsString)
+        public void NotInItems(string value, Dictionary<string, string> dictionary)
         {
             Action act = () => value.MustBeKeyOf(dictionary, nameof(value));
 
             act.ShouldThrow<ArgumentOutOfRangeException>()
-               .And.Message.Should().Contain($"{nameof(value)} must be one of the dictionary keys ({itemsString}), but you specified {value}.");
+               .And.Message.Should().Contain($"{nameof(value)} must be one of the dictionary keys{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(dictionary.Keys)}{Environment.NewLine}but you specified {value}.");
         }
 
         public static readonly TestData NotInItemsTestData =
             new[]
             {
-                new object[] { "A", new Dictionary<string, string> { ["B"] = "Hello", ["C"] = "World" }, "B, C" },
-                new object[] { "42", new Dictionary<string, string> { ["1"] = "a", ["2"] = "y" }, "1, 2" }
+                new object[] { "A", new Dictionary<string, string> { ["B"] = "Hello", ["C"] = "World" } },
+                new object[] { "42", new Dictionary<string, string> { ["1"] = "a", ["2"] = "y" } }
             };
 
         [Theory(DisplayName = "MustBeKeyOf must not throw an exception when the specified value is one of the keys in the given dictionary.")]

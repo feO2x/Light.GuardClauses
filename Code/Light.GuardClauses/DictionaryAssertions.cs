@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using Light.GuardClauses.FrameworkExtensions;
 
@@ -17,8 +16,8 @@ namespace Light.GuardClauses
         ///     Ensures that <paramref name="parameter" /> is a key of the specified <paramref name="dictionary" />, or otherwise
         ///     throws an <see cref="ArgumentOutOfRangeException" />.
         /// </summary>
-        /// <typeparam name="TKey">The key type of the <paramref name="dictionary" />.</typeparam>
-        /// <typeparam name="TValue">The value type of the <paramref name="dictionary" />.</typeparam>
+        /// <typeparam name="TKey">The key type of the dictionary.</typeparam>
+        /// <typeparam name="TValue">The value type of the dictionary.</typeparam>
         /// <param name="parameter">The value that should be key of the <paramref name="dictionary" />.</param>
         /// <param name="dictionary">The dictionary whose keys are used for checking.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
@@ -43,7 +42,36 @@ namespace Light.GuardClauses
             if (dictionary.ContainsKey(parameter))
                 return;
 
-            throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be one of the dictionary keys ({new StringBuilder().AppendItems(dictionary.Keys.ToList())}), but you specified {parameter}.");
+            throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be one of the dictionary keys{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(dictionary.Keys)}{Environment.NewLine}but you specified {parameter}.");
+        }
+
+        /// <summary>
+        ///     Ensures that <paramref name="parameter" /> is not a key of the specified <paramref name="dictionary" />, or
+        ///     otherwise throws a <see cref="ArgumentOutOfRangeException" />.
+        /// </summary>
+        /// <typeparam name="TKey">The key type of the dictionary.</typeparam>
+        /// <typeparam name="TValue">The value type of the dictionary.</typeparam>
+        /// <param name="parameter">The value that should not be key of <paramref name="dictionary" />.</param>
+        /// <param name="dictionary">The dictionary whose keys are used for checking.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when the specified <paramref name="parameter" /> is a key of
+        ///     <paramref name="dictionary" /> (optional). Please note that <paramref name="message" /> and
+        ///     <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     Thrown when <paramref name="parameter" /> is a key of
+        ///     <paramref name="dictionary" /> and no <paramref name="exception" /> is specified.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="dictionary" /> is null.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustNotBeKeyOf<TKey, TValue>(this TKey parameter, IDictionary<TKey, TValue> dictionary, string parameterName = null, string message = null, Exception exception = null)
+        {
+            dictionary.MustNotBeNull(nameof(dictionary), "You called MustNotBeKeyOf wrongly by specifying dictionary as null.");
+
+            if (dictionary.ContainsKey(parameter))
+                throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must not be one of the dictionary keys{Environment.NewLine}{new StringBuilder().AppenItemsWithNewLine(dictionary.Keys)}{Environment.NewLine}but you specified {parameter}");
         }
 
         /// <summary>
