@@ -9,7 +9,7 @@ using Light.GuardClauses.FrameworkExtensions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     The EnumerableAssertions class contains extension methods that apply assertions to collections.
+    ///     The EnumerableAssertions class contains extension methods that apply assertions to <see cref="IEnumerable{T}"/> instances.
     /// </summary>
     public static class EnumerableAssertions
     {
