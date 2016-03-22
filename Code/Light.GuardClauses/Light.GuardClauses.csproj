@@ -47,6 +47,7 @@
     <Compile Include="EqualityAssertions.cs" />
     <Compile Include="Exceptions\ArgumentNotNullException.cs" />
     <Compile Include="Exceptions\CollectionException.cs" />
+    <Compile Include="Exceptions\DictionaryException.cs" />
     <Compile Include="Exceptions\EmptyCollectionException.cs" />
     <Compile Include="Exceptions\EmptyGuidException.cs" />
     <Compile Include="Exceptions\EmptyStringException.cs" />
