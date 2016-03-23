@@ -16,7 +16,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => dictionary.MustNotHaveKey(key, nameof(dictionary));
 
             act.ShouldThrow<DictionaryException>()
-               .And.Message.Should().Contain($"{nameof(dictionary)} must not have key \"{key}\".");
+               .And.Message.Should().Contain($"{nameof(dictionary)} must not contain key \"{key}\".");
         }
 
         public static readonly TestData HasKeyData =

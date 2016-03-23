@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => dictionary.MustHaveKeys(keys, nameof(dictionary));
 
             act.ShouldThrow<KeyNotFoundException>()
-               .And.Message.Should().Contain($"{nameof(dictionary)} must have all of the following keys{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(keys)}{Environment.NewLine}but does not.");
+               .And.Message.Should().Contain($"{nameof(dictionary)} must contain all of the following keys:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(keys)}{Environment.NewLine}but does not.");
         }
 
         public static readonly TestData DoesNotHaveKeysData =
