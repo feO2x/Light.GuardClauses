@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 
 [assembly: AssemblyTitle("Light.GuardClauses")]
 [assembly: AssemblyDescription("A lightsweight library for expressive Guard Clauses with conditional compilation in C#.")]
@@ -7,3 +8,5 @@
 [assembly: AssemblyCopyright("Copyright © 2016 Kenny Pflug")]
 
 [assembly: AssemblyVersion("0.1.0")]
+[assembly: NeutralResourcesLanguage("en")]
+
