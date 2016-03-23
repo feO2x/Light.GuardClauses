@@ -13,7 +13,7 @@ namespace Light.GuardClauses.Exceptions
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="innerException">The exception that led to this one (optional).</param>
         public EmptyStringException(string parameterName, Exception innerException = null)
-            : base($"{parameterName} must not be an empty string, but you specified one.", parameterName, innerException) { }
+            : base($"{parameterName ?? "The value"} must not be an empty string, but you specified one.", parameterName, innerException) { }
 
         /// <summary>
         ///     Creates a new instance of <see cref="EmptyStringException" />.

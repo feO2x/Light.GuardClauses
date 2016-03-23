@@ -14,7 +14,7 @@ namespace Light.GuardClauses.Exceptions
         /// <param name="actualValue">The actual value of the Nullable.</param>
         /// <param name="innerException">The exception that led to this one (optional).</param>
         public NullableHasValueException(string parameterName, object actualValue, Exception innerException = null)
-            : base($"{parameterName} must have no value, but you specified a Nullable<T> with value {actualValue}.", parameterName, innerException) { }
+            : base($"{parameterName ?? "The Nullable"} must have no value, but you specified a Nullable with value {actualValue}.", parameterName, innerException) { }
 
         /// <summary>
         ///     Creates new instance of <see cref="NullableHasValueException" />.

@@ -16,7 +16,7 @@ namespace Light.GuardClauses.Exceptions
         /// <param name="regularExpression">The regular expression used for matching.</param>
         /// <param name="innerException">The exception that led to this one (optional).</param>
         public StringDoesNotMatchException(string parameterName, string actualValue, Regex regularExpression, Exception innerException = null)
-            : base($"{parameterName} must match the regular expression {regularExpression}, but you specified {actualValue}.", parameterName, innerException) { }
+            : base($"{parameterName ?? "The string"} must match the regular expression {regularExpression}, but you specified {actualValue}.", parameterName, innerException) { }
 
         /// <summary>
         ///     Creates a new instance of <see cref="StringDoesNotMatchException" />.

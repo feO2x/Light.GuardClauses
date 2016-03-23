@@ -7,13 +7,25 @@ namespace Light.GuardClauses.Tests
 {
     public sealed class MustNotBeNullTests
     {
-        [Fact(DisplayName = "MustNotBeNull must throw an exception when null is provided.")]
+        [Fact(DisplayName = "MustNotBeNull must throw an ArgumentNullException when null is provided.")]
         public void NullIsGiven()
         {
             Action act = () => DummyMethod<string>(null);
 
             act.ShouldThrow<ArgumentNullException>()
                .And.ParamName.Should().Be("someObject");
+        }
+
+        [Fact(DisplayName = "MustNotBeNull must provide a default message for the ArgumentNullException.")]
+        public void NullMessage()
+        {
+            object @object = null;
+
+            // ReSharper disable once ExpressionIsAlwaysNull
+            Action act = () => @object.MustNotBeNull(nameof(@object));
+
+            act.ShouldThrow<ArgumentNullException>()
+               .And.Message.Should().Contain($"{nameof(@object)} must not be null.");
         }
 
         [Theory(DisplayName = "MustNotBeNull must not throw an exception when the specified reference is not null.")]
