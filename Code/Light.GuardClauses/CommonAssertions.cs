@@ -28,7 +28,7 @@ namespace Light.GuardClauses
         public static void MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null, Exception exception = null) where T : class
         {
             if (parameter == null)
-                throw exception ?? new ArgumentNullException(parameterName, message);
+                throw exception ?? new ArgumentNullException(parameterName, message ?? $"{parameterName ?? "The value"} must not be null.");
         }
 
         /// <summary>
