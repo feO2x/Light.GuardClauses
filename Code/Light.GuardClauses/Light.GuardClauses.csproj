@@ -35,8 +35,18 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Light.GuardClauses.XML</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Public.Light.GuardClauses.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <None Include="Public.Light.GuardClauses.snk" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Check.cs" />
