@@ -16,6 +16,22 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// </summary>
         public static readonly string DefaultNewLineSeparator = ',' + Environment.NewLine;
 
+        private static Func<object, string> _useSurroundingCharactersForItem = UseQuotationMarksForNonPrimitiveTypes;
+
+        /// <summary>
+        ///     Gets or sets the delegate that determines which items are surrounded by special characters when <see cref="AppendItems{T}" /> or <see cref="AppendKeyValuePairs{TKey,TValue}" /> appends content to a string builder.
+        ///     This delegate point to the <see cref="UseQuotationMarksForNonPrimitiveTypes" /> method by default.
+        /// </summary>
+        public static Func<object, string> UseSurroundingCharactersForItem
+        {
+            get { return _useSurroundingCharactersForItem; }
+            set
+            {
+                value.MustNotBeNull();
+                _useSurroundingCharactersForItem = value;
+            }
+        }
+
         /// <summary>
         ///     Appends the string representations of the specified items to the string builder.
         /// </summary>
@@ -47,7 +63,10 @@ namespace Light.GuardClauses.FrameworkExtensions
             var currentIndex = 0;
             foreach (var itemToAppend in items)
             {
+                var surroundingCharacters = UseSurroundingCharactersForItem(itemToAppend);
+                stringBuilder.Append(surroundingCharacters);
                 stringBuilder.Append(itemToAppend.ToStringOrNull());
+                stringBuilder.Append(surroundingCharacters);
                 if (currentIndex < itemsCount - 1)
                     stringBuilder.Append(itemSeparator);
                 else
@@ -101,9 +120,17 @@ namespace Light.GuardClauses.FrameworkExtensions
             foreach (var keyValuePair in dictionary)
             {
                 stringBuilder.Append('[');
+                var keySurroundingCharacters = UseSurroundingCharactersForItem(keyValuePair.Key);
+                stringBuilder.Append(keySurroundingCharacters);
                 stringBuilder.Append(keyValuePair.Key);
+                stringBuilder.Append(keySurroundingCharacters);
                 stringBuilder.Append("] = ");
+
+                var valueSurroundingCharacters = UseSurroundingCharactersForItem(keyValuePair.Value);
+                stringBuilder.Append(valueSurroundingCharacters);
                 stringBuilder.Append(keyValuePair.Value.ToStringOrNull());
+                stringBuilder.Append(valueSurroundingCharacters);
+
                 if (currentIndex < dictionary.Count - 1)
                     stringBuilder.Append(pairSeparator);
                 else
@@ -139,6 +166,36 @@ namespace Light.GuardClauses.FrameworkExtensions
         public static string ToStringOrNull<T>(this T item, string nullText = "null")
         {
             return item == null ? nullText : item.ToString();
+        }
+
+        /// <summary>
+        ///     This method returns quotation marks for all types that are not primitive numerics (like e.g. int, long, short, uint, etc.) or types regarding dates and times (DateTime, DateTimeOffset, TimeSpan).
+        ///     For the latter types, an empty string is returned. This method is not supposed to be called by you directly, but is the default value for <see cref="UseSurroundingCharactersForItem" />.
+        /// </summary>
+        public static string UseQuotationMarksForNonPrimitiveTypes(object value)
+        {
+            if (value == null)
+                return string.Empty;
+
+            var type = value.GetType();
+            if (type == typeof (int) ||
+                type == typeof (long) ||
+                type == typeof (short) ||
+                type == typeof (sbyte) ||
+                type == typeof (uint) ||
+                type == typeof (ulong) ||
+                type == typeof (ushort) ||
+                type == typeof (byte) ||
+                type == typeof (bool) ||
+                type == typeof (double) ||
+                type == typeof (decimal) ||
+                type == typeof (float) ||
+                type == typeof (DateTime) ||
+                type == typeof (DateTimeOffset) ||
+                type == typeof (TimeSpan))
+                return string.Empty;
+
+            return "\"";
         }
     }
 }

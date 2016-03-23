@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
@@ -126,6 +127,45 @@ namespace Light.GuardClauses
 
             if (parameter.ContainsKey(key))
                 throw exception ?? new DictionaryException(message ?? $"{parameterName ?? "The dictionary"} must not have key \"{key}\".{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
+        }
+
+        /// <summary>
+        /// Ensures that the dictionary contains all the specified keys, or otherwise throws a <see cref="KeyNotFoundException"/>.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
+        /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
+        /// <param name="parameter">The dictionary to be checked.</param>
+        /// <param name="keys">The collection of keys that must be part of the dictionary.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="KeyNotFoundException"/> or <see cref="ArgumentNullException"/> (optional).</param>
+        /// <param name="exception">
+        /// The exception that is thrown when the specified <paramref name="parameter" /> does not contain any of the specified keys (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.</param>
+        /// <exception cref="KeyNotFoundException">Thrown when <paramref name="parameter"/> does not contain any of the specified <paramref name="keys"/> and no <paramref name="exception"/> is specified.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null and no <paramref name="exception"/> is specified or Thrown when <paramref name="keys"/> is null.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustHaveKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TKey> keys, string parameterName = null, string message = null, Exception exception = null)
+        {
+            parameter.MustNotBeNull(parameterName, message, exception);
+            // ReSharper disable PossibleMultipleEnumeration
+            keys.MustNotBeNull(nameof(keys), "You called MustHaveKeys wrongly by specifying keys as null.");
+
+            if (keys.Any(k => parameter.ContainsKey(k) == false))
+                throw exception ?? new KeyNotFoundException(message ?? $"{parameterName ?? "The dictionary"} must have all of the following keys{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(keys)}{Environment.NewLine}but does not.{Environment.NewLine}{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}");
+            // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
+        /// Ensures that the dictionary contains all the specified keys, or otherwise throws a <see cref="KeyNotFoundException"/>. This method uses the default exception.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
+        /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
+        /// <param name="parameter">The dictionary to be checked.</param>
+        /// <param name="keys">The collection of keys that must be part of the dictionary.</param>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustHaveKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, params TKey[] keys)
+        {
+            MustHaveKeys(parameter, (IEnumerable<TKey>)keys);
         }
     }
 }

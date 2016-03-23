@@ -76,6 +76,7 @@
     <Compile Include="MustBeTypeTests.cs" />
     <Compile Include="MustBeValidEnumValueTests.cs" />
     <Compile Include="MustContainTests.cs" />
+    <Compile Include="MustHaveKeysTests.cs" />
     <Compile Include="MustHaveNoDuplicatesTests.cs" />
     <Compile Include="MustHaveValueTests.cs" />
     <Compile Include="MustMatchTests.cs" />
