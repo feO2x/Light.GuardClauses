@@ -119,3 +119,7 @@ To be frank, this library is still young, but the code base is thoroughly tested
 Light.GuardClauses is a lightweight .NET solution for precondition checks, providing you with default exceptions for the most common cases and conditional compilation so that you can easily include or exclude your assertion calls when you build your project. This removes the clutter at the beginning of your parameterized methods.
 
 If you need to, you can also customize every assertion by providing custom messages or even your own exceptions - this way you have full control over your assertions. And you can easily extend Light.GuardClauses with your own methods.
+
+### Acknowledgements
+
+Light.GuardClauses is developed as part of the "iRescYou" research project, conducted at the [University Hospital of Regensburg](http://www.uniklinikum-regensburg.de/e/index.php) and the [University of Applied Sciences Regensburg](https://www.oth-regensburg.de/en.html), funded by the [Bavarian State Ministry of Health Care](http://www.stmgp.bayern.de/).
