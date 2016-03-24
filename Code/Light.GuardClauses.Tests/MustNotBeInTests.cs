@@ -1,10 +1,11 @@
 ﻿using FluentAssertions;
 using System;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustNotBeInTests
+    public sealed class MustNotBeInTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotBeIn must throw an exception when the specified value is inside of range (with inclusive lower boundary and exclusive upper boundary).")]
         [InlineData(1, 1, 5)]
@@ -50,25 +51,11 @@ namespace Light.GuardClauses.Tests
             act.ShouldNotThrow();
         }
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustNotBeIn must inject instead of the default one.")]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            const string message = "Though shall not be in range!";
+            testData.Add(new CustomExceptionTest(exception => 30.MustNotBeIn(Range<int>.FromInclusive(30).ToExclusive(35), exception: exception)));
 
-            Action act = () => 42.MustNotBeIn(Range<int>.FromInclusive(40).ToExclusive(50), message: message);
-
-            act.ShouldThrow<ArgumentOutOfRangeException>()
-               .And.Message.Should().Contain(message);
-        }
-
-        [Fact(DisplayName = "The caller can specify a custom exception that MustNotBeIn must raise instead of the default one.")]
-        public void CustomException()
-        {
-            var exception = new Exception();
-
-            Action act = () => 30.MustNotBeIn(Range<int>.FromInclusive(30).ToExclusive(35), exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            testData.Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => 42.MustNotBeIn(Range<int>.FromInclusive(40).ToExclusive(50), message: message)));
         }
     }
 }

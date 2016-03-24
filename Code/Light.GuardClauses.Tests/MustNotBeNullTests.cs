@@ -1,11 +1,12 @@
 ﻿using System;
 using FluentAssertions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustNotBeNullTests
+    public sealed class MustNotBeNullTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustNotBeNull must throw an ArgumentNullException when null is provided.")]
         public void NullIsGiven()
@@ -44,34 +45,16 @@ namespace Light.GuardClauses.Tests
                 new[] { new object() }
             };
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustNotBeNull must inject instead of the default one.")]
-        public void CustomMessage()
-        {
-            object someObject = null;
-            const string message = "Thou shall not be null!";
-
-            // ReSharper disable once ExpressionIsAlwaysNull
-            Action act = () => someObject.MustNotBeNull(message: message);
-
-            act.ShouldThrow<ArgumentNullException>()
-               .And.Message.Should().Be(message);
-        }
-
-        [Fact(DisplayName = "The caller can specify a custom exception that MustNotBeNull must raise instead of the default one.")]
-        public void CustomException()
-        {
-            object someObject = null;
-            var exception = new Exception();
-
-            // ReSharper disable once ExpressionIsAlwaysNull
-            Action act = () => someObject.MustNotBeNull(exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
-        }
-
         private static void DummyMethod<T>(T someObject) where T : class
         {
             someObject.MustNotBeNull(nameof(someObject));
+        }
+
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        {
+            testData.Add(new CustomExceptionTest(exception => ((object) null).MustNotBeNull(exception: exception)));
+
+            testData.Add(new CustomMessageTest<ArgumentNullException>(message => ((object) null).MustNotBeNull(message: message)));
         }
     }
 }

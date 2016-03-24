@@ -112,7 +112,7 @@ namespace Light.GuardClauses
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustHaveNoDuplicates<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Exception exception = null)
+        public static void MustNotContainDuplicates<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Exception exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName, message, exception);

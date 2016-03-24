@@ -1,11 +1,12 @@
 ﻿using System;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustNotHaveValueTests
+    public sealed class MustNotHaveValueTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustNotHaveValue must throw an exception when the specified Nullable<T> has a value.")]
         public void HasValue()
@@ -29,27 +30,11 @@ namespace Light.GuardClauses.Tests
             act.ShouldNotThrow();
         }
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustNotHaveValue must inject instead of the default one.")]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            double? value = 42.0;
-            const string message = "Thou shall not have a value!";
+            testData.Add(new CustomExceptionTest(exception => new int?(42).MustNotHaveValue(exception: exception)));
 
-            Action act = () => value.MustNotHaveValue(message: message);
-
-            act.ShouldThrow<NullableHasValueException>()
-               .And.Message.Should().Be(message);
-        }
-
-        [Fact(DisplayName = "The caller can specify a custom exception that MustNotHaveValue must raise instead of the default one.")]
-        public void CustomException()
-        {
-            int? value = 42;
-            var exception = new Exception();
-
-            Action act = () => value.MustNotHaveValue(exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            testData.Add(new CustomMessageTest<NullableHasValueException>(message => new double?(42.0).MustNotHaveValue(message: message)));
         }
     }
 }

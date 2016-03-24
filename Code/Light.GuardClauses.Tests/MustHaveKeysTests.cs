@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using FluentAssertions;
 using Light.GuardClauses.FrameworkExtensions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustHaveKeysTests
+    public sealed class MustHaveKeysTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustHaveKeys must throw a KeyNotFoundException when at least one of the specified keys is not present in the dictionary.")]
         [MemberData(nameof(DoesNotHaveKeysData))]
@@ -59,25 +60,23 @@ namespace Light.GuardClauses.Tests
                 new object[] { new Dictionary<char, object>(), null }
             };
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustHaveKeys must inject instead of the default one.")]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            const string message = "Thou shall have the keys!";
+            testData.Add(new CustomExceptionTest(exception => new Dictionary<char, object>().MustHaveKeys(new[] { 'a', 'b' }, exception: exception)));
+            testData.Add(new CustomExceptionTest(exception =>
+                                                 {
+                                                     Dictionary<char, object> dictionary = null;
+                                                     // ReSharper disable once ExpressionIsAlwaysNull
+                                                     dictionary.MustHaveKeys(new[] { 'a', 'b' }, exception: exception);
+                                                 }));
 
-            Action act = () => new Dictionary<char, object>().MustHaveKeys(new [] {'a', 'b'}, message: message);
-
-            act.ShouldThrow<KeyNotFoundException>()
-               .And.Message.Should().Contain(message);
-        }
-
-        [Fact(DisplayName = "The caller can specify a custom exception that MustHaveKeys must raise instead of the default one.")]
-        public void CustomException()
-        {
-            var exception = new Exception();
-
-            Action act = () => new Dictionary<char, object>().MustHaveKeys(new[] { 'a', 'b' }, exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            testData.Add(new CustomMessageTest<KeyNotFoundException>(message => new Dictionary<char, object>().MustHaveKeys(new[] { 'a', 'b' }, message: message)));
+            testData.Add(new CustomMessageTest<ArgumentNullException>(message =>
+                                                                      {
+                                                                          Dictionary<char, object> dictionary = null;
+                                                                          // ReSharper disable once ExpressionIsAlwaysNull
+                                                                          dictionary.MustHaveKeys(new[] { 'a', 'b' }, message: message);
+                                                                      }));
         }
     }
 }

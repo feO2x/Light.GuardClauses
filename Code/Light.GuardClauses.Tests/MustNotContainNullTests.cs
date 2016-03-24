@@ -1,12 +1,13 @@
 ﻿using System;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustNotContainNullTests
+    public sealed class MustNotContainNullTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotContainNull must throw an exception when the specified collection contains at least one item that is null.")]
         [MemberData(nameof(CollectionWithNullData))]
@@ -54,34 +55,14 @@ namespace Light.GuardClauses.Tests
                .And.ParamName.Should().Be(nameof(collection));
         }
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustNotContainNull must inject instead of the default one.")]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            const string message = "Thou shall not have null!";
+            testData.Add(new CustomExceptionTest(exception => new object[] { null }.MustNotContainNull(exception: exception)));
+            testData.Add(new CustomExceptionTest(exception => new[] { "This collection contains null", null }.MustNotContainNull(exception: exception)));
+            testData.Add(new CustomExceptionTest(exception => ((object[]) null).MustNotContainNull(exception: exception)));
 
-            Action act = () => new[] { "There is null", null }.MustNotContainNull(message: message);
-
-            act.ShouldThrow<CollectionException>()
-               .And.Message.Should().Contain(message);
+            testData.Add(new CustomMessageTest<CollectionException>(message => new[] { "This collection contains null", null }.MustNotContainNull(message: message)));
+            testData.Add(new CustomMessageTest<ArgumentNullException>(message => ((object[]) null).MustNotContainNull(message: message)));
         }
-
-        [Theory(DisplayName = "The caller can specify a custom exception that MustNotContainNull must raise instead of the default one.")]
-        [MemberData(nameof(CustomExceptionData))]
-        public void CustomException<T>(T[] invalidCollection) where T : class
-        {
-            var exception = new Exception();
-
-            Action act = () => invalidCollection.MustNotContainNull(exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
-        }
-
-        public static readonly TestData CustomExceptionData =
-            new[]
-            {
-                new object[] { new object[] { null } },
-                new object[] { new[] { "This collection contains null", null } },
-                new object[] { null }
-            };
     }
 }

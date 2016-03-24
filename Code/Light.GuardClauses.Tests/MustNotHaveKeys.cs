@@ -4,12 +4,13 @@ using System.Text;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustNotHaveKeys
+    public sealed class MustNotHaveKeys : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotHaveKeys must throw a DictionaryException when the dictionary contains any of the specified keys.")]
         [MemberData(nameof(HasKeysData))]
@@ -63,25 +64,13 @@ namespace Light.GuardClauses.Tests
                 new object[] { new Dictionary<char, object>(), null }
             };
 
-        [Fact]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            const string message = "Thou shall not have the keys!";
+            testData.Add(new CustomExceptionTest(exception => new Dictionary<char, string> { ['a'] = "What?" }.MustNotHaveKeys(new[] { 'a' }, exception: exception)));
+            testData.Add(new CustomExceptionTest(exception => ((Dictionary<char, string>) null).MustNotHaveKeys(new[] { 'a' }, exception: exception)));
 
-            Action act = () => new Dictionary<char, string> {['a'] = "What?"}.MustNotHaveKeys(new [] {'a'}, message: message);
-
-            act.ShouldThrow<DictionaryException>()
-               .And.Message.Should().Contain(message);
-        }
-
-        [Fact]
-        public void CustomException()
-        {
-            var exception = new Exception();
-
-            Action act = () => new Dictionary<char, string> { ['a'] = "What?" }.MustNotHaveKeys(new[] { 'a' }, exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            testData.Add(new CustomMessageTest<DictionaryException>(message => new Dictionary<char, string> { ['a'] = "What?" }.MustNotHaveKeys(new[] { 'a' }, message: message)));
+            testData.Add(new CustomMessageTest<ArgumentNullException>(message => ((Dictionary<char, string>) null).MustNotHaveKeys(new[] { 'a' }, message: message)));
         }
     }
 }

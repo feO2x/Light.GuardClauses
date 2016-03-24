@@ -1,11 +1,12 @@
 ﻿using System;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustBeNullTests
+    public sealed class MustBeNullTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustBeNull throws an exception when the specified value is not null.")]
         public void ArgumentNotNull()
@@ -29,27 +30,11 @@ namespace Light.GuardClauses.Tests
             act.ShouldNotThrow();
         }
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustBeNull must inject instead of the default one.")]
-        public void SpecifyMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            var @object = new object();
-            const string message = "Thou shall be null!";
+            testData.Add(new CustomExceptionTest(exception => new object().MustBeNull(exception: exception)));
 
-            Action act = () => @object.MustBeNull(message: message);
-
-            act.ShouldThrow<ArgumentNotNullException>()
-               .And.Message.Should().Be(message);
-        }
-
-        [Fact(DisplayName = "The caller can specify a custom exception that MustBeNull must raise instead of the default one.")]
-        public void SpecifyException()
-        {
-            var @object = new object();
-            var exception = new Exception();
-
-            Action act = () => @object.MustBeNull(exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().Be(exception);
+            testData.Add(new CustomMessageTest<ArgumentNotNullException>(message => new object().MustBeNull(message: message)));
         }
     }
 }

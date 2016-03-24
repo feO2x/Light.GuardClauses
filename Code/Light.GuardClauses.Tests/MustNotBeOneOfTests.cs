@@ -2,12 +2,13 @@
 using System.Text;
 using FluentAssertions;
 using Light.GuardClauses.FrameworkExtensions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustNotBeOneOfTests
+    public sealed class MustNotBeOneOfTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotBeOneOf must throw an exception when the specified value is within the given items.")]
         [MemberData(nameof(ParameterWithinItemsTestData))]
@@ -42,25 +43,11 @@ namespace Light.GuardClauses.Tests
                 new object[] { -3, new[] { 41, 42, 43 } }
             };
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustNotBeOneOf must inject instead of the default one.")]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            const string message = "Thou must not be one of them!";
+            testData.Add(new CustomExceptionTest(exception => "a".MustNotBeOneOf(new[] { "a", "b", "c" }, exception: exception)));
 
-            Action act = () => "a".MustNotBeOneOf(new[] { "a", "b", "c" }, message: message);
-
-            act.ShouldThrow<ArgumentOutOfRangeException>()
-               .And.Message.Should().Contain(message);
-        }
-
-        [Fact(DisplayName = "The caller can specify a custom exception that MustBeType must raise instead of the default one.")]
-        public void CustomException()
-        {
-            var exception = new Exception();
-
-            Action act = () => "a".MustNotBeOneOf(new[] { "a", "b", "c" }, exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            testData.Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => "a".MustNotBeOneOf(new[] { "a", "b", "c" }, message: message)));
         }
     }
 }

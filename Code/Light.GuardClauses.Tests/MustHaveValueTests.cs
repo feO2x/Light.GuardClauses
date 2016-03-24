@@ -1,11 +1,12 @@
 ﻿using System;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustHaveValueTests
+    public sealed class MustHaveValueTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustHaveValue must throw an exception when the specified Nullable<T> has no value.")]
         public void HasNoValue()
@@ -29,29 +30,21 @@ namespace Light.GuardClauses.Tests
             act.ShouldNotThrow();
         }
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustHaveValue must inject instead of the default one.")]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            double? value = null;
-            const string message = "Thou shall have a value!";
+            testData.Add(new CustomExceptionTest(exception =>
+                                                 {
+                                                     double? value = null;
+                                                     // ReSharper disable once ExpressionIsAlwaysNull
+                                                     value.MustHaveValue(exception: exception);
+                                                 }));
 
-            // ReSharper disable once ExpressionIsAlwaysNull
-            Action act = () => value.MustHaveValue(message: message);
-
-            act.ShouldThrow<NullableHasNoValueException>()
-               .And.Message.Should().Be(message);
-        }
-
-        [Fact(DisplayName = "The caller can specify a custom exception that MustHaveValue must raise instead of the default one.")]
-        public void CustomException()
-        {
-            double? value = null;
-            var exception = new Exception();
-
-            // ReSharper disable once ExpressionIsAlwaysNull
-            Action act = () => value.MustHaveValue(exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            testData.Add(new CustomMessageTest<NullableHasNoValueException>(message =>
+                                                                            {
+                                                                                double? value = null;
+                                                                                // ReSharper disable once ExpressionIsAlwaysNull
+                                                                                value.MustHaveValue(message: message);
+                                                                            }));
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustBeValidEnumValueTests
+    public sealed class MustBeValidEnumValueTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustBeValidEnumValue must throw an exception when the specified value is not within the defined values of the enumeration.")]
         public void InvalidEnumValue()
@@ -28,27 +29,11 @@ namespace Light.GuardClauses.Tests
             act.ShouldNotThrow();
         }
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustBeValidEnumValue must inject instead of the default one.")]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            const ConsoleSpecialKey invalidValue = (ConsoleSpecialKey) 15;
-            const string message = "Though shall be a defined enum value!";
+            testData.Add(new CustomExceptionTest(exception => ((ConsoleSpecialKey) 15).MustBeValidEnumValue(exception: exception)));
 
-            Action act = () => invalidValue.MustBeValidEnumValue(message: message);
-
-            act.ShouldThrow<EnumValueNotDefinedException>()
-               .And.Message.Should().Be(message);
-        }
-
-        [Fact(DisplayName = "The caller can specify a custom exception that MustBeValidEnumValue must raise instead of the default one.")]
-        public void CustomException()
-        {
-            const ConsoleSpecialKey invalidValue = (ConsoleSpecialKey) 15;
-            var exception = new Exception();
-
-            Action act = () => invalidValue.MustBeValidEnumValue(exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            testData.Add(new CustomMessageTest<EnumValueNotDefinedException>(message => ((ConsoleSpecialKey) 15).MustBeValidEnumValue(message: message)));
         }
     }
 }

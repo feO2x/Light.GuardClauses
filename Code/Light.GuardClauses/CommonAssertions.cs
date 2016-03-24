@@ -71,7 +71,7 @@ namespace Light.GuardClauses
         ///     Thrown when the specified <paramref name="parameter" /> cannot be downcasted and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <returns>The downcasted reference to <paramref name="parameter" />.</returns>
-        public static T MustBeType<T>(this object parameter, string parameterName = null, string message = null, Exception exception = null) where T : class
+        public static T MustBeOfType<T>(this object parameter, string parameterName = null, string message = null, Exception exception = null) where T : class
         {
             var castedValue = parameter as T;
             if (castedValue == null)

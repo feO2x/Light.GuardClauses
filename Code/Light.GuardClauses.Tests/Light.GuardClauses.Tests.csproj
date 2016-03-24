@@ -65,6 +65,14 @@
   <ItemGroup>
     <Compile Include="AgainstTests.cs" />
     <Compile Include="CheckConditionalAttributeAppliance.cs" />
+    <Compile Include="CollectionMustNotBeNullOrEmptyTests.cs" />
+    <Compile Include="CustomMessagesAndExceptions\CustomMessageAndExceptionTestData.cs" />
+    <Compile Include="CustomMessagesAndCustomExceptionsTests.cs" />
+    <Compile Include="CustomMessagesAndExceptions\ICustomMessageAndExceptionTestData.cs" />
+    <Compile Include="CustomMessagesAndExceptions\ICustomMessageAndExceptionTestDataProvider.cs" />
+    <Compile Include="CustomMessagesAndExceptions\IRunnableTest.cs" />
+    <Compile Include="CustomMessagesAndExceptions\CustomExceptionTest.cs" />
+    <Compile Include="CustomMessagesAndExceptions\CustomMessageTest.cs" />
     <Compile Include="MusHaveKeyTests.cs" />
     <Compile Include="MustBeInTests.cs" />
     <Compile Include="MustBeKeyOfTests.cs" />
@@ -74,11 +82,13 @@
     <Compile Include="MustBeSubsetOfTests.cs" />
     <Compile Include="MustBeSubstringOfTests.cs" />
     <Compile Include="MustBeTests.cs" />
-    <Compile Include="MustBeTypeTests.cs" />
+    <Compile Include="MustBeOfTypeTests.cs" />
     <Compile Include="MustBeValidEnumValueTests.cs" />
-    <Compile Include="MustContainTests.cs" />
+    <Compile Include="SingleItemMustNotContainTests.cs" />
+    <Compile Include="StringMustNotContainTests.cs" />
+    <Compile Include="SubsetMustContainTests.cs" />
     <Compile Include="MustHaveKeysTests.cs" />
-    <Compile Include="MustHaveNoDuplicatesTests.cs" />
+    <Compile Include="MustNotContainDuplicatesTests.cs" />
     <Compile Include="MustHaveValueTests.cs" />
     <Compile Include="MustMatchTests.cs" />
     <Compile Include="MustNotBeEmptyTests.cs" />
@@ -88,20 +98,22 @@
     <Compile Include="MustNotBeKeyOfTests.cs" />
     <Compile Include="MustNotBeLessThanOrEqualToTests.cs" />
     <Compile Include="MustNotBeLessThanTests.cs" />
-    <Compile Include="MustNotBeNullOrEmptyTests.cs" />
+    <Compile Include="StringMustNotBeNullOrEmptyTests.cs" />
     <Compile Include="MustNotBeNullOrWhiteSpaceTests.cs" />
     <Compile Include="MustNotBeNullTests.cs" />
     <Compile Include="MustNotBeOneOfTests.cs" />
     <Compile Include="MustNotBeSameAsTests.cs" />
     <Compile Include="MustNotBeSubstringOfTests.cs" />
     <Compile Include="MustNotContainNullTests.cs" />
-    <Compile Include="MustNotContainTests.cs" />
+    <Compile Include="SetMustNotContainTests.cs" />
     <Compile Include="MustNotHaveKeys.cs" />
     <Compile Include="MustNotHaveKeyTests.cs" />
     <Compile Include="MustNotHaveValueTests.cs" />
     <Compile Include="NotNullTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RangeTests.cs" />
+    <Compile Include="SingleItemMustContainTests.cs" />
+    <Compile Include="StringMustContainTests.cs" />
     <Compile Include="ThatTests.cs" />
   </ItemGroup>
   <ItemGroup>

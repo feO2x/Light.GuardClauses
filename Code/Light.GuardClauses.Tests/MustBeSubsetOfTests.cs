@@ -3,12 +3,13 @@ using System.Text;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustBeSubsetOfTests
+    public sealed class MustBeSubsetOfTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustBeSubsetOf must throw a CollectionException when the specified collection is no subset of superset.")]
         [MemberData(nameof(IsNotSubsetData))]
@@ -57,25 +58,11 @@ namespace Light.GuardClauses.Tests
                .And.ParamName.Should().Be("superset");
         }
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustBeSubsetOf must inject instead of the default one.")]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            const string message = "Thou must be a subset of the other!";
+            testData.Add(new CustomExceptionTest(exception => new[] { 'a', 'b' }.MustBeSubsetOf(new[] { 'a' }, exception: exception)));
 
-            Action act = () => new[] { 'a', 'b' }.MustBeSubsetOf(new[] { 'a' }, message: message);
-
-            act.ShouldThrow<CollectionException>()
-               .And.Message.Should().Contain(message);
-        }
-
-        [Fact(DisplayName = "The caller can specify a custom exception that MustBeSubsetOf must raise instead of the default one.")]
-        public void CustomException()
-        {
-            var exception = new Exception();
-
-            Action act = () => new[] { 'a', 'b' }.MustBeSubsetOf(new[] { 'a' }, exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            testData.Add(new CustomMessageTest<CollectionException>(message => new[] { 'a', 'b' }.MustBeSubsetOf(new[] { 'a' }, message: message)));
         }
     }
 }

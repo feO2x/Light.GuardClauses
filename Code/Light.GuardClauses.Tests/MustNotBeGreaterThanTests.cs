@@ -1,10 +1,11 @@
 ﻿using FluentAssertions;
 using System;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustNotBeGreaterThanTests
+    public sealed class MustNotBeGreaterThanTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotBeGreaterThan must throw an exception when the specified value is above the given boundary.")]
         [InlineData(1, 0)]
@@ -36,25 +37,11 @@ namespace Light.GuardClauses.Tests
             act.ShouldNotThrow();
         }
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustNotBeGreaterThan must inject instead of the default one.")]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            const string message = "Thou shall not be greater than the other!";
+            testData.Add(new CustomExceptionTest(exception => 12.MustNotBeGreaterThan(0, exception: exception)));
 
-            Action act = () => 42.MustNotBeGreaterThan(41, message: message);
-
-            act.ShouldThrow<ArgumentOutOfRangeException>()
-               .And.Message.Should().Contain(message);
-        }
-
-        [Fact(DisplayName = "The caller can specify a custom exception that MustNotBeGreaterThan must raise instead of the default one.")]
-        public void CustomException()
-        {
-            var exception = new Exception();
-
-            Action act = () => 12.MustNotBeGreaterThan(0, exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            testData.Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => 42.MustNotBeGreaterThan(41, message: message)));
         }
     }
 }

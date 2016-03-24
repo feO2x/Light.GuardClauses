@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using FluentAssertions;
 using Light.GuardClauses.FrameworkExtensions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustNotBeKeyOfTests
+    public sealed class MustNotBeKeyOfTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotBeKeyOf must throw an ArgumentOutOfRangeException when the specified key is present in the dictionary.")]
         [MemberData(nameof(IsKeyData))]
@@ -53,25 +54,11 @@ namespace Light.GuardClauses.Tests
                .And.ParamName.Should().Be("dictionary");
         }
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustNotBeKeyOf must inject instead of the default one.")]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            const string message = "Thou shall be no key!";
+            testData.Add(new CustomExceptionTest(exception => 'a'.MustNotBeKeyOf(new Dictionary<char, object> { ['a'] = null }, exception: exception)));
 
-            Action act = () => 'a'.MustNotBeKeyOf(new Dictionary<char, object> { ['a'] = null }, message: message);
-
-            act.ShouldThrow<ArgumentOutOfRangeException>()
-               .And.Message.Should().Contain(message);
-        }
-
-        [Fact(DisplayName = "The caller can specify a custom exception that MustNotBeKeyOf must raise instead of the default one.")]
-        public void CustomException()
-        {
-            var exception = new Exception();
-
-            Action act = () => 'a'.MustNotBeKeyOf(new Dictionary<char, object> { ['a'] = null }, exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            testData.Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => 'a'.MustNotBeKeyOf(new Dictionary<char, object> { ['a'] = null }, message: message)));
         }
     }
 }

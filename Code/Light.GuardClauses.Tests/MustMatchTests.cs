@@ -1,12 +1,13 @@
-﻿using FluentAssertions;
-using Light.GuardClauses.Exceptions;
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
+using FluentAssertions;
+using Light.GuardClauses.Exceptions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
-    public class MustMatchTests
+    public sealed class MustMatchTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustMatch must throw an exception when the specified string does not match the regular expression.")]
         public void StringDoesNotMatch()
@@ -31,25 +32,11 @@ namespace Light.GuardClauses.Tests
             act.ShouldNotThrow();
         }
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustMatch must inject instead of the default one.")]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            const string message = "Thou shall match the pattern";
+            testData.Add(new CustomExceptionTest(exception => "12345".MustMatch(new Regex(@"\W{5}"), exception: exception)));
 
-            Action act = () => "12345".MustMatch(new Regex(@"\W{5}"), message: message);
-
-            act.ShouldThrow<StringDoesNotMatchException>()
-               .And.Message.Should().Contain(message);
-        }
-
-        [Fact(DisplayName = "The caller can specify a custom exception that MustMatch must raise instead of the default one.")]
-        public void CustomException()
-        {
-            var exception = new Exception();
-
-            Action act = () => "12345".MustMatch(new Regex(@"\W{5}"), exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            testData.Add(new CustomMessageTest<StringDoesNotMatchException>(message => "12345".MustMatch(new Regex(@"\W{5}"), message: message)));
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustNotBeEmptyTests
+    public sealed class MustNotBeEmptyTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustNotBeEmpty must throw an exception when the specified GUID is empty.")]
         public void GuidEmpty()
@@ -28,25 +29,11 @@ namespace Light.GuardClauses.Tests
             act.ShouldNotThrow();
         }
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustNotBeEmpty must inject instead of the default one.")]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            const string message = "Thou shall not be an empty GUID!";
+            testData.Add(new CustomExceptionTest(exception => Guid.Empty.MustNotBeEmpty(exception: exception)));
 
-            Action act = () => Guid.Empty.MustNotBeEmpty(message: message);
-
-            act.ShouldThrow<EmptyGuidException>()
-               .And.Message.Should().Contain(message);
-        }
-
-        [Fact(DisplayName = "The caller can specify a custom exception that MustNotBeEmpty must raise instead of the default one.")]
-        public void CustomException()
-        {
-            var exception = new Exception();
-
-            Action act = () => Guid.Empty.MustNotBeEmpty(exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            testData.Add(new CustomMessageTest<EmptyGuidException>(message => Guid.Empty.MustNotBeEmpty(message: message)));
         }
     }
 }

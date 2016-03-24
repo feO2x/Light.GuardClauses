@@ -1,10 +1,11 @@
 ﻿using System;
 using FluentAssertions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustNotBeSameAsTests
+    public sealed class MustNotBeSameAsTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotBeSameAs must throw an ArgumentException when the specified references point to the same instance.")]
         [InlineData("Foo")]
@@ -28,25 +29,11 @@ namespace Light.GuardClauses.Tests
             act.ShouldNotThrow();
         }
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustNotBeSameAs must inject instead of the default one.")]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            const string message = "Thou shall not be one and the same!";
+            testData.Add(new CustomExceptionTest(exception => "foo".MustNotBeSameAs("foo", exception: exception)));
 
-            Action act = () => "foo".MustNotBeSameAs("foo", message: message);
-
-            act.ShouldThrow<ArgumentException>()
-               .And.Message.Should().Contain(message);
-        }
-
-        [Fact(DisplayName = "The caller can specify a custom exception that MustNotBeSameAs must raise instead of the default one.")]
-        public void CustomException()
-        {
-            var exception = new Exception();
-
-            Action act = () => "foo".MustNotBeSameAs("foo", exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            testData.Add(new CustomMessageTest<ArgumentException>(message => "foo".MustNotBeSameAs("foo", message: message)));
         }
     }
 }

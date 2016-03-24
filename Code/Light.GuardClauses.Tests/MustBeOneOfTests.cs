@@ -2,12 +2,13 @@
 using System.Text;
 using FluentAssertions;
 using Light.GuardClauses.FrameworkExtensions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustBeOneOfTests
+    public sealed class MustBeOneOfTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustBeOneOf must throw an exception when the specified value is not within the given items.")]
         [MemberData(nameof(NotInItemsTestData))]
@@ -43,25 +44,11 @@ namespace Light.GuardClauses.Tests
                 new object[] { 42, new[] { 41, 42, 43 } }
             };
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustBeOneOf must inject instead of the default one.")]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            const string message = "Thou shall be one of them!";
+            testData.Add(new CustomExceptionTest(exception => 'a'.MustBeOneOf(new[] { 'x', 'y' }, exception: exception)));
 
-            Action act = () => 'x'.MustBeOneOf(new[] { 'a', 'b', 'c' }, message: message);
-
-            act.ShouldThrow<ArgumentOutOfRangeException>()
-               .And.Message.Should().Contain(message);
-        }
-
-        [Fact(DisplayName = "The caller can specify a custom exception that MustBeOneOf must raise instead of the default one.")]
-        public void CustomException()
-        {
-            var exception = new Exception();
-
-            Action act = () => 'a'.MustBeOneOf(new[] { 'x', 'y' }, exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            testData.Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => 'x'.MustBeOneOf(new[] { 'a', 'b', 'c' }, message: message)));
         }
     }
 }

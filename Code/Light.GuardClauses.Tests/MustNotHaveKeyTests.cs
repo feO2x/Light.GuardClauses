@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustNotHaveKeyTests
+    public sealed class MustNotHaveKeyTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotHaveKey must throw a DictioanaryException when the specified key is part of the dictionary.")]
         [MemberData(nameof(HasKeyData))]
@@ -54,33 +55,13 @@ namespace Light.GuardClauses.Tests
                .And.ParamName.Should().Be(nameof(dictionary));
         }
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustNotHaveKey must inject instead of the default one.")]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            const string message = "Thou must not have the key!";
+            testData.Add(new CustomExceptionTest(exception => new Dictionary<char, string> { ['a'] = "value" }.MustNotHaveKey('a', exception: exception)));
+            testData.Add(new CustomExceptionTest(exception => ((Dictionary<char, string>) null).MustNotHaveKey('f', exception: exception)));
 
-            Action act = () => new Dictionary<string, object> { ["a"] = 1 }.MustNotHaveKey("a", message: message);
-
-            act.ShouldThrow<DictionaryException>()
-               .And.Message.Should().Contain(message);
+            testData.Add(new CustomMessageTest<DictionaryException>(message => new Dictionary<char, string> { ['a'] = "value" }.MustNotHaveKey('a', message: message)));
+            testData.Add(new CustomMessageTest<ArgumentNullException>(message => ((Dictionary<char, string>) null).MustNotHaveKey('f', message: message)));
         }
-
-        [Theory(DisplayName = "The caller can specify a custom exception that MustNotHaveKey must raise instead of the default one.")]
-        [MemberData(nameof(CustomExceptionData))]
-        public void CustomException(Dictionary<char, string> invalidDictionary, char key)
-        {
-            var exception = new Exception();
-
-            Action act = () => invalidDictionary.MustNotHaveKey(key, exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
-        }
-
-        public static readonly TestData CustomExceptionData =
-            new[]
-            {
-                new object[] { new Dictionary<char, string> { ['a'] = "value" }, 'a' },
-                new object[] { null, 'f' }
-            };
     }
 }

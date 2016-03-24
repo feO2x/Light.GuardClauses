@@ -1,12 +1,13 @@
 ﻿using System;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustNotBeNullOrWhiteSpaceTests
+    public sealed class MustNotBeNullOrWhiteSpaceTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustNotBeNullOrWhiteSpace must throw an ArgumentNullException when the parameter is null.")]
         public void StringIsNull()
@@ -65,33 +66,17 @@ namespace Light.GuardClauses.Tests
             act.ShouldNotThrow();
         }
 
-        [Theory(DisplayName = "The caller can specify a custom message that MustNotBeNullOrWhiteSpace must inject instead of the default one.")]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData("   ")]
-        [InlineData("\t\r\n")]
-        public void CustomMessage(string invalidString)
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            const string message = "Thou shall have human-readable information!";
+            testData.Add(new CustomExceptionTest(exception => string.Empty.MustNotBeNullOrWhiteSpace(exception: exception)));
+            testData.Add(new CustomExceptionTest(exception => "    ".MustNotBeNullOrWhiteSpace(exception: exception)));
+            testData.Add(new CustomExceptionTest(exception => "\t\r\n".MustNotBeNullOrWhiteSpace(exception: exception)));
+            testData.Add(new CustomExceptionTest(exception => ((string) null).MustNotBeNullOrWhiteSpace(exception: exception)));
 
-            Action act = () => invalidString.MustNotBeNullOrWhiteSpace(message: message);
-
-            act.ShouldThrow<ArgumentException>()
-               .And.Message.Should().Contain(message);
-        }
-
-        [Theory(DisplayName = "The caller can specify a custom exception that MustNotBeNullOrWhiteSpace must raise instead of the default one.")]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData("   ")]
-        [InlineData("\t\r\n")]
-        public void CustomException(string invalidString)
-        {
-            var exception = new Exception();
-
-            Action act = () => invalidString.MustNotBeNullOrWhiteSpace(exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            testData.Add(new CustomMessageTest<EmptyStringException>(message => string.Empty.MustNotBeNullOrWhiteSpace(message: message)));
+            testData.Add(new CustomMessageTest<StringIsOnlyWhiteSpaceException>(message => "    ".MustNotBeNullOrWhiteSpace(message: message)));
+            testData.Add(new CustomMessageTest<StringIsOnlyWhiteSpaceException>(message => "\t\r\n".MustNotBeNullOrWhiteSpace(message: message)));
+            testData.Add(new CustomMessageTest<ArgumentNullException>(message => ((string)null).MustNotBeNullOrWhiteSpace(message: message)));
         }
     }
 }

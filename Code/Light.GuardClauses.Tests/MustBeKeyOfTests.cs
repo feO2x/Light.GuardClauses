@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using FluentAssertions;
 using Light.GuardClauses.FrameworkExtensions;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustBeKeyOfTests
+    public sealed class MustBeKeyOfTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustBeKeyOf must throw an exception when the specified value is not within the keys of the given dictionary.")]
         [MemberData(nameof(NotInItemsTestData))]
@@ -43,25 +44,11 @@ namespace Light.GuardClauses.Tests
                 new object[] { 2, new Dictionary<int, string> { [1] = "Hello", [2] = "World" } }
             };
 
-        [Fact(DisplayName = "The caller can specify a custom message that MustBeKeyOf must inject instead of the default one.")]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            const string message = "Thou must be key of dictionary!";
+            testData.Add(new CustomExceptionTest(exception => "a".MustBeKeyOf(new Dictionary<string, int> { ["b"] = 42 }, exception: exception)));
 
-            Action act = () => "a".MustBeKeyOf(new Dictionary<string, int> { ["b"] = 42 }, message: message);
-
-            act.ShouldThrow<ArgumentOutOfRangeException>()
-               .And.Message.Should().Contain(message);
-        }
-
-        [Fact(DisplayName = "The caller can specify a custom exception that MustBeKeyOf must raise instead of the default one.")]
-        public void CustomException()
-        {
-            var exception = new Exception();
-
-            Action act = () => "a".MustBeKeyOf(new Dictionary<string, int> { ["b"] = 42 }, exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            testData.Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => "a".MustBeKeyOf(new Dictionary<string, int> { ["b"] = 42 }, message: message)));
         }
     }
 }

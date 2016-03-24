@@ -1,11 +1,12 @@
 ﻿using FluentAssertions;
 using System;
 using System.Collections.Generic;
+using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustBeTests
+    public sealed class MustBeTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustBe must throw an exception when the specified value is not the expected one.")]
         [InlineData(42, 0)]
@@ -54,24 +55,11 @@ namespace Light.GuardClauses.Tests
             act.ShouldThrow<ArgumentException>();
         }
 
-        [Fact (DisplayName = "The caller can specifiy a custom message that MustBe must inject instead of the default one.")]
-        public void CustomMessage()
+        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            const string message = "Thou shall be the same!";
+            testData.Add(new CustomExceptionTest(exception => "Hello".MustBe("World", exception: exception)));
 
-            Action act = () => 42.MustBe(48, message: message);
-
-            act.ShouldThrow<ArgumentException>().And.Message.Should().Be(message);
-        }
-
-        [Fact(DisplayName = "The caller can specify a custom exception that MustBe must raise instead of the default one.")]
-        public void CustomException()
-        {
-            var exception = new Exception();
-
-            Action act = () => "Hello".MustBe("World", exception: exception);
-
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            testData.Add(new CustomMessageTest<ArgumentException>(message => 42.MustBe(48, message: message)));
         }
     }
 }
