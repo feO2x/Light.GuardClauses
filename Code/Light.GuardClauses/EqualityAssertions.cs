@@ -218,11 +218,11 @@ namespace Light.GuardClauses
         /// </summary>
         /// <typeparam name="T">The type of the parameter. This must be a reference type.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
-        /// <param name="other">The other instance that parameter must be compared against.</param>
+        /// <param name="other">The other instance that parameter must be compared to.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="ArgumentException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be raised when <paramref name="parameter" /> and <paramref name="other" /> do not point to the same instance.
+        ///     The exception that will be thrown when <paramref name="parameter" /> and <paramref name="other" /> do not point to the same instance.
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> and <paramref name="other" /> do not point to the same instance and no <paramref name="exception" /> is specified.</exception>
@@ -230,7 +230,27 @@ namespace Light.GuardClauses
         public static void MustBeSameAs<T>(this T parameter, T other, string parameterName = null, string message = null, Exception exception = null) where T : class
         {
             if (ReferenceEquals(parameter, other) == false)
-                throw exception ?? new ArgumentException(message ?? $"{parameterName ?? "The reference"} must point to the same object instance as \"{other}\", but it does not.", parameterName);
+                throw exception ?? new ArgumentException(message ?? $"{parameterName ?? "The reference"} must point to the object instance \"{other}\", but it does not.", parameterName);
+        }
+
+        /// <summary>
+        ///     Ensures that the specified reference does not point to the same object instance as <paramref name="other" />, or otherwise throws an <see cref="ArgumentException" />.
+        /// </summary>
+        /// <typeparam name="T">The type of the parameter. This must be a reference type.</typeparam>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="other">The other instance that parameter must be compared to.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="ArgumentException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that will be thrown when <paramref name="parameter" /> and <paramref name="other" /> point to the same instance.
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> and <paramref name="other" /> point to the same instance and no <paramref name="exception" /> is specified.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustNotBeSameAs<T>(this T parameter, T other, string parameterName = null, string message = null, Exception exception = null) where T : class
+        {
+            if (ReferenceEquals(parameter, other))
+                throw exception ?? new ArgumentException(message ?? $"{parameterName ?? "The reference"} must not point to the object instance \"{other}\", but it does.", parameterName);
         }
     }
 }

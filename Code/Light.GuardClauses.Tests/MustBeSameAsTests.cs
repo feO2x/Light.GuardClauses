@@ -15,15 +15,15 @@ namespace Light.GuardClauses.Tests
             Action act = () => first.MustBeSameAs(second, nameof(first));
 
             act.ShouldThrow<ArgumentException>()
-               .And.Message.Should().Contain($"{nameof(first)} must point to the same object instance as \"{second}\", but it does not.");
+               .And.Message.Should().Contain($"{nameof(first)} must point to the object instance \"{second}\", but it does not.");
         }
 
         [Theory(DisplayName = "MustBeSameAs must not throw an exception when the two specified references point to the same instance.")]
         [InlineData("Foo")]
         [InlineData("Bar")]
-        public void ReferencesEqual<T>(T value) where T : class
+        public void ReferencesEqual(string reference)
         {
-            Action act = () => value.MustBeSameAs(value);
+            Action act = () => reference.MustBeSameAs(reference);
 
             act.ShouldNotThrow();
         }

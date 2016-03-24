@@ -92,6 +92,7 @@
     <Compile Include="MustNotBeNullOrWhiteSpaceTests.cs" />
     <Compile Include="MustNotBeNullTests.cs" />
     <Compile Include="MustNotBeOneOfTests.cs" />
+    <Compile Include="MustNotBeSameAsTests.cs" />
     <Compile Include="MustNotBeSubstringOfTests.cs" />
     <Compile Include="MustNotContainNullTests.cs" />
     <Compile Include="MustNotContainTests.cs" />
