@@ -70,6 +70,7 @@
     <Compile Include="MustBeKeyOfTests.cs" />
     <Compile Include="MustBeNullTests.cs" />
     <Compile Include="MustBeOneOfTests.cs" />
+    <Compile Include="MustBeSameAsTests.cs" />
     <Compile Include="MustBeSubsetOfTests.cs" />
     <Compile Include="MustBeSubstringOfTests.cs" />
     <Compile Include="MustBeTests.cs" />
