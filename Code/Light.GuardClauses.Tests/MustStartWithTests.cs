@@ -32,7 +32,7 @@ namespace Light.GuardClauses.Tests
             act.ShouldNotThrow();
         }
 
-        [Theory]
+        [Theory(DisplayName = "MustStartWith must throw an ArgumentNullException when parameter or text is null.")]
         [InlineData(null, "Foo")]
         [InlineData("Foo", null)]
         public void ArgumentNull(string @string, string startText)
