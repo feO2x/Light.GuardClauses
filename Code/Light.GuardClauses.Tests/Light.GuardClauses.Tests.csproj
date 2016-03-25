@@ -85,6 +85,7 @@
     <Compile Include="MustBeOfTypeTests.cs" />
     <Compile Include="MustBeValidEnumValueTests.cs" />
     <Compile Include="MustHaveLengthTests.cs" />
+    <Compile Include="MustStartWithTests.cs" />
     <Compile Include="SingleItemMustNotContainTests.cs" />
     <Compile Include="StringMustNotContainTests.cs" />
     <Compile Include="SubsetMustContainTests.cs" />
