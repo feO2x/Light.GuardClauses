@@ -33,7 +33,7 @@ public void SetMovieRating(Guid movieId, int numberOfStars)
 }
 ```
 
-Inspired by [FluentAssertions](https://github.com/dennisdoomen/FluentAssertions), there are many more methods tailored for strings, IComparable<T>, IEnumerable<T>, IEquatable<T>, and IDictionary<T>. See a list of all of them [in the release notes](https://github.com/feO2x/Light.GuardClauses/releases) or discover them on the fly through IntelliSense - all the methods are fully documented. Just be sure to add the following `using` statement to see the extension methods: `using Light.GuardClauses;`.
+Inspired by [FluentAssertions](https://github.com/dennisdoomen/FluentAssertions), there are many more methods tailored for strings, IComparable<T>, IEnumerable<T>, IEquatable<T>, and IDictionary<T>. See a list of all of them [in the release notes](https://github.com/feO2x/Light.GuardClauses/releases) or discover them on the fly through IntelliSense - all the methods are fully documented. Just be sure to add the following `using` statement at the top of your code files to see the extension methods: `using Light.GuardClauses;`.
 
 ## Where do I get it?
 
@@ -51,15 +51,15 @@ The methods of Light.GuardClauses are marked with the [ConditionalAttribute](htt
 
 ![Activating assertion compilation](/Images/compile_assertions.png)
 
-Although you cannot use method chaining (because methods marked with the [ConditionalAttribute](https://msdn.microsoft.com/en-us/library/system.diagnostics.conditionalattribute(v=vs.110).aspx) cannot have return values), the ability to selectively include or exclude these precondition checks gives you a lot of flexibility regarding performance: during development, you can enable them to fail fast, and if you absolutely need the performance squeeze, you can disable them for your production deployment - this is perfectly in line with Bertrand Meyer's Design by Contract where you can also enable or disable assertions checks (by the way, read his book "Object-Oriented Software Construction" if you haven't - it's a necessary read for any O-O dev in my opinion).
+Although you cannot use method chaining (because methods marked with the [ConditionalAttribute](https://msdn.microsoft.com/en-us/library/system.diagnostics.conditionalattribute(v=vs.110).aspx) cannot have return values), the ability to selectively include or exclude these precondition checks gives you a lot of flexibility regarding performance: during development, you can enable them to fail fast, and if you absolutely need the performance squeeze, you can disable them for your production deployment - this is perfectly in line with Bertrand Meyer's Design by Contract where you can also enable or disable assertions (by the way, read his book "Object-Oriented Software Construction" if you haven't - it's a necessary read for any O-O dev in my opinion).
 
 ## Customizing messages and exceptions
 
-Every extension method of Light.GuardClauses has three optional parameters: parameterName, message and exception. With these, you can customize the outcome of an assertion:
+Every extension method of Light.GuardClauses has three optional parameters: **parameterName**, **message** and **exception**. With these, you can customize the outcome of an assertion:
 
 * **parameterName** lets you inject the name of the actual parameter into the resulting exception message. By default, the standard exception messages use e.g. "The value" or "The string" to talk about the subject - these values are exchanged when you specify the name of the parameter.
 * **message** lets you exchange the entire exception message if you are not satisfied with the default message in your current context.
-* **exception** lets you specify an exception object that is thrown instead of the default one.
+* **exception** lets you specify a delegate creating an exception object that is thrown instead of the default exception.
 
 ```csharp
 public class Entity
@@ -71,6 +71,20 @@ public class Entity
         id.MustNotBeEmpty(message: "You cannot create an entity with an empty GUID.");
         
         Id = id;
+    }
+}
+```
+
+```csharp
+public class CustomerController : ApiController
+{
+    private readonly ICustomerRepository _repo;
+    
+    public CustomerController(ICustomerRepository repo)
+    {
+        repo.MustNotBeNull(exception: () => new StupidTeamMembersException("Who is the idiot that forgot to register ICustomerRepository with the DI container?"));
+    
+        _repo = repo;
     }
 }
 ```
@@ -95,16 +109,16 @@ Of course, you can write your own extension methods, too.
 If you want to write your own assertion method, you should follow these recommendations:
 * Create a static (extension) method that should have `void` as return type. Mark this method with the ConditionalAttribute and specify `Check.CompileAssertionsSymbol` to it.
 * Apart from the parameters you need, add the three optional parameters **parameterName**, **message**, and **exception**. They should behave as mentioned above in the "Customizing messages and exceptions" section.
-* Using the Null-Coalescing-Operator (??) is recommended to check if the optional parameters are specified.
+* Using the Conditional Operator (?:) and the Null-Coalescing-Operator (??) is recommended to check if the optional parameters are specified.
 
 Check out the existing methods and the following template:
 
 ```csharp
 [Conditional(Check.CompileAssertionsSymbol)
-public static void *YourMethodName*(this *YourType* parameter, *Your other necessary parameters*, string parameterName = null, string message = null, Exception exception = null)
+public static void *YourMethodName*(this *YourType* parameter, *Your other necessary parameters*, string parameterName = null, string message = null, Func<Exception> exception = null)
 {
     if (*check something here*)
-        throw exception ?? new *YourExceptionType*(message ?? $"{parameterName ?? "The value"} must not be ...");
+        throw exception != null ? exception() : new *YourExceptionType*(message ?? $"{parameterName ?? "The value"} must not be ...");
 }
 ```
 
