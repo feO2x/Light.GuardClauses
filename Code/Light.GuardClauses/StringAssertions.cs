@@ -91,7 +91,7 @@ namespace Light.GuardClauses
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustMatch(this string parameter, Regex pattern, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            pattern.MustNotBeNull(nameof(pattern), "You called MustMatch wrongly by specifying null to pattern.");
+            pattern.MustNotBeNull(nameof(pattern));
 
             var match = pattern.Match(parameter);
             if (match.Success == false)
@@ -127,7 +127,7 @@ namespace Light.GuardClauses
         public static void MustContain(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName, message, exception);
-            text.MustNotBeNullOrEmpty(nameof(text), $"You called MustContain wrongly by specifying {(text == null ? "null" : "an empty string")} for text.");
+            text.MustNotBeNullOrEmpty(nameof(text));
 
             if (ignoreCaseSensitivity)
             {
@@ -167,7 +167,7 @@ namespace Light.GuardClauses
         public static void MustNotContain(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName, message, exception);
-            text.MustNotBeNullOrEmpty(nameof(text), $"You called MustNotContain wrongly by specifying {(text == null ? "null" : "an empty string")} for text.");
+            text.MustNotBeNullOrEmpty(nameof(text));
 
             if (ignoreCaseSensitivity)
             {
@@ -209,7 +209,7 @@ namespace Light.GuardClauses
         public static void MustBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNullOrEmpty(parameterName, message, exception);
-            text.MustNotBeNullOrEmpty(nameof(text), $"You called MustBeSubstringOf wrongly by specifying {(text == null ? "null" : "an empty string")} for text.");
+            text.MustNotBeNullOrEmpty(nameof(text));
 
             if (ignoreCaseSensitivity)
             {
@@ -252,7 +252,7 @@ namespace Light.GuardClauses
         public static void MustNotBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNullOrEmpty(parameter, message, exception);
-            text.MustNotBeNullOrEmpty(nameof(text), $"You called MustNotBeSubstringOf wrongly by specifying {(text == null ? "null" : "an empty string")} for text.");
+            text.MustNotBeNullOrEmpty(nameof(text));
 
             if (ignoreCaseSensitivity)
             {

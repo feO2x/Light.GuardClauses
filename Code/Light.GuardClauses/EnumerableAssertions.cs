@@ -33,7 +33,7 @@ namespace Light.GuardClauses
         public static void MustBeOneOf<T>(this T parameter, IEnumerable<T> items, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            items.MustNotBeNull(nameof(items), "You called MustBeOneOf wrongly by specifying items as null.");
+            items.MustNotBeNull(nameof(items));
 
             if (items.Contains(parameter) == false)
                 throw exception != null ? exception() : new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be one of the items{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(items)}{Environment.NewLine}but you specified {parameter}.");
@@ -60,7 +60,7 @@ namespace Light.GuardClauses
         public static void MustNotBeOneOf<T>(this T parameter, IEnumerable<T> items, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            items.MustNotBeNull(nameof(items), "You called MustNotBeOneOf wrongly by specifying items as null.");
+            items.MustNotBeNull(nameof(items));
 
             if (items.Contains(parameter))
                 throw exception != null ? exception() : new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be none of the items{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(items)}{Environment.NewLine}but you specified {parameter}.");
@@ -259,7 +259,7 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName, message, exception);
-            superset.MustNotBeNull(nameof(superset), "You called MustBeSubsetOf wrongly by specifying superset as null.");
+            superset.MustNotBeNull(nameof(superset));
 
             if (parameter.All(superset.Contains) == false)
                 throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must be a subset of:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(superset)}{Environment.NewLine}{Environment.NewLine}The actual collection contains:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
@@ -293,7 +293,7 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName, message, exception);
-            subset.MustNotBeNull(nameof(subset), "You called MustContain wrongly by specifying subset as null.");
+            subset.MustNotBeNull(nameof(subset));
 
             if (subset.All(parameter.Contains) == false)
                 throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain the following values{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(subset)}{Environment.NewLine}but does not.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
@@ -337,7 +337,7 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName, message, exception);
-            set.MustNotBeNull(nameof(set), "You called MustNotContain wrongly by specifying set as null.");
+            set.MustNotBeNull(nameof(set));
 
             if (set.Any(parameter.Contains))
                 throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must not contain any of the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(set)}{Environment.NewLine}{Environment.NewLine}The actual content of the collection is:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);

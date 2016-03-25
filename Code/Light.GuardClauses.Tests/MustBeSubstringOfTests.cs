@@ -38,7 +38,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => "someText".MustBeSubstringOf(null);
 
             act.ShouldThrow<ArgumentNullException>()
-               .And.Message.Should().Contain("You called MustBeSubstringOf wrongly by specifying null for text.");
+               .And.ParamName.Should().Be("text");
         }
 
         [Fact(DisplayName = "MustBeSubstringOf must throw an EmptyStringException when text is an empty string.")]
@@ -47,7 +47,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => "someText".MustBeSubstringOf(string.Empty);
 
             act.ShouldThrow<EmptyStringException>()
-               .And.Message.Should().Contain("You called MustBeSubstringOf wrongly by specifying an empty string for text.");
+               .And.ParamName.Should().Be("text");
         }
 
         [Theory(DisplayName = "MustBeSubstringOf must not throw an exception when the specified string is a substring of text ingoring case-sensitivity.")]

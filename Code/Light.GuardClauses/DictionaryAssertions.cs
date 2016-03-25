@@ -35,7 +35,7 @@ namespace Light.GuardClauses
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeKeyOf<TKey, TValue>(this TKey parameter, IDictionary<TKey, TValue> dictionary, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            dictionary.MustNotBeNull(nameof(dictionary), "You called MustBeKeyOf wrongly by specifying a dictionary that is null.");
+            dictionary.MustNotBeNull(nameof(dictionary));
 
             if (dictionary.ContainsKey(parameter))
                 return;
@@ -63,7 +63,7 @@ namespace Light.GuardClauses
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotBeKeyOf<TKey, TValue>(this TKey parameter, IDictionary<TKey, TValue> dictionary, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            dictionary.MustNotBeNull(nameof(dictionary), "You called MustNotBeKeyOf wrongly by specifying dictionary as null.");
+            dictionary.MustNotBeNull(nameof(dictionary));
 
             if (dictionary.ContainsKey(parameter))
                 throw exception != null ? exception() : new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must not be one of the dictionary keys{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(dictionary.Keys)}{Environment.NewLine}but you specified {parameter}");
@@ -149,7 +149,7 @@ namespace Light.GuardClauses
         {
             parameter.MustNotBeNull(parameterName, message, exception);
             // ReSharper disable PossibleMultipleEnumeration
-            keys.MustNotBeNull(nameof(keys), "You called MustHaveKeys wrongly by specifying keys as null.");
+            keys.MustNotBeNull(nameof(keys));
 
             if (keys.Any(k => parameter.ContainsKey(k) == false))
                 throw exception != null ? exception() : new KeyNotFoundException(message ?? $"{parameterName ?? "The dictionary"} must contain all of the following keys:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(keys)}{Environment.NewLine}but does not.{Environment.NewLine}{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}");
@@ -191,7 +191,7 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName, message, exception);
-            keys.MustNotBeNull(nameof(keys), "You called MustHaveKeys wrongly by specifying keys as null.");
+            keys.MustNotBeNull(nameof(keys));
 
             if (keys.Any(parameter.ContainsKey))
                 throw exception != null ? exception() : new DictionaryException(message ?? $"{parameterName ?? "The dictionary"} must not contain any of the following keys:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(keys)}{Environment.NewLine}but it does.{Environment.NewLine}{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);

@@ -46,7 +46,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => "someText".MustNotContain(null);
 
             act.ShouldThrow<ArgumentNullException>()
-               .And.Message.Should().Contain("You called MustNotContain wrongly by specifying null for text.");
+               .And.ParamName.Should().Be("text");
         }
 
         [Fact(DisplayName = "MustNotContain must throw an exception when the specified text is an empty string.")]
@@ -55,7 +55,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => "someText".MustNotContain(string.Empty);
 
             act.ShouldThrow<EmptyStringException>()
-               .And.Message.Should().Contain("You called MustNotContain wrongly by specifying an empty string for text.");
+               .And.ParamName.Should().Be("text");
         }
 
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
