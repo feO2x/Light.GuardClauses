@@ -5,9 +5,9 @@ namespace Light.GuardClauses.Tests.CustomMessagesAndExceptions
 {
     public sealed class CustomExceptionTest : IRunnableTest
     {
-        public readonly Action<Exception> CallAssertionWithCustomException;
+        public readonly Action<Func<Exception>> CallAssertionWithCustomException;
 
-        public CustomExceptionTest(Action<Exception> callAssertionWithCustomException)
+        public CustomExceptionTest(Action<Func<Exception>> callAssertionWithCustomException)
         {
             callAssertionWithCustomException.MustNotBeNull(nameof(callAssertionWithCustomException));
 
@@ -17,8 +17,9 @@ namespace Light.GuardClauses.Tests.CustomMessagesAndExceptions
         void IRunnableTest.RunTest()
         {
             var exception = new Exception();
+            Func<Exception> createExceptionDelegate = () => exception;
 
-            Action act = () => CallAssertionWithCustomException(exception);
+            Action act = () => CallAssertionWithCustomException(createExceptionDelegate);
 
             act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
         }

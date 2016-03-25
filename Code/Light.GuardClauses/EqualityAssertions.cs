@@ -29,10 +29,10 @@ namespace Light.GuardClauses
         ///     Thrown when the specified parameter is different from the other value and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustBe<T>(this T parameter, T other, string parameterName = null, string message = null, Exception exception = null)
+        public static void MustBe<T>(this T parameter, T other, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             if (parameter.EqualsWithHashCode(other) == false)
-                throw exception ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must be {other}, but you specified {parameter}.", parameterName);
+                throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must be {other}, but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -55,10 +55,10 @@ namespace Light.GuardClauses
         ///     Thrown when the specified parameter is different from the other value and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, string parameterName = null, string message = null, Exception exception = null)
+        public static void MustBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             if (equalityComparer.EqualsWithHashCode(parameter, other) == false)
-                throw exception ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must be {other}, but you specified {parameter}.", parameterName);
+                throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must be {other}, but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -80,10 +80,10 @@ namespace Light.GuardClauses
         ///     Thrown when the specified parameter is different from the other value and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustBeEqualTo<T>(this IEquatable<T> parameter, IEquatable<T> other, string parameterName = null, string message = null, Exception exception = null)
+        public static void MustBeEqualTo<T>(this IEquatable<T> parameter, IEquatable<T> other, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             if (parameter.EqualsWithHashCode(other) == false)
-                throw exception ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must be {other}, but you specified {parameter}.", parameterName);
+                throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must be {other}, but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -105,10 +105,10 @@ namespace Light.GuardClauses
         ///     Thrown when the specified parameter is different from the other value and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustBeEqualToValue<T>(this IEquatable<T> parameter, IEquatable<T> other, string parameterName = null, string message = null, Exception exception = null) where T : struct
+        public static void MustBeEqualToValue<T>(this IEquatable<T> parameter, IEquatable<T> other, string parameterName = null, string message = null, Func<Exception> exception = null) where T : struct
         {
             if (parameter.EqualsValueWithHashCode(other) == false)
-                throw exception ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must be {other}, but you specified {parameter}.", parameterName);
+                throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must be {other}, but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -130,10 +130,10 @@ namespace Light.GuardClauses
         ///     Thrown when the specified parameter is different from the other value and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotBe<T>(this T parameter, T other, string parameterName = null, string message = null, Exception exception = null)
+        public static void MustNotBe<T>(this T parameter, T other, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             if (parameter.EqualsWithHashCode(other))
-                throw exception ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be {other}, but you specified this very value.", parameterName);
+                throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be {other}, but you specified this very value.", parameterName);
         }
 
         /// <summary>
@@ -156,10 +156,10 @@ namespace Light.GuardClauses
         ///     Thrown when the specified parameter is different from the other value and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, string parameterName = null, string message = null, Exception exception = null)
+        public static void MustNotBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             if (equalityComparer.EqualsWithHashCode(parameter, other))
-                throw exception ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be {other}, but you specified this very value.", parameterName);
+                throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be {other}, but you specified this very value.", parameterName);
         }
 
         /// <summary>
@@ -181,10 +181,10 @@ namespace Light.GuardClauses
         ///     Thrown when the specified parameter is different from the other value and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotBeEqualTo<T>(this IEquatable<T> parameter, IEquatable<T> other, string parameterName = null, string message = null, Exception exception = null)
+        public static void MustNotBeEqualTo<T>(this IEquatable<T> parameter, IEquatable<T> other, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             if (parameter.EqualsWithHashCode(other))
-                throw exception ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be {other}, but you specified this very value.", parameterName);
+                throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be {other}, but you specified this very value.", parameterName);
         }
 
         /// <summary>
@@ -207,10 +207,10 @@ namespace Light.GuardClauses
         ///     Thrown when the specified parameter is different from the other value and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotBeEqualToValue<T>(this IEquatable<T> parameter, IEquatable<T> other, string parameterName = null, string message = null, Exception exception = null) where T : struct
+        public static void MustNotBeEqualToValue<T>(this IEquatable<T> parameter, IEquatable<T> other, string parameterName = null, string message = null, Func<Exception> exception = null) where T : struct
         {
             if (parameter.EqualsValueWithHashCode(other))
-                throw exception ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be {other}, but you specified this very value.", parameterName);
+                throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be {other}, but you specified this very value.", parameterName);
         }
 
         /// <summary>
@@ -227,10 +227,10 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> and <paramref name="other" /> do not point to the same instance and no <paramref name="exception" /> is specified.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustBeSameAs<T>(this T parameter, T other, string parameterName = null, string message = null, Exception exception = null) where T : class
+        public static void MustBeSameAs<T>(this T parameter, T other, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
         {
             if (ReferenceEquals(parameter, other) == false)
-                throw exception ?? new ArgumentException(message ?? $"{parameterName ?? "The reference"} must point to the object instance \"{other}\", but it does not.", parameterName);
+                throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The reference"} must point to the object instance \"{other}\", but it does not.", parameterName);
         }
 
         /// <summary>
@@ -247,10 +247,10 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> and <paramref name="other" /> point to the same instance and no <paramref name="exception" /> is specified.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotBeSameAs<T>(this T parameter, T other, string parameterName = null, string message = null, Exception exception = null) where T : class
+        public static void MustNotBeSameAs<T>(this T parameter, T other, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
         {
             if (ReferenceEquals(parameter, other))
-                throw exception ?? new ArgumentException(message ?? $"{parameterName ?? "The reference"} must not point to the object instance \"{other}\", but it does.", parameterName);
+                throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The reference"} must not point to the object instance \"{other}\", but it does.", parameterName);
         }
     }
 }

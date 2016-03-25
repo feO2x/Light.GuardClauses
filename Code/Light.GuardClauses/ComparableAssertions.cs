@@ -26,10 +26,10 @@ namespace Light.GuardClauses
         ///     Thrown when the specified <paramref name="parameter" /> is less than <paramref name="boundary" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotBeLessThan<T>(this T parameter, T boundary, string parameterName = null, string message = null, Exception exception = null) where T : IComparable<T>
+        public static void MustNotBeLessThan<T>(this T parameter, T boundary, string parameterName = null, string message = null, Func<Exception> exception = null) where T : IComparable<T>
         {
             if (parameter.CompareTo(boundary) < 0)
-                throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must not be less than {boundary}, but you specified {parameter}.");
+                throw exception != null ? exception() : new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must not be less than {boundary}, but you specified {parameter}.");
         }
 
         /// <summary>
@@ -50,10 +50,10 @@ namespace Light.GuardClauses
         ///     Thrown when the specified <paramref name="parameter" /> is less than or equal to <paramref name="boundary" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotBeLessThanOrEqualTo<T>(this T parameter, T boundary, string parameterName = null, string message = null, Exception exception = null) where T : IComparable<T>
+        public static void MustNotBeLessThanOrEqualTo<T>(this T parameter, T boundary, string parameterName = null, string message = null, Func<Exception> exception = null) where T : IComparable<T>
         {
             if (parameter.CompareTo(boundary) <= 0)
-                throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must not be less than or equal to {boundary}, but you specified {parameter}.");
+                throw exception != null ? exception() : new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must not be less than or equal to {boundary}, but you specified {parameter}.");
         }
 
         /// <summary>
@@ -74,10 +74,10 @@ namespace Light.GuardClauses
         ///     Thrown when the specified <paramref name="parameter" /> is greater than <paramref name="boundary" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotBeGreaterThan<T>(this T parameter, T boundary, string parameterName = null, string message = null, Exception exception = null) where T : IComparable<T>
+        public static void MustNotBeGreaterThan<T>(this T parameter, T boundary, string parameterName = null, string message = null, Func<Exception> exception = null) where T : IComparable<T>
         {
             if (parameter.CompareTo(boundary) > 0)
-                throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must not be greater than {boundary}, but you specified {parameter}.");
+                throw exception != null ? exception() : new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must not be greater than {boundary}, but you specified {parameter}.");
         }
 
         /// <summary>
@@ -98,10 +98,10 @@ namespace Light.GuardClauses
         ///     Thrown when the specified <paramref name="parameter" /> is greater than or equal to <paramref name="boundary" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotBeGreaterThanOrEqualTo<T>(this T parameter, T boundary, string parameterName = null, string message = null, Exception exception = null) where T : IComparable<T>
+        public static void MustNotBeGreaterThanOrEqualTo<T>(this T parameter, T boundary, string parameterName = null, string message = null, Func<Exception> exception = null) where T : IComparable<T>
         {
             if (parameter.CompareTo(boundary) >= 0)
-                throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must not be greater than or equal to {boundary}, but you specified {parameter}.");
+                throw exception != null ? exception() : new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must not be greater than or equal to {boundary}, but you specified {parameter}.");
         }
 
         /// <summary>
@@ -122,13 +122,13 @@ namespace Light.GuardClauses
         ///     Thrown when the specified <paramref name="parameter" /> is not within <paramref name="range" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustBeIn<T>(this T parameter, Range<T> range, string parameterName = null, string message = null, Exception exception = null) where T : IComparable<T>
+        public static void MustBeIn<T>(this T parameter, Range<T> range, string parameterName = null, string message = null, Func<Exception> exception = null) where T : IComparable<T>
         {
             var fromBoundaryKind = range.IsFromInclusive ? "inclusive" : "exclusive";
             var toBoundaryKind = range.IsToInclusive ? "inclusive" : "exclusive";
 
             if (range.IsValueWithinRange(parameter) == false)
-                throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be between {range.From} ({fromBoundaryKind}) and {range.To} ({toBoundaryKind}), but you specified {parameter}.");
+                throw exception != null ? exception() : new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be between {range.From} ({fromBoundaryKind}) and {range.To} ({toBoundaryKind}), but you specified {parameter}.");
         }
 
         /// <summary>
@@ -149,13 +149,13 @@ namespace Light.GuardClauses
         ///     Thrown when the specified <paramref name="parameter" /> is within <paramref name="range" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotBeIn<T>(this T parameter, Range<T> range, string parameterName = null, string message = null, Exception exception = null) where T : IComparable<T>
+        public static void MustNotBeIn<T>(this T parameter, Range<T> range, string parameterName = null, string message = null, Func<Exception> exception = null) where T : IComparable<T>
         {
             var fromBoundaryKind = range.IsFromInclusive ? "inclusive" : "exclusive";
             var toBoundaryKind = range.IsToInclusive ? "inclusive" : "exclusive";
 
             if (range.IsValueWithinRange(parameter))
-                throw exception ?? new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must not be between {range.From} ({fromBoundaryKind}) and {range.To} ({toBoundaryKind}), but you specified {parameter}.");
+                throw exception != null ? exception() : new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must not be between {range.From} ({fromBoundaryKind}) and {range.To} ({toBoundaryKind}), but you specified {parameter}.");
         }
     }
 }
