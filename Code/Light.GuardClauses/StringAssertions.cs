@@ -265,5 +265,29 @@ namespace Light.GuardClauses
             if (text.Contains(parameter))
                 throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not be a substring of \"{text}\", but you specified \"{parameter}\".", parameterName);
         }
+
+        /// <summary>
+        ///     Ensures that the string has the specified length, or otherwise throws a <see cref="StringException" />.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="length">The length that the string should have.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" />.</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> has not the specified <paramref name="length" /> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="StringException">Thrown when <paramref name="parameter" /> does not hat the specified <paramref name="length" /> and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="length" /> is less than zero.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustHaveLength(this string parameter, int length, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName, message, exception);
+            length.MustNotBeLessThan(0, nameof(length));
+
+            if (parameter.Length != length)
+                throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must have a length of {length}, but it actually has a length of {parameter.Length}.", parameterName);
+        }
     }
 }
