@@ -358,5 +358,28 @@ namespace Light.GuardClauses
             if (parameter.StartsWith(text, StringComparison.CurrentCulture))
                 throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not start with \"{text}\", but you specified {parameter}.", parameterName);
         }
+
+        /// <summary>
+        ///     Ensures that the string does not start with the specified text (case-sensitivitiy is ignored), or otherwise throws a <see cref="StringException" />.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="text">The text that should not be at the beginning of the string.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message to be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> starts with <paramref name="text" /> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="StringException">Thrown when <paramref name="parameter" /> starts with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified or Thrown when <paramref name="text" /> is null.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustNotStartWithEquivalentOf(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName, message, exception);
+            text.MustNotBeNull(nameof(text));
+
+            if (parameter.StartsWith(text, StringComparison.CurrentCultureIgnoreCase))
+                throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not start with the equivalent of \"{text}\", but you specified {parameter}.", parameterName);
+        }
     }
 }
