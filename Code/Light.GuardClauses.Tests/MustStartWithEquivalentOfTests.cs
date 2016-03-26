@@ -44,10 +44,8 @@ namespace Light.GuardClauses.Tests
 
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => ((string) null).MustStartWithEquivalentOf("foo", exception: exception)));
             testData.Add(new CustomExceptionTest(exception => "Foo".MustStartWithEquivalentOf("Bar", exception: exception)));
 
-            testData.Add(new CustomMessageTest<ArgumentNullException>(message => ((string) null).MustStartWithEquivalentOf("foo", message: message)));
             testData.Add(new CustomMessageTest<StringException>(message => "Foo".MustStartWithEquivalentOf("Bar", message: message)));
         }
     }

@@ -108,7 +108,7 @@ namespace Light.GuardClauses
         ///     The value indicating whether the two strings should be compared without regarding case-sensitivity (defaults to false).
         /// </param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> (optional).
+        ///     The message that will be injected into the <see cref="StringException" /> (optional).
         /// </param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> does not contain the specified text (optional).
@@ -118,15 +118,13 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> does not contain the specified text and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
-        ///     or
-        ///     Thrown when <paramref name="text" /> is null.
+        ///     Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.
         /// </exception>
         /// <exception cref="EmptyStringException">Thrown when <paramref name="text" /> is an empty string.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustContain(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
         {
-            parameter.MustNotBeNull(parameterName, message, exception);
+            parameter.MustNotBeNull(parameterName);
             text.MustNotBeNullOrEmpty(nameof(text));
 
             if (ignoreCaseSensitivity)
@@ -150,7 +148,7 @@ namespace Light.GuardClauses
         ///     The value indicating whether the two strings should be compared without regarding case-sensitivity (defaults to false).
         /// </param>
         /// <param name="message">
-        ///     The message that should be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> (optional).
+        ///     The message that should be injected into the <see cref="StringException" /> (optional).
         /// </param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> does contain the specified text (optional).
@@ -160,13 +158,13 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> contains <paramref name="text" /> an no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified or Thrown when <paramref name="text" /> is null.
+        ///     Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.
         /// </exception>
         /// <exception cref="EmptyStringException">Thrown when <paramref name="text" /> is an empty string.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotContain(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
         {
-            parameter.MustNotBeNull(parameterName, message, exception);
+            parameter.MustNotBeNull(parameterName);
             text.MustNotBeNullOrEmpty(nameof(text));
 
             if (ignoreCaseSensitivity)
@@ -190,7 +188,7 @@ namespace Light.GuardClauses
         ///     The value indicating whether the two strings should be compared without regarding case-sensitivity (defaults to false).
         /// </param>
         /// <param name="message">
-        ///     The message that should be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> for <paramref name="parameter" /> (optional).
+        ///     The message that should be injected into the <see cref="StringException" /> (optional).
         /// </param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> is no substring of the specified text (optional).
@@ -200,15 +198,15 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> is not a substring of <paramref name="text" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="text" /> is null or Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.
         /// </exception>
         /// <exception cref="EmptyStringException">
-        ///     Thrown when <paramref name="text" /> is an empty string or Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> or <paramref name="text" /> is empty.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
         {
-            parameter.MustNotBeNullOrEmpty(parameterName, message, exception);
+            parameter.MustNotBeNullOrEmpty(parameterName);
             text.MustNotBeNullOrEmpty(nameof(text));
 
             if (ignoreCaseSensitivity)
@@ -233,7 +231,7 @@ namespace Light.GuardClauses
         ///     The value indicating whether the two strings should be compared without regarding case-sensitivity (defaults to false).
         /// </param>
         /// <param name="message">
-        ///     The message that should be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> for <paramref name="parameter" /> (optional).
+        ///     The message that should be injected into the <see cref="StringException" /> (optional).
         /// </param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> is a substring of the specified text (optional).
@@ -242,16 +240,12 @@ namespace Light.GuardClauses
         /// <exception cref="StringException">
         ///     Thrown when <paramref name="parameter" /> is a substring of <paramref name="text" /> and no <paramref name="exception" /> is specified.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="text" /> is null or Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
-        /// </exception>
-        /// <exception cref="EmptyStringException">
-        ///     Thrown when <paramref name="text" /> is an empty string or Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
-        /// </exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
+        /// <exception cref="EmptyStringException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is empty.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
         {
-            parameter.MustNotBeNullOrEmpty(parameter, message, exception);
+            parameter.MustNotBeNullOrEmpty(parameter);
             text.MustNotBeNullOrEmpty(nameof(text));
 
             if (ignoreCaseSensitivity)
@@ -272,18 +266,18 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="length">The length that the string should have.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="StringException" /> (optional).</param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> has not the specified <paramref name="length" /> (optional).
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> does not hat the specified <paramref name="length" /> and no <paramref name="exception" /> is specified.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="length" /> is less than zero.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustHaveLength(this string parameter, int length, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            parameter.MustNotBeNull(parameterName, message, exception);
+            parameter.MustNotBeNull(parameterName);
             length.MustNotBeLessThan(0, nameof(length));
 
             if (parameter.Length != length)
@@ -296,17 +290,17 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="text">The text that should be at the beginning of the string.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message to be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> (optional).</param>
+        /// <param name="message">The message to be injected into the <see cref="StringException" /> (optional).</param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> does not start with <paramref name="text" /> (optional).
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> does not start with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified or Thrown when <paramref name="text" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustStartWith(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            parameter.MustNotBeNull(parameterName, message, exception);
+            parameter.MustNotBeNull(parameterName);
             text.MustNotBeNull(nameof(text));
 
             if (parameter.StartsWith(text, StringComparison.CurrentCulture) == false)
@@ -319,17 +313,17 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="text">The text that should be at the beginning of the string.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message to be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> (optional).</param>
+        /// <param name="message">The message to be injected into the <see cref="StringException" /> (optional).</param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> does not start with <paramref name="text" /> (optional).
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> does not start with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified or Thrown when <paramref name="text" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustStartWithEquivalentOf(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            parameter.MustNotBeNull(parameterName, message, exception);
+            parameter.MustNotBeNull(parameterName);
             text.MustNotBeNull(nameof(text));
 
             if (parameter.StartsWith(text, StringComparison.CurrentCultureIgnoreCase) == false)
@@ -342,17 +336,17 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="text">The text that should not be at the beginning of the string.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message to be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> (optional).</param>
+        /// <param name="message">The message to be injected into the <see cref="StringException" /> (optional).</param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> starts with <paramref name="text" /> (optional).
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> starts with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified or Thrown when <paramref name="text" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotStartWith(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            parameter.MustNotBeNull(parameterName, message, exception);
+            parameter.MustNotBeNull(parameterName);
             text.MustNotBeNull(nameof(text));
 
             if (parameter.StartsWith(text, StringComparison.CurrentCulture))
@@ -365,17 +359,17 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="text">The text that should not be at the beginning of the string.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message to be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> (optional).</param>
+        /// <param name="message">The message to be injected into the <see cref="StringException" /> (optional).</param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> starts with <paramref name="text" /> (optional).
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> starts with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified or Thrown when <paramref name="text" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotStartWithEquivalentOf(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            parameter.MustNotBeNull(parameterName, message, exception);
+            parameter.MustNotBeNull(parameterName);
             text.MustNotBeNull(nameof(text));
 
             if (parameter.StartsWith(text, StringComparison.CurrentCultureIgnoreCase))

@@ -52,21 +52,9 @@ namespace Light.GuardClauses.Tests
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => "Hello there!".MustContain("world", exception: exception)));
-            testData.Add(new CustomExceptionTest(exception =>
-                                                 {
-                                                     string @string = null;
-                                                     // ReSharper disable once ExpressionIsAlwaysNull
-                                                     @string.MustContain(string.Empty, exception: exception);
-                                                 }));
 
             testData.Add(new CustomMessageTest<StringException>(message => "42".MustContain("b", message: message)));
             testData.Add(new CustomMessageTest<StringException>(message => string.Empty.MustContain("a", message: message)));
-            testData.Add(new CustomMessageTest<ArgumentNullException>(message =>
-                                                                      {
-                                                                          string @string = null;
-                                                                          // ReSharper disable once ExpressionIsAlwaysNull
-                                                                          @string.MustContain(string.Empty, message: message);
-                                                                      }));
         }
     }
 }

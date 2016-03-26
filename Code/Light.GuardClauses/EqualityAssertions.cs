@@ -54,6 +54,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentException">
         ///     Thrown when the specified parameter is different from the other value and no <paramref name="exception" /> is specified.
         /// </exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="equalityComparer" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
@@ -155,6 +156,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentException">
         ///     Thrown when the specified parameter is different from the other value and no <paramref name="exception" /> is specified.
         /// </exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="equalityComparer" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, string parameterName = null, string message = null, Func<Exception> exception = null)
         {

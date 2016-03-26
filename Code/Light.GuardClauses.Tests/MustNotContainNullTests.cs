@@ -59,10 +59,8 @@ namespace Light.GuardClauses.Tests
         {
             testData.Add(new CustomExceptionTest(exception => new object[] { null }.MustNotContainNull(exception: exception)));
             testData.Add(new CustomExceptionTest(exception => new[] { "This collection contains null", null }.MustNotContainNull(exception: exception)));
-            testData.Add(new CustomExceptionTest(exception => ((object[]) null).MustNotContainNull(exception: exception)));
 
             testData.Add(new CustomMessageTest<CollectionException>(message => new[] { "This collection contains null", null }.MustNotContainNull(message: message)));
-            testData.Add(new CustomMessageTest<ArgumentNullException>(message => ((object[]) null).MustNotContainNull(message: message)));
         }
     }
 }

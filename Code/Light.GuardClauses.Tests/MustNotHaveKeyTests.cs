@@ -58,10 +58,8 @@ namespace Light.GuardClauses.Tests
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => new Dictionary<char, string> { ['a'] = "value" }.MustNotHaveKey('a', exception: exception)));
-            testData.Add(new CustomExceptionTest(exception => ((Dictionary<char, string>) null).MustNotHaveKey('f', exception: exception)));
 
             testData.Add(new CustomMessageTest<DictionaryException>(message => new Dictionary<char, string> { ['a'] = "value" }.MustNotHaveKey('a', message: message)));
-            testData.Add(new CustomMessageTest<ArgumentNullException>(message => ((Dictionary<char, string>) null).MustNotHaveKey('f', message: message)));
         }
     }
 }

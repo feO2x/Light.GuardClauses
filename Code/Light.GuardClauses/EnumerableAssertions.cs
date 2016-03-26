@@ -68,20 +68,20 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified collection is not null or empty, or otherwise throws an exception.
+        ///     Ensures that the specified collection is not null or empty, or otherwise throws an <see cref="EmptyCollectionException"/>.
         /// </summary>
         /// <typeparam name="T">The type of the items in the collection.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="ArgumentNullException" /> or the <see cref="EmptyCollectionException" /> (optional).
+        ///     The message that will be injected into the <see cref="EmptyCollectionException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when the specified <paramref name="parameter" /> is null or empty (optional).
+        ///     The exception that is thrown when the specified <paramref name="parameter" /> is empty (optional).
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is null.
         /// </exception>
         /// <exception cref="EmptyCollectionException">
         ///     Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
@@ -89,11 +89,12 @@ namespace Light.GuardClauses
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotBeNullOrEmpty<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            if (parameter == null)
-                throw exception != null ? exception() : new ArgumentNullException(parameterName, message);
+            // ReSharper disable PossibleMultipleEnumeration
+            parameter.MustNotBeNull(parameterName);
 
             if (parameter.Any() == false)
                 throw exception != null ? exception() : (message == null ? new EmptyCollectionException(parameterName) : new EmptyCollectionException(message, parameterName));
+            // ReSharper restore PossibleMultipleEnumeration
         }
 
         /// <summary>
@@ -115,7 +116,7 @@ namespace Light.GuardClauses
         public static void MustNotContainDuplicates<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            parameter.MustNotBeNull(parameterName, message, exception);
+            parameter.MustNotBeNull(parameterName);
 
             var count = parameter.Count();
             if (count == 0)
@@ -152,13 +153,13 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" />contains at least one item that is null and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is null.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotContainNull<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
         {
             // ReSharper disable PossibleMultipleEnumeration
-            parameter.MustNotBeNull(parameterName, message, exception);
+            parameter.MustNotBeNull(parameterName);
 
             var currentIndex = -1;
             foreach (var item in parameter)
@@ -180,7 +181,7 @@ namespace Light.GuardClauses
         /// <param name="item">The item that should be part of the collection's items.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> (optional).
+        ///     The message that will be injected into the <see cref="CollectionException" /> (optional).
         /// </param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> does not contain <paramref name="item" /> (optional).
@@ -190,13 +191,13 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> does not contain the specified <paramref name="item" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is null.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustContain<T>(this IEnumerable<T> parameter, T item, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            parameter.MustNotBeNull(parameterName, message, exception);
+            parameter.MustNotBeNull(parameterName);
 
             if (parameter.Contains(item) == false)
                 throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain value \"{item.ToStringOrNull()}\", but does not.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
@@ -211,7 +212,7 @@ namespace Light.GuardClauses
         /// <param name="item">The item that should not be part of the collection's items.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="StringException" /> or <see cref="ArgumentNullException" /> (optional).
+        ///     The message that will be injected into the <see cref="CollectionException" /> (optional).
         /// </param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> does contain <paramref name="item" /> (optional).
@@ -221,13 +222,13 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> does contain the specified <paramref name="item" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is null.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotContain<T>(this IEnumerable<T> parameter, T item, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            parameter.MustNotBeNull(parameterName, message, exception);
+            parameter.MustNotBeNull(parameterName);
 
             if (parameter.Contains(item))
                 throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must not contain value \"{item.ToStringOrNull()}\", but it does.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
@@ -242,7 +243,7 @@ namespace Light.GuardClauses
         /// <param name="superset">The collection that <paramref name="parameter" /> must be a subset of.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that is injected into the <see cref="CollectionException" /> or <see cref="ArgumentNullException" />.
+        ///     The message that is injected into the <see cref="CollectionException" /> (optional).
         /// </param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> is not a subset of <paramref name="superset" /> (optional).
@@ -252,13 +253,13 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> is not part of <paramref name="superset" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified or Thrown when <paramref name="superset" /> is null.
+        ///     Thrown when <paramref name="parameter" /> or <paramref name="superset" /> is null.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeSubsetOf<T>(this IEnumerable<T> parameter, IEnumerable<T> superset, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            parameter.MustNotBeNull(parameterName, message, exception);
+            parameter.MustNotBeNull(parameterName);
             superset.MustNotBeNull(nameof(superset));
 
             if (parameter.All(superset.Contains) == false)
@@ -276,7 +277,7 @@ namespace Light.GuardClauses
         /// <param name="subset">The subset that must be part of the collection.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="CollectionException" /> or <see cref="ArgumentNullException" />.
+        ///     The message that will be injected into the <see cref="CollectionException" /> (optional).
         /// </param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> is not a superset of <paramref name="subset" /> (optional).
@@ -286,13 +287,13 @@ namespace Light.GuardClauses
         ///     Thrown when there is any item of <paramref name="subset" /> that <paramref name="parameter" /> does not contain and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified or Thrown when <paramref name="subset" /> is null.
+        ///     Thrown when <paramref name="parameter" /> or <paramref name="subset" /> is null.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustContain<T>(this IEnumerable<T> parameter, IEnumerable<T> subset, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            parameter.MustNotBeNull(parameterName, message, exception);
+            parameter.MustNotBeNull(parameterName);
             subset.MustNotBeNull(nameof(subset));
 
             if (subset.All(parameter.Contains) == false)
@@ -325,18 +326,18 @@ namespace Light.GuardClauses
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="set">The set that must not be part of the collection.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> or <see cref="ArgumentNullException" />.</param>
+        /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> contains any items of <paramref name="set" /> (optional).
         ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> contains any items of <paramref name="set" /> and no <paramref name="exception" /> is specified.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified or Thrown when <paramref name="set" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotContain<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            parameter.MustNotBeNull(parameterName, message, exception);
+            parameter.MustNotBeNull(parameterName);
             set.MustNotBeNull(nameof(set));
 
             if (set.Any(parameter.Contains))

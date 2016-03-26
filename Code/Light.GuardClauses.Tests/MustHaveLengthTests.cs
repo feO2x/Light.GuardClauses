@@ -50,10 +50,8 @@ namespace Light.GuardClauses.Tests
 
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => ((string) null).MustHaveLength(100, exception: exception)));
             testData.Add(new CustomExceptionTest(exception => "someText".MustHaveLength(13, exception: exception)));
 
-            testData.Add(new CustomMessageTest<ArgumentNullException>(message => ((string) null).MustHaveLength(3, message: message)));
             testData.Add(new CustomMessageTest<StringException>(message => "foo".MustHaveLength(2, message: message)));
         }
     }

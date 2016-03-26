@@ -61,12 +61,10 @@ namespace Light.GuardClauses.Tests
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => "I am here".MustNotContain("am", exception: exception)));
-            testData.Add(new CustomExceptionTest(exception => ((string) null).MustNotContain("Foo", exception: exception)));
             testData.Add(new CustomExceptionTest(exception =>
                                                  "When you play the game of thrones you win, or you die. There is no middle ground.".MustNotContain("game of thrones", exception: exception)));
 
             testData.Add(new CustomMessageTest<StringException>(message => "I am here".MustNotContain("am", message: message)));
-            testData.Add(new CustomMessageTest<ArgumentNullException>(message => ((string) null).MustNotContain("Foo", message: message)));
         }
     }
 }

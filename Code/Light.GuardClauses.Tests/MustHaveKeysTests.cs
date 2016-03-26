@@ -63,20 +63,8 @@ namespace Light.GuardClauses.Tests
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => new Dictionary<char, object>().MustHaveKeys(new[] { 'a', 'b' }, exception: exception)));
-            testData.Add(new CustomExceptionTest(exception =>
-                                                 {
-                                                     Dictionary<char, object> dictionary = null;
-                                                     // ReSharper disable once ExpressionIsAlwaysNull
-                                                     dictionary.MustHaveKeys(new[] { 'a', 'b' }, exception: exception);
-                                                 }));
 
             testData.Add(new CustomMessageTest<KeyNotFoundException>(message => new Dictionary<char, object>().MustHaveKeys(new[] { 'a', 'b' }, message: message)));
-            testData.Add(new CustomMessageTest<ArgumentNullException>(message =>
-                                                                      {
-                                                                          Dictionary<char, object> dictionary = null;
-                                                                          // ReSharper disable once ExpressionIsAlwaysNull
-                                                                          dictionary.MustHaveKeys(new[] { 'a', 'b' }, message: message);
-                                                                      }));
         }
     }
 }

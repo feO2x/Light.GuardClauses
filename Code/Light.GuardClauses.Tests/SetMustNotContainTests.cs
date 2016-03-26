@@ -58,10 +58,8 @@ namespace Light.GuardClauses.Tests
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => new[] { 'a', 'b' }.MustNotContain(new[] { 'a' }, exception: exception)));
-            testData.Add(new CustomExceptionTest(exception => ((string[]) null).MustNotContain(new[] { "Foo", "Bar" }, exception: exception)));
 
             testData.Add(new CustomMessageTest<CollectionException>(message => new[] { 'a', 'b' }.MustNotContain(new[] { 'a' }, message: message)));
-            testData.Add(new CustomMessageTest<ArgumentNullException>(message => ((string[]) null).MustNotContain(new[] { "Foo", "Bar" }, message: message)));
         }
     }
 }

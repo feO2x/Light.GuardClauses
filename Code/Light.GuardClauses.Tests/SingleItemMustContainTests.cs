@@ -59,21 +59,9 @@ namespace Light.GuardClauses.Tests
 
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception =>
-                                                 {
-                                                     string[] array = null;
-                                                     // ReSharper disable once ExpressionIsAlwaysNull
-                                                     array.MustContain("Foo", exception: exception);
-                                                 }));
             testData.Add(new CustomExceptionTest(exception => new[] { 1, 2, 3 }.MustContain(42, exception: exception)));
 
             testData.Add(new CustomMessageTest<CollectionException>(message => new[] { 1, 2, 3 }.MustContain(42, message: message)));
-            testData.Add(new CustomMessageTest<ArgumentNullException>(message =>
-                                                                      {
-                                                                          string[] array = null;
-                                                                          // ReSharper disable once ExpressionIsAlwaysNull
-                                                                          array.MustContain("Foo", message: message);
-                                                                      }));
         }
     }
 }
