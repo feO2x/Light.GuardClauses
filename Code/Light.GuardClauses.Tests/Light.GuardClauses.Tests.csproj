@@ -88,6 +88,7 @@
     <Compile Include="MustContainOnlyLettersTests.cs" />
     <Compile Include="MustEndWithEquivalentOfTests.cs" />
     <Compile Include="MustEndWithTests.cs" />
+    <Compile Include="MustHaveCountTests.cs" />
     <Compile Include="MustHaveLengthTests.cs" />
     <Compile Include="MustNotEndWithEquivalentOfTests.cs" />
     <Compile Include="MustNotEndWithTests.cs" />

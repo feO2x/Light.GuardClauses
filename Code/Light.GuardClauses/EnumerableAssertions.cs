@@ -68,7 +68,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified collection is not null or empty, or otherwise throws an <see cref="EmptyCollectionException"/>.
+        ///     Ensures that the specified collection is not null or empty, or otherwise throws an <see cref="EmptyCollectionException" />.
         /// </summary>
         /// <typeparam name="T">The type of the items in the collection.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
@@ -357,6 +357,33 @@ namespace Light.GuardClauses
         public static void MustNotContain<T>(this IEnumerable<T> parameter, params T[] set)
         {
             MustNotContain(parameter, (IEnumerable<T>) set);
+        }
+
+        /// <summary>
+        ///     Ensures that the collection has the specified count of items, or otherwise throws a <see cref="CollectionException" />.
+        /// </summary>
+        /// <typeparam name="T">The type of the items of the collection.</typeparam>
+        /// <param name="parameter">The collection to be checked.</param>
+        /// <param name="count">The count that the collection should have.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message to be injected into the <see cref="CollectionException" />.</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> does not have the specified <paramref name="count" /> (optional).
+        ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not have the specified <paramref name="count" /> and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="count" /> is less than zero.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustHaveCount<T>(this IEnumerable<T> parameter, int count, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            parameter.MustNotBeNull();
+            count.MustNotBeLessThan(0, nameof(count));
+
+            if (parameter.Count() != count)
+                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must have count {count}, but you specified a collection with count {parameter.Count()}.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
+            // ReSharper restore PossibleMultipleEnumeration
         }
     }
 }
