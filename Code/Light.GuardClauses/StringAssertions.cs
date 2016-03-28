@@ -467,5 +467,32 @@ namespace Light.GuardClauses
             if (parameter.EndsWith(text, StringComparison.CurrentCultureIgnoreCase))
                 throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not end with equivalent of \"{text}\", but you specified {parameter}.", parameterName);
         }
+
+        /// <summary>
+        ///     Ensures that the specified string contains only letters, or otherwise throws a <see cref="StringException" />.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message to be injected into the <see cref="StringException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> contains other characters than letters (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="StringException">Thrown when <paramref name="parameter" /> contains other characters than letters.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="EmptyStringException">Thrown when <paramref name="parameter" /> is empty.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustContainOnlyLetters(this string parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNullOrEmpty(parameterName);
+
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (var i = 0; i < parameter.Length; i++)
+            {
+                if (char.IsLetter(parameter[i]) == false)
+                    throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must contain only letters, but you specified \"{parameter}\".", parameterName);
+            }
+        }
     }
 }
