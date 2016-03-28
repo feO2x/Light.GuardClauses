@@ -87,6 +87,7 @@
     <Compile Include="MustEndWithEquivalentOfTests.cs" />
     <Compile Include="MustEndWithTests.cs" />
     <Compile Include="MustHaveLengthTests.cs" />
+    <Compile Include="MustNotEndWithEquivalentOfTests.cs" />
     <Compile Include="MustNotEndWithTests.cs" />
     <Compile Include="MustNotStartWithEquivalentOfTests.cs" />
     <Compile Include="MustNotStartWithTests.cs" />

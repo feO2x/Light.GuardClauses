@@ -426,7 +426,7 @@ namespace Light.GuardClauses
         ///     Ensures that the string does not end with the specified text (case-sensitivity is respected), or otherwise throws a <see cref="StringException" />.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="text">The text that should be at the end of the string.</param>
+        /// <param name="text">The text that should not be at the end of the string.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message to be injected into the <see cref="StringException" /> (optional).</param>
         /// <param name="exception">
@@ -443,6 +443,29 @@ namespace Light.GuardClauses
 
             if (parameter.EndsWith(text, StringComparison.CurrentCulture))
                 throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not end with \"{text}\", but you specified {parameter}.", parameterName);
+        }
+
+        /// <summary>
+        ///     Ensures that the string does not end with the specified text (case-sensitivity is ignored), or otherwise throws a <see cref="StringException" />.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="text">The text that should not be at the end of the string.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message to be injected into the <see cref="StringException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> ends with <paramref name="text" /> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="StringException">Thrown when <paramref name="parameter" /> ends with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustNotEndWithEquivalentOf(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+            text.MustNotBeNull(nameof(text));
+
+            if (parameter.EndsWith(text, StringComparison.CurrentCultureIgnoreCase))
+                throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not end with equivalent of \"{text}\", but you specified {parameter}.", parameterName);
         }
     }
 }
