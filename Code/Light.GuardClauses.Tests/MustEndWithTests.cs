@@ -8,7 +8,7 @@ namespace Light.GuardClauses.Tests
 {
     public sealed class MustEndWithTests : ICustomMessageAndExceptionTestDataProvider
     {
-        [Theory(DisplayName = "MustEndWith must throw a StringException when the string does not end with the specified text.")]
+        [Theory(DisplayName = "MustEndWith must throw a StringException when the string does not end with the specified text (case-sensitivity respected).")]
         [InlineData("Wello", "Horld!")]
         [InlineData("This should end", "End")]
         [InlineData("A mind needs books as a sword needs a whetstone, if it is to keep its edge.", "keep its ledge.")]
@@ -20,7 +20,7 @@ namespace Light.GuardClauses.Tests
                .And.Message.Should().Contain($"{nameof(@string)} must end with \"{endText}\", but you specified {@string}.");
         }
 
-        [Theory(DisplayName = "MustEndWith must not throw an exception when the string ends with the specified text.")]
+        [Theory(DisplayName = "MustEndWith must not throw an exception when the string ends with the specified text (case-sensitivity respected).")]
         [InlineData("This is the end", "is the end")]
         [InlineData("Hello", "lo")]
         [InlineData("Can a man still be brave if he's afraid?", "he's afraid?")]
