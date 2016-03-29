@@ -54,7 +54,7 @@ namespace Light.GuardClauses.Tests
             // ReSharper restore PossibleMultipleEnumeration
         }
 
-        [Theory(DisplayName = "The caller can specify for all extension methods a custom message  that has to be injected into the exception object instead of the default message.")]
+        [Theory(DisplayName = "The caller can specify for all extension methods a custom message that has to be injected into the exception object instead of the default message.")]
         [MemberData(nameof(CustomMessageTestData))]
         public void CheckCustomMessage(Type testClassType, IRunnableTest test)
         {
