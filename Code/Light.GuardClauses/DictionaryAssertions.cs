@@ -213,5 +213,47 @@ namespace Light.GuardClauses
         {
             MustNotHaveKeys(parameter, (IEnumerable<TKey>) keys);
         }
+
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustHaveValue<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TValue value, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.Values.Contains(value) == false)
+                throw exception != null ? exception() : new ValueNotFoundException(message ?? $"{parameterName ?? "The dictionary"} must contain value \"{value.ToStringOrNull()}\", but it does not.{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
+        }
+
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustHaveValues<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TValue> values, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            parameter.MustNotBeNull(parameterName);
+            values.MustNotBeNullOrEmpty(nameof(values));
+
+            if (values.Any(v => parameter.Values.Contains(v) == false))
+                throw exception != null ? exception() : new ValueNotFoundException(message ?? $"{parameterName ?? "The dictionary"} must contain the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(values)}{Environment.NewLine}{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
+            // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustNotHaveValue<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TValue value, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.Values.Contains(value))
+                throw exception != null ? exception() : new DictionaryException(message ?? $"{parameterName ?? "The dictionary"} must not contain value \"{value.ToStringOrNull()}\", but it does.{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
+        }
+
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustNotHaveValues<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TValue> values, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            parameter.MustNotBeNull(parameterName);
+            values.MustNotBeNullOrEmpty(nameof(values));
+
+            if (values.Any(parameter.Values.Contains))
+                throw exception != null ? exception() : new DictionaryException(message ?? $"{parameterName ?? "The dictionary"} must not contain any of the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(values)}{Environment.NewLine}{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
+            // ReSharper restore PossibleMultipleEnumeration
+        }
     }
 }
