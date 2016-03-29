@@ -145,9 +145,8 @@ namespace Light.GuardClauses
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeValidEnumValue<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            var enumType = typeof (T);
-            if (Enum.IsDefined(enumType, parameter) == false)
-                throw exception != null ? exception() : (message == null ? new EnumValueNotDefinedException(parameterName, parameter, enumType) : new EnumValueNotDefinedException(message, parameterName));
+            if (Enum.IsDefined(typeof(T), parameter) == false)
+                throw exception != null ? exception() : (message == null ? new EnumValueNotDefinedException(parameterName, parameter, typeof(T)) : new EnumValueNotDefinedException(message, parameterName));
         }
 
         /// <summary>
