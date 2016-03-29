@@ -62,6 +62,20 @@ Every extension method of Light.GuardClauses has three optional parameters: **pa
 * **exception** lets you specify a delegate creating an exception object that is thrown instead of the default exception.
 
 ```csharp
+public class ConsoleWriter
+{
+    private readonly ConsoleColor _foregroundColor;
+
+    public ConsoleWriter(ConsoleColor foregroundColor = ConsoleColor.Black)
+    {
+        foregroundColor.MustBeValidEnumValue(parameterName: nameof(foregroundColor));
+        
+        _foregroundColor = foregroundColor;
+    }
+}
+```
+
+```csharp
 public class Entity
 {
     public Guid Id { get; }
