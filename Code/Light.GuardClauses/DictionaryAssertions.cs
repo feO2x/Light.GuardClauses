@@ -91,7 +91,7 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> is null.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustHaveKey<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TKey key, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static void MustContainKey<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TKey key, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
 
@@ -121,7 +121,7 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> is null.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotHaveKey<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TKey key, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static void MustNotContainKey<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TKey key, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
 
@@ -145,7 +145,7 @@ namespace Light.GuardClauses
         /// <exception cref="KeyNotFoundException">Thrown when <paramref name="parameter" /> does not contain any of the specified <paramref name="keys" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="keys" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustHaveKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TKey> keys, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static void MustContainKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TKey> keys, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
             // ReSharper disable PossibleMultipleEnumeration
@@ -166,9 +166,9 @@ namespace Light.GuardClauses
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not contain any of the specified <paramref name="keys" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when any of the parameters is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustHaveKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, params TKey[] keys)
+        public static void MustContainKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, params TKey[] keys)
         {
-            MustHaveKeys(parameter, (IEnumerable<TKey>) keys);
+            MustContainKeys(parameter, (IEnumerable<TKey>) keys);
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace Light.GuardClauses
         /// <exception cref="DictionaryException">Thrown when <paramref name="parameter" /> does contain any of the specified <paramref name="keys" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="keys" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotHaveKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TKey> keys, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static void MustNotContainKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TKey> keys, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
@@ -205,17 +205,31 @@ namespace Light.GuardClauses
         /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
         /// <param name="parameter">The dictionary to be checked.</param>
         /// <param name="keys">The collection of keys that must not be part of the dictionary.</param>
-        /// ///
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does contain any of the specified <paramref name="keys" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when any of the parameters is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotHaveKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, params TKey[] keys)
+        public static void MustNotContainKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, params TKey[] keys)
         {
-            MustNotHaveKeys(parameter, (IEnumerable<TKey>) keys);
+            MustNotContainKeys(parameter, (IEnumerable<TKey>) keys);
         }
 
+        /// <summary>
+        ///     Ensures that the dictionary contains the specified value, or otherwise throws a <see cref="ValueNotFoundException" />.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
+        /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
+        /// <param name="parameter">The dictionary to be checked.</param>
+        /// <param name="value">The value that should be part of the dictionary.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="ValueNotFoundException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that will be thrown when <paramref name="parameter" /> does not contain the specified <paramref name="value" /> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ValueNotFoundException">Thrown when <paramref name="parameter" /> does not contain the specified <paramref name="value" /> and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustHaveValue<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TValue value, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static void MustContainValue<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TValue value, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
 
@@ -223,8 +237,24 @@ namespace Light.GuardClauses
                 throw exception != null ? exception() : new ValueNotFoundException(message ?? $"{parameterName ?? "The dictionary"} must contain value \"{value.ToStringOrNull()}\", but it does not.{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
         }
 
+        /// <summary>
+        ///     Ensures that the dictionary contains the specified values, or otherwise throws a <see cref="ValueNotFoundException" />. This method is not aware of duplicates.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
+        /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
+        /// <param name="parameter">The dictionary to be checked.</param>
+        /// <param name="values">The values that should be part of the dictionary.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="ValueNotFoundException" />.</param>
+        /// <param name="exception">
+        ///     The exception that will be thrown when <paramref name="parameter" /> does not contain all of the specified <paramref name="values" /> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ValueNotFoundException">Thrown when <paramref name="parameter" /> does not contain the specified <paramref name="values" /> and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="EmptyCollectionException">Thrown when <paramref name="values" /> has no entries.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="values" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustHaveValues<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TValue> values, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static void MustContainValues<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TValue> values, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
@@ -235,8 +265,39 @@ namespace Light.GuardClauses
             // ReSharper restore PossibleMultipleEnumeration
         }
 
+        /// <summary>
+        ///     Ensures that the dictionary contains the specified values, or otherwise throws a <see cref="ValueNotFoundException" />. This method is not aware of duplicates and throws the default exception.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
+        /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
+        /// <param name="parameter">The dictionary to be checked.</param>
+        /// <param name="values">The values that should be part of the dictionary.</param>
+        /// <exception cref="ValueNotFoundException">Thrown when <paramref name="parameter" /> does not contain the specified <paramref name="values" />.</exception>
+        /// <exception cref="EmptyCollectionException">Thrown when <paramref name="values" /> has no entries.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when any of the parameters is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotHaveValue<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TValue value, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static void MustContainValues<TKey, TValue>(this IDictionary<TKey, TValue> parameter, params TValue[] values)
+        {
+            MustContainValues(parameter, (IEnumerable<TValue>) values);
+        }
+
+        /// <summary>
+        ///     Ensures that the dictionary does not contain the specified value, or otherwise throws a <see cref="DictionaryException" />.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
+        /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
+        /// <param name="parameter">The dictionary to be checked.</param>
+        /// <param name="value">The values that should not be part of the dictionary.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="ValueNotFoundException" />.</param>
+        /// <param name="exception">
+        ///     The exception that will be thrown when <paramref name="parameter" /> does contain the specified <paramref name="value" />.
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="DictionaryException">Thrown when <paramref name="parameter" /> contains the specified <paramref name="value" /> and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustNotContainValue<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TValue value, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
 
@@ -244,8 +305,24 @@ namespace Light.GuardClauses
                 throw exception != null ? exception() : new DictionaryException(message ?? $"{parameterName ?? "The dictionary"} must not contain value \"{value.ToStringOrNull()}\", but it does.{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
         }
 
+        /// <summary>
+        ///     Ensures that the dictionary does not contain the specified values, or otherwise throws a <see cref="DictionaryException" />. This method is not aware of duplicates.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
+        /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
+        /// <param name="parameter">The dictionary to be checked.</param>
+        /// <param name="values">The values that should not be part of the dictionary.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="DictionaryException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that will be thrown when <paramref name="parameter" /> contains any of the specified <paramref name="values" /> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="DictionaryException">Thrown when <paramref name="parameter" /> contains any of the specified <paramref name="values" /> and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="EmptyCollectionException">Thrown when <paramref name="values" /> has no entries.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="values" /> is null.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
-        public static void MustNotHaveValues<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TValue> values, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static void MustNotContainValues<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TValue> values, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
@@ -254,6 +331,22 @@ namespace Light.GuardClauses
             if (values.Any(parameter.Values.Contains))
                 throw exception != null ? exception() : new DictionaryException(message ?? $"{parameterName ?? "The dictionary"} must not contain any of the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(values)}{Environment.NewLine}{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
             // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
+        ///     Ensures that the dictionary does not contain the specified values, or otherwise throws a <see cref="DictionaryException" />. This method is not aware of duplicates and throws the default exception.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
+        /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
+        /// <param name="parameter">The dictionary to be checked.</param>
+        /// <param name="values">The values that should not be part of the dictionary.</param>
+        /// <exception cref="ValueNotFoundException">Thrown when <paramref name="parameter" /> does contain any of the specified <paramref name="values" />.</exception>
+        /// <exception cref="EmptyCollectionException">Thrown when <paramref name="values" /> has no entries.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when any of the parameters is null.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustNotContainValues<TKey, TValue>(this IDictionary<TKey, TValue> parameter, params TValue[] values)
+        {
+            MustNotContainValues(parameter, (IEnumerable<TValue>) values);
         }
     }
 }

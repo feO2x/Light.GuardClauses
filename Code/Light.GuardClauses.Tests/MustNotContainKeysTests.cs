@@ -10,13 +10,13 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustNotHaveKeys : ICustomMessageAndExceptionTestDataProvider
+    public sealed class MustNotContainKeysTests : ICustomMessageAndExceptionTestDataProvider
     {
-        [Theory(DisplayName = "MustNotHaveKeys must throw a DictionaryException when the dictionary contains any of the specified keys.")]
+        [Theory(DisplayName = "MustNotContainKeys must throw a DictionaryException when the dictionary contains any of the specified keys.")]
         [MemberData(nameof(HasKeysData))]
         public void HasKeys(IDictionary<string, object> dictionary, IEnumerable<string> keys)
         {
-            Action act = () => dictionary.MustNotHaveKeys(keys, nameof(dictionary));
+            Action act = () => dictionary.MustNotContainKeys(keys, nameof(dictionary));
 
             act.ShouldThrow<DictionaryException>()
                .And.Message.Should().Contain($"{nameof(dictionary)} must not contain any of the following keys:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(keys)}{Environment.NewLine}but it does.");
@@ -31,11 +31,11 @@ namespace Light.GuardClauses.Tests
                 new object[] { new Dictionary<string, object> { ["1"] = 1, ["2"] = 2 }, new[] { "1", "2", "1" } }
             };
 
-        [Theory(DisplayName = "MustNotHaveKeys must not throw an exception when the dictionary does not contain any of the specified keys.")]
+        [Theory(DisplayName = "MustNotContainKeys must not throw an exception when the dictionary does not contain any of the specified keys.")]
         [MemberData(nameof(DoesNotHaveKeysData))]
         public void DoesNotHaveKeys(IDictionary<string, object> dictionary, string[] keys)
         {
-            Action act = () => dictionary.MustNotHaveKeys(keys);
+            Action act = () => dictionary.MustNotContainKeys(keys);
 
             act.ShouldNotThrow();
         }
@@ -48,11 +48,11 @@ namespace Light.GuardClauses.Tests
                 new object[] { new Dictionary<string, object> { ["1"] = 1, ["2"] = 2 }, new[] { "anything", "else" } }
             };
 
-        [Theory(DisplayName = "MustNotHaveKeys must throw an ArgumentNullException when dictionary or keys is null.")]
+        [Theory(DisplayName = "MustNotContainKeys must throw an ArgumentNullException when dictionary or keys is null.")]
         [MemberData(nameof(ArgumentNullData))]
         public void ArgumentNull(IDictionary<char, object> dictionary, char[] keys)
         {
-            Action act = () => dictionary.MustNotHaveKeys(keys);
+            Action act = () => dictionary.MustNotContainKeys(keys);
 
             act.ShouldThrow<ArgumentNullException>();
         }
@@ -66,9 +66,9 @@ namespace Light.GuardClauses.Tests
 
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => new Dictionary<char, string> { ['a'] = "What?" }.MustNotHaveKeys(new[] { 'a' }, exception: exception)));
+            testData.Add(new CustomExceptionTest(exception => new Dictionary<char, string> { ['a'] = "What?" }.MustNotContainKeys(new[] { 'a' }, exception: exception)));
 
-            testData.Add(new CustomMessageTest<DictionaryException>(message => new Dictionary<char, string> { ['a'] = "What?" }.MustNotHaveKeys(new[] { 'a' }, message: message)));
+            testData.Add(new CustomMessageTest<DictionaryException>(message => new Dictionary<char, string> { ['a'] = "What?" }.MustNotContainKeys(new[] { 'a' }, message: message)));
         }
     }
 }

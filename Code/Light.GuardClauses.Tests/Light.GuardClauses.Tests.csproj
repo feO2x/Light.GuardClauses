@@ -73,7 +73,7 @@
     <Compile Include="CustomMessagesAndExceptions\IRunnableTest.cs" />
     <Compile Include="CustomMessagesAndExceptions\CustomExceptionTest.cs" />
     <Compile Include="CustomMessagesAndExceptions\CustomMessageTest.cs" />
-    <Compile Include="MusHaveKeyTests.cs" />
+    <Compile Include="MustContainKeyTests.cs" />
     <Compile Include="MustBeInTests.cs" />
     <Compile Include="MustBeKeyOfTests.cs" />
     <Compile Include="MustBeNullTests.cs" />
@@ -99,7 +99,7 @@
     <Compile Include="SingleItemMustNotContainTests.cs" />
     <Compile Include="StringMustNotContainTests.cs" />
     <Compile Include="SubsetMustContainTests.cs" />
-    <Compile Include="MustHaveKeysTests.cs" />
+    <Compile Include="MustContainKeysTests.cs" />
     <Compile Include="MustNotContainDuplicatesTests.cs" />
     <Compile Include="MustHaveValueTests.cs" />
     <Compile Include="MustMatchTests.cs" />
@@ -118,8 +118,8 @@
     <Compile Include="MustNotBeSubstringOfTests.cs" />
     <Compile Include="MustNotContainNullTests.cs" />
     <Compile Include="SetMustNotContainTests.cs" />
-    <Compile Include="MustNotHaveKeys.cs" />
-    <Compile Include="MustNotHaveKeyTests.cs" />
+    <Compile Include="MustNotContainKeysTests.cs" />
+    <Compile Include="MustNotContainKeyTests.cs" />
     <Compile Include="MustNotHaveValueTests.cs" />
     <Compile Include="NotNullTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

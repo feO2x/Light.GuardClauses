@@ -7,13 +7,13 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MusHaveKeyTests : ICustomMessageAndExceptionTestDataProvider
+    public sealed class MustContainKeyTests : ICustomMessageAndExceptionTestDataProvider
     {
-        [Theory(DisplayName = "MustHaveKey must throw an exception when the specified key is not present in the dictionary.")]
+        [Theory(DisplayName = "MustContainKey must throw an exception when the specified key is not present in the dictionary.")]
         [MemberData(nameof(KeyNotPresentData))]
         public void KeyNotPresent(IDictionary<string, object> dictionary, string key)
         {
-            Action act = () => dictionary.MustHaveKey(key, nameof(dictionary));
+            Action act = () => dictionary.MustContainKey(key, nameof(dictionary));
 
             act.ShouldThrow<KeyNotFoundException>()
                .And.Message.Should().Contain($"{nameof(dictionary)} must contain key \"{key}\".");
@@ -26,11 +26,11 @@ namespace Light.GuardClauses.Tests
                 new object[] { new Dictionary<string, object> { ["a"] = 'a', ["b"] = 'b' }, "foo" }
             };
 
-        [Theory(DisplayName = "MustHaveKey must not throw an exception when the specified key is present in the dictionary.")]
+        [Theory(DisplayName = "MustContainKey must not throw an exception when the specified key is present in the dictionary.")]
         [MemberData(nameof(KeyPresentData))]
         public void KeyPresent<TKey>(IDictionary<TKey, object> dictionary, TKey key)
         {
-            Action act = () => dictionary.MustHaveKey(key);
+            Action act = () => dictionary.MustContainKey(key);
 
             act.ShouldNotThrow();
         }
@@ -44,9 +44,9 @@ namespace Light.GuardClauses.Tests
 
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => new Dictionary<string, string> { ["1"] = "Hey" }.MustHaveKey("2", exception: exception)));
+            testData.Add(new CustomExceptionTest(exception => new Dictionary<string, string> { ["1"] = "Hey" }.MustContainKey("2", exception: exception)));
 
-            testData.Add(new CustomMessageTest<KeyNotFoundException>(message => new Dictionary<string, string> { ["1"] = "Hey" }.MustHaveKey("2", message: message)));
+            testData.Add(new CustomMessageTest<KeyNotFoundException>(message => new Dictionary<string, string> { ["1"] = "Hey" }.MustContainKey("2", message: message)));
         }
     }
 }

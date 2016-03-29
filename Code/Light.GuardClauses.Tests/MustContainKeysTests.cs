@@ -9,13 +9,13 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    public sealed class MustHaveKeysTests : ICustomMessageAndExceptionTestDataProvider
+    public sealed class MustContainKeysTests : ICustomMessageAndExceptionTestDataProvider
     {
-        [Theory(DisplayName = "MustHaveKeys must throw a KeyNotFoundException when at least one of the specified keys is not present in the dictionary.")]
+        [Theory(DisplayName = "MustContainKeys must throw a KeyNotFoundException when at least one of the specified keys is not present in the dictionary.")]
         [MemberData(nameof(DoesNotHaveKeysData))]
         public void DoesNotHaveKeys(IDictionary<string, object> dictionary, IEnumerable<string> keys)
         {
-            Action act = () => dictionary.MustHaveKeys(keys, nameof(dictionary));
+            Action act = () => dictionary.MustContainKeys(keys, nameof(dictionary));
 
             act.ShouldThrow<KeyNotFoundException>()
                .And.Message.Should().Contain($"{nameof(dictionary)} must contain all of the following keys:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(keys)}{Environment.NewLine}but does not.");
@@ -28,11 +28,11 @@ namespace Light.GuardClauses.Tests
                 new object[] { new Dictionary<string, object> { ["First Key"] = "Value 1", ["SecondKey"] = "Value 2", ["Third Key"] = null }, new[] { "ThirdKey", "Another Key" } }
             };
 
-        [Theory(DisplayName = "MustHaveKeys must not throw an exception when all the keys are present in the dictionary.")]
+        [Theory(DisplayName = "MustContainKeys must not throw an exception when all the keys are present in the dictionary.")]
         [MemberData(nameof(HasKeysData))]
         public void HasKeys(IDictionary<string, object> dictionary, string[] keys)
         {
-            Action act = () => dictionary.MustHaveKeys(keys);
+            Action act = () => dictionary.MustContainKeys(keys);
 
             act.ShouldNotThrow();
         }
@@ -44,11 +44,11 @@ namespace Light.GuardClauses.Tests
                 new object[] { new Dictionary<string, object> { ["Id"] = "BudgetInputForm", ["Layout"] = "Horizontal", ["NumberOfColumns"] = 3 }, new[] { "Id", "Layout", "NumberOfColumns" } }
             };
 
-        [Theory(DisplayName = "MustHaveKeys must throw an ArgumentNullException when parameter or keys is null.")]
+        [Theory(DisplayName = "MustContainKeys must throw an ArgumentNullException when parameter or keys is null.")]
         [MemberData(nameof(ArgumentNullData))]
         public void ArgumentNull(IDictionary<char, object> dictionary, char[] keys)
         {
-            Action act = () => dictionary.MustHaveKeys(keys);
+            Action act = () => dictionary.MustContainKeys(keys);
 
             act.ShouldThrow<ArgumentNullException>();
         }
@@ -62,9 +62,9 @@ namespace Light.GuardClauses.Tests
 
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => new Dictionary<char, object>().MustHaveKeys(new[] { 'a', 'b' }, exception: exception)));
+            testData.Add(new CustomExceptionTest(exception => new Dictionary<char, object>().MustContainKeys(new[] { 'a', 'b' }, exception: exception)));
 
-            testData.Add(new CustomMessageTest<KeyNotFoundException>(message => new Dictionary<char, object>().MustHaveKeys(new[] { 'a', 'b' }, message: message)));
+            testData.Add(new CustomMessageTest<KeyNotFoundException>(message => new Dictionary<char, object>().MustContainKeys(new[] { 'a', 'b' }, message: message)));
         }
     }
 }
