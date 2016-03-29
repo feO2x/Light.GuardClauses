@@ -92,6 +92,7 @@
     <Compile Include="MustEndWithTests.cs" />
     <Compile Include="MustHaveCountTests.cs" />
     <Compile Include="MustHaveLengthTests.cs" />
+    <Compile Include="MustNotContainValueTests.cs" />
     <Compile Include="MustNotEndWithEquivalentOfTests.cs" />
     <Compile Include="MustNotEndWithTests.cs" />
     <Compile Include="MustNotStartWithEquivalentOfTests.cs" />
