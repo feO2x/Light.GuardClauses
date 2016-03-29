@@ -348,5 +348,55 @@ namespace Light.GuardClauses
         {
             MustNotContainValues(parameter, (IEnumerable<TValue>) values);
         }
+
+        /// <summary>
+        ///     Ensures that the dictionary contains the specified key-value-pair, or otherwise throws a <see cref="DictionaryException" />.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
+        /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
+        /// <param name="parameter">The dictionary to be checked.</param>
+        /// <param name="key">The key of the pair.</param>
+        /// <param name="value">The value of the pair.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="DictionaryException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that will be thrown when <paramref name="parameter" /> does not contain the specified key-value-pair (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="DictionaryException">Thrown when <paramref name="parameter" /> does not contain the specified key-value-pair and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustContainPair<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TKey key, TValue value, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.Contains(new KeyValuePair<TKey, TValue>(key, value)) == false)
+                throw exception != null ? exception() : new DictionaryException(message ?? $"{parameterName ?? "The dictionary"} must contain the key-value-pair \"{new StringBuilder().AppendKeyValuePair(key, value)}\", but it does not.{Environment.NewLine}{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
+        }
+
+        /// <summary>
+        ///     Ensures that the dictionary does not contain the specified key-value-pair, or otherwise throws a <see cref="DictionaryException" />.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
+        /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
+        /// <param name="parameter">The dictionary to be checked.</param>
+        /// <param name="key">The key of the pair.</param>
+        /// <param name="value">The value of the pair.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="DictionaryException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that will be thrown when <paramref name="parameter" /> does contain the specified key-value-pair (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="DictionaryException">Thrown when <paramref name="parameter" /> does contain the specified key-value-pair and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustNotContainPair<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TKey key, TValue value, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.Contains(new KeyValuePair<TKey, TValue>(key, value)))
+                throw exception != null ? exception() : new DictionaryException(message ?? $"{parameterName ?? "The dictionary"} must not contain the key-value-pair \"{new StringBuilder().AppendKeyValuePair(key, value)}\", but it does.{Environment.NewLine}{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
+        }
     }
 }

@@ -93,6 +93,35 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
+        /// Appends the string representation of the specified key-value-pair to the string builder.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the key.</typeparam>
+        /// <typeparam name="TValue">The type of the value.</typeparam>
+        /// <param name="stringBuilder">The string builder where the pair will be appended to.</param>
+        /// <param name="key">The key of the key-value-pair.</param>
+        /// <param name="value">The value of the key-value-pair.</param>
+        /// <returns>The string builder to enable method chaining.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder"/> is null.</exception>
+        public static StringBuilder AppendKeyValuePair<TKey, TValue>(this StringBuilder stringBuilder, TKey key, TValue value)
+        {
+            stringBuilder.MustNotBeNull(nameof(stringBuilder));
+
+            stringBuilder.Append('[');
+            var keySurroundingCharacters = UseSurroundingCharactersForItem(key);
+            stringBuilder.Append(keySurroundingCharacters);
+            stringBuilder.Append(key);
+            stringBuilder.Append(keySurroundingCharacters);
+            stringBuilder.Append("] = ");
+
+            var valueSurroundingCharacters = UseSurroundingCharactersForItem(value);
+            stringBuilder.Append(valueSurroundingCharacters);
+            stringBuilder.Append(value.ToStringOrNull());
+            stringBuilder.Append(valueSurroundingCharacters);
+
+            return stringBuilder;
+        }
+
+        /// <summary>
         ///     Appends the string reprensentations of the keys and values of the specified dictionary to the string builder.
         /// </summary>
         /// <typeparam name="TKey">The key type of the dictionary.</typeparam>
@@ -119,17 +148,7 @@ namespace Light.GuardClauses.FrameworkExtensions
             var currentIndex = 0;
             foreach (var keyValuePair in dictionary)
             {
-                stringBuilder.Append('[');
-                var keySurroundingCharacters = UseSurroundingCharactersForItem(keyValuePair.Key);
-                stringBuilder.Append(keySurroundingCharacters);
-                stringBuilder.Append(keyValuePair.Key);
-                stringBuilder.Append(keySurroundingCharacters);
-                stringBuilder.Append("] = ");
-
-                var valueSurroundingCharacters = UseSurroundingCharactersForItem(keyValuePair.Value);
-                stringBuilder.Append(valueSurroundingCharacters);
-                stringBuilder.Append(keyValuePair.Value.ToStringOrNull());
-                stringBuilder.Append(valueSurroundingCharacters);
+                stringBuilder.AppendKeyValuePair(keyValuePair.Key, keyValuePair.Value);
 
                 if (currentIndex < dictionary.Count - 1)
                     stringBuilder.Append(pairSeparator);
