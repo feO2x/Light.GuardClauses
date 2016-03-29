@@ -261,7 +261,7 @@ namespace Light.GuardClauses
             values.MustNotBeNullOrEmpty(nameof(values));
 
             if (values.Any(v => parameter.Values.Contains(v) == false))
-                throw exception != null ? exception() : new ValueNotFoundException(message ?? $"{parameterName ?? "The dictionary"} must contain the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(values)}{Environment.NewLine}{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
+                throw exception != null ? exception() : new ValueNotFoundException(message ?? $"{parameterName ?? "The dictionary"} must contain all the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(values)}{Environment.NewLine}{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
