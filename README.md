@@ -106,7 +106,7 @@ Of course, you can write your own extension methods, too.
 
 ## I want to extend Light.GuardClauses
 
-If you want to write your own assertion method, you should follow these recommendations:
+If you want to write your own assertion method, you should follow these recommendations (which of course can be ignored when you only want to use them in your own solution):
 * Create a static (extension) method that should have `void` as return type. Mark this method with the ConditionalAttribute and specify `Check.CompileAssertionsSymbol` to it.
 * Apart from the parameters you need, add the three optional parameters **parameterName**, **message**, and **exception**. They should behave as mentioned above in the "Customizing messages and exceptions" section.
 * Using the Conditional Operator (?:) and the Null-Coalescing-Operator (??) is recommended to check if the optional parameters are specified.
@@ -123,6 +123,49 @@ public static void *YourMethodName*(this *YourType* parameter, *Your other neces
 ```
 
 Your extension method is cool and you think other developers can benefit from it? Then send me a pull request and I'll check if it is useful to incorporate your method. Please provide tests and XML comments for your method, too.
+
+## Writing tests for new extension methods
+
+Light.GuardClauses uses [xunit.net](https://github.com/xunit/xunit) as the framework for automated tests and [FluentAssertions](https://github.com/dennisdoomen/FluentAssertions) for assertions within test methods. Please do not use any other frameworks when you want to integrate your own extension methods within the framework. Also, I would advise you to create one test class per assertion method.
+
+Furthermore, the test project contains two checks that test all assertions methods using reflection:
+* In the test class `CheckConditionalAttributeAppliance`, there is a Fact that ensures that all static methods in the Light.GuardClauses namespace are tagged with `Conditional(Check.CompileAssertionsSymbol)`. This way you cannot forget to mark your extension method with that attribute.
+* Because writing tests for custom messages and custom exceptions for all extension methods is tedious, I created a little bit of infrastructure that does most of the heavy lifting for you. This infrastructure is implemented in `CustomMessagesAndCustomExceptionsTests` test class and the types in the sub-namespace `CustomMessagesAndExceptions`. All you have to do is implement the `ICustomMessageAndExceptionTestDataProvider` interface in your test class. In the only method `PopulateTestDataForCustomExceptionAndCustomMessageTests`of this interface, you get a `CustomMessageAndExceptionTestData` object as a parameter that you can use to populate as many `CustomExceptionTest` and `CustomMessageTest` instances as you like. Check the existing test classes or the example below to see how it's done. Just be aware that `CustomMessagesAndCustomExceptionsTests` also checks if your test class implements the said interface, and if not will tell you so in the test runs. If you do not implement an assertion extension method, you can blacklist your test class in the `OmmitedTestClasses` field.
+
+A example of a test class looks like this:
+```csharp
+public sealed class MustBeSameAsTests : ICustomMessageAndExceptionTestDataProvider
+{
+    [Theory(DisplayName = "MustBeSameAs must throw an ArgumentException when the two specified references do not point to the same instance.")]
+    [InlineData("Hello", "World")]
+    [InlineData("1", "2")]
+    [InlineData(new object[] { }, new object[] { "Foo" })]
+    public void ReferencesDifferent<T>(T first, T second) where T : class
+    {
+        Action act = () => first.MustBeSameAs(second, nameof(first));
+
+        act.ShouldThrow<ArgumentException>()
+            .And.Message.Should().Contain($"{nameof(first)} must point to the object instance \"{second}\", but it does not.");
+    }
+
+    [Theory(DisplayName = "MustBeSameAs must not throw an exception when the two specified references point to the same instance.")]
+    [InlineData("Foo")]
+    [InlineData("Bar")]
+    public void ReferencesEqual(string reference)
+    {
+        Action act = () => reference.MustBeSameAs(reference);
+
+        act.ShouldNotThrow();
+    }
+
+    public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+    {
+        testData.Add(new CustomExceptionTest(exception => "foo".MustBeSameAs("bar", exception: exception)));
+
+        testData.Add(new CustomMessageTest<ArgumentException>(message => "foo".MustBeSameAs("bar", message: message)));
+    }
+}
+```
 
 ## Is it ready for production?
 
