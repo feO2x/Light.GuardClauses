@@ -86,6 +86,7 @@
     <Compile Include="MustBeValidEnumValueTests.cs" />
     <Compile Include="MustContainOnlyLettersAndDigitsTests.cs" />
     <Compile Include="MustContainOnlyLettersTests.cs" />
+    <Compile Include="MustContainPairTests.cs" />
     <Compile Include="MustContainValuesTests.cs" />
     <Compile Include="MustContainValueTests.cs" />
     <Compile Include="MustEndWithEquivalentOfTests.cs" />
