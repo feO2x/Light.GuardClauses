@@ -93,6 +93,7 @@
     <Compile Include="MustEndWithTests.cs" />
     <Compile Include="MustHaveCountTests.cs" />
     <Compile Include="MustHaveLengthTests.cs" />
+    <Compile Include="MustHaveMinimumCountTests.cs" />
     <Compile Include="MustNotContainPairTests.cs" />
     <Compile Include="MustNotContainValuesTests.cs" />
     <Compile Include="MustNotContainValueTests.cs" />
