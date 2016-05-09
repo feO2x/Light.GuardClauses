@@ -1,5 +1,7 @@
 # Light.GuardClauses
-**A lightweight library for expressive Guard Clauses with conditional compilation in C#.**  
+**A lightweight library for expressive Guard Clauses with conditional compilation in C#.** 
+
+[![Video introduction to Light.GuardClauses](https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/Images/Light.GuardClauses%20thumbnail.PNG)](https://youtu.be/NI0rVG6VbXo)
 
 ## Why do I need it?
 
