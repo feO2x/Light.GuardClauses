@@ -15,12 +15,13 @@ namespace Light.GuardClauses.Tests
         public static readonly IList<Type> OmmitedTestClasses =
             new[]
             {
-                typeof (AgainstTests),
-                typeof (CheckConditionalAttributeAppliance),
-                typeof (CustomMessagesAndCustomExceptionsTests),
-                typeof (NotNullTests),
-                typeof (RangeTests),
-                typeof (ThatTests),
+                typeof(AgainstTests),
+                typeof(CheckConditionalAttributeAppliance),
+                typeof(CustomMessagesAndCustomExceptionsTests),
+                typeof(NotNullTests),
+                typeof(RangeTests),
+                typeof(ThatTests),
+                typeof(PerformanceTests)
             };
 
         private static readonly List<ICustomMessageAndExceptionTestData> PopulatedTestData = new List<ICustomMessageAndExceptionTestData>();
@@ -30,11 +31,11 @@ namespace Light.GuardClauses.Tests
         static CustomMessagesAndCustomExceptionsTests()
         {
             // ReSharper disable PossibleMultipleEnumeration
-            var affectedTestClasses = typeof (CustomMessagesAndCustomExceptionsTests).Assembly
-                                                                                     .ExportedTypes
-                                                                                     .Where(t => t.Namespace == "Light.GuardClauses.Tests" && OmmitedTestClasses.Contains(t) == false);
+            var affectedTestClasses = typeof(CustomMessagesAndCustomExceptionsTests).Assembly
+                                                                                    .ExportedTypes
+                                                                                    .Where(t => t.Namespace == "Light.GuardClauses.Tests" && OmmitedTestClasses.Contains(t) == false);
 
-            var testClassesWithInterfaceImplementation = affectedTestClasses.Where(t => t.GetTypeInfo().ImplementedInterfaces.Contains(typeof (ICustomMessageAndExceptionTestDataProvider)));
+            var testClassesWithInterfaceImplementation = affectedTestClasses.Where(t => t.GetTypeInfo().ImplementedInterfaces.Contains(typeof(ICustomMessageAndExceptionTestDataProvider)));
             TestClassesWithoutInterfaceImplementation.AddRange(affectedTestClasses.Except(testClassesWithInterfaceImplementation));
 
             var testDataProviders = testClassesWithInterfaceImplementation.Select(Activator.CreateInstance)

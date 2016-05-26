@@ -107,6 +107,7 @@
     <Compile Include="MustNotStartWithTests.cs" />
     <Compile Include="MustStartWithEquivalentOfTests.cs" />
     <Compile Include="MustStartWithTests.cs" />
+    <Compile Include="PerformanceTests.cs" />
     <Compile Include="SingleItemMustNotContainTests.cs" />
     <Compile Include="StringMustNotContainTests.cs" />
     <Compile Include="SubsetMustContainTests.cs" />
