@@ -188,5 +188,24 @@ namespace Light.GuardClauses
             if (parameter)
                 throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must be false, but you specified true.", parameterName);
         }
+
+        /// <summary>
+        ///     Ensures that the specified Boolean value is true, or otherwise throws an <see cref="ArgumentException" />.
+        /// </summary>
+        /// <param name="parameter">The paramter to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="ArgumentException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when the specified bool is false (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is false and no <paramref name="exception" /> is specified.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustBeTrue(this bool parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            if (parameter == false)
+                throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must be true, but you specified false.", parameterName);
+        }
+
     }
 }
