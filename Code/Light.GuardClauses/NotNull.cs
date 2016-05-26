@@ -17,7 +17,7 @@ namespace Light.GuardClauses
         ///     Creates a new <see cref="NotNull{T}" />.
         /// </summary>
         /// <param name="object">The object reference that must not be null.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="object"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="object" /> is null.</exception>
         public NotNull(T @object)
         {
             @object.MustNotBeNull(nameof(@object));
@@ -104,7 +104,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Checks if the two NotNull instances are equal.
+        ///     Checks if the two NotNull instances are equal.
         /// </summary>
         public static bool operator ==(NotNull<T> first, NotNull<T> second)
         {
@@ -112,7 +112,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Checks if the two NotNull instances are not equal.
+        ///     Checks if the two NotNull instances are not equal.
         /// </summary>
         public static bool operator !=(NotNull<T> first, NotNull<T> second)
         {
@@ -120,7 +120,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Checks if the NotNull instance and the object reference are equal.
+        ///     Checks if the NotNull instance and the object reference are equal.
         /// </summary>
         public static bool operator ==(NotNull<T> first, T second)
         {
@@ -131,7 +131,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Checks if the NotNull instance and the object reference are not equal.
+        ///     Checks if the NotNull instance and the object reference are not equal.
         /// </summary>
         public static bool operator !=(NotNull<T> first, T second)
         {
@@ -139,7 +139,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Checks if the object reference and the NotNull instance are equal.
+        ///     Checks if the object reference and the NotNull instance are equal.
         /// </summary>
         public static bool operator ==(T first, NotNull<T> second)
         {
@@ -150,7 +150,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Checks if the object reference and the NotNull instance are not equal.
+        ///     Checks if the object reference and the NotNull instance are not equal.
         /// </summary>
         public static bool operator !=(T first, NotNull<T> second)
         {

@@ -75,7 +75,7 @@ namespace Light.GuardClauses
         {
             var castedValue = parameter as T;
             if (castedValue == null)
-                throw exception != null ? exception() : new TypeMismatchException(message ?? $"{parameterName ?? "The object"} is of type {parameter.GetType().FullName} and cannot be downcasted to {typeof (T).FullName}.", parameterName);
+                throw exception != null ? exception() : new TypeMismatchException(message ?? $"{parameterName ?? "The object"} is of type {parameter.GetType().FullName} and cannot be downcasted to {typeof(T).FullName}.", parameterName);
 
             return castedValue;
         }
@@ -169,6 +169,24 @@ namespace Light.GuardClauses
         {
             if (parameter == Guid.Empty)
                 throw exception != null ? exception() : (message == null ? new EmptyGuidException(parameterName) : new EmptyGuidException(message, parameterName));
+        }
+
+        /// <summary>
+        ///     Ensures that the specified Boolean value is false, or otherwise throws an <see cref="ArgumentException" />.
+        /// </summary>
+        /// <param name="parameter">The paramter to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="ArgumentException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when the specified bool is true (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is true and no <paramref name="exception" /> is specified.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustBeFalse(this bool parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            if (parameter)
+                throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must be false, but you specified true.", parameterName);
         }
     }
 }

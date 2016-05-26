@@ -73,6 +73,7 @@
     <Compile Include="CustomMessagesAndExceptions\IRunnableTest.cs" />
     <Compile Include="CustomMessagesAndExceptions\CustomExceptionTest.cs" />
     <Compile Include="CustomMessagesAndExceptions\CustomMessageTest.cs" />
+    <Compile Include="MustBeFalseTests.cs" />
     <Compile Include="MustContainKeyTests.cs" />
     <Compile Include="MustBeInTests.cs" />
     <Compile Include="MustBeKeyOfTests.cs" />
