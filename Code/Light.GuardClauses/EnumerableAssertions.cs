@@ -442,6 +442,41 @@ namespace Light.GuardClauses
             // ReSharper restore PossibleMultipleEnumeration
         }
 
+        /// <summary>
+        ///     Ensures that the specified collection contains only instances of different subtypes / subclasses, or otherwise throws a <see cref="CollectionException" />.
+        /// </summary>
+        /// <typeparam name="T">The item type of the collection. This usually should be an interface / a base class type.</typeparam>
+        /// <param name="parameter">The collection to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> contains at least two instances of the same subtype.
+        ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> contains two or more instances of the same subtype, or when <paramref name="parameter" /> contains an element that is null, and no <paramref name="exception" /> is specified.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustContainInstancesOfDifferentTypes<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            parameter.MustNotContainNull(parameterName);
+
+            var list = parameter as IList<T> ?? parameter.ToList();
+
+            for (var i = 0; i < list.Count; i++)
+            {
+                for (var j = i + 1; j < list.Count; j++)
+                {
+                    var first = list[i];
+                    var second = list[j];
+
+                    if (first.GetType() == second.GetType())
+                        throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain instances of different subtypes, but \"{first}\" and \"{second}\" (at positions {i} and {j}) have the same type: \"{first.GetType()}\".{Environment.NewLine}{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
+                }
+            }
+            // ReSharper restore PossibleMultipleEnumeration
+        }
+
         private static string Items(int count)
         {
             return count == 1 ? "item" : "items";
