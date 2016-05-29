@@ -107,7 +107,11 @@
     <Compile Include="MustNotStartWithTests.cs" />
     <Compile Include="MustStartWithEquivalentOfTests.cs" />
     <Compile Include="MustStartWithTests.cs" />
-    <Compile Include="PerformanceTests.cs" />
+    <Compile Include="PerformanceTests\BaseCounterComparisonTest.cs" />
+    <Compile Include="PerformanceTests\CounterComparisonResultWriter.cs" />
+    <Compile Include="PerformanceTests\CounterPerformanceCandidate.cs" />
+    <Compile Include="PerformanceTests\CounterTestRunResult.cs" />
+    <Compile Include="PerformanceTests\PerformanceTests.cs" />
     <Compile Include="SingleItemMustNotContainTests.cs" />
     <Compile Include="StringMustNotContainTests.cs" />
     <Compile Include="SubsetMustContainTests.cs" />
