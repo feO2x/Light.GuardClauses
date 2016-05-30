@@ -10,6 +10,7 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class CustomMessagesAndCustomExceptionsTests
     {
         public static readonly IList<Type> OmmitedTestClasses =
@@ -21,7 +22,8 @@ namespace Light.GuardClauses.Tests
                 typeof(NotNullTests),
                 typeof(RangeTests),
                 typeof(ThatTests),
-                typeof(Metadata)
+                typeof(Metadata),
+                typeof(Traits)
             };
 
         private static readonly List<ICustomMessageAndExceptionTestData> PopulatedTestData = new List<ICustomMessageAndExceptionTestData>();
@@ -90,6 +92,7 @@ namespace Light.GuardClauses.Tests
                                                                                       (testData, customExceptionTest) => new object[] { testData.TestClassType, customExceptionTest });
 
         [Fact(DisplayName = "All test classes of extension methods must populate the custom message and custom exception test data correctly.")]
+        [Trait("Category", Traits.InformativeTests)]
         public void WronglyPopulatedTestData()
         {
             if (WronglyPopulatedTestDataProviders.Count == 0)
@@ -103,6 +106,7 @@ namespace Light.GuardClauses.Tests
         }
 
         [Fact(DisplayName = "All test classes of extension methods must implement the ICustomMessageAndExceptionTestDataProvider interface.")]
+        [Trait("Category", Traits.InformativeTests)]
         public void TestClassesWithoutInterface()
         {
             if (TestClassesWithoutInterfaceImplementation.Count == 0)

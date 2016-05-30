@@ -5,6 +5,7 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class NotNullTests
     {
         [Fact(DisplayName = "The constructor of NotNull must throw an ArgumentNullException when null is specified.")]
@@ -104,6 +105,7 @@ namespace Light.GuardClauses.Tests
         }
 
         [Fact(DisplayName = "Implicit conversion from NotNull instance to interface reference is not possible and must be circumvented by using NotNull.Object.")]
+        [Trait("Category", Traits.InformativeTests)]
         public void ImplicitConversionWithInterfaces()
         {
             const string @string = "Money buys a man's silence for a time. A bolt in the heart buys it forever.";

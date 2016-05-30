@@ -7,6 +7,7 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustContainInstancesOfDifferentTypesTests : ICustomMessageAndExceptionTestDataProvider
     {
         private static readonly List<IInterface> ValidTestData = new List<IInterface>

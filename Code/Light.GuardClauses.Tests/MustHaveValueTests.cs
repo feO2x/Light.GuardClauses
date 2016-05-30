@@ -6,6 +6,7 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustHaveValueTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustHaveValue must throw an exception when the specified Nullable<T> has no value.")]

@@ -4,6 +4,7 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class ThatTests
     {
         [Fact(DisplayName = "That must throw the specified exception when the condition returns false.")]

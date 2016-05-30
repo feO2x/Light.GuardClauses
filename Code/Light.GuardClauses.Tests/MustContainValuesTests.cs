@@ -10,6 +10,7 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustContainValuesTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustContainValues must throw a ValueNotFoundException when at least one of the specified values is not present in the dicionary.")]

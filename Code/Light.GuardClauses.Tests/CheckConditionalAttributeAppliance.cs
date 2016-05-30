@@ -8,6 +8,7 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class CheckConditionalAttributeAppliance
     {
         [Fact(DisplayName = "All static and extension methods returning void in namespace Light.GuardClauses must have the ConditionalAttribute applied to them.")]

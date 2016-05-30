@@ -12,7 +12,7 @@ namespace Light.GuardClauses.Tests.PerformanceTests
         public MustNotBeNullMacrobenchmark(ITestOutputHelper output) : base(output) { }
 
         [Fact(DisplayName = "MustNotBeNull Macrobenchmark")]
-        [Trait("Category", "PerformanceTest")]
+        [Trait("Category", Traits.PerformanceTests)]
         public void MustNotBeNullMacroBenchmark()
         {
             var testValues = CreateTestValues(200000, 400000, 800000, 1600000, 3200000);

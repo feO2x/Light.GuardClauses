@@ -148,6 +148,7 @@
     <Compile Include="SingleItemMustContainTests.cs" />
     <Compile Include="StringMustContainTests.cs" />
     <Compile Include="ThatTests.cs" />
+    <Compile Include="Traits.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

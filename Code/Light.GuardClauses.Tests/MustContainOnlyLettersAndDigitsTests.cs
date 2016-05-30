@@ -6,11 +6,11 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustContainOnlyLettersAndDigitsTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustContainOnlyLettersAndDigits must throw a StringException when the specified string contains characters that are no letters or digits.")]
         [InlineData("12!ab")]
-        [InlineData("W|zzard")]
         [InlineData("W|zzard")]
         [InlineData("This string contains whitespace.")]
         [InlineData("!")]

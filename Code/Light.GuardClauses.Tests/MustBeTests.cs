@@ -6,6 +6,7 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustBe must throw an exception when the specified value is not the expected one.")]
