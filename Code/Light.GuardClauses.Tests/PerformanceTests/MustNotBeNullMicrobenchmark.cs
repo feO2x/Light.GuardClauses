@@ -11,7 +11,7 @@ namespace Light.GuardClauses.Tests.PerformanceTests
 
         [Fact(DisplayName = "MustNotBeNull Microbenchmark")]
         [Trait("Category", "PerformanceTest")]
-        public void MustNotBeNullPerformaceTests()
+        public void MustNotBeNullMicroBenchmark()
         {
             var candidates = new[]
                              {

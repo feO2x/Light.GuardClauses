@@ -13,9 +13,9 @@ namespace Light.GuardClauses.Tests.PerformanceTests
 
         [Fact(DisplayName = "MustNotBeNull Macrobenchmark")]
         [Trait("Category", "PerformanceTest")]
-        public void TestMethodName()
+        public void MustNotBeNullMacroBenchmark()
         {
-            var testValues = CreateTestValues(200000, 400000, 8000000, 1600000);
+            var testValues = CreateTestValues(200000, 400000, 800000, 1600000, 3200000);
 
             var candidates = new List<ComparisonCandidate>
                              {
