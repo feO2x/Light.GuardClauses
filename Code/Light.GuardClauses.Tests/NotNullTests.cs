@@ -103,6 +103,25 @@ namespace Light.GuardClauses.Tests
             objectFromImplicitConversion.Should().BeSameAs(@string);
         }
 
+        [Fact(DisplayName = "Implicit conversion from NotNull instance to interface reference is not possible and must be circumvented by using NotNull.Object.")]
+        public void ImplicitConversionWithInterfaces()
+        {
+            const string @string = "Money buys a man's silence for a time. A bolt in the heart buys it forever.";
+            NotNull<IComparable> notNull = @string;
+            notNull.Object.Should().BeSameAs(@string);
+
+            IComparable comparable = @string;
+            // The following implicit conversion from interface reference to NotNullInstance is not allowed because the C# specification forbids to implicitely convert to an interface type: http://stackoverflow.com/questions/143485/implicit-operator-using-interfaces
+            // NotNull<IComparable> notNull2 = comparable;
+            var notNull2 = comparable.AsNotNull();
+            notNull2.Object.Should().BeSameAs(@string);
+
+            // This conversion is not allowed because of the same reason
+            // IComparable objectFromImplicitConversion = notNull;
+            var convertedObject = notNull.Object;
+            convertedObject.MustBeSameAs(@string);
+        }
+
         [Fact(DisplayName = "The equality operators must be overloaded so that NotNull instances can be compared with each other, as well as single NotNull instances with references of the corresponding type.")]
         public void EqualityOperators()
         {

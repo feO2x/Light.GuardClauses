@@ -157,4 +157,22 @@ namespace Light.GuardClauses
             return !(first == second);
         }
     }
+
+    /// <summary>
+    ///     Provides the <see cref="AsNotNull{T}" /> extension method.
+    /// </summary>
+    public static class NotNullExtensions
+    {
+        /// <summary>
+        ///     Creates a <see cref="NotNull{T}" /> instance for the specified reference type.
+        /// </summary>
+        /// <typeparam name="T">The type that the NotNull encapsulates. This must be a reference type.</typeparam>
+        /// <param name="value">The value that must be encapsulated.</param>
+        /// <returns>The NotNull instance for the specified value.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="value" /> is null.</exception>
+        public static NotNull<T> AsNotNull<T>(this T value) where T : class
+        {
+            return new NotNull<T>(value);
+        }
+    }
 }
