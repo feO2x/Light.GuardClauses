@@ -53,9 +53,9 @@ namespace Light.GuardClauses.Tests.PerformanceTests
             Stopwatch.Reset();
         }
 
-        private void StartTimer(TimeSpan singleInterval)
+        private void StartTimer(TimeSpan interval)
         {
-            _timer.Change(singleInterval, TimeSpan.FromMilliseconds(-1));
+            _timer.Change(interval, TimeSpan.FromMilliseconds(-1));
         }
 
         protected void RunPerformanceTest(string testHeader, IList<CounterPerformanceCandidate> performanceCandidates)
@@ -65,8 +65,8 @@ namespace Light.GuardClauses.Tests.PerformanceTests
                 foreach (var performanceCandidate in performanceCandidates)
                 {
                     StartTimer(performanceTestLength);
-                    var performanceTestResult = performanceCandidate.RunTest();
-                    performanceCandidate.TestRunResults.Add(performanceTestResult);
+                    var testResult = performanceCandidate.RunTest();
+                    performanceCandidate.TestRunResults.Add(testResult);
 
                     Reset();
                 }

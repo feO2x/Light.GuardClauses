@@ -111,7 +111,7 @@
     <Compile Include="PerformanceTests\CounterComparisonResultWriter.cs" />
     <Compile Include="PerformanceTests\CounterPerformanceCandidate.cs" />
     <Compile Include="PerformanceTests\CounterTestRunResult.cs" />
-    <Compile Include="PerformanceTests\PerformanceTests.cs" />
+    <Compile Include="PerformanceTests\MustNotBeNullMicrobenchmark.cs" />
     <Compile Include="SingleItemMustNotContainTests.cs" />
     <Compile Include="StringMustNotContainTests.cs" />
     <Compile Include="SubsetMustContainTests.cs" />

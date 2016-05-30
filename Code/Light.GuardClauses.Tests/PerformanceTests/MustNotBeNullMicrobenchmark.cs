@@ -45,7 +45,6 @@ namespace Light.GuardClauses.Tests.PerformanceTests
             var numberOfLoopRuns = 0UL;
 
             Stopwatch.Start();
-
             while (Continue)
             {
                 @object.MustNotBeNull(nameof(@object));
