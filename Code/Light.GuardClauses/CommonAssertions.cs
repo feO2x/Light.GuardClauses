@@ -11,7 +11,7 @@ namespace Light.GuardClauses
     public static class CommonAssertions
     {
         /// <summary>
-        ///     Ensures that the specified parameter is not <c>null</c>, or otherwise throws an <see cref="ArgumentNullException" />.
+        ///     Ensures that the specified parameter is not null, or otherwise throws an <see cref="ArgumentNullException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -22,7 +22,7 @@ namespace Light.GuardClauses
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when the specified parameter is <c>null</c> and no <paramref name="exception" /> is specified.
+        ///     Thrown when the specified parameter is null and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
@@ -32,7 +32,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified parameter is <c>null</c>, or otherwise throws an <see cref="ArgumentNotNullException" />.
+        ///     Ensures that the specified parameter is null, or otherwise throws an <see cref="ArgumentNotNullException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -45,7 +45,7 @@ namespace Light.GuardClauses
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNotNullException">
-        ///     Thrown when the specified parameter is not <c>null</c> and no <paramref name="exception" /> is specified.
+        ///     Thrown when the specified parameter is not null and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeNull<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
