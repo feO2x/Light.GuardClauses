@@ -142,6 +142,7 @@ namespace Light.GuardClauses
         /// <exception cref="EnumValueNotDefinedException">
         ///     Thrown when the specified enum value is not defined and no <paramref name="exception" /> is specified.
         /// </exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is not a value of an enum.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeValidEnumValue<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
@@ -206,6 +207,5 @@ namespace Light.GuardClauses
             if (parameter == false)
                 throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must be true, but you specified false.", parameterName);
         }
-
     }
 }
