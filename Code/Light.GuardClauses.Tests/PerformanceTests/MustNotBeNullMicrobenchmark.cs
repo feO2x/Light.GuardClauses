@@ -15,9 +15,9 @@ namespace Light.GuardClauses.Tests.PerformanceTests
         {
             var candidates = new[]
                              {
+                                 new CounterPerformanceCandidate("Imperative Null Check", () => CheckForNullImperatively(new object())),
                                  new CounterPerformanceCandidate("Light.GuardClauses", () => CheckForNullWithLightGuardClauses(new object())),
-                                 new CounterPerformanceCandidate("FluentAssertions", () => CheckForNullWithFluentAssertions(new object())),
-                                 new CounterPerformanceCandidate("Imperative Null Check", () => CheckForNullImperatively(new object()))
+                                 new CounterPerformanceCandidate("FluentAssertions", () => CheckForNullWithFluentAssertions(new object()))
                              };
 
             RunPerformanceTest("MustNotBeNull Microbenchmark", candidates);

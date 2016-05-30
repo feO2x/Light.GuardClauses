@@ -109,10 +109,14 @@
     <Compile Include="MustStartWithEquivalentOfTests.cs" />
     <Compile Include="MustStartWithTests.cs" />
     <Compile Include="PerformanceTests\BaseCounterComparisonTest.cs" />
+    <Compile Include="PerformanceTests\BaseComparisonBenchmark.cs" />
+    <Compile Include="PerformanceTests\ComparisonBenchmarkResultWriter.cs" />
+    <Compile Include="PerformanceTests\ComparisonCandidate.cs" />
     <Compile Include="PerformanceTests\CounterComparisonResultWriter.cs" />
     <Compile Include="PerformanceTests\CounterPerformanceCandidate.cs" />
     <Compile Include="PerformanceTests\CounterTestRunResult.cs" />
     <Compile Include="PerformanceTests\MustNotBeNullMicrobenchmark.cs" />
+    <Compile Include="PerformanceTests\MustNotBeNullMacrobenchmark.cs" />
     <Compile Include="SingleItemMustNotContainTests.cs" />
     <Compile Include="StringMustNotContainTests.cs" />
     <Compile Include="SubsetMustContainTests.cs" />
