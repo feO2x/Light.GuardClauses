@@ -130,7 +130,7 @@ If you want to write your own assertion method, you should follow these recommen
 Check out the existing methods and the following template:
 
 ```csharp
-[Conditional(Check.CompileAssertionsSymbol)
+[Conditional(Check.CompileAssertionsSymbol)]
 public static void *YourMethodName*(this *YourType* parameter, *Your other necessary parameters*, string parameterName = null, string message = null, Func<Exception> exception = null)
 {
     if (*check something here*)
