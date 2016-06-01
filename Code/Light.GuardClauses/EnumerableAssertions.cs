@@ -9,7 +9,7 @@ using Light.GuardClauses.FrameworkExtensions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     The EnumerableAssertions class contains extension methods that apply assertions to <see cref="IEnumerable{T}" /> instances.
+    ///     The <see cref="EnumerableAssertions"/> class contains extension methods that apply assertions to <see cref="IEnumerable{T}" /> instances.
     /// </summary>
     public static class EnumerableAssertions
     {
@@ -168,7 +168,7 @@ namespace Light.GuardClauses
                 if (item != null)
                     continue;
 
-                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The value"} must be a collection not containing null, but you specified null at index {currentIndex}.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
+                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The value"} must be a collection not containing null, but you specified null at index {currentIndex}.{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
             }
             // ReSharper restore PossibleMultipleEnumeration
         }
@@ -200,7 +200,7 @@ namespace Light.GuardClauses
             parameter.MustNotBeNull(parameterName);
 
             if (parameter.Contains(item) == false)
-                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain value \"{item.ToStringOrNull()}\", but does not.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
+                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain value \"{item.ToStringOrNull()}\", but does not.{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -231,7 +231,7 @@ namespace Light.GuardClauses
             parameter.MustNotBeNull(parameterName);
 
             if (parameter.Contains(item))
-                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must not contain value \"{item.ToStringOrNull()}\", but it does.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
+                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must not contain value \"{item.ToStringOrNull()}\", but it does.{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -263,7 +263,7 @@ namespace Light.GuardClauses
             superset.MustNotBeNull(nameof(superset));
 
             if (parameter.All(superset.Contains) == false)
-                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must be a subset of:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(superset)}{Environment.NewLine}{Environment.NewLine}The actual collection contains:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
+                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must be a subset of:{new StringBuilder().AppendLine().AppendItemsWithNewLine(superset).AppendLine().AppendLine()}The actual collection contains:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
 
             // ReSharper restore PossibleMultipleEnumeration
         }
@@ -297,7 +297,7 @@ namespace Light.GuardClauses
             subset.MustNotBeNull(nameof(subset));
 
             if (subset.All(parameter.Contains) == false)
-                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain the following values{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(subset)}{Environment.NewLine}but does not.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
+                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain the following values{new StringBuilder().AppendLine().AppendItemsWithNewLine(subset).AppendLine()}but does not.{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -341,7 +341,7 @@ namespace Light.GuardClauses
             set.MustNotBeNull(nameof(set));
 
             if (set.Any(parameter.Contains))
-                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must not contain any of the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(set)}{Environment.NewLine}{Environment.NewLine}The actual content of the collection is:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
+                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must not contain any of the following values:{new StringBuilder().AppendLine().AppendItemsWithNewLine(set).AppendLine().AppendLine()}The actual content of the collection is:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -382,7 +382,7 @@ namespace Light.GuardClauses
             count.MustNotBeLessThan(0, nameof(count));
 
             if (parameter.Count() != count)
-                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must have count {count}, but you specified a collection with count {parameter.Count()}.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
+                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must have count {count}, but you specified a collection with count {parameter.Count()}.{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -471,7 +471,7 @@ namespace Light.GuardClauses
                     var second = list[j];
 
                     if (first.GetType() == second.GetType())
-                        throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain instances of different subtypes, but \"{first}\" and \"{second}\" (at positions {i} and {j}) have the same type: \"{first.GetType()}\".{Environment.NewLine}{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}", parameterName);
+                        throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain instances of different subtypes, but \"{first}\" and \"{second}\" (at positions {i} and {j}) have the same type: \"{first.GetType()}\".{Environment.NewLine}{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
                 }
             }
             // ReSharper restore PossibleMultipleEnumeration
@@ -510,7 +510,7 @@ namespace Light.GuardClauses
             return;
 
             ThrowException:
-            throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must start with the following items:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(subset).AppendLine()}but it does not.{Environment.NewLine}{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
+            throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must start with the following items:{new StringBuilder().AppendLine().AppendItemsWithNewLine(subset).AppendLine()}but it does not.{Environment.NewLine}{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 

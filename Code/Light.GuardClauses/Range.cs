@@ -29,7 +29,7 @@ namespace Light.GuardClauses
         public readonly bool IsToInclusive;
 
         /// <summary>
-        ///     Creates a new Range.
+        ///     Creates a new instance of <see cref="Range{T}" />.
         /// </summary>
         /// <param name="from">The lower boundary of the range.</param>
         /// <param name="to">The upper boundary of the range.</param>
@@ -70,7 +70,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Use this method to create a Range in a fluent style using method chaining.
+        ///     Use this method to create a range in a fluent style using method chaining.
         ///     Defines the lower boundary as an inclusive value.
         /// </summary>
         /// <param name="value">The value that indicates the inclusive lower boundary of the resulting Range.</param>
@@ -81,7 +81,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Use this method to create a Range in a fluent style using method chaining.
+        ///     Use this method to create a range in a fluent style using method chaining.
         ///     Defines the lower boundary as an exclusive value.
         /// </summary>
         /// <param name="value">The value that indicates the exclusive lower boundary of the resulting Range.</param>
@@ -92,7 +92,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     The nested RangeFromInfo can be used to fluently create a Range.
+        ///     The nested <see cref="RangeFromInfo" /> can be used to fluently create a <see cref="Range{T}" />.
         /// </summary>
         public struct RangeFromInfo
         {

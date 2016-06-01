@@ -9,7 +9,7 @@ using Light.GuardClauses.FrameworkExtensions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     The DictionaryAssertions class contains extension methods providing assertions for <see cref="IDictionary{TKey,TValue}" /> instances.
+    ///     The <see cref="DictionaryAssertions"/> class contains extension methods providing assertions for <see cref="IDictionary{TKey,TValue}" /> instances.
     /// </summary>
     public static class DictionaryAssertions
     {

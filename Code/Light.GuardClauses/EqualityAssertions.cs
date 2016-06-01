@@ -6,7 +6,7 @@ using Light.GuardClauses.FrameworkExtensions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     The EqualityAssertions class contains assertions that can be used to ensure that two values are equal or different.
+    ///     The <see cref="EnumerableAssertions" /> class contains assertions that can be used to ensure that two values are equal or different.
     /// </summary>
     public static class EqualityAssertions
     {

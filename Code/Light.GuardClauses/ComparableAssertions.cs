@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     The ComparableAssertions class contains extension methods that check assertions for the <see cref="IComparable{T}" /> interface.
+    ///     The <see cref="ComparableAssertions"/> class contains extension methods that check assertions for the <see cref="IComparable{T}" /> interface.
     /// </summary>
     public static class ComparableAssertions
     {

@@ -5,7 +5,7 @@ using Light.GuardClauses.Exceptions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     This class contains the most common assertions like <see cref="MustNotBeNull{T}" /> and assertions that are not directly related to
+    ///     The <see cref="CommonAssertions" /> class contains the most common assertions like <see cref="MustNotBeNull{T}" /> and assertions that are not directly related to
     ///     any categories like collection assertions or string assertions.
     /// </summary>
     public static class CommonAssertions
