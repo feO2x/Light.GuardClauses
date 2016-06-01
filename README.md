@@ -185,7 +185,7 @@ public sealed class MustBeSameAsTests : ICustomMessageAndExceptionTestDataProvid
 
 ## Is it ready for production?
 
-To be frank, this library is still young, but the code base is thoroughly tested and I actively use it in my main work, the iRescYou research project. Please note that I might introduce breaking changes since we have not reached the status of a v1.0 yet, but honestely, I do think that these are just minor changes that you can solve in a blink using search and replace in your favorite IDE.
+Since the beginning of June 2016, the library is in v1.0 and stable. Light.GuardClauses is thoroughly covered with automated tests and I actively use it in my own work, the iRescYou research project.
 
 ## In the end, what do I get?
 
@@ -196,3 +196,6 @@ If you need to, you can also customize every assertion by providing custom messa
 ### Acknowledgements
 
 Light.GuardClauses is developed as part of the "iRescYou" research project, conducted at the [University Hospital of Regensburg](http://www.uniklinikum-regensburg.de/e/index.php) and the [University of Applied Sciences Regensburg](https://www.oth-regensburg.de/en.html), funded by the [Bavarian State Ministry of Health Care](http://www.stmgp.bayern.de/).
+
+### Let there be... Light
+![Light Libraries Logo](/Images/light_logo.png)
