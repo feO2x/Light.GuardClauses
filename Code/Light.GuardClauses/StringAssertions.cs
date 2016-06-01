@@ -6,7 +6,7 @@ using Light.GuardClauses.Exceptions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     The StringAssertions class contains extension methods that make assertions on <see cref="string" /> instances.
+    ///     The <see cref="StringAssertions"/> class contains extension methods that perform assertions on <see cref="string" /> instances.
     /// </summary>
     public static class StringAssertions
     {

@@ -10,17 +10,20 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class CustomMessagesAndCustomExceptionsTests
     {
         public static readonly IList<Type> OmmitedTestClasses =
             new[]
             {
-                typeof (AgainstTests),
-                typeof (CheckConditionalAttributeAppliance),
-                typeof (CustomMessagesAndCustomExceptionsTests),
-                typeof (NotNullTests),
-                typeof (RangeTests),
-                typeof (ThatTests),
+                typeof(AgainstTests),
+                typeof(CheckConditionalAttributeAppliance),
+                typeof(CustomMessagesAndCustomExceptionsTests),
+                typeof(NotNullTests),
+                typeof(RangeTests),
+                typeof(ThatTests),
+                typeof(Metadata),
+                typeof(Traits)
             };
 
         private static readonly List<ICustomMessageAndExceptionTestData> PopulatedTestData = new List<ICustomMessageAndExceptionTestData>();
@@ -30,11 +33,11 @@ namespace Light.GuardClauses.Tests
         static CustomMessagesAndCustomExceptionsTests()
         {
             // ReSharper disable PossibleMultipleEnumeration
-            var affectedTestClasses = typeof (CustomMessagesAndCustomExceptionsTests).Assembly
-                                                                                     .ExportedTypes
-                                                                                     .Where(t => t.Namespace == "Light.GuardClauses.Tests" && OmmitedTestClasses.Contains(t) == false);
+            var affectedTestClasses = typeof(CustomMessagesAndCustomExceptionsTests).Assembly
+                                                                                    .ExportedTypes
+                                                                                    .Where(t => t.Namespace == "Light.GuardClauses.Tests" && OmmitedTestClasses.Contains(t) == false);
 
-            var testClassesWithInterfaceImplementation = affectedTestClasses.Where(t => t.GetTypeInfo().ImplementedInterfaces.Contains(typeof (ICustomMessageAndExceptionTestDataProvider)));
+            var testClassesWithInterfaceImplementation = affectedTestClasses.Where(t => t.GetTypeInfo().ImplementedInterfaces.Contains(typeof(ICustomMessageAndExceptionTestDataProvider)));
             TestClassesWithoutInterfaceImplementation.AddRange(affectedTestClasses.Except(testClassesWithInterfaceImplementation));
 
             var testDataProviders = testClassesWithInterfaceImplementation.Select(Activator.CreateInstance)
@@ -89,6 +92,7 @@ namespace Light.GuardClauses.Tests
                                                                                       (testData, customExceptionTest) => new object[] { testData.TestClassType, customExceptionTest });
 
         [Fact(DisplayName = "All test classes of extension methods must populate the custom message and custom exception test data correctly.")]
+        [Trait("Category", Traits.InformativeTests)]
         public void WronglyPopulatedTestData()
         {
             if (WronglyPopulatedTestDataProviders.Count == 0)
@@ -102,6 +106,7 @@ namespace Light.GuardClauses.Tests
         }
 
         [Fact(DisplayName = "All test classes of extension methods must implement the ICustomMessageAndExceptionTestDataProvider interface.")]
+        [Trait("Category", Traits.InformativeTests)]
         public void TestClassesWithoutInterface()
         {
             if (TestClassesWithoutInterfaceImplementation.Count == 0)

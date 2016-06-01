@@ -8,6 +8,7 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeOneOfTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustBeOneOf must throw an exception when the specified value is not within the given items.")]

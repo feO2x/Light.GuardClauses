@@ -6,6 +6,7 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeValidEnumValueTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustBeValidEnumValue must throw an exception when the specified value is not within the defined values of the enumeration.")]

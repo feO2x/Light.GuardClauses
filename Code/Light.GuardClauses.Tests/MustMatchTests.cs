@@ -7,6 +7,7 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustMatchTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustMatch must throw an exception when the specified string does not match the regular expression.")]

@@ -7,6 +7,7 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustContainKeyTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustContainKey must throw an exception when the specified key is not present in the dictionary.")]

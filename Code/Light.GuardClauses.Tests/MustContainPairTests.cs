@@ -10,6 +10,7 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustContainPairTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustContainPair must throw a Dictionary exception when the dictionary does not contain the specified key-value-pair.")]

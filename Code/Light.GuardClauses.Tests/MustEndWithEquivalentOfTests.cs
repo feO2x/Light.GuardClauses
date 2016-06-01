@@ -6,6 +6,7 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustEndWithEquivalentOfTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustEndWithEquivalentOf must throw a StringException when the string does not end with the specified text (ignoring case-sensitivity).")]

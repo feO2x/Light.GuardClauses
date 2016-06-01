@@ -6,6 +6,7 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class StringMustContainTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustContain must throw a StringException when the specified text is not part of the given string.")]

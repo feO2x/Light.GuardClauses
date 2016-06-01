@@ -5,13 +5,13 @@ using Light.GuardClauses.Exceptions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     This class contains the most common assertions like <see cref="MustNotBeNull{T}" /> and assertions that are not directly related to
+    ///     The <see cref="CommonAssertions" /> class contains the most common assertions like <see cref="MustNotBeNull{T}" /> and assertions that are not directly related to
     ///     any categories like collection assertions or string assertions.
     /// </summary>
     public static class CommonAssertions
     {
         /// <summary>
-        ///     Ensures that the specified parameter is not <c>null</c>, or otherwise throws an <see cref="ArgumentNullException" />.
+        ///     Ensures that the specified parameter is not null, or otherwise throws an <see cref="ArgumentNullException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -22,7 +22,7 @@ namespace Light.GuardClauses
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when the specified parameter is <c>null</c> and no <paramref name="exception" /> is specified.
+        ///     Thrown when the specified parameter is null and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
@@ -32,7 +32,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified parameter is <c>null</c>, or otherwise throws an <see cref="ArgumentNotNullException" />.
+        ///     Ensures that the specified parameter is null, or otherwise throws an <see cref="ArgumentNotNullException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -45,7 +45,7 @@ namespace Light.GuardClauses
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNotNullException">
-        ///     Thrown when the specified parameter is not <c>null</c> and no <paramref name="exception" /> is specified.
+        ///     Thrown when the specified parameter is not null and no <paramref name="exception" /> is specified.
         /// </exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeNull<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
@@ -75,7 +75,7 @@ namespace Light.GuardClauses
         {
             var castedValue = parameter as T;
             if (castedValue == null)
-                throw exception != null ? exception() : new TypeMismatchException(message ?? $"{parameterName ?? "The object"} is of type {parameter.GetType().FullName} and cannot be downcasted to {typeof (T).FullName}.", parameterName);
+                throw exception != null ? exception() : new TypeMismatchException(message ?? $"{parameterName ?? "The object"} is of type {parameter.GetType().FullName} and cannot be downcasted to {typeof(T).FullName}.", parameterName);
 
             return castedValue;
         }
@@ -142,6 +142,7 @@ namespace Light.GuardClauses
         /// <exception cref="EnumValueNotDefinedException">
         ///     Thrown when the specified enum value is not defined and no <paramref name="exception" /> is specified.
         /// </exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is not a value of an enum.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeValidEnumValue<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
@@ -169,6 +170,42 @@ namespace Light.GuardClauses
         {
             if (parameter == Guid.Empty)
                 throw exception != null ? exception() : (message == null ? new EmptyGuidException(parameterName) : new EmptyGuidException(message, parameterName));
+        }
+
+        /// <summary>
+        ///     Ensures that the specified Boolean value is false, or otherwise throws an <see cref="ArgumentException" />.
+        /// </summary>
+        /// <param name="parameter">The paramter to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="ArgumentException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when the specified bool is true (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is true and no <paramref name="exception" /> is specified.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustBeFalse(this bool parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            if (parameter)
+                throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must be false, but you specified true.", parameterName);
+        }
+
+        /// <summary>
+        ///     Ensures that the specified Boolean value is true, or otherwise throws an <see cref="ArgumentException" />.
+        /// </summary>
+        /// <param name="parameter">The paramter to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="ArgumentException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when the specified bool is false (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is false and no <paramref name="exception" /> is specified.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustBeTrue(this bool parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            if (parameter == false)
+                throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must be true, but you specified false.", parameterName);
         }
     }
 }
