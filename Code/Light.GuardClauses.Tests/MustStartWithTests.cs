@@ -46,7 +46,7 @@ namespace Light.GuardClauses.Tests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        [Theory(DisplayName = "MustStartWith for collections must throw a CollectionException when the collection does not begin with the specified subset.")]
+        [Theory(DisplayName = "MustStartWith for collections must throw a CollectionException when the collection does not start with the specified subset in the same order.")]
         [InlineData(new[] { 1, 2, 3 }, new[] { 1, 3 })]
         [InlineData(new[] { 88, 22, 36 }, new[] { 1 })]
         [InlineData(new[] { 1 }, new[] { 1, 2, 3 })]

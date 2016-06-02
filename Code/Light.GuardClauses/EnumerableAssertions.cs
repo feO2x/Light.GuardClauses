@@ -9,7 +9,7 @@ using Light.GuardClauses.FrameworkExtensions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     The <see cref="EnumerableAssertions"/> class contains extension methods that apply assertions to <see cref="IEnumerable{T}" /> instances.
+    ///     The <see cref="EnumerableAssertions" /> class contains extension methods that apply assertions to <see cref="IEnumerable{T}" /> instances.
     /// </summary>
     public static class EnumerableAssertions
     {
@@ -490,7 +490,7 @@ namespace Light.GuardClauses
         ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="subset" /> is null.</exception>
-        /// <exception cref="CollectionException">Thrown when <paramref name="parameter" />does not start with the items of <paramref name="subset" /> (same order), and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not start with the items of <paramref name="subset" /> (same order), and no <paramref name="exception" /> is specified.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustStartWith<T>(this IEnumerable<T> parameter, IEnumerable<T> subset, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
@@ -511,6 +511,41 @@ namespace Light.GuardClauses
 
             ThrowException:
             throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must start with the following items:{new StringBuilder().AppendLine().AppendItemsWithNewLine(subset).AppendLine()}but it does not.{Environment.NewLine}{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
+            // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
+        ///     Ensures that the specified collection does not start with the given subset (same order), or otherwise throws a <see cref="CollectionException" />.
+        /// </summary>
+        /// <typeparam name="T">The item type of the collection.</typeparam>
+        /// <param name="parameter">The collection to be checked.</param>
+        /// <param name="subset"></param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that will be thrown when the collection contains the given subset at the start of it.
+        ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="subset" /> is null.</exception>
+        /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does start with the items of <paramref name="subset" /> (same order), and no <paramref name="exception" /> is specified.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustNotStartWith<T>(this IEnumerable<T> parameter, IEnumerable<T> subset, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            var first = parameter.AsList();
+            var second = subset.AsList();
+            second.MustNotBeNullOrEmpty(nameof(subset), "Your precondition is setup wrongly: subset is an empty collection.");
+
+            if (first.Count < second.Count)
+                return;
+
+            for (var i = 0; i < second.Count; i++)
+            {
+                if (first[i].EqualsWithHashCode(second[i]) == false)
+                    return;
+            }
+
+            throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must not start with the following items:{new StringBuilder().AppendLine().AppendItemsWithNewLine(subset).AppendLine()}but it does.{Environment.NewLine}{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
