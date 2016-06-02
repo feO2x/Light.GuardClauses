@@ -49,7 +49,7 @@ Light.GuardClauses is specifically tailored for the scenario of creating precond
 
 ## Conditional Compilation
 
-The methods of Light.GuardClauses are marked with the [ConditionalAttribute](https://msdn.microsoft.com/en-us/library/system.diagnostics.conditionalattribute(v=vs.110).aspx) so that you can include or exclude the calls to these methods when you build your project. To do that, go to the Build tab in the project properties and define the compilation symbol "COMPILE_ASSERTIONS" so that calls to Light.GuardClauses methods are included.
+The methods of Light.GuardClauses are marked with the [ConditionalAttribute](https://msdn.microsoft.com/en-us/library/system.diagnostics.conditionalattribute(v=vs.110).aspx) so that you can include or exclude the calls to these methods when you build your project. To exclude the calls to the Light.GuardClauses methods, go to the Build tab in the project properties and remove the compilation symbol "COMPILE_ASSERTIONS". By default, this symbol is set when you install Light.GuardClauses via NuGet.
 
 ![Activating assertion compilation](/Images/compile_assertions.png)
 
