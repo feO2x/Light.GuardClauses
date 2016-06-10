@@ -20,7 +20,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => dictionary.MustContainValues(values, nameof(dictionary));
 
             act.ShouldThrow<ValueNotFoundException>()
-               .And.Message.Should().Contain($"{nameof(dictionary)} must contain all the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(values)}");
+               .And.Message.Should().Contain($"{nameof(dictionary)} must contain all of the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(values)}");
         }
 
         public static readonly TestData ValuesNotContainedData =

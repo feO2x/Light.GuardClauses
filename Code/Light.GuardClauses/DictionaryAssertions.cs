@@ -9,7 +9,7 @@ using Light.GuardClauses.FrameworkExtensions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     The <see cref="DictionaryAssertions"/> class contains extension methods providing assertions for <see cref="IDictionary{TKey,TValue}" /> instances.
+    ///     The <see cref="DictionaryAssertions" /> class contains extension methods providing assertions for <see cref="IDictionary{TKey,TValue}" /> instances.
     /// </summary>
     public static class DictionaryAssertions
     {
@@ -40,7 +40,14 @@ namespace Light.GuardClauses
             if (dictionary.ContainsKey(parameter))
                 return;
 
-            throw exception != null ? exception() : new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be one of the dictionary keys{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(dictionary.Keys)}{Environment.NewLine}but you specified {parameter}.");
+            throw exception != null ? exception() :
+                      new ArgumentOutOfRangeException(parameterName,
+                                                      parameter,
+                                                      message ??
+                                                      new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be one of the dictionary keys:")
+                                                                         .AppendItemsWithNewLine(dictionary.Keys).AppendLine()
+                                                                         .AppendLine($"but you specified {parameter}.")
+                                                                         .ToString());
         }
 
         /// <summary>
@@ -65,8 +72,17 @@ namespace Light.GuardClauses
         {
             dictionary.MustNotBeNull(nameof(dictionary));
 
-            if (dictionary.ContainsKey(parameter))
-                throw exception != null ? exception() : new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must not be one of the dictionary keys{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(dictionary.Keys)}{Environment.NewLine}but you specified {parameter}");
+            if (dictionary.ContainsKey(parameter) == false)
+                return;
+
+            throw exception != null ? exception() :
+                      new ArgumentOutOfRangeException(parameterName,
+                                                      parameter,
+                                                      message ??
+                                                      new StringBuilder().AppendLine($"{parameterName ?? "The value"} must not be one of the dictionary keys:")
+                                                                         .AppendItemsWithNewLine(dictionary.Keys).AppendLine()
+                                                                         .AppendLine($"but you specified {parameter}.")
+                                                                         .ToString());
         }
 
         /// <summary>
@@ -95,8 +111,14 @@ namespace Light.GuardClauses
         {
             parameter.MustNotBeNull(parameterName);
 
-            if (parameter.ContainsKey(key) == false)
-                throw exception != null ? exception() : new KeyNotFoundException(message ?? $"{parameterName ?? "The dictionary"} must contain key \"{key}\".{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}");
+            if (parameter.ContainsKey(key))
+                return;
+
+            throw exception != null ? exception() :
+                      new KeyNotFoundException(message ??
+                                               new StringBuilder().AppendLine($"{parameterName ?? "The dictionary"} must contain key \"{key}\".")
+                                                                  .AppendDictionaryContent(parameter)
+                                                                  .ToString());
         }
 
         /// <summary>
@@ -125,8 +147,15 @@ namespace Light.GuardClauses
         {
             parameter.MustNotBeNull(parameterName);
 
-            if (parameter.ContainsKey(key))
-                throw exception != null ? exception() : new DictionaryException(message ?? $"{parameterName ?? "The dictionary"} must not contain key \"{key}\".{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
+            if (parameter.ContainsKey(key) == false)
+                return;
+
+            throw exception != null ? exception() :
+                      new DictionaryException(message ??
+                                              new StringBuilder().AppendLine($"{parameterName ?? "The dictionary"} must not contain key \"{key}\".")
+                                                                 .AppendDictionaryContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
         }
 
         /// <summary>
@@ -151,8 +180,16 @@ namespace Light.GuardClauses
             // ReSharper disable PossibleMultipleEnumeration
             keys.MustNotBeNull(nameof(keys));
 
-            if (keys.Any(k => parameter.ContainsKey(k) == false))
-                throw exception != null ? exception() : new KeyNotFoundException(message ?? $"{parameterName ?? "The dictionary"} must contain all of the following keys:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(keys)}{Environment.NewLine}but does not.{Environment.NewLine}{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}");
+            if (keys.All(parameter.ContainsKey))
+                return;
+
+            throw exception != null ? exception() :
+                      new KeyNotFoundException(message ??
+                                               new StringBuilder().AppendLine($"{parameterName ?? "The dictionary"} must contain all of the following keys:")
+                                                                  .AppendItemsWithNewLine(keys).AppendLine()
+                                                                  .AppendLine("but it does not.").AppendLine()
+                                                                  .AppendDictionaryContent(parameter)
+                                                                  .ToString());
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -193,8 +230,17 @@ namespace Light.GuardClauses
             parameter.MustNotBeNull(parameterName);
             keys.MustNotBeNull(nameof(keys));
 
-            if (keys.Any(parameter.ContainsKey))
-                throw exception != null ? exception() : new DictionaryException(message ?? $"{parameterName ?? "The dictionary"} must not contain any of the following keys:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(keys)}{Environment.NewLine}but it does.{Environment.NewLine}{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
+            if (keys.Any(parameter.ContainsKey) == false)
+                return;
+
+            throw exception != null ? exception() :
+                      new DictionaryException(message ??
+                                              new StringBuilder().AppendLine($"{parameterName ?? "The dictionary"} must not contain any of the following keys:")
+                                                                 .AppendItemsWithNewLine(keys).AppendLine()
+                                                                 .AppendLine("but it does.").AppendLine()
+                                                                 .AppendDictionaryContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -233,8 +279,15 @@ namespace Light.GuardClauses
         {
             parameter.MustNotBeNull(parameterName);
 
-            if (parameter.Values.Contains(value) == false)
-                throw exception != null ? exception() : new ValueNotFoundException(message ?? $"{parameterName ?? "The dictionary"} must contain value \"{value.ToStringOrNull()}\", but it does not.{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
+            if (parameter.Values.Contains(value))
+                return;
+
+            throw exception != null ? exception() :
+                      new ValueNotFoundException(message ??
+                                                 new StringBuilder().AppendLine($"{parameterName ?? "The dictionary"} must contain value \"{value.ToStringOrNull()}\", but it does not.")
+                                                                    .AppendDictionaryContent(parameter)
+                                                                    .ToString(),
+                                                 parameterName);
         }
 
         /// <summary>
@@ -260,8 +313,17 @@ namespace Light.GuardClauses
             parameter.MustNotBeNull(parameterName);
             values.MustNotBeNullOrEmpty(nameof(values));
 
-            if (values.Any(v => parameter.Values.Contains(v) == false))
-                throw exception != null ? exception() : new ValueNotFoundException(message ?? $"{parameterName ?? "The dictionary"} must contain all the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(values)}{Environment.NewLine}{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
+            if (values.All(parameter.Values.Contains))
+                return;
+
+            throw exception != null ? exception() :
+                      new ValueNotFoundException(message ??
+                                                 new StringBuilder().AppendLine($"{parameterName ?? "The dictionary"} must contain all of the following values:")
+                                                                    .AppendItemsWithNewLine(values).AppendLine()
+                                                                    .AppendLine("but it does not.").AppendLine()
+                                                                    .AppendDictionaryContent(parameter)
+                                                                    .ToString(),
+                                                 parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -301,8 +363,15 @@ namespace Light.GuardClauses
         {
             parameter.MustNotBeNull(parameterName);
 
-            if (parameter.Values.Contains(value))
-                throw exception != null ? exception() : new DictionaryException(message ?? $"{parameterName ?? "The dictionary"} must not contain value \"{value.ToStringOrNull()}\", but it does.{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
+            if (parameter.Values.Contains(value) == false)
+                return;
+
+            throw exception != null ? exception() :
+                      new DictionaryException(message ??
+                                              new StringBuilder().AppendLine($"{parameterName ?? "The dictionary"} must not contain value \"{value.ToStringOrNull()}\", but it does.")
+                                                                 .AppendDictionaryContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
         }
 
         /// <summary>
@@ -328,8 +397,17 @@ namespace Light.GuardClauses
             parameter.MustNotBeNull(parameterName);
             values.MustNotBeNullOrEmpty(nameof(values));
 
-            if (values.Any(parameter.Values.Contains))
-                throw exception != null ? exception() : new DictionaryException(message ?? $"{parameterName ?? "The dictionary"} must not contain any of the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(values)}{Environment.NewLine}{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
+            if (values.Any(parameter.Values.Contains) == false)
+                return;
+
+            throw exception != null ? exception() :
+                      new DictionaryException(message ??
+                                              new StringBuilder().AppendLine($"{parameterName ?? "The dictionary"} must not contain any of the following values:")
+                                                                 .AppendItemsWithNewLine(values).AppendLine()
+                                                                 .AppendLine("but it does.").AppendLine()
+                                                                 .AppendDictionaryContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -370,8 +448,17 @@ namespace Light.GuardClauses
         {
             parameter.MustNotBeNull(parameterName);
 
-            if (parameter.Contains(new KeyValuePair<TKey, TValue>(key, value)) == false)
-                throw exception != null ? exception() : new DictionaryException(message ?? $"{parameterName ?? "The dictionary"} must contain the key-value-pair \"{new StringBuilder().AppendKeyValuePair(key, value)}\", but it does not.{Environment.NewLine}{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
+            if (parameter.Contains(new KeyValuePair<TKey, TValue>(key, value)))
+                return;
+
+            throw exception != null ? exception() :
+                      new DictionaryException(message ??
+                                              new StringBuilder().Append($"{parameterName ?? "The dictionary"} must contain the key-value-pair \"")
+                                                                 .AppendKeyValuePair(key, value)
+                                                                 .AppendLine("\", but it does not.").AppendLine()
+                                                                 .AppendDictionaryContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
         }
 
         /// <summary>
@@ -395,8 +482,17 @@ namespace Light.GuardClauses
         {
             parameter.MustNotBeNull(parameterName);
 
-            if (parameter.Contains(new KeyValuePair<TKey, TValue>(key, value)))
-                throw exception != null ? exception() : new DictionaryException(message ?? $"{parameterName ?? "The dictionary"} must not contain the key-value-pair \"{new StringBuilder().AppendKeyValuePair(key, value)}\", but it does.{Environment.NewLine}{Environment.NewLine}Actual content of the dictionary:{Environment.NewLine}{new StringBuilder().AppendKeyValuePairsWithNewLine(parameter)}", parameterName);
+            if (parameter.Contains(new KeyValuePair<TKey, TValue>(key, value)) == false)
+                return;
+
+            throw exception != null ? exception() :
+                      new DictionaryException(message ??
+                                              new StringBuilder().Append($"{parameterName ?? "The dictionary"} must not contain the key-value-pair \"")
+                                                                 .AppendKeyValuePair(key, value)
+                                                                 .AppendLine("\", but it does.").AppendLine()
+                                                                 .AppendDictionaryContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
         }
     }
 }

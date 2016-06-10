@@ -221,16 +221,36 @@ namespace Light.GuardClauses.FrameworkExtensions
         ///     Each item is on a new line.
         /// </summary>
         /// <typeparam name="T">The item type of the collection.</typeparam>
-        /// <param name="stringBuilder">The string builder that the content will be appended to.</param>
+        /// <param name="stringBuilder">The string builder that the content is appended to.</param>
         /// <param name="collection">The collection whose items will be appended to the string builder.</param>
         /// <param name="headerLine">The string that will be placed before the actual items as a header.</param>
         /// <returns>The string builder for method chaining.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> or <paramref name="collection" />is null.</exception>
         public static StringBuilder AppendCollectionContent<T>(this StringBuilder stringBuilder, IEnumerable<T> collection, string headerLine = "Actual content of the collection:")
         {
             stringBuilder.MustNotBeNull(nameof(stringBuilder));
 
             return stringBuilder.AppendLine(headerLine)
                                 .AppendItemsWithNewLine(collection);
+        }
+
+        /// <summary>
+        ///     Appends the content of the dictionary with the specified header line to the string builder.
+        ///     Each key-value-pair is on a new line.
+        /// </summary>
+        /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
+        /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
+        /// <param name="stringBuilder">The string builder the content is appended to.</param>
+        /// <param name="dictionary">The dictionary whose key-value-pairs will be appended to the string builder.</param>
+        /// <param name="headerLine">The string that will be placed before the actual items as the header.</param>
+        /// <returns>The string builder for method chaining.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> or <paramref name="dictionary" /> is null.</exception>
+        public static StringBuilder AppendDictionaryContent<TKey, TValue>(this StringBuilder stringBuilder, IDictionary<TKey, TValue> dictionary, string headerLine = "Actual content of the dictionary:")
+        {
+            stringBuilder.MustNotBeNull(nameof(stringBuilder));
+
+            return stringBuilder.AppendLine(headerLine)
+                                .AppendKeyValuePairsWithNewLine(dictionary);
         }
     }
 }
