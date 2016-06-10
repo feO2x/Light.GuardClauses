@@ -35,8 +35,18 @@ namespace Light.GuardClauses
             // ReSharper disable PossibleMultipleEnumeration
             items.MustNotBeNull(nameof(items));
 
-            if (items.Contains(parameter) == false)
-                throw exception != null ? exception() : new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be one of the items{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(items)}{Environment.NewLine}but you specified {parameter}.");
+            if (items.Contains(parameter))
+                return;
+
+            throw exception != null ? exception() :
+                      new ArgumentOutOfRangeException(parameterName,
+                                                      parameter,
+                                                      message ??
+                                                      new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be one of the items")
+                                                                         .AppendItemsWithNewLine(items).AppendLine()
+                                                                         .AppendLine($"but you specified {parameter}.")
+                                                                         .ToString());
+
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -62,8 +72,17 @@ namespace Light.GuardClauses
             // ReSharper disable PossibleMultipleEnumeration
             items.MustNotBeNull(nameof(items));
 
-            if (items.Contains(parameter))
-                throw exception != null ? exception() : new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must be none of the items{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(items)}{Environment.NewLine}but you specified {parameter}.");
+            if (items.Contains(parameter) == false)
+                return;
+
+            throw exception != null ? exception() :
+                      new ArgumentOutOfRangeException(parameterName,
+                                                      parameter,
+                                                      message ??
+                                                      new StringBuilder().AppendLine($"{parameterName ?? "The value"} must not be one of the items")
+                                                                         .AppendItemsWithNewLine(items).AppendLine()
+                                                                         .AppendLine($"but you specified {parameter}.")
+                                                                         .ToString());
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -130,7 +149,12 @@ namespace Light.GuardClauses
                     if (itemToCompare.EqualsWithHashCode(parameter.ElementAt(j)) == false)
                         continue;
 
-                    throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The value"} must be a collection with unique items, but there is a duplicate at index {j}.{Environment.NewLine}Actual content of the collection:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(parameter)}.", parameterName);
+                    throw exception != null ? exception() :
+                              new CollectionException(message ??
+                                                      new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be a collection with unique items, but there is a duplicate at index {j}.")
+                                                                         .AppendCollectionContent(parameter)
+                                                                         .ToString(),
+                                                      parameterName);
                 }
             }
             // ReSharper restore PossibleMultipleEnumeration
@@ -164,11 +188,16 @@ namespace Light.GuardClauses
             var currentIndex = -1;
             foreach (var item in parameter)
             {
-                currentIndex++;
+                ++currentIndex;
                 if (item != null)
                     continue;
 
-                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The value"} must be a collection not containing null, but you specified null at index {currentIndex}.{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
+                throw exception != null ? exception() :
+                          new CollectionException(message ??
+                                                  new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be a collection not containing null, but you specified null at index {currentIndex}.")
+                                                                     .AppendCollectionContent(parameter)
+                                                                     .ToString(),
+                                                  parameterName);
             }
             // ReSharper restore PossibleMultipleEnumeration
         }
@@ -199,8 +228,15 @@ namespace Light.GuardClauses
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
 
-            if (parameter.Contains(item) == false)
-                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain value \"{item.ToStringOrNull()}\", but does not.{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
+            if (parameter.Contains(item))
+                return;
+
+            throw exception != null ? exception() :
+                      new CollectionException(message ??
+                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain value \"{item.ToStringOrNull()}\", but does not.")
+                                                                 .AppendCollectionContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -230,8 +266,15 @@ namespace Light.GuardClauses
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
 
-            if (parameter.Contains(item))
-                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must not contain value \"{item.ToStringOrNull()}\", but it does.{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
+            if (parameter.Contains(item) == false)
+                return;
+
+            throw exception != null ? exception() :
+                      new CollectionException(message ??
+                                              new StringBuilder($"{parameterName ?? "The collection"} must not contain value \"{item.ToStringOrNull()}\", but it does.")
+                                                  .AppendCollectionContent(parameter)
+                                                  .ToString(),
+                                              parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -260,11 +303,19 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
-            superset.MustNotBeNull(nameof(superset));
+            superset.MustNotBeNullOrEmpty(nameof(superset), "Your precondition is set up wrongly: superset is an empty collection.");
 
-            if (parameter.All(superset.Contains) == false)
-                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must be a subset of:{new StringBuilder().AppendLine().AppendItemsWithNewLine(superset).AppendLine().AppendLine()}The actual collection contains:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
+            if (parameter.All(superset.Contains))
+                return;
 
+            throw exception != null ? exception() :
+                      new CollectionException(message ??
+                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must be a subset of:")
+                                                                 .AppendItemsWithNewLine(superset).AppendLine()
+                                                                 .AppendLine("but it is not.").AppendLine()
+                                                                 .AppendCollectionContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -294,10 +345,19 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
-            subset.MustNotBeNull(nameof(subset));
+            subset.MustNotBeNullOrEmpty(nameof(subset), "Your precondition is set up wrongly: subset is an empty collection.");
 
-            if (subset.All(parameter.Contains) == false)
-                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain the following values{new StringBuilder().AppendLine().AppendItemsWithNewLine(subset).AppendLine()}but does not.{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
+            if (subset.All(parameter.Contains))
+                return;
+
+            throw exception != null ? exception() :
+                      new CollectionException(message ??
+                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain the following values:")
+                                                                 .AppendItemsWithNewLine(subset).AppendLine()
+                                                                 .AppendLine("but it does not.").AppendLine()
+                                                                 .AppendCollectionContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -338,10 +398,19 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
-            set.MustNotBeNull(nameof(set));
+            set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
 
-            if (set.Any(parameter.Contains))
-                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must not contain any of the following values:{new StringBuilder().AppendLine().AppendItemsWithNewLine(set).AppendLine().AppendLine()}The actual content of the collection is:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
+            if (set.Any(parameter.Contains) == false)
+                return;
+
+            throw exception != null ? exception() :
+                      new CollectionException(message ??
+                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not contain any of the following values:")
+                                                                 .AppendItemsWithNewLine(set).AppendLine()
+                                                                 .AppendLine("but it does.").AppendLine()
+                                                                 .AppendCollectionContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -381,8 +450,15 @@ namespace Light.GuardClauses
             parameter.MustNotBeNull();
             count.MustNotBeLessThan(0, nameof(count));
 
-            if (parameter.Count() != count)
-                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must have count {count}, but you specified a collection with count {parameter.Count()}.{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
+            if (parameter.Count() == count)
+                return;
+
+            throw exception != null ? exception() :
+                      new CollectionException(message ??
+                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must have count {count}, but you specified a collection with count {parameter.Count()}.")
+                                                                 .AppendCollectionContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -409,8 +485,15 @@ namespace Light.GuardClauses
             count.MustNotBeLessThan(0);
 
             var collectionCount = parameter.Count();
-            if (collectionCount < count)
-                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must have at least {count} {Items(count)}, but it actually has {collectionCount} {Items(collectionCount)}.", parameterName);
+            if (collectionCount >= count)
+                return;
+
+            throw exception != null ? exception() :
+                      new CollectionException(message ??
+                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must have at least {count} {Items(count)}, but it actually has {collectionCount} {Items(collectionCount)}.")
+                                                                 .AppendCollectionContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -437,8 +520,15 @@ namespace Light.GuardClauses
             count.MustNotBeLessThan(0);
 
             var collectionCount = parameter.Count();
-            if (collectionCount > count)
-                throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must have no more than {count} {Items(count)}, but it actually has {collectionCount} {Items(collectionCount)}.", parameterName);
+            if (collectionCount <= count)
+                return;
+
+            throw exception != null ? exception() :
+                      new CollectionException(message ??
+                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must have no more than {count} {Items(count)}, but it actually has {collectionCount} {Items(collectionCount)}.")
+                                                                 .AppendCollectionContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -470,8 +560,15 @@ namespace Light.GuardClauses
                     var first = list[i];
                     var second = list[j];
 
-                    if (first.GetType() == second.GetType())
-                        throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must contain instances of different subtypes, but \"{first}\" and \"{second}\" (at positions {i} and {j}) have the same type: \"{first.GetType()}\".{Environment.NewLine}{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
+                    if (first.GetType() != second.GetType())
+                        continue;
+
+                    throw exception != null ? exception() :
+                              new CollectionException(message ??
+                                                      new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain instances of different subtypes, but \"{first}\" and \"{second}\" (at positions {i} and {j}) have the same type: \"{first.GetType()}\".")
+                                                                         .AppendLine().AppendCollectionContent(parameter)
+                                                                         .ToString(),
+                                                      parameterName);
                 }
             }
             // ReSharper restore PossibleMultipleEnumeration
@@ -497,7 +594,7 @@ namespace Light.GuardClauses
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.AsList();
             var second = subset.AsList();
-            second.MustNotBeNullOrEmpty(nameof(subset), "Your precondition is setup wrongly: subset is an empty collection.");
+            second.MustNotBeNullOrEmpty(nameof(subset), "Your precondition is set up wrongly: subset is an empty collection.");
 
             if (first.Count < second.Count)
                 goto ThrowException;
@@ -510,7 +607,14 @@ namespace Light.GuardClauses
             return;
 
             ThrowException:
-            throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must start with the following items:{new StringBuilder().AppendLine().AppendItemsWithNewLine(subset).AppendLine()}but it does not.{Environment.NewLine}{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
+            throw exception != null ? exception() :
+                      new CollectionException(message ??
+                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must start with the following items:")
+                                                                 .AppendItemsWithNewLine(subset).AppendLine()
+                                                                 .AppendLine("but it does not.").AppendLine()
+                                                                 .AppendCollectionContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -534,7 +638,7 @@ namespace Light.GuardClauses
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.AsList();
             var second = subset.AsList();
-            second.MustNotBeNullOrEmpty(nameof(subset), "Your precondition is setup wrongly: subset is an empty collection.");
+            second.MustNotBeNullOrEmpty(nameof(subset), "Your precondition is set up wrongly: subset is an empty collection.");
 
             if (first.Count < second.Count)
                 return;
@@ -545,7 +649,14 @@ namespace Light.GuardClauses
                     return;
             }
 
-            throw exception != null ? exception() : new CollectionException(message ?? $"{parameterName ?? "The collection"} must not start with the following items:{new StringBuilder().AppendLine().AppendItemsWithNewLine(subset).AppendLine()}but it does.{Environment.NewLine}{Environment.NewLine}Actual content of the collection:{new StringBuilder().AppendLine().AppendItemsWithNewLine(parameter)}", parameterName);
+            throw exception != null ? exception() :
+                      new CollectionException(message ??
+                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not start with the following items:")
+                                                                 .AppendItemsWithNewLine(subset).AppendLine()
+                                                                 .AppendLine("but it does.").AppendLine()
+                                                                 .AppendCollectionContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 

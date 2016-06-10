@@ -52,7 +52,6 @@ namespace Light.GuardClauses.FrameworkExtensions
         {
             // ReSharper disable PossibleMultipleEnumeration
             stringBuilder.MustNotBeNull(nameof(stringBuilder));
-
             items.MustNotBeNull(nameof(items));
             itemSeparator.MustNotBeNull(nameof(itemSeparator));
 
@@ -93,7 +92,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
-        /// Appends the string representation of the specified key-value-pair to the string builder.
+        ///     Appends the string representation of the specified key-value-pair to the string builder.
         /// </summary>
         /// <typeparam name="TKey">The type of the key.</typeparam>
         /// <typeparam name="TValue">The type of the value.</typeparam>
@@ -101,7 +100,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <param name="key">The key of the key-value-pair.</param>
         /// <param name="value">The value of the key-value-pair.</param>
         /// <returns>The string builder to enable method chaining.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> is null.</exception>
         public static StringBuilder AppendKeyValuePair<TKey, TValue>(this StringBuilder stringBuilder, TKey key, TValue value)
         {
             stringBuilder.MustNotBeNull(nameof(stringBuilder));
@@ -197,24 +196,41 @@ namespace Light.GuardClauses.FrameworkExtensions
                 return string.Empty;
 
             var type = value.GetType();
-            if (type == typeof (int) ||
-                type == typeof (long) ||
-                type == typeof (short) ||
-                type == typeof (sbyte) ||
-                type == typeof (uint) ||
-                type == typeof (ulong) ||
-                type == typeof (ushort) ||
-                type == typeof (byte) ||
-                type == typeof (bool) ||
-                type == typeof (double) ||
-                type == typeof (decimal) ||
-                type == typeof (float) ||
-                type == typeof (DateTime) ||
-                type == typeof (DateTimeOffset) ||
-                type == typeof (TimeSpan))
+            if (type == typeof(int) ||
+                type == typeof(long) ||
+                type == typeof(short) ||
+                type == typeof(sbyte) ||
+                type == typeof(uint) ||
+                type == typeof(ulong) ||
+                type == typeof(ushort) ||
+                type == typeof(byte) ||
+                type == typeof(bool) ||
+                type == typeof(double) ||
+                type == typeof(decimal) ||
+                type == typeof(float) ||
+                type == typeof(DateTime) ||
+                type == typeof(DateTimeOffset) ||
+                type == typeof(TimeSpan))
                 return string.Empty;
 
             return "\"";
+        }
+
+        /// <summary>
+        ///     Appends the content of the collection with the specified header line to the string builder.
+        ///     Each item is on a new line.
+        /// </summary>
+        /// <typeparam name="T">The item type of the collection.</typeparam>
+        /// <param name="stringBuilder">The string builder that the content will be appended to.</param>
+        /// <param name="collection">The collection whose items will be appended to the string builder.</param>
+        /// <param name="headerLine">The string that will be placed before the actual items as a header.</param>
+        /// <returns>The string builder for method chaining.</returns>
+        public static StringBuilder AppendCollectionContent<T>(this StringBuilder stringBuilder, IEnumerable<T> collection, string headerLine = "Actual content of the collection:")
+        {
+            stringBuilder.MustNotBeNull(nameof(stringBuilder));
+
+            return stringBuilder.AppendLine(headerLine)
+                                .AppendItemsWithNewLine(collection);
         }
     }
 }

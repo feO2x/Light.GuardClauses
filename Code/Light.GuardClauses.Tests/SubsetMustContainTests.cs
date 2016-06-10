@@ -19,7 +19,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => collection.MustContain(invalidSubset, nameof(collection));
 
             act.ShouldThrow<CollectionException>()
-               .And.Message.Should().Contain($"{nameof(collection)} must contain the following values{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(invalidSubset)}");
+               .And.Message.Should().Contain($"{nameof(collection)} must contain the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(invalidSubset)}");
         }
 
         public static readonly TestData IsNoSupersetData =
