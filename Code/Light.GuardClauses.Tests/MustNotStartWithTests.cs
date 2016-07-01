@@ -92,7 +92,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => collection.MustNotStartWith(new List<string>());
 
             act.ShouldThrow<EmptyCollectionException>()
-               .And.Message.Should().Contain("Your precondition is set up wrongly: subset is an empty collection.");
+               .And.Message.Should().Contain("Your precondition is set up wrongly: set is an empty collection.");
         }
 
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
