@@ -588,7 +588,7 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not start with the items of <paramref name="set" /> (same order), and no <paramref name="exception" /> is specified.</exception>
-        /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set"/> is an empty collection.</exception>
+        /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> is an empty collection.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustStartWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
@@ -616,6 +616,53 @@ namespace Light.GuardClauses
                                                                  .AppendCollectionContent(parameter)
                                                                  .ToString(),
                                               parameterName);
+            // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
+        ///     Ensures that the specified collection ends with the given set (same order), or otherwise throws a <see cref="CollectionException" />.
+        /// </summary>
+        /// <typeparam name="T">The item type of the collection.</typeparam>
+        /// <param name="parameter">The collection to be checked.</param>
+        /// <param name="set">The items that the collection must end with.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that will be thrown when the collection does not contain the given set at the end of it.
+        ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
+        /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not start with the items of <paramref name="set" /> (same order), and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> is an empty collection.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustEndWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            var first = parameter.AsList();
+            var second = set.AsList();
+            second.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
+
+            if (first.Count < second.Count)
+                goto ThrowException;
+
+            for (var i = 0; i < second.Count; i++)
+            {
+                var targetIndex = first.Count - second.Count + i;
+                if (first[targetIndex].EqualsWithHashCode(second[i]) == false)
+                    goto ThrowException;
+            }
+            return;
+
+            ThrowException:
+            throw exception != null ? exception() :
+                      new CollectionException(message ??
+                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must end with the following items:")
+                                                                 .AppendItemsWithNewLine(set).AppendLine()
+                                                                 .AppendLine("but it does not.").AppendLine()
+                                                                 .AppendCollectionContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
+
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -674,7 +721,7 @@ namespace Light.GuardClauses
         ///     The exception that will be thrown when the collection contains the given set at the end of it.
         ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
         /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does contain the given set at the end of it, and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> is an empty collection.</exception>
         [Conditional(Check.CompileAssertionsSymbol)]
