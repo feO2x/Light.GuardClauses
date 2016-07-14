@@ -754,7 +754,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the collection starts with the specified item of <paramref name="set" /> in any order, or otherwise throws a <see cref="CollectionException" />.
+        ///     Ensures that the collection starts with the specified items of <paramref name="set" /> in any order, or otherwise throws a <see cref="CollectionException" />.
         /// </summary>
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
@@ -793,6 +793,52 @@ namespace Light.GuardClauses
                                               new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must start with the following items in any order:")
                                                                  .AppendItemsWithNewLine(set).AppendLine()
                                                                  .AppendLine("but it does not.").AppendLine()
+                                                                 .AppendCollectionContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
+            // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
+        ///     Ensures that the collection does not start with the specified items of <paramref name="set" /> in any order, or otherwise throws a <see cref="CollectionException" />.
+        /// </summary>
+        /// <typeparam name="T">The item type of the collection.</typeparam>
+        /// <param name="parameter">The collection to be checked.</param>
+        /// <param name="set">The items the collection must not start with (in any order).</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that will be thrown when the collection does start with the given items (in any order).
+        ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
+        /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not start with the given items (in any order), and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> contains no items.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustNotStartWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            var first = parameter.AsList();
+            var second = set.AsList();
+            second.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
+
+            if (first.Count < second.Count)
+                return;
+
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (var i = 0; i < second.Count; i++)
+            {
+                if (ContainsAtStart(first, second.Count, second[i]))
+                    goto ThrowException;
+            }
+            return;
+
+            ThrowException:
+            throw exception != null ? exception() :
+                      new CollectionException(message ??
+                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not start with the following items in any order:")
+                                                                 .AppendItemsWithNewLine(set).AppendLine()
+                                                                 .AppendLine("but it does.").AppendLine()
                                                                  .AppendCollectionContent(parameter)
                                                                  .ToString(),
                                               parameterName);
