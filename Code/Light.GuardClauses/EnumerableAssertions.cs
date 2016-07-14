@@ -828,12 +828,10 @@ namespace Light.GuardClauses
             // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < second.Count; i++)
             {
-                if (ContainsAtStart(first, second.Count, second[i]))
-                    goto ThrowException;
+                if (ContainsAtStart(first, second.Count, second[i]) == false)
+                    return;
             }
-            return;
 
-            ThrowException:
             throw exception != null ? exception() :
                       new CollectionException(message ??
                                               new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not start with the following items in any order:")

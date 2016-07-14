@@ -62,6 +62,7 @@ namespace Light.GuardClauses.Tests
         [Theory(DisplayName = "MustNotStartWithEquivalentOf for collections must not throw an exception when the collection does not the contain the items of set at the start in any order.")]
         [InlineData(new[] { 1, 2, 3, 4, 5 }, new[] { 42, -55 })]
         [InlineData(new[] { 1, 2, 3, 4, 5 }, new[] { 2 })]
+        [InlineData(new[] { 1, 2, 3, 4, 5 }, new[] { 3, 2 })]
         [InlineData(new[] { 2500 }, new[] { 2500, 2600 })]
         public void CollectionsStartDifferent(IEnumerable<int> collection, IEnumerable<int> set)
         {
