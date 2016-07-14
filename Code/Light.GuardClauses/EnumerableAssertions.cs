@@ -855,6 +855,64 @@ namespace Light.GuardClauses
             return false;
         }
 
+        /// <summary>
+        ///     Ensures that the collection ends with the specified items of <paramref name="set" /> in any order, or otherwise throws a <see cref="CollectionException" />.
+        /// </summary>
+        /// <typeparam name="T">The item type of the collection.</typeparam>
+        /// <param name="parameter">The collection to be checked.</param>
+        /// <param name="set">The items the collection must end with (in any order).</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that will be thrown when the collection does not end with the given items (in any order).
+        ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
+        /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not end with the given items (in any order), and no <paramref name="exception" /> is specified.</exception>
+        /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> contains no items.</exception>
+        [Conditional(Check.CompileAssertionsSymbol)]
+        public static void MustEndWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            var first = parameter.AsList();
+            var second = set.AsList();
+            second.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
+
+            if (first.Count < second.Count)
+                goto ThrowException;
+
+            var lowerIndex = first.Count - second.Count;
+
+            // ReSharper disable once ForCanBeConvertedToForeach
+            for (var i = 0; i < second.Count; i++)
+            {
+                if (ContainsAtEnd(first, lowerIndex, second[i]) == false)
+                    goto ThrowException;
+            }
+            return;
+
+            ThrowException:
+            throw exception != null ? exception() :
+                      new CollectionException(message ??
+                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must end with the following items in any order:")
+                                                                 .AppendItemsWithNewLine(set).AppendLine()
+                                                                 .AppendLine("but it does not.").AppendLine()
+                                                                 .AppendCollectionContent(parameter)
+                                                                 .ToString(),
+                                              parameterName);
+            // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        private static bool ContainsAtEnd<T>(IList<T> collection, int lowerIndex, T item)
+        {
+            for (var i = lowerIndex; i < collection.Count; i++)
+            {
+                if (collection[i].EqualsWithHashCode(item))
+                    return true;
+            }
+            return false;
+        }
+
         private static string Items(int count)
         {
             return count == 1 ? "item" : "items";
