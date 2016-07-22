@@ -1,11 +1,11 @@
 # Light.GuardClauses
-**A lightweight library for expressive Guard Clauses with conditional compilation in C#.** 
+**A lightweight library for expressive Guard Clauses with conditional compilation in .NET.** 
 
 [![Video introduction to Light.GuardClauses](https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/Images/Light.GuardClauses%20thumbnail.PNG)](https://youtu.be/NI0rVG6VbXo)
 
 ## Why do I need it?
 
-When you write methods with parameters in C# (including constructors), you for sure are used to Guard Clauses that check the validity of parameter values. The most common one is probably the null check where you throw an ArgumentNullException if an object reference does not point to an actual object. Light.GuardClauses provides a set of extension methods simplifying this task for you:
+When you write methods with parameters in C# (including constructors), you for sure are used to Guard Clauses that check the validity of parameter values. The most common one is probably the null check where you throw an `ArgumentNullException` if an object reference does not point to an actual object. Light.GuardClauses provides a set of extension methods simplifying this task for you:
 
 ```csharp
 public class Foo
@@ -22,7 +22,7 @@ public class Foo
 }
 ```
 
-Light.GuardClauses provides extension methods for a lot of scenarios, e.g. for GUIDs and numeric values:
+There is a vast variety of scenarios where Light.GuardClauses can support you, e.g. with GUIDs and numeric values:
 
 ```csharp
 public void SetMovieRating(Guid movieId, int numberOfStars)
@@ -35,13 +35,15 @@ public void SetMovieRating(Guid movieId, int numberOfStars)
 }
 ```
 
-Inspired by [FluentAssertions](https://github.com/dennisdoomen/FluentAssertions), there are many more methods tailored for strings, IComparable<T>, IEnumerable<T>, IEquatable<T>, and IDictionary<T>. See a list of all of them [in the release notes](https://github.com/feO2x/Light.GuardClauses/releases) or discover them on the fly through IntelliSense - all the methods are fully documented. Just be sure to add the following `using` statement at the top of your code files to see the extension methods: `using Light.GuardClauses;`.
+Inspired by [FluentAssertions](https://github.com/dennisdoomen/FluentAssertions), there are many more methods tailored for strings, `IComparable<T>`, `IEnumerable<T>`, `IEquatable<T>`, and `IDictionary<T>`. See a list of all of them [in the release notes](https://github.com/feO2x/Light.GuardClauses/releases) or discover them on the fly through IntelliSense - all the methods are fully documented. Just be sure to add the following `using` statement at the top of your code files to see the extension methods: `using Light.GuardClauses;`.
 
 ## Where do I get it?
 
 [Download the assembly via NuGet](https://www.nuget.org/packages/Light.GuardClauses/): `Install-Package Light.GuardClauses` - Or use the code from this repo.
 
-Light.GuardClauses is a portable library compatible for .NET 4.5 or later, Windows 8 / 8.1 / 10 Store Apps, Windows Phone 8.1 / Windows Phone 8 Silverlight, and .NET Core 1.0 (profile 259).
+Light.GuardClauses is a Portable Class Library supporting the .NET Standard 1.0 (profile 259). This means it is compatible with e.g. .NET 4.5 or later, .NET Core 1.0, the Universal Windows Platform, Windows 8 / 8.1 Store Apps, and Windows Phone 8.1 / Windows Phone 8 Silverlight.
+
+**Important: if the target project uses project.json, the COMPILE_ASSERTIONS symbol is not set automatically when installing the NuGet package - you have to set it manually in this case. See the [Conditional Compilation](https://github.com/feO2x/Light.GuardClauses#conditional-compilation) section below for more info.
 
 ## And what's the difference to other assertion libraries?
 
@@ -51,15 +53,17 @@ Light.GuardClauses is specifically tailored for the scenario of creating precond
 
 The methods of Light.GuardClauses are marked with the [ConditionalAttribute](https://msdn.microsoft.com/en-us/library/system.diagnostics.conditionalattribute(v=vs.110).aspx) so that you can include or exclude the calls to these methods when you build your project. To exclude the calls to the Light.GuardClauses methods, go to the Build tab in the project properties and remove the compilation symbol "COMPILE_ASSERTIONS". By default, this symbol is set when you install Light.GuardClauses via NuGet.
 
+**Important: the COMPILE_ASSERTIONS symbol is not set automatically in projects that use project.json. You have to set it manually in this case, e.g. in the project properties.**
+
 ![Activating assertion compilation](/Images/compile_assertions.png)
 
-Although you cannot use method chaining (because methods marked with the [ConditionalAttribute](https://msdn.microsoft.com/en-us/library/system.diagnostics.conditionalattribute(v=vs.110).aspx) cannot have return values), the ability to selectively include or exclude these precondition checks gives you a lot of flexibility regarding performance: during development, you can enable them to fail fast, and if you absolutely need the performance squeeze, you can disable them for your production deployment - this is perfectly in line with Bertrand Meyer's Design by Contract where you can also enable or disable assertions (by the way, read his book "Object-Oriented Software Construction" if you haven't - it's a necessary read for any O-O dev in my opinion).
+Although you cannot use method chaining (because methods marked with the [ConditionalAttribute](https://msdn.microsoft.com/en-us/library/system.diagnostics.conditionalattribute(v=vs.110).aspx) cannot have a return value), the ability to selectively include or exclude these precondition checks gives you a lot of flexibility regarding performance: during development, you can enable them to fail fast, and if you absolutely need the performance squeeze, you can disable them for your production deployment - this is perfectly in line with Bertrand Meyer's Design by Contract where you can also enable or disable assertions (by the way, read his book "Object-Oriented Software Construction" if you haven't - it's a necessary read for any O-O dev in my opinion).
 
 ## Customizing messages and exceptions
 
 Every extension method of Light.GuardClauses has three optional parameters: **parameterName**, **message** and **exception**. With these, you can customize the outcome of an assertion:
 
-* **parameterName** lets you inject the name of the actual parameter into the resulting exception message. By default, the standard exception messages use e.g. "The value" or "The string" to talk about the subject - these values are exchanged when you specify the name of the parameter.
+* **parameterName** lets you inject the name of the parameter that is checked into the resulting exception message. By default, the standard exception messages use e.g. "The value" or "The string" to talk about the subject - these parts are exchanged when you specify the name of the parameter. My advise is to not use paramterName when developing application-specific code, but if you create framework / library or any other type of reusable code, it is better to use this parameterName so that exception messages immediately point to the erroneous parameter.
 * **message** lets you exchange the entire exception message if you are not satisfied with the default message in your current context.
 * **exception** lets you specify a delegate creating an exception object that is thrown instead of the default exception.
 
@@ -123,8 +127,8 @@ Of course, you can write your own extension methods, too.
 ## I want to extend Light.GuardClauses
 
 If you want to write your own assertion method, you should follow these recommendations (which of course can be ignored when you only want to use them in your own solution):
-* Create a static (extension) method that should have `void` as return type. Mark this method with the ConditionalAttribute and specify `Check.CompileAssertionsSymbol` to it.
-* Apart from the parameters you need, add the three optional parameters **parameterName**, **message**, and **exception**. They should behave as mentioned above in the "Customizing messages and exceptions" section.
+* Create a static (extension) method that should have `void` as return type. Mark this method with the `ConditionalAttribute` and specify `Check.CompileAssertionsSymbol` to it.
+* Apart from the parameters you need, add the three optional parameters **parameterName**, **message**, and **exception**. They should behave as mentioned above in the [Customizing messages and exceptions](https://github.com/feO2x/Light.GuardClauses#customizing-messages-and-exceptions) section.
 * Using the Conditional Operator (?:) and the Null-Coalescing-Operator (??) is recommended to check if the optional parameters are specified.
 
 Check out the existing methods and the following template:
@@ -196,6 +200,10 @@ If you need to, you can also customize every assertion by providing custom messa
 ### Acknowledgements
 
 Light.GuardClauses is developed as part of the "iRescYou" research project, conducted at the [University Hospital of Regensburg](http://www.uniklinikum-regensburg.de/e/index.php) and the [University of Applied Sciences Regensburg](https://www.oth-regensburg.de/en.html), funded by the [Bavarian State Ministry of Health Care](http://www.stmgp.bayern.de/).
+
+Thanks to [xunit.net](https://github.com/xunit/xunit) and [FluentAssertions](https://github.com/dennisdoomen/FluentAssertions) - I use these frameworks every day!
+Thanks for [NuSpec.ReferenceGenerator](https://github.com/onovotny/ReferenceGenerator) which creates the necessary .NET Core dependencies on the fly!
+And [Visual Studio](https://www.visualstudio.com/) together with [R#](https://www.jetbrains.com/dotnet/) is awesome!
 
 ### Let there be... Light
 ![Light Libraries Logo](/Images/light_logo.png)
