@@ -47,8 +47,14 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <None Include="Light.GuardClauses.nuspec">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="NuGetScripts\install.ps1" />
+    <None Include="NuGetScripts\uninstall.ps1" />
     <None Include="project.json" />
     <None Include="Public.Light.GuardClauses.snk" />
+    <None Include="CreateSignedNuGetPackage.bat" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Check.cs" />

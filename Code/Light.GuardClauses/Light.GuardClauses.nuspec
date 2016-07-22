@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>Light.GuardClauses</id>
+    <version>1.2.0</version>
+    <authors>Kenny Pflug</authors>
+    <owners>Kenny Pflug</owners>
+    <licenseUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/feO2x/Light.GuardClauses</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/Images/light_logo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A lightweight library for expressive Guard Clauses with conditional compilation in .NET.</description>
+    <releaseNotes>
+      - Added 10 new assertions methods for collections
+      - Added support for .NETStandard 1.0
+
+      Check out the history: https://github.com/feO2x/Light.GuardClauses/releases
+    </releaseNotes>
+    <copyright>Copyright © 2016 Kenny Pflug</copyright>
+    <tags>Assertions Preconditions GuardClauses DesignByContract DbC</tags>
+    <dependencies>
+      <group targetFramework="netstandard1.0">
+        <dependency id="System.Collections" version="4.0.11" />
+        <dependency id="System.Linq" version="4.1.0" />
+        <dependency id="System.Resources.ResourceManager" version="4.0.1" />
+        <dependency id="System.Runtime" version="4.1.0" />
+        <dependency id="System.Runtime.Extensions" version="4.1.0" />
+        <dependency id="System.Text.RegularExpressions" version="4.1.0" />
+      </group>
+      <group targetFramework="net45" />
+      <group targetFramework="win8" />
+      <group targetFramework="wp8" />
+      <group targetFramework="wpa81" />
+      <group targetFramework="xamarin.ios" />
+      <group targetFramework="monotouch" />
+      <group targetFramework="monoandroid" />
+      <group targetFramework="portable-net45+win8+wp8+wpa81" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\signedRelease\Light.GuardClauses.dll" target="lib\netstandard1.0" />
+    <file src="bin\signedRelease\Light.GuardClauses.xml" target="lib\netstandard1.0" />
+    <file src="NuGetScripts\install.ps1" target="tools" />
+    <file src="NuGetScripts\uninstall.ps1" target="tools" />
+  </files>
+</package>
