@@ -41,9 +41,9 @@ Inspired by [FluentAssertions](https://github.com/dennisdoomen/FluentAssertions)
 
 [Download the assembly via NuGet](https://www.nuget.org/packages/Light.GuardClauses/): `Install-Package Light.GuardClauses` - Or use the code from this repo.
 
-Light.GuardClauses is a Portable Class Library supporting the .NET Standard 1.0 (profile 259). This means it is compatible with e.g. .NET 4.5 or later, .NET Core 1.0, the Universal Windows Platform, Windows 8 / 8.1 Store Apps, and Windows Phone 8.1 / Windows Phone 8 Silverlight.
+Light.GuardClauses is a Portable Class Library with support for profile 259. This means it is compatible with e.g. .NET 4.5 or later, .NET Core 1.0 and UWP (use "imports" in project.json), Windows 8 / 8.1 Store Apps, and Windows Phone 8.1 / Windows Phone 8 Silverlight.
 
-**Important: if the target project uses project.json, the COMPILE_ASSERTIONS symbol is not set automatically when installing the NuGet package - you have to set it manually in this case. See the [Conditional Compilation](https://github.com/feO2x/Light.GuardClauses#conditional-compilation) section below for more info.
+**Important: if the target project uses project.json, the COMPILE_ASSERTIONS symbol is not set automatically when installing the NuGet package - you have to set it manually in this case. See the [Conditional Compilation](https://github.com/feO2x/Light.GuardClauses#conditional-compilation) section below for more info.**
 
 ## And what's the difference to other assertion libraries?
 
@@ -56,6 +56,14 @@ The methods of Light.GuardClauses are marked with the [ConditionalAttribute](htt
 **Important: the COMPILE_ASSERTIONS symbol is not set automatically in projects that use project.json. You have to set it manually in this case, e.g. in the project properties.**
 
 ![Activating assertion compilation](/Images/compile_assertions.png)
+
+**Alternatively, you can add the following JSON under the root object of project.json:**
+
+```json
+"buildOptions": {
+  "define": [ "COMPILE_ASSERTIONS" ]
+}
+```
 
 Although you cannot use method chaining (because methods marked with the [ConditionalAttribute](https://msdn.microsoft.com/en-us/library/system.diagnostics.conditionalattribute(v=vs.110).aspx) cannot have a return value), the ability to selectively include or exclude these precondition checks gives you a lot of flexibility regarding performance: during development, you can enable them to fail fast, and if you absolutely need the performance squeeze, you can disable them for your production deployment - this is perfectly in line with Bertrand Meyer's Design by Contract where you can also enable or disable assertions (by the way, read his book "Object-Oriented Software Construction" if you haven't - it's a necessary read for any O-O dev in my opinion).
 
@@ -189,7 +197,7 @@ public sealed class MustBeSameAsTests : ICustomMessageAndExceptionTestDataProvid
 
 ## Is it ready for production?
 
-Since the beginning of June 2016, the library is in v1.0 and stable. Light.GuardClauses is thoroughly covered with automated tests and I actively use it in my own work, the iRescYou research project.
+Since the beginning of June 2016, the library is in v1.x and stable. Light.GuardClauses is thoroughly covered with automated tests and I actively use it in my own work, the iRescYou research project.
 
 ## In the end, what do I get?
 
