@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Light.GuardClauses</id>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <authors>Kenny Pflug</authors>
     <owners>Kenny Pflug</owners>
     <licenseUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/LICENSE</licenseUrl>
@@ -10,7 +10,7 @@
     <iconUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/Images/light_logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A lightweight library for expressive Guard Clauses with conditional compilation in .NET.</description>
-    <releaseNotes>- Added 10 new assertions methods for collections
+    <releaseNotes>Equality.CreateHashCode now won't throw an exception when one of the passed in values is null.
 
 Check out the history: https://github.com/feO2x/Light.GuardClauses/releases
     </releaseNotes>

@@ -7,6 +7,6 @@ using System.Reflection;
 [assembly: AssemblyProduct("Light.GuardClauses")]
 [assembly: AssemblyCopyright("Copyright © 2016 Kenny Pflug")]
 
-[assembly: AssemblyVersion("1.2.0")]
+[assembly: AssemblyVersion("1.2.1")]
 [assembly: NeutralResourcesLanguage("en")]
 
