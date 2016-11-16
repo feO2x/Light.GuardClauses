@@ -73,6 +73,7 @@
     <Compile Include="CustomMessagesAndExceptions\IRunnableTest.cs" />
     <Compile Include="CustomMessagesAndExceptions\CustomExceptionTest.cs" />
     <Compile Include="CustomMessagesAndExceptions\CustomMessageTest.cs" />
+    <Compile Include="EqualityTests.cs" />
     <Compile Include="Metadata.cs" />
     <Compile Include="MustBeFalseTests.cs" />
     <Compile Include="MustBeGreaterThanOrEqualToTests.cs" />

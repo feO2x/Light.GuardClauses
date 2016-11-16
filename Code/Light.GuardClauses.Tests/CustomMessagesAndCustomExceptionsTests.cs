@@ -23,7 +23,8 @@ namespace Light.GuardClauses.Tests
                 typeof(RangeTests),
                 typeof(ThatTests),
                 typeof(Metadata),
-                typeof(Traits)
+                typeof(Traits),
+                typeof(EqualityTests)
             };
 
         private static readonly List<ICustomMessageAndExceptionTestData> PopulatedTestData = new List<ICustomMessageAndExceptionTestData>();
