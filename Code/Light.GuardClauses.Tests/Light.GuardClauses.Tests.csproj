@@ -80,6 +80,7 @@
     <Compile Include="MustBeGreaterThanTests.cs" />
     <Compile Include="MustBeLessThanOrEqualToTests.cs" />
     <Compile Include="MustBeLessThanTests.cs" />
+    <Compile Include="MustBeLocalTests.cs" />
     <Compile Include="MustBeTrueTests.cs" />
     <Compile Include="MustContainInstancesOfDifferentTypesTests.cs" />
     <Compile Include="MustContainKeyTests.cs" />
