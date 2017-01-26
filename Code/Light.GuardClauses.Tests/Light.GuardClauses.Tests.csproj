@@ -82,6 +82,7 @@
     <Compile Include="MustBeLessThanTests.cs" />
     <Compile Include="MustBeLocalTests.cs" />
     <Compile Include="MustBeTrueTests.cs" />
+    <Compile Include="MustBeUnspecifiedTests.cs" />
     <Compile Include="MustContainInstancesOfDifferentTypesTests.cs" />
     <Compile Include="MustContainKeyTests.cs" />
     <Compile Include="MustBeInTests.cs" />
