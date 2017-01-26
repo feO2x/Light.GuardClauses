@@ -101,6 +101,7 @@
     <Compile Include="MustEndWithEquivalentOfTests.cs" />
     <Compile Include="MustEndWithTests.cs" />
     <Compile Include="MustHaveCountTests.cs" />
+    <Compile Include="MustBeUtcTests.cs" />
     <Compile Include="MustHaveLengthTests.cs" />
     <Compile Include="MustHaveMaximumCountTests.cs" />
     <Compile Include="MustHaveMinimumCountTests.cs" />

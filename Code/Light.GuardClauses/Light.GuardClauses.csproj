@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Check.cs" />
+    <Compile Include="DateTimeAssertions.cs" />
     <Compile Include="EnumerableAssertions.cs" />
     <Compile Include="CommonAssertions.cs" />
     <Compile Include="ComparableAssertions.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Exceptions\EmptyGuidException.cs" />
     <Compile Include="Exceptions\EmptyStringException.cs" />
     <Compile Include="Exceptions\EnumValueNotDefinedException.cs" />
+    <Compile Include="Exceptions\InvalidDateTimeException.cs" />
     <Compile Include="Exceptions\NullableHasNoValueException.cs" />
     <Compile Include="Exceptions\NullableHasValueException.cs" />
     <Compile Include="Exceptions\StringDoesNotMatchException.cs" />
