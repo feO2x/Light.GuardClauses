@@ -435,7 +435,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="count">The count that the collection should have.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message to be injected into the <see cref="CollectionException" />.</param>
+        /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> does not have the specified <paramref name="count" /> (optional).
         ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
