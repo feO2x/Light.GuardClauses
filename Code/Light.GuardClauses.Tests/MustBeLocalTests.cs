@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => invalidDateTime.MustBeLocal(nameof(invalidDateTime));
 
             act.ShouldThrow<InvalidDateTimeException>()
-               .And.Message.Should().Contain($"The specified date time \"{invalidDateTime:O}\" must be of kind local, but actually is {invalidDateTime.Kind}.");
+               .And.Message.Should().Contain($"The specified date time \"{invalidDateTime:O}\" must be of kind {DateTimeKind.Local}, but actually is {invalidDateTime.Kind}.");
         }
 
         public static readonly TestData NotLocalData =

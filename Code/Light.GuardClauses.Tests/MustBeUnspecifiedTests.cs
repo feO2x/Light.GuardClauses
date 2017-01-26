@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => invalidDateTime.MustBeUnspecified(nameof(invalidDateTime));
 
             act.ShouldThrow<InvalidDateTimeException>()
-               .And.Message.Should().Contain($"The specified date time \"{invalidDateTime:O}\" must be of kind unspecified, but actually is {invalidDateTime.Kind}.");
+               .And.Message.Should().Contain($"The specified date time \"{invalidDateTime:O}\" must be of kind {DateTimeKind.Unspecified}, but actually is {invalidDateTime.Kind}.");
         }
 
         public static readonly TestData NotUnspecifiedData =

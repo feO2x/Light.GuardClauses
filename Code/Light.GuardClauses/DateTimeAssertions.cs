@@ -25,7 +25,7 @@ namespace Light.GuardClauses
         {
             if (dateTime.Kind == DateTimeKind.Utc) return;
 
-            throw exception != null ? exception() : new InvalidDateTimeException(dateTime, message ?? $"The specified date time \"{dateTime:O}\" must be of kind UTC, but actually is {dateTime.Kind}.", parameterName);
+            throw exception != null ? exception() : new InvalidDateTimeException(dateTime, message ?? $"The specified date time \"{dateTime:O}\" must be of kind {DateTimeKind.Utc}, but actually is {dateTime.Kind}.", parameterName);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Light.GuardClauses
         {
             if (dateTime.Kind == DateTimeKind.Local) return;
 
-            throw exception != null ? exception() : new InvalidDateTimeException(dateTime, message ?? $"The specified date time \"{dateTime:O}\" must be of kind local, but actually is {dateTime.Kind}.", parameterName);
+            throw exception != null ? exception() : new InvalidDateTimeException(dateTime, message ?? $"The specified date time \"{dateTime:O}\" must be of kind {DateTimeKind.Local}, but actually is {dateTime.Kind}.", parameterName);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Light.GuardClauses
         {
             if (dateTime.Kind == DateTimeKind.Unspecified) return;
 
-            throw exception != null ? exception() : new InvalidDateTimeException(dateTime, message ?? $"The specified date time \"{dateTime:O}\" must be of kind unspecified, but actually is {dateTime.Kind}.", parameterName);
+            throw exception != null ? exception() : new InvalidDateTimeException(dateTime, message ?? $"The specified date time \"{dateTime:O}\" must be of kind {DateTimeKind.Unspecified}, but actually is {dateTime.Kind}.", parameterName);
         }
     }
 }

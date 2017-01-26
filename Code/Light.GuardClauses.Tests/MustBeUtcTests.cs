@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => invalidDateTime.MustBeUtc(nameof(invalidDateTime));
 
             act.ShouldThrow<InvalidDateTimeException>()
-               .And.Message.Should().Contain($"The specified date time \"{invalidDateTime:O}\" must be of kind UTC, but actually is {invalidDateTime.Kind}.");
+               .And.Message.Should().Contain($"The specified date time \"{invalidDateTime:O}\" must be of kind {DateTimeKind.Utc}, but actually is {invalidDateTime.Kind}.");
         }
 
         public static readonly TestData NotUtcData =
