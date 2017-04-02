@@ -117,6 +117,20 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        ///     Checks if the specified collection is null or empty.
+        /// </summary>
+        /// <typeparam name="T">The item type of the collection.</typeparam>
+        /// <param name="parameter">The collection to be checked.</param>
+        /// <returns>True if the collection is null or empty, else false.</returns>
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> parameter)
+        {
+            if (parameter == null)
+                return true;
+
+            return !parameter.Any();
+        }
+
+        /// <summary>
         ///     Ensures that the specified collection has unique items, or otherwise throws a <see cref="CollectionException" />.
         /// </summary>
         /// <typeparam name="T">The type of the items in the collection.</typeparam>
