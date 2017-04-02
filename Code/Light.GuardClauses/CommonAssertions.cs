@@ -151,6 +151,17 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Checks if the specified value is a valid enum value of its type.
+        /// </summary>
+        /// <typeparam name="T">The type of the parameter.</typeparam>
+        /// <param name="parameter">The enum value to be checked.</param>
+        /// <returns>True if the specified value is a valid value of an enum type, else false.</returns>
+        public static bool IsValidEnumValue<T>(this T parameter)
+        {
+            return Enum.IsDefined(typeof(T), parameter);
+        }
+
+        /// <summary>
         ///     Ensures that the specified GUID is not empty, or otherwise throws an <see cref="EmptyGuidException" />.
         /// </summary>
         /// <param name="parameter">The parameter to be checked.</param>
