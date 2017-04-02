@@ -6,7 +6,7 @@ using Light.GuardClauses.Exceptions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     The <see cref="StringAssertions"/> class contains extension methods that perform assertions on <see cref="string" /> instances.
+    ///     The <see cref="StringAssertions" /> class contains extension methods that perform assertions on <see cref="string" /> instances.
     /// </summary>
     public static class StringAssertions
     {
@@ -36,6 +36,16 @@ namespace Light.GuardClauses
 
             if (parameter == string.Empty)
                 throw exception != null ? exception() : (message == null ? new EmptyStringException(parameterName) : new EmptyStringException(message, parameterName));
+        }
+
+        /// <summary>
+        ///     Checks if the specified string is null or empty.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <returns>True if the string is null or empty, else false.</returns>
+        public static bool IsNullOrEmpty(this string parameter)
+        {
+            return string.IsNullOrEmpty(parameter);
         }
 
         /// <summary>
