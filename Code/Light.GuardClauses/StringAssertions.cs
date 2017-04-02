@@ -84,6 +84,16 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        ///     Checks if the specified string is null, empty, or contains only white space characters.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <returns>True if the string is either null, or an empty string, or if it contains only white space characters.</returns>
+        public static bool IsNullOrWhiteSpace(this string parameter)
+        {
+            return string.IsNullOrWhiteSpace(parameter);
+        }
+
+        /// <summary>
         ///     Ensures that <paramref name="parameter" /> matches the specified regular expression, or otherwise throws an <see cref="StringDoesNotMatchException" />.
         /// </summary>
         /// <param name="parameter">The parameter to be checked.</param>

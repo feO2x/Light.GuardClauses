@@ -78,6 +78,7 @@
     <Compile Include="IsInTests.cs" />
     <Compile Include="IsNotInTests.cs" />
     <Compile Include="IsNullOrEmptyTests.cs" />
+    <Compile Include="IsNullOrWhiteSpaceTests.cs" />
     <Compile Include="IsValidEnumValueTests.cs" />
     <Compile Include="Metadata.cs" />
     <Compile Include="MustBeFalseTests.cs" />
