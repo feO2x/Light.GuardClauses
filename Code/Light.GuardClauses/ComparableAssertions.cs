@@ -263,5 +263,17 @@ namespace Light.GuardClauses
             if (range.IsValueWithinRange(parameter))
                 throw exception != null ? exception() : new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must not be between {range.From} ({fromBoundaryKind}) and {range.To} ({toBoundaryKind}), but you specified {parameter}.");
         }
+
+        /// <summary>
+        ///     Checks if the parameter is not within the specified range.
+        /// </summary>
+        /// <typeparam name="T">The type of the parameter.</typeparam>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="range">The range that <paramref name="parameter" /> must not be in between.</param>
+        /// <returns>True if the parameter value is not in between of the specified range, else false.</returns>
+        public static bool IsNotIn<T>(this T parameter, Range<T> range) where T : IComparable<T>
+        {
+            return range.IsValueWithinRange(parameter) == false;
+        }
     }
 }
