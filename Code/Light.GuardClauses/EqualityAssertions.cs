@@ -254,5 +254,17 @@ namespace Light.GuardClauses
             if (ReferenceEquals(parameter, other))
                 throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The reference"} must not point to the object instance \"{other}\", but it does.", parameterName);
         }
+
+        /// <summary>
+        ///     Checks if the specified parameter points to the same object as the specified reference.
+        /// </summary>
+        /// <typeparam name="T">The type of the objects.</typeparam>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="reference">The reference that parameter should be checked against.</param>
+        /// <returns>True if both references point to the same object, else false.</returns>
+        public static bool IsSameAs<T>(this T parameter, T reference) where T : class
+        {
+            return ReferenceEquals(parameter, reference);
+        }
     }
 }
