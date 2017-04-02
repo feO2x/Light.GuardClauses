@@ -151,7 +151,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Checks if the specified value is a valid enum value of its type.
+        ///     Checks if the specified value is a valid enum value of its type.
         /// </summary>
         /// <typeparam name="T">The type of the parameter.</typeparam>
         /// <param name="parameter">The enum value to be checked.</param>
@@ -181,6 +181,16 @@ namespace Light.GuardClauses
         {
             if (parameter == Guid.Empty)
                 throw exception != null ? exception() : (message == null ? new EmptyGuidException(parameterName) : new EmptyGuidException(message, parameterName));
+        }
+
+        /// <summary>
+        ///     Checks if the specified GUID is an empty one.
+        /// </summary>
+        /// <param name="parameter">The GUID to be checked.</param>
+        /// <returns>True if the GUID is empty, else false.</returns>
+        public static bool IsEmpty(this Guid parameter)
+        {
+            return parameter == Guid.Empty;
         }
 
         /// <summary>
