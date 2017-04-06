@@ -66,6 +66,7 @@
     <Compile Include="AgainstTests.cs" />
     <Compile Include="CheckConditionalAttributeAppliance.cs" />
     <Compile Include="CollectionMustNotBeNullOrEmptyTests.cs" />
+    <Compile Include="ContainsOnlyLettersTests.cs" />
     <Compile Include="CustomMessagesAndExceptions\CustomMessageAndExceptionTestData.cs" />
     <Compile Include="CustomMessagesAndCustomExceptionsTests.cs" />
     <Compile Include="CustomMessagesAndExceptions\ICustomMessageAndExceptionTestData.cs" />

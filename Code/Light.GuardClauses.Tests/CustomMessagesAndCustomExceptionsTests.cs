@@ -31,7 +31,8 @@ namespace Light.GuardClauses.Tests
                 typeof(IsNotInTests),
                 typeof(IsNullOrEmptyTests),
                 typeof(IsNullOrWhiteSpaceTests),
-                typeof(IsSameAsTests)
+                typeof(IsSameAsTests),
+                typeof(ContainsOnlyLettersTests)
             };
 
         private static readonly List<ICustomMessageAndExceptionTestData> PopulatedTestData = new List<ICustomMessageAndExceptionTestData>();

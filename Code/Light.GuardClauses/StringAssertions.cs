@@ -516,6 +516,28 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        ///     Checks if the specified string contains only characters (using <see cref="char.IsLetter(char)" />
+        ///     Empty strings return false.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <returns>True if the string is not empty and contains only characters, else false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        public static bool ContainsOnlyLetters(this string parameter)
+        {
+            parameter.MustNotBeNull(nameof(parameter));
+
+            if (parameter.Length == 0)
+                return false;
+
+            for (var i = 0; i < parameter.Length; i++)
+            {
+                if (char.IsLetter(parameter[i]) == false)
+                    return false;
+            }
+            return true;
+        }
+
+        /// <summary>
         ///     Ensures that the specified string contains only letters and digits, or otherwise throws a <see cref="StringException" />.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
