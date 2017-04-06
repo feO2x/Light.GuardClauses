@@ -117,6 +117,7 @@
     <Compile Include="MustHaveLengthTests.cs" />
     <Compile Include="MustHaveMaximumCountTests.cs" />
     <Compile Include="MustHaveMinimumCountTests.cs" />
+    <Compile Include="MustHaveSchemeTests.cs" />
     <Compile Include="MustNotContainPairTests.cs" />
     <Compile Include="MustNotContainValuesTests.cs" />
     <Compile Include="MustNotContainValueTests.cs" />
