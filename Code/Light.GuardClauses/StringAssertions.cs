@@ -563,5 +563,27 @@ namespace Light.GuardClauses
                     throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must contain only letters or digits, but you specified \"{parameter}\".", parameterName);
             }
         }
+
+        /// <summary>
+        ///     Checks if the specified string contains only upper- and lowercase characters as well as digits.
+        ///     Empty strings return false.
+        /// </summary>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <returns>True if the parameter contains only uppercase, lowercase, or digit characters, else false.</returns>
+        public static bool ContainsOnlyLettersAndDigits(this string parameter)
+        {
+            parameter.MustNotBeNull(nameof(parameter));
+
+            if (parameter.Length == 0)
+                return false;
+
+            for (var i = 0; i < parameter.Length; i++)
+            {
+                if (char.IsLetterOrDigit(parameter[i]) == false)
+                    return false;
+            }
+
+            return true;
+        }
     }
 }
