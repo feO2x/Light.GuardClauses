@@ -84,6 +84,7 @@
     <Compile Include="IsSameAsTests.cs" />
     <Compile Include="IsValidEnumValueTests.cs" />
     <Compile Include="Metadata.cs" />
+    <Compile Include="MustBeAbsoluteUriTests.cs" />
     <Compile Include="MustBeFalseTests.cs" />
     <Compile Include="MustBeGreaterThanOrEqualToTests.cs" />
     <Compile Include="MustBeGreaterThanTests.cs" />
