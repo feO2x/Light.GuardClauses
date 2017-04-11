@@ -210,7 +210,6 @@ If you need to, you can also customize every assertion by providing custom messa
 Light.GuardClauses is developed as part of the "iRescYou" research project, conducted at the [University Hospital of Regensburg](http://www.uniklinikum-regensburg.de/e/index.php) and the [University of Applied Sciences Regensburg](https://www.oth-regensburg.de/en.html), funded by the [Bavarian State Ministry of Health Care](http://www.stmgp.bayern.de/).
 
 Thanks to [xunit.net](https://github.com/xunit/xunit) and [FluentAssertions](https://github.com/dennisdoomen/FluentAssertions) - I use these frameworks every day!
-Thanks for [NuSpec.ReferenceGenerator](https://github.com/onovotny/ReferenceGenerator) which creates the necessary .NET Core dependencies on the fly!
 And [Visual Studio](https://www.visualstudio.com/) together with [R#](https://www.jetbrains.com/dotnet/) is awesome!
 
 ### Let there be... Light
