@@ -41,9 +41,9 @@ Inspired by [FluentAssertions](https://github.com/dennisdoomen/FluentAssertions)
 
 [Download the assembly via NuGet](https://www.nuget.org/packages/Light.GuardClauses/): `Install-Package Light.GuardClauses` - Or use the code from this repo.
 
-Light.GuardClauses is a Portable Class Library with support for profile 259. This means it is compatible with e.g. .NET 4.5 or later, .NET Core 1.0 and UWP (use "imports" in project.json), Windows 8 / 8.1 Store Apps, and Windows Phone 8.1 / Windows Phone 8 Silverlight.
+Light.GuardClauses is a Portable Class Library with support for profile 259. This means it is compatible with e.g. .NET 4.5 or later, .NET Core 1.0 and UWP (use "PackageTargetFallback" in csproj or "imports" in project.json), Windows 8 / 8.1 Store Apps, and Windows Phone 8.1 / Windows Phone 8 Silverlight.
 
-**Important: if the target project uses project.json, the COMPILE_ASSERTIONS symbol is not set automatically when installing the NuGet package - you have to set it manually in this case. See the [Conditional Compilation](https://github.com/feO2x/Light.GuardClauses#conditional-compilation) section below for more info.**
+**Important: if the target project uses the new .NET Core csproj format or project.json, the COMPILE_ASSERTIONS symbol is not set automatically when installing the NuGet package - you have to set it manually in this case. See the [Conditional Compilation](https://github.com/feO2x/Light.GuardClauses#conditional-compilation) section below for more info.**
 
 ## And what's the difference to other assertion libraries?
 
@@ -53,11 +53,19 @@ Light.GuardClauses is specifically tailored for the scenario of creating precond
 
 The methods of Light.GuardClauses are marked with the [ConditionalAttribute](https://msdn.microsoft.com/en-us/library/system.diagnostics.conditionalattribute(v=vs.110).aspx) so that you can include or exclude the calls to these methods when you build your project. To exclude the calls to the Light.GuardClauses methods, go to the Build tab in the project properties and remove the compilation symbol "COMPILE_ASSERTIONS". By default, this symbol is set when you install Light.GuardClauses via NuGet.
 
-**Important: the COMPILE_ASSERTIONS symbol is not set automatically in projects that use project.json. You have to set it manually in this case, e.g. in the project properties.**
+**Important: the COMPILE_ASSERTIONS symbol is not set automatically in projects that use the new .NET Core csproj format or  project.json. You have to set it manually in this case, e.g. in the project properties.**
 
 ![Activating assertion compilation](/Images/compile_assertions.png)
 
-**Alternatively, you can add the following JSON under the root object of project.json:**
+**Alternatively, you can add the following XML to the first `PropertyGroup` in the new csproj format:**
+
+```xml
+<PropertyGroup>
+    <DefineConstants>COMPILE_ASSERTIONS</DefineConstants>
+</PropertyGroup>
+```
+
+**Or the following JSON under the root object in project.json:**
 
 ```json
 "buildOptions": {
@@ -197,7 +205,7 @@ public sealed class MustBeSameAsTests : ICustomMessageAndExceptionTestDataProvid
 
 ## Is it ready for production?
 
-Since the beginning of June 2016, the library is in v1.x and stable. Light.GuardClauses is thoroughly covered with automated tests and I actively use it in my own work, the iRescYou research project.
+Since the beginning of June 2016, the library is in v1.x and stable. Light.GuardClauses is thoroughly covered with automated tests and I actively use it in my daily work.
 
 ## In the end, what do I get?
 
