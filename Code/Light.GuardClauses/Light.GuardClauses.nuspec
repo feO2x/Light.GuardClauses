@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Light.GuardClauses</id>
-    <version>1.2.1</version>
+    <version>1.3.0</version>
     <authors>Kenny Pflug</authors>
     <owners>Kenny Pflug</owners>
     <licenseUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/LICENSE</licenseUrl>
@@ -10,11 +10,21 @@
     <iconUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/Images/light_logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A lightweight library for expressive Guard Clauses with conditional compilation in .NET.</description>
-    <releaseNotes>Equality.CreateHashCode now won't throw an exception when one of the passed in values is null.
+    <releaseNotes>New assertion methods for DateTime: MustBeUtc, MustBeLocal, and MustBeUnspecified.
+New assertion methods for Uri: MustBeAbsoluteUri, and MustHaveScheme
+
+New assertion methods that won't throw exceptions: 
+  - IsValidEnumValue, 
+  - IsEmpty (for GUIDs), 
+  - IsIn and IsNotIn (ranges),
+  - IsNullOrEmpty (for collections and strings)
+  - IsNullOrWhiteSpace (for strings)
+  - IsSameAs (for object references)
+  - ContainsOnlyLetters and ContainsOnlyLettersAndDigits (for strings)
 
 Check out the history: https://github.com/feO2x/Light.GuardClauses/releases
     </releaseNotes>
-    <copyright>Copyright © 2016 Kenny Pflug</copyright>
+    <copyright>Copyright © 2017 Kenny Pflug</copyright>
     <tags>Assertions Preconditions GuardClauses DesignByContract DbC</tags>
     
   </metadata>
