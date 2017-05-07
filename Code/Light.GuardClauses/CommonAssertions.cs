@@ -23,10 +23,12 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">
         ///     Thrown when the specified parameter is null and no <paramref name="exception" /> is specified.
         /// </exception>
-        public static void MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
+        public static T MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
         {
-            if (parameter == null)
-                throw exception != null ? exception() : new ArgumentNullException(parameterName, message ?? $"{parameterName ?? "The value"} must not be null.");
+            if (parameter != null)
+                return parameter;
+
+            throw exception != null ? exception() : new ArgumentNullException(parameterName, message ?? $"{parameterName ?? "The value"} must not be null.");
         }
 
         /// <summary>
@@ -45,10 +47,12 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNotNullException">
         ///     Thrown when the specified parameter is not null and no <paramref name="exception" /> is specified.
         /// </exception>
-        public static void MustBeNull<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
+        public static T MustBeNull<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
         {
-            if (parameter != null)
-                throw exception != null ? exception() : (message == null ? new ArgumentNotNullException(parameterName, parameter) : new ArgumentNotNullException(message, parameterName));
+            if (parameter == null)
+                return null;
+
+            throw exception != null ? exception() : (message == null ? new ArgumentNotNullException(parameterName, parameter) : new ArgumentNotNullException(message, parameterName));
         }
 
         /// <summary>
@@ -93,10 +97,12 @@ namespace Light.GuardClauses
         /// <exception cref="NullableHasNoValueException">
         ///     Thrown when the specified nullable has no value and no <paramref name="exception" /> is specified.
         /// </exception>
-        public static void MustHaveValue<T>(this T? parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : struct
+        public static T? MustHaveValue<T>(this T? parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : struct
         {
-            if (parameter.HasValue == false)
-                throw exception != null ? exception() : (message != null ? new NullableHasNoValueException(message, parameterName) : new NullableHasNoValueException(parameterName));
+            if (parameter.HasValue)
+                return parameter;
+
+            throw exception != null ? exception() : (message != null ? new NullableHasNoValueException(message, parameterName) : new NullableHasNoValueException(parameterName));
         }
 
         /// <summary>
@@ -115,10 +121,12 @@ namespace Light.GuardClauses
         /// <exception cref="NullableHasValueException">
         ///     Thrown when the specified nullable has a value and no <paramref name="exception" /> is specified.
         /// </exception>
-        public static void MustNotHaveValue<T>(this T? parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : struct
+        public static T? MustNotHaveValue<T>(this T? parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : struct
         {
-            if (parameter.HasValue)
-                throw exception != null ? exception() : (message == null ? new NullableHasValueException(parameterName, parameter.Value) : new NullableHasValueException(message, parameterName));
+            if (parameter.HasValue == false)
+                return null;
+
+            throw exception != null ? exception() : (message == null ? new NullableHasValueException(parameterName, parameter.Value) : new NullableHasValueException(message, parameterName));
         }
 
         /// <summary>
@@ -138,10 +146,12 @@ namespace Light.GuardClauses
         ///     Thrown when the specified enum value is not defined and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is not a value of an enum.</exception>
-        public static void MustBeValidEnumValue<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static T MustBeValidEnumValue<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            if (Enum.IsDefined(typeof(T), parameter) == false)
-                throw exception != null ? exception() : (message == null ? new EnumValueNotDefinedException(parameterName, parameter, typeof(T)) : new EnumValueNotDefinedException(message, parameterName));
+            if (Enum.IsDefined(typeof(T), parameter))
+                return parameter;
+
+            throw exception != null ? exception() : (message == null ? new EnumValueNotDefinedException(parameterName, parameter, typeof(T)) : new EnumValueNotDefinedException(message, parameterName));
         }
 
         /// <summary>
@@ -170,10 +180,11 @@ namespace Light.GuardClauses
         /// <exception cref="EmptyGuidException">
         ///     Thrown when the specified GUID is empty and no <paramref name="exception" /> is specified.
         /// </exception>
-        public static void MustNotBeEmpty(this Guid parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static Guid MustNotBeEmpty(this Guid parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            if (parameter == Guid.Empty)
-                throw exception != null ? exception() : (message == null ? new EmptyGuidException(parameterName) : new EmptyGuidException(message, parameterName));
+            if (parameter != Guid.Empty)
+                return parameter;
+            throw exception != null ? exception() : (message == null ? new EmptyGuidException(parameterName) : new EmptyGuidException(message, parameterName));
         }
 
         /// <summary>
@@ -197,10 +208,12 @@ namespace Light.GuardClauses
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is true and no <paramref name="exception" /> is specified.</exception>
-        public static void MustBeFalse(this bool parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static bool MustBeFalse(this bool parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            if (parameter)
-                throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must be false, but you specified true.", parameterName);
+            if (parameter == false)
+                return false;
+
+            throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must be false, but you specified true.", parameterName);
         }
 
         /// <summary>
@@ -214,10 +227,12 @@ namespace Light.GuardClauses
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is false and no <paramref name="exception" /> is specified.</exception>
-        public static void MustBeTrue(this bool parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static bool MustBeTrue(this bool parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            if (parameter == false)
-                throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must be true, but you specified false.", parameterName);
+            if (parameter)
+                return true;
+
+            throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must be true, but you specified false.", parameterName);
         }
     }
 }

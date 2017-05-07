@@ -31,12 +31,12 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> is no key of <paramref name="dictionary" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="dictionary" /> is null.</exception>
-        public static void MustBeKeyOf<TKey, TValue>(this TKey parameter, IDictionary<TKey, TValue> dictionary, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static TKey MustBeKeyOf<TKey, TValue>(this TKey parameter, IDictionary<TKey, TValue> dictionary, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             dictionary.MustNotBeNull(nameof(dictionary));
 
             if (dictionary.ContainsKey(parameter))
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -66,12 +66,12 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> is a key of <paramref name="dictionary" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="dictionary" /> is null.</exception>
-        public static void MustNotBeKeyOf<TKey, TValue>(this TKey parameter, IDictionary<TKey, TValue> dictionary, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static TKey MustNotBeKeyOf<TKey, TValue>(this TKey parameter, IDictionary<TKey, TValue> dictionary, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             dictionary.MustNotBeNull(nameof(dictionary));
 
             if (dictionary.ContainsKey(parameter) == false)
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -105,12 +105,12 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="parameter" /> is null.
         /// </exception>
-        public static void MustContainKey<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TKey key, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IDictionary<TKey, TValue> MustContainKey<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TKey key, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
 
             if (parameter.ContainsKey(key))
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -141,12 +141,12 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="parameter" /> is null.
         /// </exception>
-        public static void MustNotContainKey<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TKey key, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IDictionary<TKey, TValue> MustNotContainKey<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TKey key, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
 
             if (parameter.ContainsKey(key) == false)
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -172,14 +172,14 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="KeyNotFoundException">Thrown when <paramref name="parameter" /> does not contain any of the specified <paramref name="keys" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="keys" /> is null.</exception>
-        public static void MustContainKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TKey> keys, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IDictionary<TKey, TValue> MustContainKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TKey> keys, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
             // ReSharper disable PossibleMultipleEnumeration
             keys.MustNotBeNull(nameof(keys));
 
             if (keys.All(parameter.ContainsKey))
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -201,9 +201,9 @@ namespace Light.GuardClauses
         /// <param name="keys">The collection of keys that must be part of the dictionary.</param>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not contain any of the specified <paramref name="keys" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when any of the parameters is null.</exception>
-        public static void MustContainKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, params TKey[] keys)
+        public static IDictionary<TKey, TValue> MustContainKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, params TKey[] keys)
         {
-            MustContainKeys(parameter, (IEnumerable<TKey>) keys);
+            return MustContainKeys(parameter, (IEnumerable<TKey>) keys);
         }
 
         /// <summary>
@@ -221,14 +221,14 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="DictionaryException">Thrown when <paramref name="parameter" /> does contain any of the specified <paramref name="keys" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="keys" /> is null.</exception>
-        public static void MustNotContainKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TKey> keys, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IDictionary<TKey, TValue> MustNotContainKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TKey> keys, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
             keys.MustNotBeNull(nameof(keys));
 
             if (keys.Any(parameter.ContainsKey) == false)
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -251,9 +251,9 @@ namespace Light.GuardClauses
         /// <param name="keys">The collection of keys that must not be part of the dictionary.</param>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does contain any of the specified <paramref name="keys" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when any of the parameters is null.</exception>
-        public static void MustNotContainKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, params TKey[] keys)
+        public static IDictionary<TKey, TValue> MustNotContainKeys<TKey, TValue>(this IDictionary<TKey, TValue> parameter, params TKey[] keys)
         {
-            MustNotContainKeys(parameter, (IEnumerable<TKey>) keys);
+            return MustNotContainKeys(parameter, (IEnumerable<TKey>) keys);
         }
 
         /// <summary>
@@ -271,12 +271,12 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="ValueNotFoundException">Thrown when <paramref name="parameter" /> does not contain the specified <paramref name="value" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        public static void MustContainValue<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TValue value, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IDictionary<TKey, TValue> MustContainValue<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TValue value, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
 
             if (parameter.Values.Contains(value))
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -303,14 +303,14 @@ namespace Light.GuardClauses
         /// <exception cref="ValueNotFoundException">Thrown when <paramref name="parameter" /> does not contain the specified <paramref name="values" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="values" /> has no entries.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="values" /> is null.</exception>
-        public static void MustContainValues<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TValue> values, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IDictionary<TKey, TValue> MustContainValues<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TValue> values, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
             values.MustNotBeNullOrEmpty(nameof(values));
 
             if (values.All(parameter.Values.Contains))
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -334,9 +334,9 @@ namespace Light.GuardClauses
         /// <exception cref="ValueNotFoundException">Thrown when <paramref name="parameter" /> does not contain the specified <paramref name="values" />.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="values" /> has no entries.</exception>
         /// <exception cref="ArgumentNullException">Thrown when any of the parameters is null.</exception>
-        public static void MustContainValues<TKey, TValue>(this IDictionary<TKey, TValue> parameter, params TValue[] values)
+        public static IDictionary<TKey, TValue> MustContainValues<TKey, TValue>(this IDictionary<TKey, TValue> parameter, params TValue[] values)
         {
-            MustContainValues(parameter, (IEnumerable<TValue>) values);
+            return MustContainValues(parameter, (IEnumerable<TValue>) values);
         }
 
         /// <summary>
@@ -354,12 +354,12 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="DictionaryException">Thrown when <paramref name="parameter" /> contains the specified <paramref name="value" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        public static void MustNotContainValue<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TValue value, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IDictionary<TKey, TValue> MustNotContainValue<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TValue value, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
 
             if (parameter.Values.Contains(value) == false)
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -386,14 +386,14 @@ namespace Light.GuardClauses
         /// <exception cref="DictionaryException">Thrown when <paramref name="parameter" /> contains any of the specified <paramref name="values" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="values" /> has no entries.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="values" /> is null.</exception>
-        public static void MustNotContainValues<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TValue> values, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IDictionary<TKey, TValue> MustNotContainValues<TKey, TValue>(this IDictionary<TKey, TValue> parameter, IEnumerable<TValue> values, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
             values.MustNotBeNullOrEmpty(nameof(values));
 
             if (values.Any(parameter.Values.Contains) == false)
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -417,9 +417,9 @@ namespace Light.GuardClauses
         /// <exception cref="ValueNotFoundException">Thrown when <paramref name="parameter" /> does contain any of the specified <paramref name="values" />.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="values" /> has no entries.</exception>
         /// <exception cref="ArgumentNullException">Thrown when any of the parameters is null.</exception>
-        public static void MustNotContainValues<TKey, TValue>(this IDictionary<TKey, TValue> parameter, params TValue[] values)
+        public static IDictionary<TKey, TValue> MustNotContainValues<TKey, TValue>(this IDictionary<TKey, TValue> parameter, params TValue[] values)
         {
-            MustNotContainValues(parameter, (IEnumerable<TValue>) values);
+            return MustNotContainValues(parameter, (IEnumerable<TValue>) values);
         }
 
         /// <summary>
@@ -438,12 +438,12 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="DictionaryException">Thrown when <paramref name="parameter" /> does not contain the specified key-value-pair and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        public static void MustContainPair<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TKey key, TValue value, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IDictionary<TKey, TValue> MustContainPair<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TKey key, TValue value, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
 
             if (parameter.Contains(new KeyValuePair<TKey, TValue>(key, value)))
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -472,12 +472,12 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="DictionaryException">Thrown when <paramref name="parameter" /> does contain the specified key-value-pair and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        public static void MustNotContainPair<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TKey key, TValue value, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IDictionary<TKey, TValue> MustNotContainPair<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TKey key, TValue value, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
 
             if (parameter.Contains(new KeyValuePair<TKey, TValue>(key, value)) == false)
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()

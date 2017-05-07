@@ -27,13 +27,16 @@ namespace Light.GuardClauses
         /// <exception cref="EmptyStringException">
         ///     Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
         /// </exception>
-        public static void MustNotBeNullOrEmpty(this string parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static string MustNotBeNullOrEmpty(this string parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
+            // TODO: this can be simplified using MustNotBeNull
             if (parameter == null)
                 throw exception != null ? exception() : new ArgumentNullException(parameterName, message);
 
             if (parameter == string.Empty)
                 throw exception != null ? exception() : (message == null ? new EmptyStringException(parameterName) : new EmptyStringException(message, parameterName));
+
+            return parameter;
         }
 
         /// <summary>
@@ -67,7 +70,7 @@ namespace Light.GuardClauses
         /// <exception cref="StringIsOnlyWhiteSpaceException">
         ///     Thrown when <paramref name="parameter" /> contains only whitespace and no <paramref name="exception" /> is specified.
         /// </exception>
-        public static void MustNotBeNullOrWhiteSpace(this string parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static string MustNotBeNullOrWhiteSpace(this string parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNullOrEmpty(parameterName, message, exception);
 
@@ -75,7 +78,7 @@ namespace Light.GuardClauses
             foreach (var character in parameter)
             {
                 if (char.IsWhiteSpace(character) == false)
-                    return;
+                    return parameter;
             }
             throw exception != null ? exception() : (message == null ? StringIsOnlyWhiteSpaceException.CreateDefault(parameterName, parameter) : new StringIsOnlyWhiteSpaceException(message, parameterName));
         }
@@ -105,13 +108,15 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> does not match the <paramref name="pattern" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="pattern" /> is null.</exception>
-        public static void MustMatch(this string parameter, Regex pattern, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static string MustMatch(this string parameter, Regex pattern, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             pattern.MustNotBeNull(nameof(pattern));
 
             var match = pattern.Match(parameter);
-            if (match.Success == false)
-                throw exception != null ? exception() : (message == null ? new StringDoesNotMatchException(parameterName, parameter, pattern) : new StringDoesNotMatchException(message, parameterName));
+            if (match.Success)
+                return parameter;
+
+            throw exception != null ? exception() : (message == null ? new StringDoesNotMatchException(parameterName, parameter, pattern) : new StringDoesNotMatchException(message, parameterName));
         }
 
         /// <summary>
@@ -137,20 +142,24 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.
         /// </exception>
         /// <exception cref="EmptyStringException">Thrown when <paramref name="text" /> is an empty string.</exception>
-        public static void MustContain(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
+        public static string MustContain(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
             text.MustNotBeNullOrEmpty(nameof(text));
 
+            // TODO: this could be optimized
+            var parameterCompareValue = parameter;
             if (ignoreCaseSensitivity)
             {
-                parameter = parameter.ToLower();
+                parameterCompareValue = parameter.ToLower();
                 // ReSharper disable once PossibleNullReferenceException
                 text = text.ToLower();
             }
 
-            if (parameter.Contains(text) == false)
-                throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must contain the text \"{text}\", but you specified \"{parameter}\".", parameterName);
+            if (parameterCompareValue.Contains(text))
+                return parameter;
+
+            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must contain the text \"{text}\", but you specified \"{parameter}\".", parameterName);
         }
 
         /// <summary>
@@ -176,20 +185,24 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.
         /// </exception>
         /// <exception cref="EmptyStringException">Thrown when <paramref name="text" /> is an empty string.</exception>
-        public static void MustNotContain(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
+        public static string MustNotContain(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
             text.MustNotBeNullOrEmpty(nameof(text));
 
+            // TODO: this could be optimized
+            var parameterCompareValue = parameter;
             if (ignoreCaseSensitivity)
             {
-                parameter = parameter.ToLower();
+                parameterCompareValue = parameter.ToLower();
                 // ReSharper disable once PossibleNullReferenceException
                 text = text.ToLower();
             }
 
-            if (parameter.Contains(text))
-                throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not contain the text \"{text}\", but you specified \"{parameter}\".", parameterName);
+            if (parameterCompareValue.Contains(text) == false)
+                return parameter;
+
+            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not contain the text \"{text}\", but you specified \"{parameter}\".", parameterName);
         }
 
         /// <summary>
@@ -217,21 +230,25 @@ namespace Light.GuardClauses
         /// <exception cref="EmptyStringException">
         ///     Thrown when <paramref name="parameter" /> or <paramref name="text" /> is empty.
         /// </exception>
-        public static void MustBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
+        public static string MustBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNullOrEmpty(parameterName);
             text.MustNotBeNullOrEmpty(nameof(text));
 
+            // TODO: this could be optimized
+            var parameterCompareValue = parameter;
             if (ignoreCaseSensitivity)
             {
-                parameter = parameter.ToLower();
+                parameterCompareValue = parameter.ToLower();
                 // ReSharper disable once PossibleNullReferenceException
                 text = text.ToLower();
             }
 
             // ReSharper disable once PossibleNullReferenceException
-            if (text.Contains(parameter) == false)
-                throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must be a substring of \"{text}\", but you specified \"{parameter}\".", parameterName);
+            if (text.Contains(parameterCompareValue))
+                return parameter;
+
+            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must be a substring of \"{text}\", but you specified \"{parameter}\".", parameterName);
         }
 
         /// <summary>
@@ -255,21 +272,25 @@ namespace Light.GuardClauses
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
         /// <exception cref="EmptyStringException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is empty.</exception>
-        public static void MustNotBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
+        public static string MustNotBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNullOrEmpty(parameter);
             text.MustNotBeNullOrEmpty(nameof(text));
 
+            // TODO: this could be optimized
+            var parameterCompareValue = parameter;
             if (ignoreCaseSensitivity)
             {
-                parameter = parameter.ToLower();
+                parameterCompareValue = parameter.ToLower();
                 // ReSharper disable once PossibleNullReferenceException
                 text = text.ToLower();
             }
 
             // ReSharper disable once PossibleNullReferenceException
-            if (text.Contains(parameter))
-                throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not be a substring of \"{text}\", but you specified \"{parameter}\".", parameterName);
+            if (text.Contains(parameterCompareValue) == false)
+                return parameter;
+
+            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not be a substring of \"{text}\", but you specified \"{parameter}\".", parameterName);
         }
 
         /// <summary>
@@ -286,13 +307,15 @@ namespace Light.GuardClauses
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> does not hat the specified <paramref name="length" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="length" /> is less than zero.</exception>
-        public static void MustHaveLength(this string parameter, int length, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static string MustHaveLength(this string parameter, int length, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
             length.MustNotBeLessThan(0, nameof(length));
 
-            if (parameter.Length != length)
-                throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must have a length of {length}, but it actually has a length of {parameter.Length}.", parameterName);
+            if (parameter.Length == length)
+                return parameter;
+
+            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must have a length of {length}, but it actually has a length of {parameter.Length}.", parameterName);
         }
 
         /// <summary>
@@ -308,13 +331,15 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> does not start with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
-        public static void MustStartWith(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static string MustStartWith(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
             text.MustNotBeNull(nameof(text));
 
-            if (parameter.StartsWith(text, StringComparison.CurrentCulture) == false)
-                throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must start with \"{text}\", but you specified {parameter}.", parameterName);
+            if (parameter.StartsWith(text, StringComparison.CurrentCulture))
+                return parameter;
+
+            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must start with \"{text}\", but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -330,13 +355,15 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> does not start with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
-        public static void MustStartWithEquivalentOf(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static string MustStartWithEquivalentOf(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
             text.MustNotBeNull(nameof(text));
 
-            if (parameter.StartsWith(text, StringComparison.CurrentCultureIgnoreCase) == false)
-                throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must start with the equivalent of \"{text}\", but you specified {parameter}.", parameterName);
+            if (parameter.StartsWith(text, StringComparison.CurrentCultureIgnoreCase))
+                return parameter;
+
+            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must start with the equivalent of \"{text}\", but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -352,13 +379,15 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> starts with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
-        public static void MustNotStartWith(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static string MustNotStartWith(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
             text.MustNotBeNull(nameof(text));
 
-            if (parameter.StartsWith(text, StringComparison.CurrentCulture))
-                throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not start with \"{text}\", but you specified {parameter}.", parameterName);
+            if (parameter.StartsWith(text, StringComparison.CurrentCulture) == false)
+                return parameter;
+
+            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not start with \"{text}\", but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -374,13 +403,15 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> starts with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
-        public static void MustNotStartWithEquivalentOf(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static string MustNotStartWithEquivalentOf(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
             text.MustNotBeNull(nameof(text));
 
-            if (parameter.StartsWith(text, StringComparison.CurrentCultureIgnoreCase))
-                throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not start with the equivalent of \"{text}\", but you specified {parameter}.", parameterName);
+            if (parameter.StartsWith(text, StringComparison.CurrentCultureIgnoreCase) == false)
+                return parameter;
+
+            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not start with the equivalent of \"{text}\", but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -396,13 +427,15 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> does not end with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
-        public static void MustEndWith(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static string MustEndWith(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
             text.MustNotBeNull(nameof(text));
 
-            if (parameter.EndsWith(text, StringComparison.CurrentCulture) == false)
-                throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must end with \"{text}\", but you specified {parameter}.", parameterName);
+            if (parameter.EndsWith(text, StringComparison.CurrentCulture))
+                return parameter;
+
+            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must end with \"{text}\", but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -418,13 +451,15 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> does not end with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
-        public static void MustEndWithEquivalentOf(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static string MustEndWithEquivalentOf(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
             text.MustNotBeNull(nameof(text));
 
-            if (parameter.EndsWith(text, StringComparison.CurrentCultureIgnoreCase) == false)
-                throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must end with the equivalent of \"{text}\", but you specified {parameter}.", parameterName);
+            if (parameter.EndsWith(text, StringComparison.CurrentCultureIgnoreCase))
+                return parameter;
+
+            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must end with the equivalent of \"{text}\", but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -440,13 +475,15 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> ends with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
-        public static void MustNotEndWith(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static string MustNotEndWith(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
             text.MustNotBeNull(nameof(text));
 
-            if (parameter.EndsWith(text, StringComparison.CurrentCulture))
-                throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not end with \"{text}\", but you specified {parameter}.", parameterName);
+            if (parameter.EndsWith(text, StringComparison.CurrentCulture) == false)
+                return parameter;
+
+            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not end with \"{text}\", but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -462,13 +499,15 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> ends with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
-        public static void MustNotEndWithEquivalentOf(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static string MustNotEndWithEquivalentOf(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
             text.MustNotBeNull(nameof(text));
 
-            if (parameter.EndsWith(text, StringComparison.CurrentCultureIgnoreCase))
-                throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not end with equivalent of \"{text}\", but you specified {parameter}.", parameterName);
+            if (parameter.EndsWith(text, StringComparison.CurrentCultureIgnoreCase) == false)
+                return parameter;
+
+            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not end with equivalent of \"{text}\", but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -484,7 +523,7 @@ namespace Light.GuardClauses
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> contains other characters than letters.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="EmptyStringException">Thrown when <paramref name="parameter" /> is empty.</exception>
-        public static void MustContainOnlyLetters(this string parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static string MustContainOnlyLetters(this string parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNullOrEmpty(parameterName);
 
@@ -495,6 +534,7 @@ namespace Light.GuardClauses
                 if (char.IsLetter(parameter[i]) == false)
                     throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must contain only letters, but you specified \"{parameter}\".", parameterName);
             }
+            return parameter;
         }
 
         /// <summary>
@@ -529,7 +569,7 @@ namespace Light.GuardClauses
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> contains other characters than letters or digits.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="EmptyStringException">Thrown when <paramref name="parameter" /> is empty.</exception>
-        public static void MustContainOnlyLettersAndDigits(this string parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static string MustContainOnlyLettersAndDigits(this string parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNullOrEmpty(parameterName);
 
@@ -540,6 +580,8 @@ namespace Light.GuardClauses
                 if (char.IsLetterOrDigit(parameter[i]) == false)
                     throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must contain only letters or digits, but you specified \"{parameter}\".", parameterName);
             }
+
+            return parameter;
         }
 
         /// <summary>

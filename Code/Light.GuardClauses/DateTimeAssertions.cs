@@ -19,9 +19,9 @@ namespace Light.GuardClauses
         ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="InvalidDateTimeException">Thrown when <paramref name="dateTime" />'s is not <see cref="DateTimeKind.Utc" />.</exception>
-        public static void MustBeUtc(this DateTime dateTime, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static DateTime MustBeUtc(this DateTime dateTime, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            if (dateTime.Kind == DateTimeKind.Utc) return;
+            if (dateTime.Kind == DateTimeKind.Utc) return dateTime;
 
             throw exception != null ? exception() : new InvalidDateTimeException(dateTime, message ?? $"The specified date time \"{dateTime:O}\" must be of kind {DateTimeKind.Utc}, but actually is {dateTime.Kind}.", parameterName);
         }
@@ -37,9 +37,9 @@ namespace Light.GuardClauses
         ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="InvalidDateTimeException">Thrown when <paramref name="dateTime" />'s is not <see cref="DateTimeKind.Local" />.</exception>
-        public static void MustBeLocal(this DateTime dateTime, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static DateTime MustBeLocal(this DateTime dateTime, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            if (dateTime.Kind == DateTimeKind.Local) return;
+            if (dateTime.Kind == DateTimeKind.Local) return dateTime;
 
             throw exception != null ? exception() : new InvalidDateTimeException(dateTime, message ?? $"The specified date time \"{dateTime:O}\" must be of kind {DateTimeKind.Local}, but actually is {dateTime.Kind}.", parameterName);
         }
@@ -55,9 +55,9 @@ namespace Light.GuardClauses
         ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="InvalidDateTimeException">Thrown when <paramref name="dateTime" />'s is not <see cref="DateTimeKind.Unspecified" />.</exception>
-        public static void MustBeUnspecified(this DateTime dateTime, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static DateTime MustBeUnspecified(this DateTime dateTime, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            if (dateTime.Kind == DateTimeKind.Unspecified) return;
+            if (dateTime.Kind == DateTimeKind.Unspecified) return dateTime;
 
             throw exception != null ? exception() : new InvalidDateTimeException(dateTime, message ?? $"The specified date time \"{dateTime:O}\" must be of kind {DateTimeKind.Unspecified}, but actually is {dateTime.Kind}.", parameterName);
         }

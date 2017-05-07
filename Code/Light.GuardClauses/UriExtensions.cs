@@ -19,12 +19,12 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
-        public static void MustBeAbsoluteUri(this Uri uri, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static Uri MustBeAbsoluteUri(this Uri uri, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             uri.MustNotBeNull(parameterName);
 
             if (uri.IsAbsoluteUri)
-                return;
+                return uri;
 
             throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The URI"} must be an absolute URI, but you specified \"{uri}\".", parameterName);
         }
@@ -42,12 +42,12 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> does not have the specified scheme.</exception>
-        public static void MustHaveScheme(this Uri uri, string scheme, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static Uri MustHaveScheme(this Uri uri, string scheme, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             uri.MustNotBeNull(parameterName);
 
             if (uri.IsAbsoluteUri && uri.Scheme == scheme)
-                return;
+                return uri;
 
             var subclause = uri.IsAbsoluteUri ? $"but actually has scheme \"{uri.Scheme}\" (\"{uri}\")." : $"but it has none because it is a relative URI (\"{uri}\").";
             throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The URI"} must have scheme \"{scheme}\", {subclause}");

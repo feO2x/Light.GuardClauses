@@ -26,7 +26,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => InvalidTestData.MustContainInstancesOfDifferentTypes(nameof(InvalidTestData));
 
             act.ShouldThrow<CollectionException>()
-               .And.Message.Should().Contain($"{nameof(InvalidTestData)} must contain instances of different subtypes, but \"{InvalidTestData[0]}\" and \"{InvalidTestData[2]}\" (at positions {0} and {2}) have the same type: \"{typeof(A)}\".");
+               .And.Message.Should().Contain($"{nameof(InvalidTestData)} must contain instances of different subtypes, but \"{typeof(A)}\" occurs a second time at index \"{2}\".");
         }
 
         [Fact(DisplayName = "MustContainInstancesOfDifferentTypes must not throw an exception when the specified collection contains instances of different subtypes.")]

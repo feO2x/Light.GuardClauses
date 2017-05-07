@@ -28,13 +28,13 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> is not part of <paramref name="items" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="items" /> is null.</exception>
-        public static void MustBeOneOf<T>(this T parameter, IEnumerable<T> items, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static T MustBeOneOf<T>(this T parameter, IEnumerable<T> items, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             items.MustNotBeNull(nameof(items));
 
             if (items.Contains(parameter))
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -65,13 +65,13 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> is part of <paramref name="items" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="items" /> is null.</exception>
-        public static void MustNotBeOneOf<T>(this T parameter, IEnumerable<T> items, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static T MustNotBeOneOf<T>(this T parameter, IEnumerable<T> items, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             items.MustNotBeNull(nameof(items));
 
             if (items.Contains(parameter) == false)
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -104,13 +104,15 @@ namespace Light.GuardClauses
         /// <exception cref="EmptyCollectionException">
         ///     Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
         /// </exception>
-        public static void MustNotBeNullOrEmpty<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustNotBeNullOrEmpty<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
 
-            if (parameter.Any() == false)
-                throw exception != null ? exception() : (message == null ? new EmptyCollectionException(parameterName) : new EmptyCollectionException(message, parameterName));
+            if (parameter.Any())
+                return parameter;
+
+            throw exception != null ? exception() : (message == null ? new EmptyCollectionException(parameterName) : new EmptyCollectionException(message, parameterName));
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -143,14 +145,14 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> has at least two equal items in it and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        public static void MustNotContainDuplicates<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustNotContainDuplicates<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
 
             var count = parameter.Count();
             if (count == 0)
-                return;
+                return parameter;
 
             for (var i = 0; i < count; i++)
             {
@@ -169,6 +171,7 @@ namespace Light.GuardClauses
                                                         parameterName);
                 }
             }
+            return parameter;
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -191,7 +194,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="parameter" /> is null.
         /// </exception>
-        public static void MustNotContainNull<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
+        public static IEnumerable<T> MustNotContainNull<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
@@ -211,6 +214,7 @@ namespace Light.GuardClauses
                                                                        .ToString(),
                                                     parameterName);
             }
+            return parameter;
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -234,13 +238,13 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="parameter" /> is null.
         /// </exception>
-        public static void MustContain<T>(this IEnumerable<T> parameter, T item, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustContain<T>(this IEnumerable<T> parameter, T item, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
 
             if (parameter.Contains(item))
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -272,13 +276,13 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="parameter" /> is null.
         /// </exception>
-        public static void MustNotContain<T>(this IEnumerable<T> parameter, T item, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustNotContain<T>(this IEnumerable<T> parameter, T item, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
 
             if (parameter.Contains(item) == false)
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -310,14 +314,14 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="parameter" /> or <paramref name="superset" /> is null.
         /// </exception>
-        public static void MustBeSubsetOf<T>(this IEnumerable<T> parameter, IEnumerable<T> superset, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustBeSubsetOf<T>(this IEnumerable<T> parameter, IEnumerable<T> superset, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
             superset.MustNotBeNullOrEmpty(nameof(superset), "Your precondition is set up wrongly: superset is an empty collection.");
 
             if (parameter.All(superset.Contains))
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -352,14 +356,14 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="parameter" /> or <paramref name="subset" /> is null.
         /// </exception>
-        public static void MustContain<T>(this IEnumerable<T> parameter, IEnumerable<T> subset, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustContain<T>(this IEnumerable<T> parameter, IEnumerable<T> subset, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
             subset.MustNotBeNullOrEmpty(nameof(subset), "Your precondition is set up wrongly: subset is an empty collection.");
 
             if (subset.All(parameter.Contains))
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -385,9 +389,9 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="parameter" /> or <paramref name="subset" /> is null.
         /// </exception>
-        public static void MustContain<T>(this IEnumerable<T> parameter, params T[] subset)
+        public static IEnumerable<T> MustContain<T>(this IEnumerable<T> parameter, params T[] subset)
         {
-            MustContain(parameter, (IEnumerable<T>) subset);
+            return MustContain(parameter, (IEnumerable<T>) subset);
         }
 
         /// <summary>
@@ -404,14 +408,14 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> contains any items of <paramref name="set" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
-        public static void MustNotContain<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustNotContain<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
             set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
 
             if (set.Any(parameter.Contains) == false)
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -433,9 +437,9 @@ namespace Light.GuardClauses
         /// <param name="set">The set that must not be part of the collection.</param>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> contains any items of <paramref name="set" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when any of the parameters is null.</exception>
-        public static void MustNotContain<T>(this IEnumerable<T> parameter, params T[] set)
+        public static IEnumerable<T> MustNotContain<T>(this IEnumerable<T> parameter, params T[] set)
         {
-            MustNotContain(parameter, (IEnumerable<T>) set);
+            return MustNotContain(parameter, (IEnumerable<T>) set);
         }
 
         /// <summary>
@@ -453,14 +457,14 @@ namespace Light.GuardClauses
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not have the specified <paramref name="count" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="count" /> is less than zero.</exception>
-        public static void MustHaveCount<T>(this IEnumerable<T> parameter, int count, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustHaveCount<T>(this IEnumerable<T> parameter, int count, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull();
             count.MustNotBeLessThan(0, nameof(count));
 
             if (parameter.Count() == count)
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -487,7 +491,7 @@ namespace Light.GuardClauses
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not have at least the specified number of items and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="count" /> is less than zero.</exception>
-        public static void MustHaveMinimumCount<T>(this IEnumerable<T> parameter, int count, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustHaveMinimumCount<T>(this IEnumerable<T> parameter, int count, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
@@ -495,7 +499,7 @@ namespace Light.GuardClauses
 
             var collectionCount = parameter.Count();
             if (collectionCount >= count)
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -522,7 +526,7 @@ namespace Light.GuardClauses
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> contains more than the specified number of items and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="count" /> is less than zero.</exception>
-        public static void MustHaveMaximumCount<T>(this IEnumerable<T> parameter, int count, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustHaveMaximumCount<T>(this IEnumerable<T> parameter, int count, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
@@ -530,7 +534,7 @@ namespace Light.GuardClauses
 
             var collectionCount = parameter.Count();
             if (collectionCount <= count)
-                return;
+                return parameter;
 
             throw exception != null
                       ? exception()
@@ -555,32 +559,30 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> contains two or more instances of the same subtype, or when <paramref name="parameter" /> contains an element that is null, and no <paramref name="exception" /> is specified.</exception>
-        public static void MustContainInstancesOfDifferentTypes<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
+        public static IEnumerable<T> MustContainInstancesOfDifferentTypes<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotContainNull(parameterName);
 
-            var list = parameter as IList<T> ?? parameter.ToList();
-
+            var hashSet = new HashSet<Type>();
+            var list = parameter.AsList();
             for (var i = 0; i < list.Count; i++)
             {
-                for (var j = i + 1; j < list.Count; j++)
-                {
-                    var first = list[i];
-                    var second = list[j];
+                var type = list[i].GetType();
+                if (hashSet.Add(type))
+                    continue;
 
-                    if (first.GetType() != second.GetType())
-                        continue;
+                throw exception != null
+                          ? exception()
+                          : new CollectionException(message ??
+                                                    new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain instances of different subtypes, but \"{type}\" occurs a second time at index \"{i}\".")
+                                                                       .AppendLine().AppendCollectionContent(parameter)
+                                                                       .ToString(),
+                                                    parameterName);
 
-                    throw exception != null
-                              ? exception()
-                              : new CollectionException(message ??
-                                                        new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain instances of different subtypes, but \"{first}\" and \"{second}\" (at positions {i} and {j}) have the same type: \"{first.GetType()}\".")
-                                                                           .AppendLine().AppendCollectionContent(parameter)
-                                                                           .ToString(),
-                                                        parameterName);
-                }
             }
+
+            return parameter;
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -599,8 +601,9 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not start with the items of <paramref name="set" /> (same order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> is an empty collection.</exception>
-        public static void MustStartWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustStartWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
+            // TODO: maybe I should introduce an IEqualityComparer<T> here?
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.AsList();
             var second = set.AsList();
@@ -614,7 +617,7 @@ namespace Light.GuardClauses
                 if (first[i].EqualsWithHashCode(second[i]) == false)
                     goto ThrowException;
             }
-            return;
+            return parameter;
 
             ThrowException:
             throw exception != null
@@ -644,7 +647,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not start with the items of <paramref name="set" /> (same order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> is an empty collection.</exception>
-        public static void MustEndWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustEndWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.AsList();
@@ -660,7 +663,7 @@ namespace Light.GuardClauses
                 if (first[targetIndex].EqualsWithHashCode(second[i]) == false)
                     goto ThrowException;
             }
-            return;
+            return parameter;
 
             ThrowException:
             throw exception != null
@@ -691,7 +694,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does start with the items of <paramref name="set" /> (same order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> is empty.</exception>
-        public static void MustNotStartWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustNotStartWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.AsList();
@@ -699,12 +702,12 @@ namespace Light.GuardClauses
             second.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
 
             if (first.Count < second.Count)
-                return;
+                return parameter;
 
             for (var i = 0; i < second.Count; i++)
             {
                 if (first[i].EqualsWithHashCode(second[i]) == false)
-                    return;
+                    return parameter;
             }
 
             throw exception != null
@@ -734,7 +737,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does contain the given set at the end of it, and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> is an empty collection.</exception>
-        public static void MustNotEndWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustNotEndWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.AsList();
@@ -742,13 +745,13 @@ namespace Light.GuardClauses
             second.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
 
             if (first.Count < second.Count)
-                return;
+                return parameter;
 
             for (var i = 0; i < second.Count; i++)
             {
                 var targetIndex = first.Count - second.Count + i;
                 if (first[targetIndex].EqualsWithHashCode(second[i]) == false)
-                    return;
+                    return parameter;
             }
 
             throw exception != null
@@ -778,7 +781,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not start with the given items (in any order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> contains no items.</exception>
-        public static void MustStartWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustStartWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.AsList();
@@ -794,7 +797,7 @@ namespace Light.GuardClauses
                 if (ContainsAtStart(first, second.Count, second[i]) == false)
                     goto ThrowException;
             }
-            return;
+            return parameter;
 
             ThrowException:
             throw exception != null
@@ -824,7 +827,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not start with the given items (in any order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> contains no items.</exception>
-        public static void MustNotStartWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustNotStartWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.AsList();
@@ -832,13 +835,13 @@ namespace Light.GuardClauses
             second.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
 
             if (first.Count < second.Count)
-                return;
+                return parameter;
 
             // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < second.Count; i++)
             {
                 if (ContainsAtStart(first, second.Count, second[i]) == false)
-                    return;
+                    return parameter;
             }
 
             throw exception != null
@@ -878,7 +881,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not end with the given items (in any order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> contains no items.</exception>
-        public static void MustEndWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustEndWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.AsList();
@@ -896,7 +899,7 @@ namespace Light.GuardClauses
                 if (ContainsAtEnd(first, lowerIndex, second[i]) == false)
                     goto ThrowException;
             }
-            return;
+            return parameter;
 
             ThrowException:
             throw exception != null
@@ -926,7 +929,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not end with the given items (in any order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> contains no items.</exception>
-        public static void MustNotEndWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustNotEndWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.AsList();
@@ -934,7 +937,7 @@ namespace Light.GuardClauses
             second.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
 
             if (first.Count < second.Count)
-                return;
+                return parameter;
 
             var lowerIndex = first.Count - second.Count;
 
@@ -942,7 +945,7 @@ namespace Light.GuardClauses
             for (var i = 0; i < second.Count; i++)
             {
                 if (ContainsAtEnd(first, lowerIndex, second[i]) == false)
-                    return;
+                    return parameter;
             }
             throw exception != null
                       ? exception()
