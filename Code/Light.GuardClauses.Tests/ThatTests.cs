@@ -22,5 +22,14 @@ namespace Light.GuardClauses.Tests
 
             act.ShouldNotThrow();
         }
+
+        [Fact(DisplayName = "That must throw an ArgumentNullException when createException is null.")]
+        public void CreateExceptionNull()
+        {
+            Action act = () => Check.That(true, null);
+
+            act.ShouldThrow<ArgumentNullException>()
+               .And.ParamName.Should().Be("createException");
+        }
     }
 }

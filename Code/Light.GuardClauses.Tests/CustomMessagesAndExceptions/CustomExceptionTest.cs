@@ -17,9 +17,9 @@ namespace Light.GuardClauses.Tests.CustomMessagesAndExceptions
         void IRunnableTest.RunTest()
         {
             var exception = new Exception();
-            Func<Exception> createExceptionDelegate = () => exception;
+            Exception CreateExceptionDelegate() => exception;
 
-            Action act = () => CallAssertionWithCustomException(createExceptionDelegate);
+            Action act = () => CallAssertionWithCustomException(CreateExceptionDelegate);
 
             act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
         }

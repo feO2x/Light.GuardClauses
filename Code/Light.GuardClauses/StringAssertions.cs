@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Light.GuardClauses.Exceptions;
 
@@ -28,7 +27,6 @@ namespace Light.GuardClauses
         /// <exception cref="EmptyStringException">
         ///     Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
         /// </exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotBeNullOrEmpty(this string parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             if (parameter == null)
@@ -69,7 +67,6 @@ namespace Light.GuardClauses
         /// <exception cref="StringIsOnlyWhiteSpaceException">
         ///     Thrown when <paramref name="parameter" /> contains only whitespace and no <paramref name="exception" /> is specified.
         /// </exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotBeNullOrWhiteSpace(this string parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNullOrEmpty(parameterName, message, exception);
@@ -108,7 +105,6 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> does not match the <paramref name="pattern" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="pattern" /> is null.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustMatch(this string parameter, Regex pattern, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             pattern.MustNotBeNull(nameof(pattern));
@@ -141,7 +137,6 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.
         /// </exception>
         /// <exception cref="EmptyStringException">Thrown when <paramref name="text" /> is an empty string.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustContain(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -181,7 +176,6 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.
         /// </exception>
         /// <exception cref="EmptyStringException">Thrown when <paramref name="text" /> is an empty string.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotContain(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -223,7 +217,6 @@ namespace Light.GuardClauses
         /// <exception cref="EmptyStringException">
         ///     Thrown when <paramref name="parameter" /> or <paramref name="text" /> is empty.
         /// </exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNullOrEmpty(parameterName);
@@ -262,7 +255,6 @@ namespace Light.GuardClauses
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
         /// <exception cref="EmptyStringException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is empty.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNullOrEmpty(parameter);
@@ -294,7 +286,6 @@ namespace Light.GuardClauses
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> does not hat the specified <paramref name="length" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="length" /> is less than zero.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustHaveLength(this string parameter, int length, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -317,7 +308,6 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> does not start with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustStartWith(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -340,7 +330,6 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> does not start with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustStartWithEquivalentOf(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -363,7 +352,6 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> starts with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotStartWith(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -386,7 +374,6 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> starts with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotStartWithEquivalentOf(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -409,7 +396,6 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> does not end with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustEndWith(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -432,7 +418,6 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> does not end with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustEndWithEquivalentOf(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -455,7 +440,6 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> ends with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotEndWith(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -478,7 +462,6 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> ends with <paramref name="text" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotEndWithEquivalentOf(this string parameter, string text, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -501,7 +484,6 @@ namespace Light.GuardClauses
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> contains other characters than letters.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="EmptyStringException">Thrown when <paramref name="parameter" /> is empty.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustContainOnlyLetters(this string parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNullOrEmpty(parameterName);
@@ -547,7 +529,6 @@ namespace Light.GuardClauses
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> contains other characters than letters or digits.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="EmptyStringException">Thrown when <paramref name="parameter" /> is empty.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustContainOnlyLettersAndDigits(this string parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNullOrEmpty(parameterName);

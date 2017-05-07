@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Light.GuardClauses.Exceptions;
@@ -29,7 +28,6 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> is not part of <paramref name="items" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="items" /> is null.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeOneOf<T>(this T parameter, IEnumerable<T> items, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -38,14 +36,15 @@ namespace Light.GuardClauses
             if (items.Contains(parameter))
                 return;
 
-            throw exception != null ? exception() :
-                      new ArgumentOutOfRangeException(parameterName,
-                                                      parameter,
-                                                      message ??
-                                                      new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be one of the items")
-                                                                         .AppendItemsWithNewLine(items).AppendLine()
-                                                                         .AppendLine($"but you specified {parameter}.")
-                                                                         .ToString());
+            throw exception != null
+                      ? exception()
+                      : new ArgumentOutOfRangeException(parameterName,
+                                                        parameter,
+                                                        message ??
+                                                        new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be one of the items")
+                                                                           .AppendItemsWithNewLine(items).AppendLine()
+                                                                           .AppendLine($"but you specified {parameter}.")
+                                                                           .ToString());
 
             // ReSharper restore PossibleMultipleEnumeration
         }
@@ -66,7 +65,6 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> is part of <paramref name="items" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="items" /> is null.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotBeOneOf<T>(this T parameter, IEnumerable<T> items, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -75,14 +73,15 @@ namespace Light.GuardClauses
             if (items.Contains(parameter) == false)
                 return;
 
-            throw exception != null ? exception() :
-                      new ArgumentOutOfRangeException(parameterName,
-                                                      parameter,
-                                                      message ??
-                                                      new StringBuilder().AppendLine($"{parameterName ?? "The value"} must not be one of the items")
-                                                                         .AppendItemsWithNewLine(items).AppendLine()
-                                                                         .AppendLine($"but you specified {parameter}.")
-                                                                         .ToString());
+            throw exception != null
+                      ? exception()
+                      : new ArgumentOutOfRangeException(parameterName,
+                                                        parameter,
+                                                        message ??
+                                                        new StringBuilder().AppendLine($"{parameterName ?? "The value"} must not be one of the items")
+                                                                           .AppendItemsWithNewLine(items).AppendLine()
+                                                                           .AppendLine($"but you specified {parameter}.")
+                                                                           .ToString());
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -105,7 +104,6 @@ namespace Light.GuardClauses
         /// <exception cref="EmptyCollectionException">
         ///     Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
         /// </exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotBeNullOrEmpty<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -145,7 +143,6 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> has at least two equal items in it and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotContainDuplicates<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -163,12 +160,13 @@ namespace Light.GuardClauses
                     if (itemToCompare.EqualsWithHashCode(parameter.ElementAt(j)) == false)
                         continue;
 
-                    throw exception != null ? exception() :
-                              new CollectionException(message ??
-                                                      new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be a collection with unique items, but there is a duplicate at index {j}.")
-                                                                         .AppendCollectionContent(parameter)
-                                                                         .ToString(),
-                                                      parameterName);
+                    throw exception != null
+                              ? exception()
+                              : new CollectionException(message ??
+                                                        new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be a collection with unique items, but there is a duplicate at index {j}.")
+                                                                           .AppendCollectionContent(parameter)
+                                                                           .ToString(),
+                                                        parameterName);
                 }
             }
             // ReSharper restore PossibleMultipleEnumeration
@@ -193,7 +191,6 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="parameter" /> is null.
         /// </exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotContainNull<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -206,12 +203,13 @@ namespace Light.GuardClauses
                 if (item != null)
                     continue;
 
-                throw exception != null ? exception() :
-                          new CollectionException(message ??
-                                                  new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be a collection not containing null, but you specified null at index {currentIndex}.")
-                                                                     .AppendCollectionContent(parameter)
-                                                                     .ToString(),
-                                                  parameterName);
+                throw exception != null
+                          ? exception()
+                          : new CollectionException(message ??
+                                                    new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be a collection not containing null, but you specified null at index {currentIndex}.")
+                                                                       .AppendCollectionContent(parameter)
+                                                                       .ToString(),
+                                                    parameterName);
             }
             // ReSharper restore PossibleMultipleEnumeration
         }
@@ -236,7 +234,6 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="parameter" /> is null.
         /// </exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustContain<T>(this IEnumerable<T> parameter, T item, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -245,12 +242,13 @@ namespace Light.GuardClauses
             if (parameter.Contains(item))
                 return;
 
-            throw exception != null ? exception() :
-                      new CollectionException(message ??
-                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain value \"{item.ToStringOrNull()}\", but does not.")
-                                                                 .AppendCollectionContent(parameter)
-                                                                 .ToString(),
-                                              parameterName);
+            throw exception != null
+                      ? exception()
+                      : new CollectionException(message ??
+                                                new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain value \"{item.ToStringOrNull()}\", but does not.")
+                                                                   .AppendCollectionContent(parameter)
+                                                                   .ToString(),
+                                                parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -274,7 +272,6 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="parameter" /> is null.
         /// </exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotContain<T>(this IEnumerable<T> parameter, T item, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -283,12 +280,13 @@ namespace Light.GuardClauses
             if (parameter.Contains(item) == false)
                 return;
 
-            throw exception != null ? exception() :
-                      new CollectionException(message ??
-                                              new StringBuilder($"{parameterName ?? "The collection"} must not contain value \"{item.ToStringOrNull()}\", but it does.")
-                                                  .AppendCollectionContent(parameter)
-                                                  .ToString(),
-                                              parameterName);
+            throw exception != null
+                      ? exception()
+                      : new CollectionException(message ??
+                                                new StringBuilder($"{parameterName ?? "The collection"} must not contain value \"{item.ToStringOrNull()}\", but it does.")
+                                                    .AppendCollectionContent(parameter)
+                                                    .ToString(),
+                                                parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -312,7 +310,6 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="parameter" /> or <paramref name="superset" /> is null.
         /// </exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeSubsetOf<T>(this IEnumerable<T> parameter, IEnumerable<T> superset, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -322,14 +319,15 @@ namespace Light.GuardClauses
             if (parameter.All(superset.Contains))
                 return;
 
-            throw exception != null ? exception() :
-                      new CollectionException(message ??
-                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must be a subset of:")
-                                                                 .AppendItemsWithNewLine(superset).AppendLine()
-                                                                 .AppendLine("but it is not.").AppendLine()
-                                                                 .AppendCollectionContent(parameter)
-                                                                 .ToString(),
-                                              parameterName);
+            throw exception != null
+                      ? exception()
+                      : new CollectionException(message ??
+                                                new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must be a subset of:")
+                                                                   .AppendItemsWithNewLine(superset).AppendLine()
+                                                                   .AppendLine("but it is not.").AppendLine()
+                                                                   .AppendCollectionContent(parameter)
+                                                                   .ToString(),
+                                                parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -354,7 +352,6 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="parameter" /> or <paramref name="subset" /> is null.
         /// </exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustContain<T>(this IEnumerable<T> parameter, IEnumerable<T> subset, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -364,14 +361,15 @@ namespace Light.GuardClauses
             if (subset.All(parameter.Contains))
                 return;
 
-            throw exception != null ? exception() :
-                      new CollectionException(message ??
-                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain the following values:")
-                                                                 .AppendItemsWithNewLine(subset).AppendLine()
-                                                                 .AppendLine("but it does not.").AppendLine()
-                                                                 .AppendCollectionContent(parameter)
-                                                                 .ToString(),
-                                              parameterName);
+            throw exception != null
+                      ? exception()
+                      : new CollectionException(message ??
+                                                new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain the following values:")
+                                                                   .AppendItemsWithNewLine(subset).AppendLine()
+                                                                   .AppendLine("but it does not.").AppendLine()
+                                                                   .AppendCollectionContent(parameter)
+                                                                   .ToString(),
+                                                parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -387,7 +385,6 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="parameter" /> or <paramref name="subset" /> is null.
         /// </exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustContain<T>(this IEnumerable<T> parameter, params T[] subset)
         {
             MustContain(parameter, (IEnumerable<T>) subset);
@@ -407,7 +404,6 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> contains any items of <paramref name="set" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotContain<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -417,14 +413,15 @@ namespace Light.GuardClauses
             if (set.Any(parameter.Contains) == false)
                 return;
 
-            throw exception != null ? exception() :
-                      new CollectionException(message ??
-                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not contain any of the following values:")
-                                                                 .AppendItemsWithNewLine(set).AppendLine()
-                                                                 .AppendLine("but it does.").AppendLine()
-                                                                 .AppendCollectionContent(parameter)
-                                                                 .ToString(),
-                                              parameterName);
+            throw exception != null
+                      ? exception()
+                      : new CollectionException(message ??
+                                                new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not contain any of the following values:")
+                                                                   .AppendItemsWithNewLine(set).AppendLine()
+                                                                   .AppendLine("but it does.").AppendLine()
+                                                                   .AppendCollectionContent(parameter)
+                                                                   .ToString(),
+                                                parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -436,7 +433,6 @@ namespace Light.GuardClauses
         /// <param name="set">The set that must not be part of the collection.</param>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> contains any items of <paramref name="set" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when any of the parameters is null.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotContain<T>(this IEnumerable<T> parameter, params T[] set)
         {
             MustNotContain(parameter, (IEnumerable<T>) set);
@@ -457,7 +453,6 @@ namespace Light.GuardClauses
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not have the specified <paramref name="count" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="count" /> is less than zero.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustHaveCount<T>(this IEnumerable<T> parameter, int count, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -467,12 +462,13 @@ namespace Light.GuardClauses
             if (parameter.Count() == count)
                 return;
 
-            throw exception != null ? exception() :
-                      new CollectionException(message ??
-                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must have count {count}, but you specified a collection with count {parameter.Count()}.")
-                                                                 .AppendCollectionContent(parameter)
-                                                                 .ToString(),
-                                              parameterName);
+            throw exception != null
+                      ? exception()
+                      : new CollectionException(message ??
+                                                new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must have count {count}, but you specified a collection with count {parameter.Count()}.")
+                                                                   .AppendCollectionContent(parameter)
+                                                                   .ToString(),
+                                                parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -491,7 +487,6 @@ namespace Light.GuardClauses
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not have at least the specified number of items and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="count" /> is less than zero.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustHaveMinimumCount<T>(this IEnumerable<T> parameter, int count, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -502,12 +497,13 @@ namespace Light.GuardClauses
             if (collectionCount >= count)
                 return;
 
-            throw exception != null ? exception() :
-                      new CollectionException(message ??
-                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must have at least {count} {Items(count)}, but it actually has {collectionCount} {Items(collectionCount)}.")
-                                                                 .AppendCollectionContent(parameter)
-                                                                 .ToString(),
-                                              parameterName);
+            throw exception != null
+                      ? exception()
+                      : new CollectionException(message ??
+                                                new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must have at least {count} {Items(count)}, but it actually has {collectionCount} {Items(collectionCount)}.")
+                                                                   .AppendCollectionContent(parameter)
+                                                                   .ToString(),
+                                                parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -526,7 +522,6 @@ namespace Light.GuardClauses
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> contains more than the specified number of items and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="count" /> is less than zero.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustHaveMaximumCount<T>(this IEnumerable<T> parameter, int count, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -537,12 +532,13 @@ namespace Light.GuardClauses
             if (collectionCount <= count)
                 return;
 
-            throw exception != null ? exception() :
-                      new CollectionException(message ??
-                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must have no more than {count} {Items(count)}, but it actually has {collectionCount} {Items(collectionCount)}.")
-                                                                 .AppendCollectionContent(parameter)
-                                                                 .ToString(),
-                                              parameterName);
+            throw exception != null
+                      ? exception()
+                      : new CollectionException(message ??
+                                                new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must have no more than {count} {Items(count)}, but it actually has {collectionCount} {Items(collectionCount)}.")
+                                                                   .AppendCollectionContent(parameter)
+                                                                   .ToString(),
+                                                parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -559,7 +555,6 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> contains two or more instances of the same subtype, or when <paramref name="parameter" /> contains an element that is null, and no <paramref name="exception" /> is specified.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustContainInstancesOfDifferentTypes<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -577,12 +572,13 @@ namespace Light.GuardClauses
                     if (first.GetType() != second.GetType())
                         continue;
 
-                    throw exception != null ? exception() :
-                              new CollectionException(message ??
-                                                      new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain instances of different subtypes, but \"{first}\" and \"{second}\" (at positions {i} and {j}) have the same type: \"{first.GetType()}\".")
-                                                                         .AppendLine().AppendCollectionContent(parameter)
-                                                                         .ToString(),
-                                                      parameterName);
+                    throw exception != null
+                              ? exception()
+                              : new CollectionException(message ??
+                                                        new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain instances of different subtypes, but \"{first}\" and \"{second}\" (at positions {i} and {j}) have the same type: \"{first.GetType()}\".")
+                                                                           .AppendLine().AppendCollectionContent(parameter)
+                                                                           .ToString(),
+                                                        parameterName);
                 }
             }
             // ReSharper restore PossibleMultipleEnumeration
@@ -603,7 +599,6 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not start with the items of <paramref name="set" /> (same order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> is an empty collection.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustStartWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -622,14 +617,15 @@ namespace Light.GuardClauses
             return;
 
             ThrowException:
-            throw exception != null ? exception() :
-                      new CollectionException(message ??
-                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must start with the following items:")
-                                                                 .AppendItemsWithNewLine(set).AppendLine()
-                                                                 .AppendLine("but it does not.").AppendLine()
-                                                                 .AppendCollectionContent(parameter)
-                                                                 .ToString(),
-                                              parameterName);
+            throw exception != null
+                      ? exception()
+                      : new CollectionException(message ??
+                                                new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must start with the following items:")
+                                                                   .AppendItemsWithNewLine(set).AppendLine()
+                                                                   .AppendLine("but it does not.").AppendLine()
+                                                                   .AppendCollectionContent(parameter)
+                                                                   .ToString(),
+                                                parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -648,7 +644,6 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not start with the items of <paramref name="set" /> (same order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> is an empty collection.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustEndWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -668,14 +663,15 @@ namespace Light.GuardClauses
             return;
 
             ThrowException:
-            throw exception != null ? exception() :
-                      new CollectionException(message ??
-                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must end with the following items:")
-                                                                 .AppendItemsWithNewLine(set).AppendLine()
-                                                                 .AppendLine("but it does not.").AppendLine()
-                                                                 .AppendCollectionContent(parameter)
-                                                                 .ToString(),
-                                              parameterName);
+            throw exception != null
+                      ? exception()
+                      : new CollectionException(message ??
+                                                new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must end with the following items:")
+                                                                   .AppendItemsWithNewLine(set).AppendLine()
+                                                                   .AppendLine("but it does not.").AppendLine()
+                                                                   .AppendCollectionContent(parameter)
+                                                                   .ToString(),
+                                                parameterName);
 
             // ReSharper restore PossibleMultipleEnumeration
         }
@@ -695,7 +691,6 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does start with the items of <paramref name="set" /> (same order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> is empty.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotStartWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -712,14 +707,15 @@ namespace Light.GuardClauses
                     return;
             }
 
-            throw exception != null ? exception() :
-                      new CollectionException(message ??
-                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not start with the following items:")
-                                                                 .AppendItemsWithNewLine(set).AppendLine()
-                                                                 .AppendLine("but it does.").AppendLine()
-                                                                 .AppendCollectionContent(parameter)
-                                                                 .ToString(),
-                                              parameterName);
+            throw exception != null
+                      ? exception()
+                      : new CollectionException(message ??
+                                                new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not start with the following items:")
+                                                                   .AppendItemsWithNewLine(set).AppendLine()
+                                                                   .AppendLine("but it does.").AppendLine()
+                                                                   .AppendCollectionContent(parameter)
+                                                                   .ToString(),
+                                                parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -738,7 +734,6 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does contain the given set at the end of it, and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> is an empty collection.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotEndWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -756,14 +751,15 @@ namespace Light.GuardClauses
                     return;
             }
 
-            throw exception != null ? exception() :
-                      new CollectionException(message ??
-                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not end with the following items:")
-                                                                 .AppendItemsWithNewLine(set).AppendLine()
-                                                                 .AppendLine("but it does.").AppendLine()
-                                                                 .AppendCollectionContent(parameter)
-                                                                 .ToString(),
-                                              parameterName);
+            throw exception != null
+                      ? exception()
+                      : new CollectionException(message ??
+                                                new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not end with the following items:")
+                                                                   .AppendItemsWithNewLine(set).AppendLine()
+                                                                   .AppendLine("but it does.").AppendLine()
+                                                                   .AppendCollectionContent(parameter)
+                                                                   .ToString(),
+                                                parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -782,7 +778,6 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not start with the given items (in any order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> contains no items.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustStartWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -802,14 +797,15 @@ namespace Light.GuardClauses
             return;
 
             ThrowException:
-            throw exception != null ? exception() :
-                      new CollectionException(message ??
-                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must start with the following items in any order:")
-                                                                 .AppendItemsWithNewLine(set).AppendLine()
-                                                                 .AppendLine("but it does not.").AppendLine()
-                                                                 .AppendCollectionContent(parameter)
-                                                                 .ToString(),
-                                              parameterName);
+            throw exception != null
+                      ? exception()
+                      : new CollectionException(message ??
+                                                new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must start with the following items in any order:")
+                                                                   .AppendItemsWithNewLine(set).AppendLine()
+                                                                   .AppendLine("but it does not.").AppendLine()
+                                                                   .AppendCollectionContent(parameter)
+                                                                   .ToString(),
+                                                parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -828,7 +824,6 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not start with the given items (in any order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> contains no items.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotStartWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -846,14 +841,15 @@ namespace Light.GuardClauses
                     return;
             }
 
-            throw exception != null ? exception() :
-                      new CollectionException(message ??
-                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not start with the following items in any order:")
-                                                                 .AppendItemsWithNewLine(set).AppendLine()
-                                                                 .AppendLine("but it does.").AppendLine()
-                                                                 .AppendCollectionContent(parameter)
-                                                                 .ToString(),
-                                              parameterName);
+            throw exception != null
+                      ? exception()
+                      : new CollectionException(message ??
+                                                new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not start with the following items in any order:")
+                                                                   .AppendItemsWithNewLine(set).AppendLine()
+                                                                   .AppendLine("but it does.").AppendLine()
+                                                                   .AppendCollectionContent(parameter)
+                                                                   .ToString(),
+                                                parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -882,7 +878,6 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not end with the given items (in any order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> contains no items.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustEndWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -904,14 +899,15 @@ namespace Light.GuardClauses
             return;
 
             ThrowException:
-            throw exception != null ? exception() :
-                      new CollectionException(message ??
-                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must end with the following items in any order:")
-                                                                 .AppendItemsWithNewLine(set).AppendLine()
-                                                                 .AppendLine("but it does not.").AppendLine()
-                                                                 .AppendCollectionContent(parameter)
-                                                                 .ToString(),
-                                              parameterName);
+            throw exception != null
+                      ? exception()
+                      : new CollectionException(message ??
+                                                new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must end with the following items in any order:")
+                                                                   .AppendItemsWithNewLine(set).AppendLine()
+                                                                   .AppendLine("but it does not.").AppendLine()
+                                                                   .AppendCollectionContent(parameter)
+                                                                   .ToString(),
+                                                parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -930,7 +926,6 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not end with the given items (in any order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> contains no items.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustNotEndWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
@@ -949,14 +944,15 @@ namespace Light.GuardClauses
                 if (ContainsAtEnd(first, lowerIndex, second[i]) == false)
                     return;
             }
-            throw exception != null ? exception() :
-                      new CollectionException(message ??
-                                              new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not end with the following items in any order:")
-                                                                 .AppendItemsWithNewLine(set).AppendLine()
-                                                                 .AppendLine("but it does.").AppendLine()
-                                                                 .AppendCollectionContent(parameter)
-                                                                 .ToString(),
-                                              parameterName);
+            throw exception != null
+                      ? exception()
+                      : new CollectionException(message ??
+                                                new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not end with the following items in any order:")
+                                                                   .AppendItemsWithNewLine(set).AppendLine()
+                                                                   .AppendLine("but it does.").AppendLine()
+                                                                   .AppendCollectionContent(parameter)
+                                                                   .ToString(),
+                                                parameterName);
             // ReSharper restore PossibleMultipleEnumeration
         }
 

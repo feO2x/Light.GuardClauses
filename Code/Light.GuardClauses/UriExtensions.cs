@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace Light.GuardClauses
 {
@@ -20,7 +19,6 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeAbsoluteUri(this Uri uri, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             uri.MustNotBeNull(parameterName);
@@ -44,7 +42,6 @@ namespace Light.GuardClauses
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> does not have the specified scheme.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustHaveScheme(this Uri uri, string scheme, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             uri.MustNotBeNull(parameterName);

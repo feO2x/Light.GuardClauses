@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses
@@ -20,7 +19,6 @@ namespace Light.GuardClauses
         ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="InvalidDateTimeException">Thrown when <paramref name="dateTime" />'s is not <see cref="DateTimeKind.Utc" />.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeUtc(this DateTime dateTime, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             if (dateTime.Kind == DateTimeKind.Utc) return;
@@ -39,7 +37,6 @@ namespace Light.GuardClauses
         ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="InvalidDateTimeException">Thrown when <paramref name="dateTime" />'s is not <see cref="DateTimeKind.Local" />.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeLocal(this DateTime dateTime, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             if (dateTime.Kind == DateTimeKind.Local) return;
@@ -58,7 +55,6 @@ namespace Light.GuardClauses
         ///     Please note that <paramref name="parameterName" /> and <paramref name="message" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="InvalidDateTimeException">Thrown when <paramref name="dateTime" />'s is not <see cref="DateTimeKind.Unspecified" />.</exception>
-        [Conditional(Check.CompileAssertionsSymbol)]
         public static void MustBeUnspecified(this DateTime dateTime, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             if (dateTime.Kind == DateTimeKind.Unspecified) return;

@@ -17,7 +17,6 @@ namespace Light.GuardClauses.Tests
             new[]
             {
                 typeof(AgainstTests),
-                typeof(CheckConditionalAttributeAppliance),
                 typeof(CustomMessagesAndCustomExceptionsTests),
                 typeof(NotNullTests),
                 typeof(RangeTests),
