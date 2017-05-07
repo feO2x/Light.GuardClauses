@@ -1,98 +1,30 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AE41DA06-A8F1-435F-A06D-77C5AF095923}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Light.GuardClauses</RootNamespace>
-    <AssemblyName>Light.GuardClauses</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;COMPILE_ASSERTIONS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Light.GuardClauses.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <TargetFramework>netstandard1.0</TargetFramework>
     <DefineConstants>COMPILE_ASSERTIONS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Light.GuardClauses.XML</DocumentationFile>
+    <Version>1.3.0</Version>
+    <Authors>Kenny Pflug</Authors>
+    <Company>Kenny Pflug</Company>
+    <Copyright>© 2016-2017 Kenny Pflug</Copyright>
+    <PackageIconUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/Images/light_logo.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/feO2x/Light.GuardClauses</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/LICENSE</PackageLicenseUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>Assertions Preconditions GuardClauses DesignByContract DbC</PackageTags>
+    <PackageReleaseNotes>New assertion methods for DateTime: MustBeUtc, MustBeLocal, and MustBeUnspecified.
+New assertion methods for Uri: MustBeAbsoluteUri, and MustHaveScheme
+
+New assertion methods that won't throw exceptions: 
+  - IsValidEnumValue, 
+  - IsEmpty (for GUIDs), 
+  - IsIn and IsNotIn (ranges),
+  - IsNullOrEmpty (for collections and strings)
+  - IsNullOrWhiteSpace (for strings)
+  - IsSameAs (for object references)
+  - ContainsOnlyLetters and ContainsOnlyLettersAndDigits (for strings)
+
+Check out the history: https://github.com/feO2x/Light.GuardClauses/releases</PackageReleaseNotes>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <DelaySign>false</DelaySign>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Public.Light.GuardClauses.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-    <None Include="Light.GuardClauses.nuspec">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="NuGetScripts\install.ps1" />
-    <None Include="NuGetScripts\uninstall.ps1" />
-    <None Include="project.json" />
-    <None Include="Public.Light.GuardClauses.snk" />
-    <None Include="CreateSignedNuGetPackage.bat" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Check.cs" />
-    <Compile Include="DateTimeAssertions.cs" />
-    <Compile Include="EnumerableAssertions.cs" />
-    <Compile Include="CommonAssertions.cs" />
-    <Compile Include="ComparableAssertions.cs" />
-    <Compile Include="DictionaryAssertions.cs" />
-    <Compile Include="EqualityAssertions.cs" />
-    <Compile Include="Exceptions\ArgumentNotNullException.cs" />
-    <Compile Include="Exceptions\CollectionException.cs" />
-    <Compile Include="Exceptions\DictionaryException.cs" />
-    <Compile Include="Exceptions\EmptyCollectionException.cs" />
-    <Compile Include="Exceptions\EmptyGuidException.cs" />
-    <Compile Include="Exceptions\EmptyStringException.cs" />
-    <Compile Include="Exceptions\EnumValueNotDefinedException.cs" />
-    <Compile Include="Exceptions\InvalidDateTimeException.cs" />
-    <Compile Include="Exceptions\NullableHasNoValueException.cs" />
-    <Compile Include="Exceptions\NullableHasValueException.cs" />
-    <Compile Include="Exceptions\StringDoesNotMatchException.cs" />
-    <Compile Include="Exceptions\StringException.cs" />
-    <Compile Include="Exceptions\StringIsOnlyWhiteSpaceException.cs" />
-    <Compile Include="Exceptions\TypeMismatchException.cs" />
-    <Compile Include="Exceptions\ValueNotFoundException.cs" />
-    <Compile Include="FrameworkExtensions\EnumerableExtensions.cs" />
-    <Compile Include="FrameworkExtensions\Equality.cs" />
-    <Compile Include="NotNull.cs" />
-    <Compile Include="FrameworkExtensions\StringBuilderExtensions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Range.cs" />
-    <Compile Include="StringAssertions.cs" />
-    <Compile Include="UriExtensions.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

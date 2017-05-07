@@ -1,193 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\xunit.runner.visualstudio.2.2.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.2.0\build\net20\xunit.runner.visualstudio.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{224A3FAD-0E27-477C-AE0D-9D012CB31B6C}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Light.GuardClauses.Tests</RootNamespace>
-    <AssemblyName>Light.GuardClauses.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <DefineConstants>COMPILE_ASSERTIONS</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;COMPILE_ASSERTIONS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;COMPILE_ASSERTIONS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="FluentAssertions, Version=4.19.2.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.4.19.2\lib\net45\FluentAssertions.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentAssertions.Core, Version=4.19.2.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.4.19.2\lib\net45\FluentAssertions.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.abstractions.2.0.1\lib\net35\xunit.abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.core, Version=2.2.0.3545, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.core.2.2.0\lib\netstandard1.1\xunit.core.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.execution.desktop, Version=2.2.0.3545, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.execution.2.2.0\lib\net452\xunit.execution.desktop.dll</HintPath>
-    </Reference>
+    <PackageReference Include="fluentassertions" Version="4.19.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="AgainstTests.cs" />
-    <Compile Include="CheckConditionalAttributeAppliance.cs" />
-    <Compile Include="CollectionMustNotBeNullOrEmptyTests.cs" />
-    <Compile Include="ContainsOnlyLettersAndDigitsTests.cs" />
-    <Compile Include="ContainsOnlyLettersTests.cs" />
-    <Compile Include="CustomMessagesAndExceptions\CustomMessageAndExceptionTestData.cs" />
-    <Compile Include="CustomMessagesAndCustomExceptionsTests.cs" />
-    <Compile Include="CustomMessagesAndExceptions\ICustomMessageAndExceptionTestData.cs" />
-    <Compile Include="CustomMessagesAndExceptions\ICustomMessageAndExceptionTestDataProvider.cs" />
-    <Compile Include="CustomMessagesAndExceptions\IRunnableTest.cs" />
-    <Compile Include="CustomMessagesAndExceptions\CustomExceptionTest.cs" />
-    <Compile Include="CustomMessagesAndExceptions\CustomMessageTest.cs" />
-    <Compile Include="EqualityTests.cs" />
-    <Compile Include="IsEmptyTests.cs" />
-    <Compile Include="IsInTests.cs" />
-    <Compile Include="IsNotInTests.cs" />
-    <Compile Include="IsNullOrEmptyTests.cs" />
-    <Compile Include="IsNullOrWhiteSpaceTests.cs" />
-    <Compile Include="IsSameAsTests.cs" />
-    <Compile Include="IsValidEnumValueTests.cs" />
-    <Compile Include="Metadata.cs" />
-    <Compile Include="MustBeAbsoluteUriTests.cs" />
-    <Compile Include="MustBeFalseTests.cs" />
-    <Compile Include="MustBeGreaterThanOrEqualToTests.cs" />
-    <Compile Include="MustBeGreaterThanTests.cs" />
-    <Compile Include="MustBeLessThanOrEqualToTests.cs" />
-    <Compile Include="MustBeLessThanTests.cs" />
-    <Compile Include="MustBeLocalTests.cs" />
-    <Compile Include="MustBeTrueTests.cs" />
-    <Compile Include="MustBeUnspecifiedTests.cs" />
-    <Compile Include="MustContainInstancesOfDifferentTypesTests.cs" />
-    <Compile Include="MustContainKeyTests.cs" />
-    <Compile Include="MustBeInTests.cs" />
-    <Compile Include="MustBeKeyOfTests.cs" />
-    <Compile Include="MustBeNullTests.cs" />
-    <Compile Include="MustBeOneOfTests.cs" />
-    <Compile Include="MustBeSameAsTests.cs" />
-    <Compile Include="MustBeSubsetOfTests.cs" />
-    <Compile Include="MustBeSubstringOfTests.cs" />
-    <Compile Include="MustBeTests.cs" />
-    <Compile Include="MustBeOfTypeTests.cs" />
-    <Compile Include="MustBeValidEnumValueTests.cs" />
-    <Compile Include="MustContainOnlyLettersAndDigitsTests.cs" />
-    <Compile Include="MustContainOnlyLettersTests.cs" />
-    <Compile Include="MustContainPairTests.cs" />
-    <Compile Include="MustContainValuesTests.cs" />
-    <Compile Include="MustContainValueTests.cs" />
-    <Compile Include="MustEndWithEquivalentOfTests.cs" />
-    <Compile Include="MustEndWithTests.cs" />
-    <Compile Include="MustHaveCountTests.cs" />
-    <Compile Include="MustBeUtcTests.cs" />
-    <Compile Include="MustHaveLengthTests.cs" />
-    <Compile Include="MustHaveMaximumCountTests.cs" />
-    <Compile Include="MustHaveMinimumCountTests.cs" />
-    <Compile Include="MustHaveSchemeTests.cs" />
-    <Compile Include="MustNotContainPairTests.cs" />
-    <Compile Include="MustNotContainValuesTests.cs" />
-    <Compile Include="MustNotContainValueTests.cs" />
-    <Compile Include="MustNotEndWithEquivalentOfTests.cs" />
-    <Compile Include="MustNotEndWithTests.cs" />
-    <Compile Include="MustNotStartWithEquivalentOfTests.cs" />
-    <Compile Include="MustNotStartWithTests.cs" />
-    <Compile Include="MustStartWithEquivalentOfTests.cs" />
-    <Compile Include="MustStartWithTests.cs" />
-    <Compile Include="PerformanceTests\BaseCounterComparisonTest.cs" />
-    <Compile Include="PerformanceTests\BaseComparisonBenchmark.cs" />
-    <Compile Include="PerformanceTests\ComparisonBenchmarkResultWriter.cs" />
-    <Compile Include="PerformanceTests\ComparisonCandidate.cs" />
-    <Compile Include="PerformanceTests\CounterComparisonResultWriter.cs" />
-    <Compile Include="PerformanceTests\CounterPerformanceCandidate.cs" />
-    <Compile Include="PerformanceTests\CounterTestRunResult.cs" />
-    <Compile Include="PerformanceTests\MustNotBeNullMicrobenchmark.cs" />
-    <Compile Include="PerformanceTests\MustNotBeNullMacrobenchmark.cs" />
-    <Compile Include="SingleItemMustNotContainTests.cs" />
-    <Compile Include="StringMustNotContainTests.cs" />
-    <Compile Include="SubsetMustContainTests.cs" />
-    <Compile Include="MustContainKeysTests.cs" />
-    <Compile Include="MustNotContainDuplicatesTests.cs" />
-    <Compile Include="MustHaveValueTests.cs" />
-    <Compile Include="MustMatchTests.cs" />
-    <Compile Include="MustNotBeEmptyTests.cs" />
-    <Compile Include="MustNotBeGreaterThanOrEqualToTests.cs" />
-    <Compile Include="MustNotBeGreaterThanTests.cs" />
-    <Compile Include="MustNotBeInTests.cs" />
-    <Compile Include="MustNotBeKeyOfTests.cs" />
-    <Compile Include="MustNotBeLessThanOrEqualToTests.cs" />
-    <Compile Include="MustNotBeLessThanTests.cs" />
-    <Compile Include="StringMustNotBeNullOrEmptyTests.cs" />
-    <Compile Include="MustNotBeNullOrWhiteSpaceTests.cs" />
-    <Compile Include="MustNotBeNullTests.cs" />
-    <Compile Include="MustNotBeOneOfTests.cs" />
-    <Compile Include="MustNotBeSameAsTests.cs" />
-    <Compile Include="MustNotBeSubstringOfTests.cs" />
-    <Compile Include="MustNotContainNullTests.cs" />
-    <Compile Include="SetMustNotContainTests.cs" />
-    <Compile Include="MustNotContainKeysTests.cs" />
-    <Compile Include="MustNotContainKeyTests.cs" />
-    <Compile Include="MustNotHaveValueTests.cs" />
-    <Compile Include="NotNullTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RangeTests.cs" />
-    <Compile Include="SingleItemMustContainTests.cs" />
-    <Compile Include="StringMustContainTests.cs" />
-    <Compile Include="ThatTests.cs" />
-    <Compile Include="Traits.cs" />
+    <ProjectReference Include="..\Light.GuardClauses\Light.GuardClauses.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Light.GuardClauses\Light.GuardClauses.csproj">
-      <Project>{ae41da06-a8f1-435f-a06d-77c5af095923}</Project>
-      <Name>Light.GuardClauses</Name>
-    </ProjectReference>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.2.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.2.0\build\net20\xunit.runner.visualstudio.props'))" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

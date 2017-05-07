@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
@@ -18,7 +19,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => @object.MustBeOfType<Array>(nameof(@object));
 
             act.ShouldThrow<TypeMismatchException>()
-               .And.Message.Should().Contain($"{nameof(@object)} is of type {typeof (string).FullName} and cannot be downcasted to {typeof (Array).FullName}.");
+               .And.Message.Should().Contain($"{nameof(@object)} is of type {typeof(string).FullName} and cannot be downcasted to {typeof(Array).FullName}.");
         }
 
         [Fact(DisplayName = "MustBeOfType must return the downcasted object if cast succeeds.")]
@@ -35,7 +36,7 @@ namespace Light.GuardClauses.Tests
         {
             testData.Add(new CustomExceptionTest(exception => "Wow!".MustBeOfType<Stream>(exception: exception)));
 
-            testData.Add(new CustomMessageTest<TypeMismatchException>(message => "Hello".MustBeOfType<Activator>(message: message)));
+            testData.Add(new CustomMessageTest<TypeMismatchException>(message => "Hello".MustBeOfType<StringBuilder>(message: message)));
         }
     }
 }

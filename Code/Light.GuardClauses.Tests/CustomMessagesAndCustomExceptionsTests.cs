@@ -43,7 +43,8 @@ namespace Light.GuardClauses.Tests
         static CustomMessagesAndCustomExceptionsTests()
         {
             // ReSharper disable PossibleMultipleEnumeration
-            var affectedTestClasses = typeof(CustomMessagesAndCustomExceptionsTests).Assembly
+            var affectedTestClasses = typeof(CustomMessagesAndCustomExceptionsTests).GetTypeInfo()
+                                                                                    .Assembly
                                                                                     .ExportedTypes
                                                                                     .Where(t => t.Namespace == "Light.GuardClauses.Tests" && OmmitedTestClasses.Contains(t) == false);
 

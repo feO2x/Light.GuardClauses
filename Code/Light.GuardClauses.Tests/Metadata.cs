@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Reflection;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -17,7 +18,8 @@ namespace Light.GuardClauses.Tests
         [Fact(DisplayName = "Number of methods in Light.GuardClauses.")]
         public void NumberOfStaticMethods()
         {
-            var totalNumberOfMethods = typeof(Check).Assembly
+            var totalNumberOfMethods = typeof(Check).GetTypeInfo()
+                                                    .Assembly
                                                     .ExportedTypes
                                                     .Where(t => t.Namespace == typeof(Check).Namespace)
                                                     .SelectMany(t => t.GetMethods())

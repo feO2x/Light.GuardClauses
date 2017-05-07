@@ -14,7 +14,8 @@ namespace Light.GuardClauses.Tests
         [Fact(DisplayName = "All static and extension methods returning void in namespace Light.GuardClauses must have the ConditionalAttribute applied to them.")]
         public void CheckMethodsForConditionalAttribute()
         {
-            var methodsWithoutConditionalAttribute = typeof (Check).Assembly
+            var methodsWithoutConditionalAttribute = typeof (Check).GetTypeInfo()
+                                                                   .Assembly
                                                                    .ExportedTypes
                                                                    .Where(t => t.Namespace == typeof(Check).Namespace)
                                                                    .SelectMany(t => t.GetMethods())

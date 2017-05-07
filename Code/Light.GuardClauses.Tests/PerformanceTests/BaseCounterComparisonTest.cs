@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Xunit.Abstractions;
+using Light.GuardClauses;
 
 namespace Light.GuardClauses.Tests.PerformanceTests
 {
@@ -19,7 +20,7 @@ namespace Light.GuardClauses.Tests.PerformanceTests
         protected BaseCounterComparisonTest(ITestOutputHelper output, List<TimeSpan> performanceTestLenghts = null)
         {
             Output = output;
-            _timer = new Timer(StopPerformanceRun);
+            _timer = new Timer(StopPerformanceRun, null, TimeSpan.FromMilliseconds(-1), TimeSpan.FromMilliseconds(-1));
 
             PerformanceTestLengths = performanceTestLenghts ?? new List<TimeSpan>
                                                                {

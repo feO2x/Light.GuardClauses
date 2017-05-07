@@ -9,7 +9,7 @@ namespace Light.GuardClauses.Tests
     {
         [Theory(DisplayName = "IsValidEnumValue must return true when the enum value is valid.")]
         [InlineData(ConsoleColor.Black)]
-        [InlineData(AppDomainManagerInitializationOptions.RegisterWithHost)]
+        [InlineData(UriKind.Absolute)]
         [InlineData(DateTimeKind.Utc)]
         public void EnumValueValid<T>(T enumValue)
         {
