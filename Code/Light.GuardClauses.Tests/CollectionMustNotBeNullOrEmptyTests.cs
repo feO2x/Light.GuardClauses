@@ -25,6 +25,7 @@ namespace Light.GuardClauses.Tests
         [Fact(DisplayName = "MustNotBeNullOrEmpty must throw an EmptyCollectionException when the parameter is a collection with no items.")]
         public void ListEmpty()
         {
+            // ReSharper disable once CollectionNeverUpdated.Local
             var list = new List<int>();
 
             Action act = () => list.MustNotBeNullOrEmpty(nameof(list));
