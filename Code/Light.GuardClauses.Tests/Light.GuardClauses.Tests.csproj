@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <DefineConstants>COMPILE_ASSERTIONS</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
