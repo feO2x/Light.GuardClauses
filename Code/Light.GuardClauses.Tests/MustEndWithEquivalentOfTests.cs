@@ -52,7 +52,7 @@ namespace Light.GuardClauses.Tests
         [InlineData(new[] { -10 }, new[] { -11 })]
         public void CollectionEndsDiffer(IEnumerable<int> collection, IEnumerable<int> set)
         {
-            Action act = () => collection.MustEndWithEquivalentOf(set, nameof(collection));
+            Action act = () => collection.MustEndWithEquivalentOf(set, parameterName: nameof(collection));
 
             act.ShouldThrow<CollectionException>()
                .And.Message.Should().Contain($"{nameof(collection)} must end with the following items in any order:{new StringBuilder().AppendLine().AppendItemsWithNewLine(set).AppendLine()}but it does not.");

@@ -14,7 +14,7 @@ namespace Light.GuardClauses.Tests
         [MemberData(nameof(DuplicateItemsTestData))]
         public void DuplicateItems<T>(T[] collection, int duplicateIndex)
         {
-            Action act = () => collection.MustNotContainDuplicates(nameof(collection));
+            Action act = () => collection.MustNotContainDuplicates(parameterName: nameof(collection));
 
             act.ShouldThrow<CollectionException>()
                .And.Message.Should().Contain($"{nameof(collection)} must be a collection with unique items, but there is a duplicate at index {duplicateIndex}.");
@@ -32,7 +32,7 @@ namespace Light.GuardClauses.Tests
         [MemberData(nameof(UniqueItemsTestData))]
         public void UniqueItems<T>(T[] collection)
         {
-            Action act = () => collection.MustNotContainDuplicates(nameof(collection));
+            Action act = () => collection.MustNotContainDuplicates(parameterName: nameof(collection));
 
             act.ShouldNotThrow();
         }

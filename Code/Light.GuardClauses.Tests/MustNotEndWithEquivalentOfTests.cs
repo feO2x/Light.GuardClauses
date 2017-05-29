@@ -51,7 +51,7 @@ namespace Light.GuardClauses.Tests
         [InlineData(new[] { -1255 }, new[] { -1255 })]
         public void CollectionEndsEqual(IEnumerable<int> collection, IEnumerable<int> set)
         {
-            Action act = () => collection.MustNotEndWithEquivalentOf(set, nameof(collection));
+            Action act = () => collection.MustNotEndWithEquivalentOf(set, parameterName: nameof(collection));
 
             act.ShouldThrow<CollectionException>()
                .And.Message.Should().Contain($"{nameof(collection)} must not end with the following items in any order:{new StringBuilder().AppendLine().AppendItemsWithNewLine(set).AppendLine()}but it does.");

@@ -15,7 +15,7 @@ namespace Light.GuardClauses.Tests
         [InlineData("Hello", "World!")]
         public void ValuesNotEqual<T>(T value, T other)
         {
-            Action act = () => value.MustBe(other, nameof(value));
+            Action act = () => value.MustBe(other, parameterName: nameof(value));
 
             act.ShouldThrow<ArgumentException>()
                .And.Message.Should().Contain($"{nameof(value)} must be {other}, but you specified {value}");
@@ -27,7 +27,7 @@ namespace Light.GuardClauses.Tests
         [InlineData("Hey")]
         public void ValuesEqual<T>(T value)
         {
-            Action act = () => value.MustBe(value, nameof(value));
+            Action act = () => value.MustBe(value, parameterName: nameof(value));
 
             act.ShouldNotThrow();
         }
@@ -36,22 +36,6 @@ namespace Light.GuardClauses.Tests
         public void ValuesNotEqualWithEqualityComparer()
         {
             Action act = () => 55.0.MustBe(55.1, EqualityComparer<double>.Default);
-
-            act.ShouldThrow<ArgumentException>();
-        }
-
-        [Fact(DisplayName = "MustBeEqualToValue must throw an exception when the specified IEquatable<T> values (Value Type) are not equal.")]
-        public void EquatableStructsComparison()
-        {
-            Action act = () => 42.MustBeEqualToValue(44);
-
-            act.ShouldThrow<ArgumentException>();
-        }
-
-        [Fact(DisplayName = "MustBeEqualTo must throw an exception when the specified IEquatable<T> values (Reference Types) are not equal.")]
-        public void EquatableComparison()
-        {
-            Action act = () => "Hello".MustBeEqualTo("There!");
 
             act.ShouldThrow<ArgumentException>();
         }

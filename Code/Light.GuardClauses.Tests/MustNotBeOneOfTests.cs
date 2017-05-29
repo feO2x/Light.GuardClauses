@@ -15,7 +15,7 @@ namespace Light.GuardClauses.Tests
         [MemberData(nameof(ParameterWithinItemsTestData))]
         public void ParameterWithinItems<T>(T value, T[] items)
         {
-            Action act = () => value.MustNotBeOneOf(items, nameof(value));
+            Action act = () => value.MustNotBeOneOf(items, parameterName: nameof(value));
 
             act.ShouldThrow<ArgumentOutOfRangeException>()
                .And.Message.Should().Contain($"{nameof(value)} must not be one of the items{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(items)}{Environment.NewLine}but you specified {value}.");
@@ -32,7 +32,7 @@ namespace Light.GuardClauses.Tests
         [MemberData(nameof(InItemsTestData))]
         public void ParameterOutOfItems<T>(T value, T[] items)
         {
-            Action act = () => value.MustNotBeOneOf(items, nameof(value));
+            Action act = () => value.MustNotBeOneOf(items, parameterName: nameof(value));
 
             act.ShouldNotThrow();
         }

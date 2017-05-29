@@ -53,7 +53,7 @@ namespace Light.GuardClauses.Tests
         [InlineData(new[] { 1 }, new[] { 42 })]
         public void CollectionStartsDiffer(IEnumerable<int> collection, IEnumerable<int> set)
         {
-            Action act = () => collection.MustStartWithEquivalentOf(set, nameof(collection));
+            Action act = () => collection.MustStartWithEquivalentOf(set, parameterName: nameof(collection));
 
             act.ShouldThrow<CollectionException>()
                .And.Message.Should().Contain($"{nameof(collection)} must start with the following items in any order:{new StringBuilder().AppendLine().AppendItemsWithNewLine(set).AppendLine()}but it does not.");

@@ -18,6 +18,7 @@ namespace Light.GuardClauses
         /// <typeparam name="T">The type of the parameter.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="items">The items where <paramref name="parameter" /> must be part of.</param>
+        /// <param name="equalityComparer">The equality comparer that is used to compare items (optional). If null is specified, then <see cref="EqualityComparer{T}.Default"/> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
         /// <param name="exception">
@@ -28,12 +29,13 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> is not part of <paramref name="items" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="items" /> is null.</exception>
-        public static T MustBeOneOf<T>(this T parameter, IEnumerable<T> items, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static T MustBeOneOf<T>(this T parameter, IEnumerable<T> items, IEqualityComparer<T> equalityComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             items.MustNotBeNull(nameof(items));
+            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
-            if (items.Contains(parameter))
+            if (items.Contains(parameter, equalityComparer))
                 return parameter;
 
             throw exception != null
@@ -55,6 +57,7 @@ namespace Light.GuardClauses
         /// <typeparam name="T">The type of the parameter.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="items">The items where <paramref name="parameter" /> must not be part of.</param>
+        /// <param name="equalityComparer">The equality comparer that is used to compare items (optional). If null is specified, then <see cref="EqualityComparer{T}.Default"/> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
         /// <param name="exception">
@@ -65,12 +68,13 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> is part of <paramref name="items" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="items" /> is null.</exception>
-        public static T MustNotBeOneOf<T>(this T parameter, IEnumerable<T> items, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static T MustNotBeOneOf<T>(this T parameter, IEnumerable<T> items, IEqualityComparer<T> equalityComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             items.MustNotBeNull(nameof(items));
+            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
-            if (items.Contains(parameter) == false)
+            if (items.Contains(parameter, equalityComparer) == false)
                 return parameter;
 
             throw exception != null
@@ -135,6 +139,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <typeparam name="T">The type of the items in the collection.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
+        /// <param name="equalityComparer">The equality comparer that is used to compare items (optional). If null is specified, then <see cref="EqualityComparer{T}.Default"/> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
         /// <param name="exception">
@@ -145,28 +150,28 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> has at least two equal items in it and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        public static IEnumerable<T> MustNotContainDuplicates<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustNotContainDuplicates<T>(this IEnumerable<T> parameter, IEqualityComparer<T> equalityComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            parameter.MustNotBeNull(parameterName);
+            var collection = parameter.AsReadOnlyList();
+            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
-            var count = parameter.Count();
-            if (count == 0)
+            if (collection.Count == 0)
                 return parameter;
 
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < collection.Count; i++)
             {
-                var itemToCompare = parameter.ElementAt(i);
-                for (var j = i + 1; j < count; j++)
+                var itemToCompare = collection[i];
+                for (var j = i + 1; j < collection.Count; j++)
                 {
-                    if (itemToCompare.EqualsWithHashCode(parameter.ElementAt(j)) == false)
+                    if (equalityComparer.EqualsWithHashCode(itemToCompare, collection[j]) == false)
                         continue;
 
                     throw exception != null
                               ? exception()
                               : new CollectionException(message ??
                                                         new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be a collection with unique items, but there is a duplicate at index {j}.")
-                                                                           .AppendCollectionContent(parameter)
+                                                                           .AppendCollectionContent(collection)
                                                                            .ToString(),
                                                         parameterName);
                 }
@@ -548,6 +553,7 @@ namespace Light.GuardClauses
 
         /// <summary>
         ///     Ensures that the specified collection contains only instances of different subtypes / subclasses, or otherwise throws a <see cref="CollectionException" />.
+        ///     Calls <see cref="MustNotContainNull{T}"/> internally.
         /// </summary>
         /// <typeparam name="T">The item type of the collection. This usually should be an interface / a base class type.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
@@ -562,10 +568,9 @@ namespace Light.GuardClauses
         public static IEnumerable<T> MustContainInstancesOfDifferentTypes<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
         {
             // ReSharper disable PossibleMultipleEnumeration
-            parameter.MustNotContainNull(parameterName);
+            var list = parameter.MustNotContainNull(parameterName).AsReadOnlyList();
 
             var hashSet = new HashSet<Type>();
-            var list = parameter.AsList();
             for (var i = 0; i < list.Count; i++)
             {
                 var type = list[i].GetType();
@@ -592,6 +597,7 @@ namespace Light.GuardClauses
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="set">The items that the collection must start with.</param>
+        /// <param name="equalityComparer">The equality comparer that is used to compare items (optional). If null is specified, then <see cref="EqualityComparer{T}.Default"/> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
         /// <param name="exception">
@@ -601,20 +607,19 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not start with the items of <paramref name="set" /> (same order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> is an empty collection.</exception>
-        public static IEnumerable<T> MustStartWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustStartWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, IEqualityComparer<T> equalityComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            // TODO: maybe I should introduce an IEqualityComparer<T> here?
             // ReSharper disable PossibleMultipleEnumeration
-            var first = parameter.AsList();
-            var second = set.AsList();
-            second.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
+            var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
+            var second = set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is null or an empty collection.").AsReadOnlyList();
+            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
             if (first.Count < second.Count)
                 goto ThrowException;
 
             for (var i = 0; i < second.Count; i++)
             {
-                if (first[i].EqualsWithHashCode(second[i]) == false)
+                if (equalityComparer.EqualsWithHashCode(first[i], second[i]) == false)
                     goto ThrowException;
             }
             return parameter;
@@ -638,6 +643,7 @@ namespace Light.GuardClauses
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="set">The items that the collection must end with.</param>
+        /// <param name="equalityComparer">The equality comparer that is used to compare items (optional). If null is specified, then <see cref="EqualityComparer{T}.Default"/> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
         /// <param name="exception">
@@ -647,12 +653,12 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not start with the items of <paramref name="set" /> (same order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> is an empty collection.</exception>
-        public static IEnumerable<T> MustEndWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustEndWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, IEqualityComparer<T> equalityComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            var first = parameter.AsList();
-            var second = set.AsList();
-            second.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
+            var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
+            var second = set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.").AsReadOnlyList();
+            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
             if (first.Count < second.Count)
                 goto ThrowException;
@@ -660,7 +666,7 @@ namespace Light.GuardClauses
             for (var i = 0; i < second.Count; i++)
             {
                 var targetIndex = first.Count - second.Count + i;
-                if (first[targetIndex].EqualsWithHashCode(second[i]) == false)
+                if (equalityComparer.EqualsWithHashCode(first[targetIndex], second[i]) == false)
                     goto ThrowException;
             }
             return parameter;
@@ -685,6 +691,7 @@ namespace Light.GuardClauses
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="set">The items the collection must not start with.</param>
+        /// <param name="equalityComparer">The equality comparer that is used to compare items (optional). If null is specified, then <see cref="EqualityComparer{T}.Default"/> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
         /// <param name="exception">
@@ -694,19 +701,19 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does start with the items of <paramref name="set" /> (same order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> is empty.</exception>
-        public static IEnumerable<T> MustNotStartWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustNotStartWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, IEqualityComparer<T> equalityComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            var first = parameter.AsList();
-            var second = set.AsList();
-            second.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
+            var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
+            var second = set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.").AsReadOnlyList();
+            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
             if (first.Count < second.Count)
                 return parameter;
 
             for (var i = 0; i < second.Count; i++)
             {
-                if (first[i].EqualsWithHashCode(second[i]) == false)
+                if (equalityComparer.EqualsWithHashCode(first[i], second[i]) == false)
                     return parameter;
             }
 
@@ -728,6 +735,7 @@ namespace Light.GuardClauses
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="set">The items the collection must not end with.</param>
+        /// <param name="equalityComparer">The equality comparer that is used to compare items (optional). If null is specified, then <see cref="EqualityComparer{T}.Default"/> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
         /// <param name="exception">
@@ -737,12 +745,12 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does contain the given set at the end of it, and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> is an empty collection.</exception>
-        public static IEnumerable<T> MustNotEndWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustNotEndWith<T>(this IEnumerable<T> parameter, IEnumerable<T> set, IEqualityComparer<T> equalityComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            var first = parameter.AsList();
-            var second = set.AsList();
-            second.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
+            var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
+            var second = set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.").AsReadOnlyList();
+            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
             if (first.Count < second.Count)
                 return parameter;
@@ -750,7 +758,7 @@ namespace Light.GuardClauses
             for (var i = 0; i < second.Count; i++)
             {
                 var targetIndex = first.Count - second.Count + i;
-                if (first[targetIndex].EqualsWithHashCode(second[i]) == false)
+                if (equalityComparer.EqualsWithHashCode(first[targetIndex], second[i]) == false)
                     return parameter;
             }
 
@@ -772,6 +780,7 @@ namespace Light.GuardClauses
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="set">The items the collection must start with (in any order).</param>
+        /// <param name="equalityComparer">The equality comparer that is used to compare items (optional). If null is specified, then <see cref="EqualityComparer{T}.Default"/> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
         /// <param name="exception">
@@ -781,12 +790,12 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not start with the given items (in any order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> contains no items.</exception>
-        public static IEnumerable<T> MustStartWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustStartWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, IEqualityComparer<T> equalityComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            var first = parameter.AsList();
-            var second = set.AsList();
-            second.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
+            var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
+            var second = set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.").AsReadOnlyList();
+            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
             if (first.Count < second.Count)
                 goto ThrowException;
@@ -794,7 +803,7 @@ namespace Light.GuardClauses
             // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < second.Count; i++)
             {
-                if (ContainsAtStart(first, second.Count, second[i]) == false)
+                if (ContainsAtStart(first, second.Count, second[i], equalityComparer) == false)
                     goto ThrowException;
             }
             return parameter;
@@ -818,6 +827,7 @@ namespace Light.GuardClauses
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="set">The items the collection must not start with (in any order).</param>
+        /// <param name="equalityComparer">The equality comparer that is used to compare items (optional). If null is specified, then <see cref="EqualityComparer{T}.Default"/> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
         /// <param name="exception">
@@ -827,12 +837,12 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not start with the given items (in any order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> contains no items.</exception>
-        public static IEnumerable<T> MustNotStartWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustNotStartWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, IEqualityComparer<T> equalityComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            var first = parameter.AsList();
-            var second = set.AsList();
-            second.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
+            var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
+            var second = set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.").AsReadOnlyList();
+            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
             if (first.Count < second.Count)
                 return parameter;
@@ -840,7 +850,7 @@ namespace Light.GuardClauses
             // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < second.Count; i++)
             {
-                if (ContainsAtStart(first, second.Count, second[i]) == false)
+                if (ContainsAtStart(first, second.Count, second[i], equalityComparer) == false)
                     return parameter;
             }
 
@@ -856,11 +866,11 @@ namespace Light.GuardClauses
             // ReSharper restore PossibleMultipleEnumeration
         }
 
-        private static bool ContainsAtStart<T>(IList<T> collection, int upperIndex, T item)
+        private static bool ContainsAtStart<T>(IReadOnlyList<T> collection, int upperIndex, T item, IEqualityComparer<T> equalityComparer)
         {
             for (var i = 0; i < upperIndex; i++)
             {
-                if (collection[i].EqualsWithHashCode(item))
+                if (equalityComparer.EqualsWithHashCode(collection[i], item))
                     return true;
             }
             return false;
@@ -872,6 +882,7 @@ namespace Light.GuardClauses
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="set">The items the collection must end with (in any order).</param>
+        /// <param name="equalityComparer">The equality comparer that is used to compare items (optional). If null is specified, then <see cref="EqualityComparer{T}.Default"/> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
         /// <param name="exception">
@@ -881,12 +892,12 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not end with the given items (in any order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> contains no items.</exception>
-        public static IEnumerable<T> MustEndWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustEndWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, IEqualityComparer<T> equalityComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            var first = parameter.AsList();
-            var second = set.AsList();
-            second.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
+            var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
+            var second = set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.").AsReadOnlyList();
+            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
             if (first.Count < second.Count)
                 goto ThrowException;
@@ -896,7 +907,7 @@ namespace Light.GuardClauses
             // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < second.Count; i++)
             {
-                if (ContainsAtEnd(first, lowerIndex, second[i]) == false)
+                if (ContainsAtEnd(first, lowerIndex, second[i], equalityComparer) == false)
                     goto ThrowException;
             }
             return parameter;
@@ -920,6 +931,7 @@ namespace Light.GuardClauses
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="set">The items the collection must not end with (in any order).</param>
+        /// <param name="equalityComparer">The equality comparer that is used to compare items (optional). If null is specified, then <see cref="EqualityComparer{T}.Default"/> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="CollectionException" /> (optional).</param>
         /// <param name="exception">
@@ -929,12 +941,12 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="set" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="parameter" /> does not end with the given items (in any order), and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="set" /> contains no items.</exception>
-        public static IEnumerable<T> MustNotEndWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static IEnumerable<T> MustNotEndWithEquivalentOf<T>(this IEnumerable<T> parameter, IEnumerable<T> set, IEqualityComparer<T> equalityComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            var first = parameter.AsList();
-            var second = set.AsList();
-            second.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
+            var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
+            var second = set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.").AsReadOnlyList();
+            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
             if (first.Count < second.Count)
                 return parameter;
@@ -944,7 +956,7 @@ namespace Light.GuardClauses
             // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < second.Count; i++)
             {
-                if (ContainsAtEnd(first, lowerIndex, second[i]) == false)
+                if (ContainsAtEnd(first, lowerIndex, second[i], equalityComparer) == false)
                     return parameter;
             }
             throw exception != null
@@ -959,11 +971,11 @@ namespace Light.GuardClauses
             // ReSharper restore PossibleMultipleEnumeration
         }
 
-        private static bool ContainsAtEnd<T>(IList<T> collection, int lowerIndex, T item)
+        private static bool ContainsAtEnd<T>(IReadOnlyList<T> collection, int lowerIndex, T item, IEqualityComparer<T> equalityComparer)
         {
             for (var i = lowerIndex; i < collection.Count; i++)
             {
-                if (collection[i].EqualsWithHashCode(item))
+                if (equalityComparer.EqualsWithHashCode(collection[i], item))
                     return true;
             }
             return false;

@@ -50,7 +50,7 @@ namespace Light.GuardClauses.Tests
         [InlineData(new[] { 5050, 8776, -233232, 445, 43597 }, new[] { 445, 43597 })]
         public void CollectionEndsEqual(IEnumerable<int> collection, IEnumerable<int> set)
         {
-            Action act = () => collection.MustNotEndWith(set, nameof(collection));
+            Action act = () => collection.MustNotEndWith(set, parameterName: nameof(collection));
 
             act.ShouldThrow<CollectionException>()
                .And.Message.Should().Contain($"{nameof(collection)} must not end with the following items:{new StringBuilder().AppendLine().AppendItemsWithNewLine(set).AppendLine()}but it does.");

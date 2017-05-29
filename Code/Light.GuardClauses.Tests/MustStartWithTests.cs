@@ -52,7 +52,7 @@ namespace Light.GuardClauses.Tests
         [InlineData(new[] { 1 }, new[] { 1, 2, 3 })]
         public void StartItemsDifferent(IEnumerable<int> collection, IEnumerable<int> subset)
         {
-            Action act = () => collection.MustStartWith(subset, nameof(collection));
+            Action act = () => collection.MustStartWith(subset, parameterName: nameof(collection));
 
             act.ShouldThrow<CollectionException>()
                .And.Message.Should().Contain($"{nameof(collection)} must start with the following items:{new StringBuilder().AppendLine().AppendItemsWithNewLine(subset).AppendLine()}but it does not.");
@@ -88,7 +88,7 @@ namespace Light.GuardClauses.Tests
             Action act = () => collection.MustStartWith(new List<string>());
 
             act.ShouldThrow<EmptyCollectionException>()
-               .And.Message.Should().Contain("Your precondition is set up wrongly: set is an empty collection.");
+               .And.Message.Should().Contain("Your precondition is set up wrongly: set is null or an empty collection.");
         }
 
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

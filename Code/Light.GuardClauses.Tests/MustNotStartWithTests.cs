@@ -52,7 +52,7 @@ namespace Light.GuardClauses.Tests
         [InlineData(new[] { 1 }, new[] { 1 })]
         public void StartItemsEqual(IEnumerable<int> collection, IEnumerable<int> subset)
         {
-            Action act = () => collection.MustNotStartWith(subset, nameof(collection));
+            Action act = () => collection.MustNotStartWith(subset, parameterName: nameof(collection));
 
             act.ShouldThrow<CollectionException>()
                .And.Message.Should().Contain($"{nameof(collection)} must not start with the following items:{new StringBuilder().AppendLine().AppendItemsWithNewLine(subset).AppendLine()}but it does.");
