@@ -6,7 +6,7 @@ using System.Text;
 namespace Light.GuardClauses.FrameworkExtensions
 {
     /// <summary>
-    ///     The StringBuilderExtensions class contains an extension method that encapsulates the adding of items from a
+    ///     The <see cref="StringBuilderExtensions" /> class contains an extension method that encapsulates the adding of items from a
     ///     collection or dictionary to a string builder.
     /// </summary>
     public static class StringBuilderExtensions
@@ -20,16 +20,12 @@ namespace Light.GuardClauses.FrameworkExtensions
 
         /// <summary>
         ///     Gets or sets the delegate that determines which items are surrounded by special characters when <see cref="AppendItems{T}" /> or <see cref="AppendKeyValuePairs{TKey,TValue}" /> appends content to a string builder.
-        ///     This delegate point to the <see cref="UseQuotationMarksForNonPrimitiveTypes" /> method by default.
+        ///     This delegate points to the <see cref="UseQuotationMarksForNonPrimitiveTypes" /> method by default.
         /// </summary>
         public static Func<object, string> UseSurroundingCharactersForItem
         {
-            get { return _useSurroundingCharactersForItem; }
-            set
-            {
-                value.MustNotBeNull();
-                _useSurroundingCharactersForItem = value;
-            }
+            get => _useSurroundingCharactersForItem;
+            set => _useSurroundingCharactersForItem = value.MustNotBeNull();
         }
 
         /// <summary>
@@ -107,15 +103,15 @@ namespace Light.GuardClauses.FrameworkExtensions
 
             stringBuilder.Append('[');
             var keySurroundingCharacters = UseSurroundingCharactersForItem(key);
-            stringBuilder.Append(keySurroundingCharacters);
-            stringBuilder.Append(key);
-            stringBuilder.Append(keySurroundingCharacters);
-            stringBuilder.Append("] = ");
+            stringBuilder.Append(keySurroundingCharacters)
+                         .Append(key)
+                         .Append(keySurroundingCharacters)
+                         .Append("] = ");
 
             var valueSurroundingCharacters = UseSurroundingCharactersForItem(value);
-            stringBuilder.Append(valueSurroundingCharacters);
-            stringBuilder.Append(value.ToStringOrNull());
-            stringBuilder.Append(valueSurroundingCharacters);
+            stringBuilder.Append(valueSurroundingCharacters)
+                         .Append(value.ToStringOrNull())
+                         .Append(valueSurroundingCharacters);
 
             return stringBuilder;
         }
@@ -228,9 +224,8 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> or <paramref name="collection" />is null.</exception>
         public static StringBuilder AppendCollectionContent<T>(this StringBuilder stringBuilder, IEnumerable<T> collection, string headerLine = "Actual content of the collection:")
         {
-            stringBuilder.MustNotBeNull(nameof(stringBuilder));
-
-            return stringBuilder.AppendLine(headerLine)
+            return stringBuilder.MustNotBeNull(nameof(stringBuilder))
+                                .AppendLine(headerLine)
                                 .AppendItemsWithNewLine(collection);
         }
 
@@ -247,9 +242,8 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> or <paramref name="dictionary" /> is null.</exception>
         public static StringBuilder AppendDictionaryContent<TKey, TValue>(this StringBuilder stringBuilder, IDictionary<TKey, TValue> dictionary, string headerLine = "Actual content of the dictionary:")
         {
-            stringBuilder.MustNotBeNull(nameof(stringBuilder));
-
-            return stringBuilder.AppendLine(headerLine)
+            return stringBuilder.MustNotBeNull(nameof(stringBuilder))
+                                .AppendLine(headerLine)
                                 .AppendKeyValuePairsWithNewLine(dictionary);
         }
     }
