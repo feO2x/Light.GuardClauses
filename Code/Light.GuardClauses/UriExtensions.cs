@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses
 {
@@ -51,6 +54,43 @@ namespace Light.GuardClauses
 
             var subclause = uri.IsAbsoluteUri ? $"but actually has scheme \"{uri.Scheme}\" (\"{uri}\")." : $"but it has none because it is a relative URI (\"{uri}\").";
             throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The URI"} must have scheme \"{scheme}\", {subclause}");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified URI has one of the given schemes, or otherwise throws an <see cref="ArgumentException" />.
+        /// </summary>
+        /// <param name="uri">The URI to be checked.</param>
+        /// <param name="schemes"></param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message of the exception (optional).</param>
+        /// <param name="exception">
+        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI and does not have one of the specified schemes.
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI or does not have one of the specified schemes.</exception>
+        public static Uri MustHaveOneSchemeOf(this Uri uri, IEnumerable<string> schemes, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            uri.MustNotBeNull(parameterName);
+            var schemesCollection = schemes.MustNotBeNullOrEmpty(nameof(schemes), "Your precondition is set up wrongly: schemes is null or an empty collection.").AsReadOnlyList();
+
+            if (uri.IsAbsoluteUri == false)
+                goto ThrowException;
+
+            for (var i = 0; i < schemesCollection.Count; i++)
+            {
+                if (string.Equals(schemesCollection[i], uri.Scheme, StringComparison.OrdinalIgnoreCase))
+                    return uri;
+            }
+
+            ThrowException:
+            var subclause = uri.IsAbsoluteUri ? $"but actually has scheme \"{uri.Scheme}\" (\"{uri}\")." : $"but it has none because it is a relative URI (\"{uri}\").";
+            throw exception != null
+                      ? exception()
+                      : new ArgumentException(message ?? new StringBuilder().Append($"{parameterName ?? "The URI"} must have one of the following schemes:")
+                                                                            .AppendItemsWithNewLine(schemesCollection)
+                                                                            .Append(subclause)
+                                                                            .ToString());
         }
 
         /// <summary>
