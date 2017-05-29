@@ -37,20 +37,54 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI.
+        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI and does not have the specified scheme.
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> does not have the specified scheme.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI or does not have the specified scheme.</exception>
         public static Uri MustHaveScheme(this Uri uri, string scheme, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             uri.MustNotBeNull(parameterName);
 
-            if (uri.IsAbsoluteUri && uri.Scheme == scheme)
+            if (uri.IsAbsoluteUri && string.Equals(uri.Scheme, scheme, StringComparison.OrdinalIgnoreCase))
                 return uri;
 
             var subclause = uri.IsAbsoluteUri ? $"but actually has scheme \"{uri.Scheme}\" (\"{uri}\")." : $"but it has none because it is a relative URI (\"{uri}\").";
             throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The URI"} must have scheme \"{scheme}\", {subclause}");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified URI has the "https" scheme, or otherwise throws an <see cref="ArgumentException" />.
+        /// </summary>
+        /// <param name="uri">The URI to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message of the exception (optional).</param>
+        /// <param name="exception">
+        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI and does not have the "https" scheme.
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI or does not have the "https" scheme.</exception>
+        public static Uri MustBeHttpsUrl(this Uri uri, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            return uri.MustHaveScheme("https", parameterName, message, exception);
+        }
+
+        /// <summary>
+        ///     Ensures that the specified URI has the "http" scheme, or otherwise throws an <see cref="ArgumentException" />.
+        /// </summary>
+        /// <param name="uri">The URI to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message of the exception (optional).</param>
+        /// <param name="exception">
+        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI and does not have the "http" scheme.
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI or does not have the "http" scheme.</exception>
+        public static Uri MustBeHttpUrl(this Uri uri, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            return uri.MustHaveScheme("http", parameterName, message, exception);
         }
     }
 }
