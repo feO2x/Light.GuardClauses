@@ -40,7 +40,7 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI and does not have the specified scheme.
+        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have the specified scheme.
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
@@ -64,7 +64,7 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI and does not have one of the specified schemes.
+        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have one of the specified schemes.
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
@@ -100,7 +100,7 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI and does not have the "https" scheme.
+        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have the "https" scheme.
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
@@ -117,7 +117,7 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI and does not have the "http" scheme.
+        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have the "http" scheme.
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
@@ -125,6 +125,23 @@ namespace Light.GuardClauses
         public static Uri MustBeHttpUrl(this Uri uri, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             return uri.MustHaveScheme("http", parameterName, message, exception);
+        }
+
+        /// <summary>
+        ///     Ensures that the specified URI has the "http" or "https" scheme, or otherwise throws an <see cref="ArgumentException" />.
+        /// </summary>
+        /// <param name="uri">The URI to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message of the exception (optional).</param>
+        /// <param name="exception">
+        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have the "http" or "https" scheme.
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI or does not have the "http" or "https" scheme.</exception>
+        public static Uri MustBeHttpOrHttpsUrl(this Uri uri, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            return uri.MustHaveOneSchemeOf(new[] { "http", "https" });
         }
     }
 }
