@@ -25,4 +25,8 @@ Added features:
 </PackageReleaseNotes>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.0\Light.GuardClauses.xml</DocumentationFile>
+  </PropertyGroup>
+
 </Project>
