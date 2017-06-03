@@ -1,6 +1,8 @@
 # Light.GuardClauses
 **A lightweight .NET library for expressive Guard Clauses.** 
 
+[![Video introduction to Light.GuardClauses](https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/Images/version2-video-logo.png)](https://youtu.be/wTDY_Gt46vU) 
+
 ## Why do I need it?
 
 When you write methods with parameters in C# (including constructors), you for sure are used to Guard Clauses that check the validity of parameter values. The most common one is probably the null check where you throw an `ArgumentNullException` if an object reference does not point to an actual object. Light.GuardClauses provides a set of extension methods simplifying this task for you:
