@@ -34,7 +34,8 @@ namespace Light.GuardClauses.Tests
                 typeof(ContainsOnlyLettersTests),
                 typeof(ContainsOnlyLettersAndDigitsTests),
                 typeof(FluentApiTests),
-                typeof(AsReadOnlyListTests)
+                typeof(AsReadOnlyListTests),
+                typeof(IsEquivalentToTests)
             };
 
         private static readonly List<ICustomMessageAndExceptionTestData> PopulatedTestData = new List<ICustomMessageAndExceptionTestData>();
@@ -47,7 +48,7 @@ namespace Light.GuardClauses.Tests
             var affectedTestClasses = typeof(CustomMessagesAndCustomExceptionsTests).GetTypeInfo()
                                                                                     .Assembly
                                                                                     .ExportedTypes
-                                                                                    .Where(t => t.Namespace == "Light.GuardClauses.Tests" && OmmitedTestClasses.Contains(t) == false);
+                                                                                    .Where(t => t.Namespace == "Light.GuardClauses.Tests" && OmmitedTestClasses.Contains(t) == false && t.IsNested == false);
 
             var testClassesWithInterfaceImplementation = affectedTestClasses.Where(t => t.GetTypeInfo().ImplementedInterfaces.Contains(typeof(ICustomMessageAndExceptionTestDataProvider)));
             TestClassesWithoutInterfaceImplementation.AddRange(affectedTestClasses.Except(testClassesWithInterfaceImplementation));
