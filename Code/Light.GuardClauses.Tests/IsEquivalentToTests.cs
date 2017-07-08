@@ -1,10 +1,9 @@
-﻿using FluentAssertions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using FluentAssertions;
 using Xunit;
-using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 // ReSharper disable UnusedTypeParameter
 
@@ -28,52 +27,71 @@ namespace Light.GuardClauses.Tests
             result.Should().Be(expected);
         }
 
-        [Theory(DisplayName = "IsEquivalentTo must return true when one type is a constructed generic type and the other one is the corresponding generic type definition.")]
-        [MemberData(nameof(GenericTypesData))]
-        public void GenericTypes(Type type, Type other, bool expected)
+        [Fact(DisplayName = "IsEquivalentTo must return true when two generic type definitions of the same type are passed in.")]
+        public void GenericTypeDefinition()
         {
-            var result = type.IsEquivalentTo(other);
-
-            result.Should().Be(expected);
+            TestEquivalence(typeof(List<>), typeof(List<>), true);
         }
 
-        public static TestData GenericTypesData =>
-            new[]
-            {
-                // Simple type tests
-                new object[] { typeof(List<>), typeof(List<>), true },
-                new object[] { typeof(IList<string>), typeof(IList<string>), true },
+        [Fact(DisplayName = "IsEquivalentTo must return true when two closed bound generic types are passed in that are equal.")]
+        public void ClosedBoundGenericType()
+        {
+            TestEquivalence(typeof(IList<string>), typeof(IList<string>), true);
+        }
 
-                // Base types of generic types
-                new object[] { typeof(SubTypeA<>).GetTypeInfo().BaseType, typeof(GenericType<>), true },
-                new object[] { typeof(GenericType<>), typeof(SubTypeA<>).GetTypeInfo().BaseType, true },
-                new object[] { typeof(SubTypeA<int>).GetTypeInfo().BaseType, typeof(GenericType<int>), true },
-                new object[] { typeof(SubTypeA<int>).GetTypeInfo().BaseType, typeof(GenericType<int>), true },
-                new object[] { typeof(SubTypeA<int>).GetTypeInfo().BaseType, typeof(GenericType<>), true },
-                new object[] { typeof(SubTypeB).GetTypeInfo().BaseType, typeof(GenericType<string>), true },
-                new object[] { typeof(SubTypeB).GetTypeInfo().BaseType, typeof(GenericType<>), true },
-                new object[] { typeof(SubTypeB).GetTypeInfo().BaseType, typeof(List<>), false },
+        [Fact(DisplayName = "IsEquivalentTo must return false when two closed bound generic types are passed in that are not equal.")]
+        public void UnequalClosedBoundGenericType()
+        {
+            TestEquivalence(typeof(IReadOnlyList<string>), typeof(IReadOnlyList<object>), false);
+        }
 
-                // Same list as above, but switched first and second parameter
-                new object[] { typeof(GenericType<>), typeof(SubTypeA<>).GetTypeInfo().BaseType, true },
-                new object[] { typeof(GenericType<>), typeof(SubTypeA<>).GetTypeInfo().BaseType, true },
-                new object[] { typeof(GenericType<int>), typeof(SubTypeA<int>).GetTypeInfo().BaseType, true },
-                new object[] { typeof(GenericType<int>), typeof(SubTypeA<int>).GetTypeInfo().BaseType, true },
-                new object[] { typeof(GenericType<>), typeof(SubTypeA<int>).GetTypeInfo().BaseType, true },
-                new object[] { typeof(GenericType<string>), typeof(SubTypeB).GetTypeInfo().BaseType, true },
-                new object[] { typeof(GenericType<>), typeof(SubTypeB).GetTypeInfo().BaseType, true },
-                new object[] { typeof(List<>), typeof(SubTypeB).GetTypeInfo().BaseType, false },
+        [Fact(DisplayName = "IsEquivalentTo must return true when the open bound generic type (base class) is compared to the generic type definition.")]
+        public void OpenBoundGenericTypeAndGenericTypeDefinition()
+        {
+            TestEquivalence(typeof(SubTypeA<>).GetTypeInfo().BaseType, typeof(GenericType<>), true);
+        }
 
-                // Return types of generic methods
-                new object[] { CreateDictionaryOfTKeyTValue.ReturnType, typeof(Dictionary<,>), true },
-                new object[] { CreateDictionaryOfTKey.ReturnType, typeof(Dictionary<,>), true },
-                new object[] { CreateDictionaryOfTKey.ReturnType, CreateDictionaryOfTKeyTValue.ReturnType, false },
+        [Fact(DisplayName = "IsEquivalentTo must return true when the closed bound generic type (base class) is compared to the closed bound generic type. ")]
+        public void ClosedBoundBaseType()
+        {
+            TestEquivalence(typeof(SubTypeB).GetTypeInfo().BaseType, typeof(GenericType<string>), true);
+        }
 
-                // Same list as above, but switched first and second parameter
-                new object[] { typeof(Dictionary<,>), CreateDictionaryOfTKeyTValue.ReturnType, true },
-                new object[] { typeof(Dictionary<,>), CreateDictionaryOfTKey.ReturnType, true },
-                new object[] { CreateDictionaryOfTKeyTValue.ReturnType, CreateDictionaryOfTKey.ReturnType, false }
-            };
+        [Fact(DisplayName = "IsEquivalentTo must return true when the closed bound generic type (base class) is compared to the generic type definition.")]
+        public void ClosedBoundBaseTypeAndGenericTypeDefinition()
+        {
+            TestEquivalence(typeof(SubTypeA<int>).GetTypeInfo().BaseType, typeof(GenericType<>), true);
+        }
+
+        [Fact(DisplayName = "IsEquivalentTo must return false when the closed bound generic type (base class) is compared to another generic type definition.")]
+        public void DifferentTypes()
+        {
+            TestEquivalence(typeof(SubTypeA<int>).GetTypeInfo().BaseType, typeof(List<>), false);
+        }
+
+        [Fact(DisplayName = "IsEquivalentTo must return true when a open bound generic type (return type) is compared to the generic type definition.")]
+        public void OpenBoundReturnTypeAndGenericTypeDefinition()
+        {
+            TestEquivalence(CreateDictionaryOfTKeyTValue.ReturnType, typeof(Dictionary<,>), true);
+        }
+
+        [Fact(DisplayName = "IsEquivalentTo must return true when a partially open bound generic type (return type) is compared to the generic type definition.")]
+        public void PartiallyOpenBoundReturnTypeAndGenericTypeDefinition()
+        {
+            TestEquivalence(CreateDictionaryOfTKey.ReturnType, typeof(Dictionary<,>), true);
+        }
+
+        [Fact(DisplayName = "IsEquivalentTo must return false when two different open bound generic types having the same generic type definition are compared.")]
+        public void DifferentOpenBoundGenericTypes()
+        {
+            TestEquivalence(CreateDictionaryOfTKeyTValue.ReturnType, CreateDictionaryOfTKey.ReturnType, false);
+        }
+
+        private static void TestEquivalence(Type first, Type second, bool expected)
+        {
+            first.IsEquivalentTo(second).Should().Be(expected);
+            second.IsEquivalentTo(first).Should().Be(expected);
+        }
 
         public class GenericType<T> { }
 
@@ -101,6 +119,4 @@ namespace Light.GuardClauses.Tests
             CreateDictionaryOfTKey = typeInfo.DeclaredMethods.First(m => m.IsStatic && m.Name.StartsWith(nameof(CreateDictionaryB)));
         }
     }
-
-    
 }

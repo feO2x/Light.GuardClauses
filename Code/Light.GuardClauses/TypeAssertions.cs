@@ -9,7 +9,7 @@ namespace Light.GuardClauses
     public static class TypeAssertions
     {
         /// <summary>
-        ///     Checks if the two types are equivalent. This is true when 1) both types are non-generic types and are equal
+        ///     Checks if the two specified types are equivalent. This is true when 1) both types are non-generic types and are equal
         ///     or when 2) one type is a constructed generic type and the other type is the corresponding generic type definition.
         /// </summary>
         /// <param name="type">The first type to be checked.</param>
@@ -21,8 +21,7 @@ namespace Light.GuardClauses
         public static bool IsEquivalentTo(this Type type, Type other)
         {
             if (ReferenceEquals(type, other)) return true;
-            if (ReferenceEquals(type, null)) return ReferenceEquals(other, null);
-            if (ReferenceEquals(other, null)) return false;
+            if (ReferenceEquals(type, null) || ReferenceEquals(other, null)) return false;
 
             if (type == other) return true;
 
