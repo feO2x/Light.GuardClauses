@@ -47,6 +47,17 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        ///     Checks if the specified type is an interface. This is true when the <see cref="TypeInfo.IsInterface" />
+        ///     property returns true.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
+        public static bool IsInterface(this Type type)
+        {
+            return type.GetTypeInfo().IsInterface;
+        }
+
+        /// <summary>
         ///     Checks if the specified type is a delegate. This is true when the <see cref="TypeInfo.IsClass" />
         ///     property returns true and the <see cref="TypeInfo.BaseType" /> is <see cref="MulticastDelegate" />).
         /// </summary>
