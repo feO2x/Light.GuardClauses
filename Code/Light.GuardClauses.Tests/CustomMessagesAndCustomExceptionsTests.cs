@@ -36,7 +36,8 @@ namespace Light.GuardClauses.Tests
                 typeof(FluentApiTests),
                 typeof(AsReadOnlyListTests),
                 typeof(IsEquivalentToTests),
-                typeof(IsDerivingFromTests)
+                typeof(IsDerivingFromTests),
+                typeof(IsClassTests)
             };
 
         private static readonly List<ICustomMessageAndExceptionTestData> PopulatedTestData = new List<ICustomMessageAndExceptionTestData>();

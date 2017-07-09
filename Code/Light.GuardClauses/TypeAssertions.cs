@@ -34,6 +34,20 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        ///     Checks if the specified type is a class. This is true when the <see cref="TypeInfo.IsClass" />
+        ///     property returns true and the type is no delegate (i.e. its <see cref="TypeInfo.BaseType" /> is no
+        ///     <see cref="MulticastDelegate" />).
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
+        public static bool IsClass(this Type type)
+        {
+            var typeInfo = type.GetTypeInfo();
+            return typeInfo.IsClass && typeInfo.BaseType != typeof(MulticastDelegate);
+        }
+
+
+        /// <summary>
         ///     Checks if the specified type derives from the other type. Internally, this method uses <see cref="IsEquivalentTo" />
         ///     so that bound generic types and their corresponding generic type definitions are regarded as equal.
         /// </summary>
