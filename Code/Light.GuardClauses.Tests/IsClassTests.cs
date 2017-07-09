@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
-    [Trait("Category", "Functional Tests")]
+    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsClassTests
     {
         [Fact]
