@@ -32,5 +32,29 @@ namespace Light.GuardClauses
                 return type.GetGenericTypeDefinition() == other;
             return other.GetGenericTypeDefinition() == type;
         }
+
+        /// <summary>
+        ///     Checks if the specified type derives from the other type. Internally, this method uses <see cref="IsEquivalentTo" />
+        ///     so that bound generic types and their corresponding generic type definitions are regarded as equal.
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <param name="baseClass">The base class that <paramref name="type" /> should derive from.</param>
+        /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
+        /// <returns>True if <paramref name="type" /> derives directly or indirectly from <paramref name="baseClass" />, else false.</returns>
+        public static bool IsDerivingFrom(this Type type, Type baseClass)
+        {
+            type.MustNotBeNull(nameof(type));
+            baseClass.MustNotBeNull(nameof(baseClass));
+
+            var currentBaseType = type.GetTypeInfo().BaseType;
+            while (currentBaseType != null)
+            {
+                if (currentBaseType.IsEquivalentTo(baseClass))
+                    return true;
+
+                currentBaseType = currentBaseType.GetTypeInfo().BaseType;
+            }
+            return false;
+        }
     }
 }
