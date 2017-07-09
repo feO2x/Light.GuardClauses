@@ -82,6 +82,17 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        ///     Checks if the specified type is an enum. This is true when the <see cref="TypeInfo.IsEnum" />
+        ///     property return true.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
+        public static bool IsEnum(this Type type)
+        {
+            return type.GetTypeInfo().IsEnum;
+        }
+
+        /// <summary>
         ///     Checks if the specified type derives from the other type. Internally, this method uses <see cref="IsEquivalentTo" />
         ///     so that bound generic types and their corresponding generic type definitions are regarded as equal.
         /// </summary>
