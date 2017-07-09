@@ -58,6 +58,17 @@ namespace Light.GuardClauses
             return typeInfo.IsClass && typeInfo.BaseType == typeof(MulticastDelegate);
         }
 
+        /// <summary>
+        ///     Checks if the specified type is a struct. This is true when the <see cref="TypeInfo.IsValueType" />
+        ///     property returns true and the <see cref="TypeInfo.BaseType" /> is <see cref="ValueType" />).
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
+        public static bool IsStruct(this Type type)
+        {
+            var typeInfo = type.GetTypeInfo();
+            return typeInfo.IsValueType && typeInfo.BaseType == typeof(ValueType);
+        }
 
         /// <summary>
         ///     Checks if the specified type derives from the other type. Internally, this method uses <see cref="IsEquivalentTo" />
