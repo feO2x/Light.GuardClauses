@@ -206,5 +206,20 @@ namespace Light.GuardClauses
 
             return false;
         }
+
+        /// <summary>
+        ///     Checks if the given type derives from the specified base class or interface type. Internally, this method uses <see cref="IsEquivalentTo" />
+        ///     so that bound generic types and their corresponding generic type defintions are regarded as equal.
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <param name="baseClassOrInterfaceType">The type describing an interface or base class that <paramref name="type" /> should derive from or implement.</param>
+        /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
+        public static bool IsDerivingFromOrImplementing(this Type type, Type baseClassOrInterfaceType)
+        {
+            return baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType))
+                                           .IsInterface()
+                       ? type.IsImplementing(baseClassOrInterfaceType)
+                       : baseClassOrInterfaceType.IsClass() && type.IsDerivingFrom(baseClassOrInterfaceType);
+        }
     }
 }
