@@ -56,7 +56,7 @@ namespace Light.GuardClauses.Tests
                .And.ParamName.Should().Be(nameof(type));
         }
 
-        [Fact]
+        [Fact(DisplayName = "IsDerivingFromOrImplementing must throw an ArgumentNullException when the specified base type is null.")]
         public void BaseTypeNull()
         {
             var baseClassOrInterfaceType = default(Type);
