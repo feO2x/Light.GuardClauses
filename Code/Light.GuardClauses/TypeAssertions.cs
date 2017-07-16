@@ -34,8 +34,8 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the specified type is a class. This is true when the <see cref="TypeInfo.IsClass" />
-        ///     property returns true and the type is no delegate (i.e. its <see cref="TypeInfo.BaseType" /> is no
+        ///     Checks if the specified type is a class. This is true when <see cref="TypeInfo.IsClass" />
+        ///     returns true and the type is no delegate (i.e. its <see cref="TypeInfo.BaseType" /> is no
         ///     <see cref="MulticastDelegate" />).
         /// </summary>
         /// <param name="type">The type to check.</param>
@@ -47,8 +47,8 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the specified type is an interface. This is true when the <see cref="TypeInfo.IsInterface" />
-        ///     property returns true.
+        ///     Checks if the specified type is an interface. This is true when <see cref="TypeInfo.IsInterface" />
+        ///     returns true.
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
@@ -58,8 +58,8 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the specified type is a delegate. This is true when the <see cref="TypeInfo.IsClass" />
-        ///     property returns true and the <see cref="TypeInfo.BaseType" /> is <see cref="MulticastDelegate" />).
+        ///     Checks if the specified type is a delegate. This is true when <see cref="TypeInfo.IsClass" />
+        ///     returns true and <see cref="TypeInfo.BaseType" /> is the <see cref="MulticastDelegate" />) type.
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
@@ -70,26 +70,48 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the specified type is a struct. This is true when the <see cref="TypeInfo.IsValueType" />
-        ///     property returns true and the <see cref="TypeInfo.BaseType" /> is <see cref="ValueType" />).
+        ///     Checks if the specified type is a struct. This is true when <see cref="TypeInfo.IsValueType" />
+        ///     returns true and <see cref="TypeInfo.IsEnum" /> returns false.
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
         public static bool IsStruct(this Type type)
         {
             var typeInfo = type.GetTypeInfo();
-            return typeInfo.IsValueType && typeInfo.BaseType == typeof(ValueType);
+            return typeInfo.IsValueType && typeInfo.IsEnum == false;
         }
 
         /// <summary>
-        ///     Checks if the specified type is an enum. This is true when the <see cref="TypeInfo.IsEnum" />
-        ///     property return true.
+        ///     Checks if the specified type is an enum. This is true when <see cref="TypeInfo.IsEnum" />
+        ///     returns true.
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
         public static bool IsEnum(this Type type)
         {
             return type.GetTypeInfo().IsEnum;
+        }
+
+        /// <summary>
+        /// Checks if the specified type is a reference type. This is true when <see cref="TypeInfo.IsValueType"/>
+        /// return false.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsReferenceType(this Type type)
+        {
+            return type.GetTypeInfo().IsValueType == false;
+        }
+
+        /// <summary>
+        ///     Checks if the specified type is a value type. This is true when the <see cref="TypeInfo.IsValueType" />
+        ///     property returns true.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
+        public static bool IsValueType(this Type type)
+        {
+            return type.GetTypeInfo().IsValueType;
         }
 
         /// <summary>
