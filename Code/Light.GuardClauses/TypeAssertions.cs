@@ -124,7 +124,6 @@ namespace Light.GuardClauses
         /// <returns>True if <paramref name="type" /> derives directly or indirectly from <paramref name="baseClass" />, else false.</returns>
         public static bool IsDerivingFrom(this Type type, Type baseClass)
         {
-            type.MustNotBeNull(nameof(type));
             baseClass.MustNotBeNull(nameof(baseClass));
 
             var currentBaseType = type.GetTypeInfo().BaseType;
