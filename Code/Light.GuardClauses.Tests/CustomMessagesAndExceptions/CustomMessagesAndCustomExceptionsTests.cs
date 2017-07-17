@@ -4,58 +4,17 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Light.GuardClauses.FrameworkExtensions;
-using Light.GuardClauses.Tests.CommonAssertionsTests;
-using Light.GuardClauses.Tests.ComparableAssertionsTests;
-using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
-using Light.GuardClauses.Tests.EqualityAssertionsTests;
-using Light.GuardClauses.Tests.StringAssertionsTests;
-using Light.GuardClauses.Tests.TypeAssertionsTests;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
-namespace Light.GuardClauses.Tests
+namespace Light.GuardClauses.Tests.CustomMessagesAndExceptions
 {
     [Trait("Category", Traits.FunctionalTests)]
     public sealed class CustomMessagesAndCustomExceptionsTests
     {
         public static readonly IList<Type> OmmitedTestClasses =
-            new[]
-            {
-                typeof(AgainstTests),
-                typeof(CustomMessagesAndCustomExceptionsTests),
-                typeof(NotNullTests),
-                typeof(RangeTests),
-                typeof(ThatTests),
-                typeof(Metadata),
-                typeof(Traits),
-                typeof(EqualityTests),
-                typeof(IsValidEnumValueTests),
-                typeof(IsEmptyTests),
-                typeof(IsInTests),
-                typeof(IsNotInTests),
-                typeof(IsNullOrEmptyTests),
-                typeof(IsNullOrWhiteSpaceTests),
-                typeof(IsSameAsTests),
-                typeof(ContainsOnlyLettersTests),
-                typeof(ContainsOnlyLettersAndDigitsTests),
-                typeof(FluentApiTests),
-                typeof(AsReadOnlyListTests),
-                typeof(IsEquivalentToTests),
-                typeof(IsDerivingFromTests),
-                typeof(IsClassTests),
-                typeof(IsDelegateTests),
-                typeof(IsStructTests),
-                typeof(IsInterfaceTests),
-                typeof(IsEnumTests),
-                typeof(IsReferenceTypeTests),
-                typeof(IsValueTypeTests),
-                typeof(IsImplementingTests),
-                typeof(IsDerivingFromOrImplementingTests),
-                typeof(EquivalentTypeComparerTests),
-                typeof(IsOrImplementsTests),
-                typeof(IsOrDerivesFromTests),
-                typeof(IsInInheritanceHierarchyOfTests)
-            };
+            new Type[]
+                { };
 
         private static readonly List<ICustomMessageAndExceptionTestData> PopulatedTestData = new List<ICustomMessageAndExceptionTestData>();
         private static readonly List<Type> TestClassesWithoutInterfaceImplementation = new List<Type>();
@@ -67,7 +26,7 @@ namespace Light.GuardClauses.Tests
             var affectedTestClasses = typeof(CustomMessagesAndCustomExceptionsTests).GetTypeInfo()
                                                                                     .Assembly
                                                                                     .ExportedTypes
-                                                                                    .Where(t => t.Namespace == "Light.GuardClauses.Tests" && OmmitedTestClasses.Contains(t) == false && t.IsNested == false);
+                                                                                    .Where(t => t.IsClass() && t.Name.StartsWith("Must") && t.Name.EndsWith("Tests") && OmmitedTestClasses.Contains(t) == false && t.IsNested == false);
 
             var testClassesWithInterfaceImplementation = affectedTestClasses.Where(t => t.GetTypeInfo().ImplementedInterfaces.Contains(typeof(ICustomMessageAndExceptionTestDataProvider)));
             TestClassesWithoutInterfaceImplementation.AddRange(affectedTestClasses.Except(testClassesWithInterfaceImplementation));
