@@ -48,7 +48,8 @@ namespace Light.GuardClauses.Tests
                 typeof(IsDerivingFromOrImplementingTests),
                 typeof(EquivalentTypeComparerTests),
                 typeof(IsOrImplementsTests),
-                typeof(IsOrDerivesFromTests)
+                typeof(IsOrDerivesFromTests),
+                typeof(IsPartOfInheritanceHierarchyOfTests)
             };
 
         private static readonly List<ICustomMessageAndExceptionTestData> PopulatedTestData = new List<ICustomMessageAndExceptionTestData>();
