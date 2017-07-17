@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Light.GuardClauses.FrameworkExtensions;
+using Light.GuardClauses.Tests.CommonAssertionsTests;
+using Light.GuardClauses.Tests.ComparableAssertionsTests;
 using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;

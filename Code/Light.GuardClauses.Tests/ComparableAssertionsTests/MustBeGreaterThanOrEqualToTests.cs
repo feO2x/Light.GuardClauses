@@ -3,7 +3,7 @@ using FluentAssertions;
 using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 
-namespace Light.GuardClauses.Tests
+namespace Light.GuardClauses.Tests.ComparableAssertionsTests
 {
     [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeGreaterThanOrEqualToTests : ICustomMessageAndExceptionTestDataProvider

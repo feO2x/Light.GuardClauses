@@ -3,7 +3,7 @@ using FluentAssertions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
-namespace Light.GuardClauses.Tests
+namespace Light.GuardClauses.Tests.ComparableAssertionsTests
 {
     [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsInTests
