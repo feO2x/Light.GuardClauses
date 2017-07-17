@@ -12,6 +12,11 @@ namespace Light.GuardClauses
     public sealed class EqualivalentTypeComparer : IEqualityComparer<Type>
     {
         /// <summary>
+        ///     Gets a singleton instance of the equality comparer.
+        /// </summary>
+        public static readonly EqualivalentTypeComparer Instance = new EqualivalentTypeComparer();
+
+        /// <summary>
         ///     Checks if the two types are equivalent (using <see cref="TypeAssertions.IsEquivalentTo" />).
         ///     This check works like the normal type equality comparison, but when two
         ///     generic types are compared, they are regarded as equal when one of them is a bound generic type

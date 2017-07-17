@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Light.GuardClauses.FrameworkExtensions;
 
@@ -161,22 +162,25 @@ namespace Light.GuardClauses
 
         /// <summary>
         ///     Checks if the specified type derives from the other type. Internally, this method uses <see cref="IsEquivalentTo" />
-        ///     so that bound generic types and their corresponding generic type definitions are regarded as equal.
+        ///     by default so that bound generic types and their corresponding generic type definitions are regarded as equal.
+        ///     If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <param name="baseClass">The base class that <paramref name="type" /> should derive from.</param>
-        /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
+        /// <param name="typeComparer">The equality comparer used to compare the base types (optional). When no value is specified, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="baseClass" /> is null.</exception>
         /// <returns>True if <paramref name="type" /> derives directly or indirectly from <paramref name="baseClass" />, else false.</returns>
-        public static bool IsDerivingFrom(this Type type, Type baseClass)
+        public static bool IsDerivingFrom(this Type type, Type baseClass, IEqualityComparer<Type> typeComparer = null)
         {
             baseClass.MustNotBeNull(nameof(baseClass));
-
             if (baseClass.IsClass() == false) return false;
+
+            typeComparer = typeComparer ?? EqualivalentTypeComparer.Instance;
 
             var currentBaseType = type.GetTypeInfo().BaseType;
             while (currentBaseType != null)
             {
-                if (currentBaseType.IsEquivalentTo(baseClass))
+                if (typeComparer.Equals(currentBaseType, baseClass))
                     return true;
 
                 currentBaseType = currentBaseType.GetTypeInfo().BaseType;
@@ -187,20 +191,24 @@ namespace Light.GuardClauses
         /// <summary>
         ///     Checks if the specified type implements the given interface type. Internally, this method uses <see cref="IsEquivalentTo" />
         ///     so that bound generic types and their corresponding generic type defintions are regarded as equal.
+        ///     If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <param name="interfaceType">The interface type that <paramref name="type" /> should implement.</param>
-        /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
+        /// <param name="typeComparer">The equality comparer used to compare the interface types (optional). When no value is specified, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="interfaceType" /> is null.</exception>
         /// <returns>True if <paramref name="type" /> implements <paramref name="interfaceType" /> directly or indirectly, else false.</returns>
-        public static bool IsImplementing(this Type type, Type interfaceType)
+        public static bool IsImplementing(this Type type, Type interfaceType, IEqualityComparer<Type> typeComparer = null)
         {
             interfaceType.MustNotBeNull(nameof(interfaceType));
             if (interfaceType.IsInterface() == false) return false;
 
+            typeComparer = typeComparer ?? EqualivalentTypeComparer.Instance;
+
             var implementedInterfaces = type.GetTypeInfo().ImplementedInterfaces.AsReadOnlyList();
             for (var i = 0; i < implementedInterfaces.Count; i++)
             {
-                if (implementedInterfaces[i].IsEquivalentTo(interfaceType))
+                if (typeComparer.Equals(implementedInterfaces[i], interfaceType))
                     return true;
             }
 
@@ -210,16 +218,69 @@ namespace Light.GuardClauses
         /// <summary>
         ///     Checks if the given type derives from the specified base class or interface type. Internally, this method uses <see cref="IsEquivalentTo" />
         ///     so that bound generic types and their corresponding generic type defintions are regarded as equal.
+        ///     If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <param name="baseClassOrInterfaceType">The type describing an interface or base class that <paramref name="type" /> should derive from or implement.</param>
-        /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
-        public static bool IsDerivingFromOrImplementing(this Type type, Type baseClassOrInterfaceType)
+        /// <param name="typeComparer">The equality comparer used to compare the interface types (optional). When no value is specified, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="baseClassOrInterfaceType" /> is null.</exception>
+        public static bool IsDerivingFromOrImplementing(this Type type, Type baseClassOrInterfaceType, IEqualityComparer<Type> typeComparer = null)
         {
             return baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType))
                                            .IsInterface()
-                       ? type.IsImplementing(baseClassOrInterfaceType)
-                       : baseClassOrInterfaceType.IsClass() && type.IsDerivingFrom(baseClassOrInterfaceType);
+                       ? type.IsImplementing(baseClassOrInterfaceType, typeComparer)
+                       : type.IsDerivingFrom(baseClassOrInterfaceType, typeComparer);
+        }
+
+        /// <summary>
+        ///     Checks if the given <paramref name="type" /> is equal to the specified <paramref name="otherType" /> or if it implements it. Internally, this
+        ///     method uses <see cref="IsEquivalentTo" /> so that bound generic types and their corresponding generic type defintions are regarded as equal.
+        ///     If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the interface type that <paramref name="type" /> implements.</param>
+        /// <param name="typeComparer">The equality comparer used to compare the types (optional). When no value is specified, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
+        public static bool IsOrImplements(this Type type, Type otherType, IEqualityComparer<Type> typeComparer = null)
+        {
+            otherType.MustNotBeNull(nameof(otherType));
+            typeComparer = typeComparer ?? EqualivalentTypeComparer.Instance;
+
+            return typeComparer.Equals(type, otherType) || type.IsImplementing(otherType, typeComparer);
+        }
+
+        /// <summary>
+        ///     Checks if the given <paramref name="type" /> is equal to the specified <paramref name="otherType" /> or if it derives from it. Internally, this
+        ///     method uses <see cref="IsEquivalentTo" /> so that bound generic types and their corresponding generic type defintions are regarded as equal.
+        ///     If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the base class type where <paramref name="type" /> derives from.</param>
+        /// <param name="typeComparer">The equality comparer used to compare the types (optional). When no value is specified, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
+        public static bool IsOrDerivesFrom(this Type type, Type otherType, IEqualityComparer<Type> typeComparer = null)
+        {
+            otherType.MustNotBeNull(nameof(otherType));
+            typeComparer = typeComparer ?? EqualivalentTypeComparer.Instance;
+
+            return typeComparer.Equals(type, otherType) || type.IsDerivingFrom(otherType, typeComparer);
+        }
+
+        /// <summary>
+        ///     Checks if the given <paramref name="type" /> is equal to the specified <paramref name="otherType" /> or if it derives from it or implements it.
+        ///     Internally, this method uses <see cref="IsEquivalentTo" /> so that bound generic types and their corresponding generic type defintions
+        ///     are regarded as equal. If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the base class type where <paramref name="type" /> derives from.</param>
+        /// <param name="typeComparer">The equality comparer used to compare the types (optional). When no value is specified, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
+        public static bool IsPartOfInheritanceHierarcharyOf(this Type type, Type otherType, IEqualityComparer<Type> typeComparer = null)
+        {
+            otherType.MustNotBeNull(nameof(otherType));
+            typeComparer = typeComparer ?? EqualivalentTypeComparer.Instance;
+
+            return typeComparer.Equals(type, otherType) || type.IsDerivingFromOrImplementing(otherType, typeComparer);
         }
     }
 }
