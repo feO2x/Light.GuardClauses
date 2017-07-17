@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
 
-namespace Light.GuardClauses.Tests
+namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
     [Trait("Category", "Functional Tests")]
     public sealed class IsDerivingFromTests

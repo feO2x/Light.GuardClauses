@@ -7,7 +7,7 @@ using Xunit;
 
 // ReSharper disable UnusedTypeParameter
 
-namespace Light.GuardClauses.Tests
+namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
     [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsEquivalentToTests

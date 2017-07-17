@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using FluentAssertions;
 using Xunit;
 
-namespace Light.GuardClauses.Tests
+namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
     [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsDelegateTests

@@ -9,6 +9,7 @@ using Light.GuardClauses.Tests.ComparableAssertionsTests;
 using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Light.GuardClauses.Tests.EqualityAssertionsTests;
 using Light.GuardClauses.Tests.StringAssertionsTests;
+using Light.GuardClauses.Tests.TypeAssertionsTests;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
