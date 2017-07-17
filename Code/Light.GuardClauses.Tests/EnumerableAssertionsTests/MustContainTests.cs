@@ -7,10 +7,10 @@ using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
-namespace Light.GuardClauses.Tests
+namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
     [Trait("Category", Traits.FunctionalTests)]
-    public sealed class SubsetMustContainTests : ICustomMessageAndExceptionTestDataProvider
+    public sealed class MustContainTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustContain must throw a CollectionException when the specified subset is not part of the collection.")]
         [MemberData(nameof(IsNoSupersetData))]
