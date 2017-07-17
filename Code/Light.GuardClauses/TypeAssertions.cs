@@ -277,7 +277,7 @@ namespace Light.GuardClauses
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the base class type where <paramref name="type" /> derives from.</param>
         /// <param name="typeComparer">The equality comparer used to compare the types (optional). When no value is specified, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
-        public static bool IsPartOfInheritanceHierarcharyOf(this Type type, Type otherType, IEqualityComparer<Type> typeComparer = null)
+        public static bool IsInInheritanceHierarchyOf(this Type type, Type otherType, IEqualityComparer<Type> typeComparer = null)
         {
             type.MustNotBeNull(nameof(type));
             otherType.MustNotBeNull(nameof(otherType));
