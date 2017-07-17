@@ -4,10 +4,10 @@ using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 
-namespace Light.GuardClauses.Tests
+namespace Light.GuardClauses.Tests.StringAssertionsTests
 {
     [Trait("Category", Traits.FunctionalTests)]
-    public sealed class StringMustNotBeNullOrEmptyTests : ICustomMessageAndExceptionTestDataProvider
+    public sealed class MustNotBeNullOrEmptyTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustNotBeNullOrEmpty must throw an ArgumentNullException when a string is null.")]
         public void StringNull()

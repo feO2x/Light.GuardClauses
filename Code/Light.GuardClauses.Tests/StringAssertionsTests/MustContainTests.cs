@@ -4,10 +4,10 @@ using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 
-namespace Light.GuardClauses.Tests
+namespace Light.GuardClauses.Tests.StringAssertionsTests
 {
     [Trait("Category", Traits.FunctionalTests)]
-    public sealed class StringMustContainTests : ICustomMessageAndExceptionTestDataProvider
+    public sealed class MustContainTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustContain must throw a StringException when the specified text is not part of the given string.")]
         [InlineData("abc", "d")]
