@@ -243,6 +243,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
         public static bool IsOrImplements(this Type type, Type otherType, IEqualityComparer<Type> typeComparer = null)
         {
+            type.MustNotBeNull(nameof(type));
             otherType.MustNotBeNull(nameof(otherType));
             typeComparer = typeComparer ?? EqualivalentTypeComparer.Instance;
 
@@ -260,6 +261,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
         public static bool IsOrDerivesFrom(this Type type, Type otherType, IEqualityComparer<Type> typeComparer = null)
         {
+            type.MustNotBeNull(nameof(type));
             otherType.MustNotBeNull(nameof(otherType));
             typeComparer = typeComparer ?? EqualivalentTypeComparer.Instance;
 
@@ -277,6 +279,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
         public static bool IsPartOfInheritanceHierarcharyOf(this Type type, Type otherType, IEqualityComparer<Type> typeComparer = null)
         {
+            type.MustNotBeNull(nameof(type));
             otherType.MustNotBeNull(nameof(otherType));
             typeComparer = typeComparer ?? EqualivalentTypeComparer.Instance;
 
