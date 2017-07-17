@@ -4,7 +4,7 @@ using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
-namespace Light.GuardClauses.Tests
+namespace Light.GuardClauses.Tests.UriAssertionsTests
 {
     [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeAbsoluteUriTests : ICustomMessageAndExceptionTestDataProvider
