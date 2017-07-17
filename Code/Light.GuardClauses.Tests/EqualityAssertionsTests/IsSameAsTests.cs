@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Xunit;
 
-namespace Light.GuardClauses.Tests
+namespace Light.GuardClauses.Tests.EqualityAssertionsTests
 {
     [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsSameAsTests

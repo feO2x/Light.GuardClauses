@@ -1,15 +1,15 @@
-﻿using FluentAssertions;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 
-namespace Light.GuardClauses.Tests
+namespace Light.GuardClauses.Tests.EqualityAssertionsTests
 {
     [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeTests : ICustomMessageAndExceptionTestDataProvider
     {
-        [Theory(DisplayName = "MustBe must throw an exception when the specified value is not the expected one.")]
+        [Theory(DisplayName = "MustBe must throw an exception when the specified values are different.")]
         [InlineData(42, 0)]
         [InlineData(true, false)]
         [InlineData("Hello", "World!")]
@@ -21,7 +21,7 @@ namespace Light.GuardClauses.Tests
                .And.Message.Should().Contain($"{nameof(value)} must be {other}, but you specified {value}");
         }
 
-        [Theory(DisplayName = "MustBe must not throw an exception when the specified value is the same as the expected one.")]
+        [Theory(DisplayName = "MustBe must not throw an exception when the specified values are equal.")]
         [InlineData(42)]
         [InlineData(55.89)]
         [InlineData("Hey")]
@@ -32,7 +32,7 @@ namespace Light.GuardClauses.Tests
             act.ShouldNotThrow();
         }
 
-        [Fact(DisplayName = "MustBe must throw an exception when the specified value is not the expected one, using an equality comparer for comparison.")]
+        [Fact(DisplayName = "MustBe must throw an exception when the specified values are different, using an equality comparer for comparison.")]
         public void ValuesNotEqualWithEqualityComparer()
         {
             Action act = () => 55.0.MustBe(55.1, EqualityComparer<double>.Default);
