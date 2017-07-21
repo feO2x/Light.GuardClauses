@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Xunit.Sdk;
 
 namespace Light.GuardClauses.Tests.CustomMessagesAndExceptions
 {
@@ -36,6 +37,18 @@ namespace Light.GuardClauses.Tests.CustomMessagesAndExceptions
             test.MustNotBeNull(nameof(test));
 
             _customMessageTests.Add(test);
+            return this;
+        }
+
+        public CustomMessageAndExceptionTestData AddExceptionTest(Action<Func<Exception>> raiseException)
+        {
+            _customExceptionTests.Add(new CustomExceptionTest(raiseException));
+            return this;
+        }
+
+        public CustomMessageAndExceptionTestData AddMessageTest<TException>(Action<string> raiseException) where TException : Exception
+        {
+            _customMessageTests.Add(new CustomMessageTest<TException>(raiseException));
             return this;
         }
     }

@@ -37,7 +37,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the parameter type is equivalent to the specified other type. This is true when 1) both types are equal or
+        ///     Ensures that the parameter type is equivalent to the specified other type. This is true when 1) both types are equal or
         ///     when 2) one type is a constructed generic type and the other type is the corresponding generic type definition.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
@@ -47,11 +47,11 @@ namespace Light.GuardClauses
         ///     The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is not equivalent to <paramref name="other"/> (optional).
+        ///     The exception that is thrown when <paramref name="parameter" /> is not equivalent to <paramref name="other" /> (optional).
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
-        /// <exception cref="TypeException">Thrown when <paramref name="parameter"/> is not equivalent to <paramref name="other"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is not equivalent to <paramref name="other" />.</exception>
         public static Type MustBeEquivalentTo(this Type parameter, Type other, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -63,7 +63,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the parameter type is not equivalent to the specified other type. This is true when 1) both types are not equal and
+        ///     Ensures that the parameter type is not equivalent to the specified other type. This is true when 1) both types are not equal and
         ///     when 2) one type is a constructed generic type and the other type is not the corresponding generic type definition.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
@@ -73,11 +73,11 @@ namespace Light.GuardClauses
         ///     The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is equivalent to <paramref name="other"/> (optional).
+        ///     The exception that is thrown when <paramref name="parameter" /> is equivalent to <paramref name="other" /> (optional).
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
-        /// <exception cref="TypeException">Thrown when <paramref name="parameter"/> is equivalent to <paramref name="other"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is equivalent to <paramref name="other" />.</exception>
         public static Type MustNotBeEquivalentTo(this Type parameter, Type other, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -110,6 +110,102 @@ namespace Light.GuardClauses
         public static bool IsClass(this TypeInfo typeInfo)
         {
             return typeInfo.MustNotBeNull().IsClass && typeInfo.BaseType != typeof(MulticastDelegate);
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type is a class (no delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is no class (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no class.</exception>
+        public static Type MustBeClass(this Type parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsClass())
+                return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a class, but it is not.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type info describes a class (no delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type info to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is no class (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no class.</exception>
+        public static TypeInfo MustBeClass(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsClass())
+                return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be a class, but it is not.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type is no class (but a delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is a class (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is a class.</exception>
+        public static Type MustNotBeClass(this Type parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsClass() == false)
+                return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be a class, but it is.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type info describes no class (but a delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type info to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is a class (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is a class.</exception>
+        public static TypeInfo MustNotBeClass(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsClass() == false)
+                return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must not be a class, but it is.");
         }
 
         /// <summary>
