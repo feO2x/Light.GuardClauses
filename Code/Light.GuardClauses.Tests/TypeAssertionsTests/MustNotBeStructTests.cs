@@ -12,7 +12,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
     public sealed class MustNotBeStructTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustNotBeStruct must throw a TypeException when the specified type is a struct.")]
-        public void IsNotStruct()
+        public void IsStruct()
         {
             TestIsStruct(() => typeof(decimal).MustNotBeStruct(), typeof(decimal));
             TestIsStruct(() => typeof(ConsoleKeyInfo).GetTypeInfo().MustNotBeStruct(), typeof(ConsoleKeyInfo));
@@ -25,7 +25,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         }
 
         [Fact(DisplayName = "MustNotBeStruct must not throw an exception when the specified type is no struct.")]
-        public void IsStruct()
+        public void IsNotStruct()
         {
             TestIsNotStruct(() => typeof(IEnumerable).MustNotBeStruct());
             TestIsNotStruct(() => typeof(Action).MustNotBeStruct());

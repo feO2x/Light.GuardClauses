@@ -14,7 +14,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
     public sealed class MustNotBeInterfaceTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustNotBeInterface must throw a TypeException when the specified type is an interface.")]
-        public void IsNotInterface()
+        public void IsInterface()
         {
             TestIsInterface(() => typeof(IServiceProvider).MustNotBeInterface(), typeof(IServiceProvider));
             TestIsInterface(() => typeof(ICommand).GetTypeInfo().MustNotBeInterface(), typeof(ICommand));
@@ -27,7 +27,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         }
 
         [Fact(DisplayName = "MustNotBeInterface must not throw an exception when the specified type is no interface.")]
-        public void IsInterface()
+        public void IsNotInterface()
         {
             TestIsNotInterface(() => typeof(string).MustNotBeInterface());
             TestIsNotInterface(() => typeof(Assembly).GetTypeInfo().MustNotBeInterface());

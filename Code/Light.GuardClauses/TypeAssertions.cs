@@ -185,7 +185,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified type info describes no class (but a delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        ///     Ensures that the specified type info does not describe a class (but a delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type info to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
@@ -290,7 +290,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified type info does not describes an interface (but a class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        ///     Ensures that the specified type info does not describe an interface (but a class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type info to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
@@ -332,6 +332,98 @@ namespace Light.GuardClauses
         public static bool IsDelegate(this TypeInfo typeInfo)
         {
             return typeInfo.MustNotBeNull().IsClass && typeInfo.BaseType == typeof(MulticastDelegate);
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type is a delegate (no class, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is no delegate (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no delegate.</exception>
+        public static Type MustBeDelegate(this Type parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsDelegate()) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a delegate, but it is not.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type info describes a delegate (no class, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type info to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is no delegate (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no delegate.</exception>
+        public static TypeInfo MustBeDelegate(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsDelegate()) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a delegate, but it is not.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type is not a delegate (but a class, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is a delegate (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is a delegate.</exception>
+        public static Type MustNotBeDelegate(this Type parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsDelegate() == false) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be a delegate, but it is.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type info does not describe a delegate (but a class, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type info to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is a delegate (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is a delegate.</exception>
+        public static TypeInfo MustNotBeDelegate(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsDelegate() == false) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be a delegate, but it is.");
         }
 
         /// <summary>
@@ -426,7 +518,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified type info describes no struct (but a class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
+        ///     Ensures that the specified type info does not describe a struct (but a class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
