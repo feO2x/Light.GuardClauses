@@ -21,7 +21,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         private static void TestIsNotClass(Action act, Type type)
         {
             act.ShouldThrow<TypeException>()
-               .And.Message.Should().Contain($"type \"{type}\" must be a class, but it is not.");
+               .And.Message.Should().Contain($"The type \"{type}\" must be a class, but it is not.");
         }
 
         [Fact(DisplayName = "MustBeClass must not throw an exception when the specified type is a class.")]
@@ -39,9 +39,8 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         [Fact(DisplayName = "MustBeClass must throw an ArgumentNullException when parameter is null.")]
         public void ParameterNull()
         {
-            Action act = () => ((Type) null).MustBeClass();
-
-            act.ShouldThrow<ArgumentNullException>();
+            new Action(() => ((Type) null).MustBeClass()).ShouldThrow<ArgumentNullException>();
+            new Action(() => ((TypeInfo) null).MustBeClass()).ShouldThrow<ArgumentNullException>();
         }
 
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

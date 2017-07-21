@@ -220,6 +220,99 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        ///     Ensures that the specified type is an interface (no class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is no interface (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no interface.</exception>
+        public static Type MustBeInterface(this Type parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsInterface())
+                return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be an interface, but is not.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type info describes an interface (no class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type info to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is no interface (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no interface.</exception>
+        public static TypeInfo MustBeInterface(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsInterface) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be an interface, but is not.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type is no interface (but a class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is an interface (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is an interface.</exception>
+        public static Type MustNotBeInterface(this Type parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsInterface() == false) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be an interface, but it is.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type info does not describes an interface (but a class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type info to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is an interface (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is an interface.</exception>
+        public static TypeInfo MustNotBeInterface(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsInterface == false) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must not be an interface, but it is.");
+        }
+
+        /// <summary>
         ///     Checks if the specified type is a delegate. This is true when <see cref="TypeInfo.IsClass" />
         ///     returns true and <see cref="TypeInfo.BaseType" /> is the <see cref="MulticastDelegate" />) type.
         /// </summary>
