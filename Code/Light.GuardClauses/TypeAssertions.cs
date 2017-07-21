@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses
@@ -11,7 +12,7 @@ namespace Light.GuardClauses
     public static class TypeAssertions
     {
         /// <summary>
-        ///     Checks if the two specified types are equivalent. This is true when 1) both types are equal or 
+        ///     Checks if the two specified types are equivalent. This is true when 1) both types are equal or
         ///     when 2) one type is a constructed generic type and the other type is the corresponding generic type definition.
         /// </summary>
         /// <param name="type">The first type to be checked.</param>
@@ -33,6 +34,58 @@ namespace Light.GuardClauses
             if (type.IsConstructedGenericType)
                 return type.GetGenericTypeDefinition() == other;
             return other.GetGenericTypeDefinition() == type;
+        }
+
+        /// <summary>
+        ///     Checks if the parameter type is equivalent to the specified other type. This is true when 1) both types are equal or
+        ///     when 2) one type is a constructed generic type and the other type is the corresponding generic type definition.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="other">The other type that <paramref name="parameter" /> should be equivalent to.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is not equivalent to <paramref name="other"/> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter"/> is not equivalent to <paramref name="other"/>.</exception>
+        public static Type MustBeEquivalentTo(this Type parameter, Type other, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsEquivalentTo(other))
+                return parameter;
+
+            throw exception != null ? exception() : new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be equivalent to \"{other?.ToString() ?? "null"}\", but it is not.");
+        }
+
+        /// <summary>
+        ///     Checks if the parameter type is not equivalent to the specified other type. This is true when 1) both types are not equal and
+        ///     when 2) one type is a constructed generic type and the other type is not the corresponding generic type definition.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="other">The other type that <paramref name="parameter" /> should be equivalent to.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is equivalent to <paramref name="other"/> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter"/> is equivalent to <paramref name="other"/>.</exception>
+        public static Type MustNotBeEquivalentTo(this Type parameter, Type other, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsEquivalentTo(other) == false)
+                return parameter;
+
+            throw exception != null ? exception() : new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be equivalent to \"{other?.ToString() ?? "null"}\", but it is.");
         }
 
         /// <summary>
