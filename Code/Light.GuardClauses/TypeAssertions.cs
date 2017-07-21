@@ -775,7 +775,7 @@ namespace Light.GuardClauses
         ///     by default so that bound generic types and their corresponding generic type definitions are regarded as equal.
         ///     If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
         /// </summary>
-        /// <param name="type">The type to be checked.</param>
+        /// <param name="type">The type info to be checked.</param>
         /// <param name="baseClass">The base class that <paramref name="type" /> should derive from.</param>
         /// <param name="typeComparer">The equality comparer used to compare the base types (optional). When no value is specified, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="baseClass" /> is null.</exception>
@@ -796,6 +796,64 @@ namespace Light.GuardClauses
                 currentBaseType = currentBaseType.GetTypeInfo().BaseType;
             }
             return false;
+        }
+
+        /// <summary>
+        ///     Ensures that the type derives from the specified <paramref name="baseClass" />, or otherwise throws a <see cref="TypeException" />.
+        ///     By default, this method uses <see cref="IsEquivalentTo" /> internally so that constructed generic types and their corrsponding
+        ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
+        ///     <paramref name="typeComparer" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="baseClass">The type describing the base class that <paramref name="parameter" /> should derive from.</param>
+        /// <param name="typeComparer">The equality comparer that is used to check if two types are equal (optional). By default, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> does not derive from <paramref name="baseClass" /> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="baseClass" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> does not derive from <paramref name="baseClass" />.</exception>
+        public static Type MustDeriveFrom(this Type parameter, Type baseClass, IEqualityComparer<Type> typeComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+            baseClass.MustNotBeNull(nameof(baseClass));
+
+            if (parameter.IsDerivingFrom(baseClass, typeComparer)) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must derive from \"{baseClass}\", but it does not.");
+        }
+
+        /// <summary>
+        ///     Ensures that the type does not derive from the specified <paramref name="other" /> type, or otherwise throws a <see cref="TypeException" />.
+        ///     By default, this method uses <see cref="IsEquivalentTo" /> internally so that constructed generic types and their corrsponding
+        ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
+        ///     <paramref name="typeComparer" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="other">The type that <paramref name="parameter" /> must not derive from.</param>
+        /// <param name="typeComparer">The equality comparer that is used to check if two types are equal (optional). By default, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> does derive from <paramref name="other" /> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="other" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> does derive from <paramref name="other" />.</exception>
+        public static Type MustNotDeriveFrom(this Type parameter, Type other, IEqualityComparer<Type> typeComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+            other.MustNotBeNull(nameof(other));
+
+            if (parameter.IsDerivingFrom(other, typeComparer) == false) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not derive from \"{other}\", but it does.");
         }
 
         /// <summary>
