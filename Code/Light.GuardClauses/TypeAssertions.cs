@@ -474,7 +474,7 @@ namespace Light.GuardClauses
         /// <summary>
         ///     Ensures that the specified type info describes a struct (no class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
-        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="parameter">The type info to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
         ///     The message that will be injected into the <see cref="TypeException" /> (optional).
@@ -520,7 +520,7 @@ namespace Light.GuardClauses
         /// <summary>
         ///     Ensures that the specified type info does not describe a struct (but a class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
-        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="parameter">The type info to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
         ///     The message that will be injected into the <see cref="TypeException" /> (optional).
@@ -549,6 +549,98 @@ namespace Light.GuardClauses
         public static bool IsEnum(this Type type)
         {
             return type.GetTypeInfo().IsEnum;
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type is an enum (no class, interface, delegate, or struct), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is no enum (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no enum.</exception>
+        public static Type MustBeEnum(this Type parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsEnum()) return parameter;
+
+            throw exception?.Invoke() ?? throw new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be an enum, but it is not.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type info describes an enum (no class, interface, delegate, or struct), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type info to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is no enum (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no enum.</exception>
+        public static TypeInfo MustBeEnum(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsEnum) return parameter;
+
+            throw exception?.Invoke() ?? throw new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be an enum, but it is not.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type is no enum (but a class, interface, delegate, or struct), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is an enum (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is an enum.</exception>
+        public static Type MustNotBeEnum(this Type parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsEnum() == false) return parameter;
+
+            throw exception?.Invoke() ?? throw new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be an enum, but it is.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type info does not describe an enum (but a class, interface, delegate, or struct), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type info to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is an enum (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is an enum.</exception>
+        public static TypeInfo MustNotBeEnum(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsEnum == false) return parameter;
+
+            throw exception?.Invoke() ?? throw new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must not be an enum, but it is.");
         }
 
         /// <summary>
