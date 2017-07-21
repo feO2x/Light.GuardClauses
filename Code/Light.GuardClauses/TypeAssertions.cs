@@ -668,6 +668,52 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        ///     Ensures that the specified type is a reference type (i.e. a class, interface, or delegate), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is no reference type (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no reference type.</exception>
+        public static Type MustBeReferenceType(this Type parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsReferenceType()) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a reference type, but it is a value type.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type info describes a reference type (i.e. a class, interface, or delegate), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type info to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is no reference type (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no reference type.</exception>
+        public static TypeInfo MustBeReferenceType(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsReferenceType()) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be a reference type, but it is a value type.");
+        }
+
+        /// <summary>
         ///     Checks if the specified type is a value type. This is true when the <see cref="TypeInfo.IsValueType" />
         ///     property returns true.
         /// </summary>
@@ -676,6 +722,52 @@ namespace Light.GuardClauses
         public static bool IsValueType(this Type type)
         {
             return type.GetTypeInfo().IsValueType;
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type is a value type (i.e. a struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is no value type (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no value type.</exception>
+        public static Type MustBeValueType(this Type parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsValueType()) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a value type, but it is a reference type.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type info describes a value type (i.e. a struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type info to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is no value type (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no value type.</exception>
+        public static TypeInfo MustBeValueType(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsValueType) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be a value type, but it is a reference type.");
         }
 
         /// <summary>
