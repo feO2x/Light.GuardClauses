@@ -240,7 +240,7 @@ namespace Light.GuardClauses
             if (parameter.IsInterface())
                 return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be an interface, but is not.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be an interface, but it is not.");
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsInterface) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be an interface, but is not.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be an interface, but it is not.");
         }
 
         /// <summary>
@@ -354,6 +354,98 @@ namespace Light.GuardClauses
         public static bool IsStruct(this TypeInfo typeInfo)
         {
             return typeInfo.MustNotBeNull().IsValueType && typeInfo.IsEnum == false;
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type is a struct (no class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is no struct (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no struct.</exception>
+        public static Type MustBeStruct(this Type parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsStruct()) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a struct, but it is not.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type info describes a struct (no class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is no struct (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no struct.</exception>
+        public static TypeInfo MustBeStruct(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsStruct()) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be a struct, but it is not.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type is no struct (but a class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is a struct (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is a struct.</exception>
+        public static Type MustNotBeStruct(this Type parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsStruct() == false) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be a struct, but it is.");
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type info describes no struct (but a class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is a struct (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is a struct.</exception>
+        public static TypeInfo MustNotBeStruct(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsStruct() == false) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must not be a struct, but it is.");
         }
 
         /// <summary>

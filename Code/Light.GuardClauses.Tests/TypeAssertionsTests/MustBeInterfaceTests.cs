@@ -21,7 +21,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         private static void TestIsNotInterface(Action act, Type type)
         {
             act.ShouldThrow<TypeException>()
-               .And.Message.Should().Contain($"The type \"{type}\" must be an interface, but is not.");
+               .And.Message.Should().Contain($"The type \"{type}\" must be an interface, but it is not.");
         }
 
         [Fact(DisplayName = "MustBeInterface must not throw an exception when the specified type is an interface.")]
