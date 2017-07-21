@@ -24,6 +24,13 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         }
 
         [Fact]
+        public void SameNonGenericType()
+        {
+            TestIsDerivingFrom(typeof(double), typeof(double), false);
+            TestIsDerivingFrom(typeof(string), typeof(string), false);
+        }
+
+        [Fact]
         public void ValueTypeNonObjectBaseClass()
         {
             TestIsDerivingFrom(typeof(double), typeof(ValueType), true);
@@ -33,24 +40,28 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         public void EnumTypeValidBaseClass()
         {
             TestIsDerivingFrom(typeof(ConsoleColor), typeof(Enum), true);
+            TestIsDerivingFrom(typeof(Enum), typeof(ConsoleColor), false);
         }
 
         [Fact]
         public void ClosedBoundGenericTypeWithValidGenericTypeDefinition()
         {
             TestIsDerivingFrom(typeof(StringDictionary), typeof(Dictionary<,>), true);
+            TestIsDerivingFrom(typeof(Dictionary<,>), typeof(StringDictionary), false);
         }
 
         [Fact]
         public void ClosedBoundGenericTypeWithObject()
         {
             TestIsDerivingFrom(typeof(Dictionary<int, object>), typeof(object), true);
+            TestIsDerivingFrom(typeof(object), typeof(Dictionary<int, object>), false);
         }
 
         [Fact]
         public void SameGenericType()
         {
             TestIsDerivingFrom(typeof(Dictionary<string, object>), typeof(Dictionary<string, object>), false);
+            TestIsDerivingFrom(typeof(Dictionary<,>), typeof(Dictionary<string, object>), false);
         }
 
         [Fact]
