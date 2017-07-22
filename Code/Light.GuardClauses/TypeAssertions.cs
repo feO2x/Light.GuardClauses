@@ -907,7 +907,7 @@ namespace Light.GuardClauses
             parameter.MustNotBeNull(parameterName);
             interfaceType.MustNotBeNull(nameof(interfaceType));
 
-            if (parameter.IsImplementing(interfaceType)) return parameter;
+            if (parameter.IsImplementing(interfaceType, typeComparer)) return parameter;
 
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must implement \"{interfaceType}\", but it does not.");
         }
@@ -936,7 +936,7 @@ namespace Light.GuardClauses
             parameter.MustNotBeNull(parameterName);
             other.MustNotBeNull(nameof(other));
 
-            if (parameter.IsImplementing(other) == false) return parameter;
+            if (parameter.IsImplementing(other, typeComparer) == false) return parameter;
 
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not implement \"{other}\", but it does.");
         }
@@ -956,6 +956,64 @@ namespace Light.GuardClauses
                                            .IsInterface()
                        ? type.IsImplementing(baseClassOrInterfaceType, typeComparer)
                        : type.IsDerivingFrom(baseClassOrInterfaceType, typeComparer);
+        }
+
+        /// <summary>
+        ///     Ensures that the type derives from or implements the specified <paramref name="baseClassOrInterfaceType" />, or otherwise throws a <see cref="TypeException" />.
+        ///     By default, this method uses <see cref="IsEquivalentTo" /> internally so that constructed generic types and their corrsponding
+        ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
+        ///     <paramref name="typeComparer" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="baseClassOrInterfaceType">The type that <paramref name="parameter" /> should derive from or implement.</param>
+        /// <param name="typeComparer">The equality comparer that is used to check if two types are equal (optional). By default, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> does not derive from or implement <paramref name="baseClassOrInterfaceType" /> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="baseClassOrInterfaceType" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> does not derive from or implement <paramref name="baseClassOrInterfaceType" />.</exception>
+        public static Type MustDeriveFromOrImplement(this Type parameter, Type baseClassOrInterfaceType, IEqualityComparer<Type> typeComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+            baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType));
+
+            if (parameter.IsDerivingFromOrImplementing(baseClassOrInterfaceType, typeComparer)) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must derive from or implement \"{baseClassOrInterfaceType}\", but it does not.");
+        }
+
+        /// <summary>
+        ///     Ensures that the type does not derive from or implement the specified <paramref name="other" /> type, or otherwise throws a <see cref="TypeException" />.
+        ///     By default, this method uses <see cref="IsEquivalentTo" /> internally so that constructed generic types and their corrsponding
+        ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
+        ///     <paramref name="typeComparer" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="other">The type that <paramref name="parameter" /> should not derive from or implement.</param>
+        /// <param name="typeComparer">The equality comparer that is used to check if two types are equal (optional). By default, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> derives from or implements <paramref name="other" /> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="other" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> derives from or implements <paramref name="other" />.</exception>
+        public static Type MustNotDeriveFromOrImplement(this Type parameter, Type other, IEqualityComparer<Type> typeComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+            other.MustNotBeNull(nameof(other));
+
+            if (parameter.IsDerivingFromOrImplementing(other, typeComparer) == false) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not derive from or implement \"{other}\", but it does.");
         }
 
         /// <summary>
