@@ -28,7 +28,7 @@ namespace Light.GuardClauses
             if (parameter != null)
                 return parameter;
 
-            throw exception != null ? exception() : new ArgumentNullException(parameterName, message ?? $"{parameterName ?? "The value"} must not be null.");
+            throw exception?.Invoke() ?? new ArgumentNullException(parameterName, message ?? $"{parameterName ?? "The value"} must not be null.");
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Light.GuardClauses
             if (parameter == null)
                 return null;
 
-            throw exception != null ? exception() : (message == null ? new ArgumentNotNullException(parameterName, parameter) : new ArgumentNotNullException(message, parameterName));
+            throw exception?.Invoke() ?? (message == null ? new ArgumentNotNullException(parameterName, parameter) : new ArgumentNotNullException(message, parameterName));
         }
 
         /// <summary>
@@ -75,10 +75,10 @@ namespace Light.GuardClauses
         public static T MustBeOfType<T>(this object parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
         {
             var castedValue = parameter as T;
-            if (castedValue == null)
-                throw exception != null ? exception() : new TypeMismatchException(message ?? $"{parameterName ?? "The object"} is of type {parameter.GetType().FullName} and cannot be downcasted to {typeof(T).FullName}.", parameterName);
+            if (castedValue != null)
+                return castedValue;
 
-            return castedValue;
+            throw exception?.Invoke() ?? new TypeMismatchException(message ?? $"{parameterName ?? "The object"} is of type {parameter.GetType().FullName} and cannot be downcasted to {typeof(T).FullName}.", parameterName);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Light.GuardClauses
             if (parameter.HasValue)
                 return parameter;
 
-            throw exception != null ? exception() : (message != null ? new NullableHasNoValueException(message, parameterName) : new NullableHasNoValueException(parameterName));
+            throw exception?.Invoke() ?? (message != null ? new NullableHasNoValueException(message, parameterName) : new NullableHasNoValueException(parameterName));
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace Light.GuardClauses
             if (parameter.HasValue == false)
                 return null;
 
-            throw exception != null ? exception() : (message == null ? new NullableHasValueException(parameterName, parameter.Value) : new NullableHasValueException(message, parameterName));
+            throw exception?.Invoke() ?? (message == null ? new NullableHasValueException(parameterName, parameter.Value) : new NullableHasValueException(message, parameterName));
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace Light.GuardClauses
             if (Enum.IsDefined(typeof(T), parameter))
                 return parameter;
 
-            throw exception != null ? exception() : (message == null ? new EnumValueNotDefinedException(parameterName, parameter, typeof(T)) : new EnumValueNotDefinedException(message, parameterName));
+            throw exception?.Invoke() ?? (message == null ? new EnumValueNotDefinedException(parameterName, parameter, typeof(T)) : new EnumValueNotDefinedException(message, parameterName));
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace Light.GuardClauses
         {
             if (parameter != Guid.Empty)
                 return parameter;
-            throw exception != null ? exception() : (message == null ? new EmptyGuidException(parameterName) : new EmptyGuidException(message, parameterName));
+            throw exception?.Invoke() ?? (message == null ? new EmptyGuidException(parameterName) : new EmptyGuidException(message, parameterName));
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace Light.GuardClauses
             if (parameter == false)
                 return false;
 
-            throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must be false, but you specified true.", parameterName);
+            throw exception?.Invoke() ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must be false, but you specified true.", parameterName);
         }
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace Light.GuardClauses
             if (parameter)
                 return true;
 
-            throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must be true, but you specified false.", parameterName);
+            throw exception?.Invoke() ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must be true, but you specified false.", parameterName);
         }
     }
 }
