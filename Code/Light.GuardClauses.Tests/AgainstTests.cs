@@ -22,5 +22,14 @@ namespace Light.GuardClauses.Tests
 
             act.ShouldNotThrow();
         }
+
+        [Fact(DisplayName = "Against must throw an ArgumentNullException when exception is null.")]
+        public void ExceptionNull()
+        {
+            Action act = () => Check.Against(false, null);
+
+            act.ShouldThrow<ArgumentNullException>()
+               .And.ParamName.Should().Be("exception");
+        }
     }
 }
