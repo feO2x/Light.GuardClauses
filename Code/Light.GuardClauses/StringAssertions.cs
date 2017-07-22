@@ -105,16 +105,17 @@ namespace Light.GuardClauses
         /// <exception cref="StringDoesNotMatchException">
         ///     Thrown when <paramref name="parameter" /> does not match the <paramref name="pattern" /> and no <paramref name="exception" /> is specified.
         /// </exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="pattern" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="pattern" /> is null.</exception>
         public static string MustMatch(this string parameter, Regex pattern, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
+            parameter.MustNotBeNull(parameterName);
             pattern.MustNotBeNull(nameof(pattern));
 
             var match = pattern.Match(parameter);
             if (match.Success)
                 return parameter;
 
-            throw exception != null ? exception() : (message == null ? new StringDoesNotMatchException(parameterName, parameter, pattern) : new StringDoesNotMatchException(message, parameterName));
+            throw exception?.Invoke() ?? (message == null ? new StringDoesNotMatchException(parameterName, parameter, pattern) : new StringDoesNotMatchException(message, parameterName));
         }
 
         /// <summary>
@@ -157,7 +158,7 @@ namespace Light.GuardClauses
             if (parameterCompareValue.Contains(text))
                 return parameter;
 
-            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must contain the text \"{text}\", but you specified \"{parameter}\".", parameterName);
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must contain the text \"{text}\", but you specified \"{parameter}\".", parameterName);
         }
 
         /// <summary>
@@ -200,7 +201,7 @@ namespace Light.GuardClauses
             if (parameterCompareValue.Contains(text) == false)
                 return parameter;
 
-            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not contain the text \"{text}\", but you specified \"{parameter}\".", parameterName);
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must not contain the text \"{text}\", but you specified \"{parameter}\".", parameterName);
         }
 
         /// <summary>
@@ -246,7 +247,7 @@ namespace Light.GuardClauses
             if (text.Contains(parameterCompareValue))
                 return parameter;
 
-            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must be a substring of \"{text}\", but you specified \"{parameter}\".", parameterName);
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must be a substring of \"{text}\", but you specified \"{parameter}\".", parameterName);
         }
 
         /// <summary>
@@ -288,7 +289,7 @@ namespace Light.GuardClauses
             if (text.Contains(parameterCompareValue) == false)
                 return parameter;
 
-            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not be a substring of \"{text}\", but you specified \"{parameter}\".", parameterName);
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must not be a substring of \"{text}\", but you specified \"{parameter}\".", parameterName);
         }
 
         /// <summary>
@@ -313,7 +314,7 @@ namespace Light.GuardClauses
             if (parameter.Length == length)
                 return parameter;
 
-            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must have a length of {length}, but it actually has a length of {parameter.Length}.", parameterName);
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must have a length of {length}, but it actually has a length of {parameter.Length}.", parameterName);
         }
 
         /// <summary>
@@ -337,7 +338,7 @@ namespace Light.GuardClauses
             if (parameter.StartsWith(text, StringComparison.CurrentCulture))
                 return parameter;
 
-            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must start with \"{text}\", but you specified {parameter}.", parameterName);
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must start with \"{text}\", but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -361,7 +362,7 @@ namespace Light.GuardClauses
             if (parameter.StartsWith(text, StringComparison.CurrentCultureIgnoreCase))
                 return parameter;
 
-            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must start with the equivalent of \"{text}\", but you specified {parameter}.", parameterName);
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must start with the equivalent of \"{text}\", but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -385,7 +386,7 @@ namespace Light.GuardClauses
             if (parameter.StartsWith(text, StringComparison.CurrentCulture) == false)
                 return parameter;
 
-            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not start with \"{text}\", but you specified {parameter}.", parameterName);
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must not start with \"{text}\", but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -409,7 +410,7 @@ namespace Light.GuardClauses
             if (parameter.StartsWith(text, StringComparison.CurrentCultureIgnoreCase) == false)
                 return parameter;
 
-            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not start with the equivalent of \"{text}\", but you specified {parameter}.", parameterName);
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must not start with the equivalent of \"{text}\", but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -433,7 +434,7 @@ namespace Light.GuardClauses
             if (parameter.EndsWith(text, StringComparison.CurrentCulture))
                 return parameter;
 
-            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must end with \"{text}\", but you specified {parameter}.", parameterName);
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must end with \"{text}\", but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -457,7 +458,7 @@ namespace Light.GuardClauses
             if (parameter.EndsWith(text, StringComparison.CurrentCultureIgnoreCase))
                 return parameter;
 
-            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must end with the equivalent of \"{text}\", but you specified {parameter}.", parameterName);
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must end with the equivalent of \"{text}\", but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -481,7 +482,7 @@ namespace Light.GuardClauses
             if (parameter.EndsWith(text, StringComparison.CurrentCulture) == false)
                 return parameter;
 
-            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not end with \"{text}\", but you specified {parameter}.", parameterName);
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must not end with \"{text}\", but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -505,7 +506,7 @@ namespace Light.GuardClauses
             if (parameter.EndsWith(text, StringComparison.CurrentCultureIgnoreCase) == false)
                 return parameter;
 
-            throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must not end with equivalent of \"{text}\", but you specified {parameter}.", parameterName);
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must not end with equivalent of \"{text}\", but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -530,7 +531,7 @@ namespace Light.GuardClauses
             for (var i = 0; i < parameter.Length; i++)
             {
                 if (char.IsLetter(parameter[i]) == false)
-                    throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must contain only letters, but you specified \"{parameter}\".", parameterName);
+                    throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must contain only letters, but you specified \"{parameter}\".", parameterName);
             }
             return parameter;
         }
@@ -576,7 +577,7 @@ namespace Light.GuardClauses
             for (var i = 0; i < parameter.Length; i++)
             {
                 if (char.IsLetterOrDigit(parameter[i]) == false)
-                    throw exception != null ? exception() : new StringException(message ?? $"{parameterName ?? "The string"} must contain only letters or digits, but you specified \"{parameter}\".", parameterName);
+                    throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must contain only letters or digits, but you specified \"{parameter}\".", parameterName);
             }
 
             return parameter;
