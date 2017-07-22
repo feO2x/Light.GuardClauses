@@ -69,15 +69,13 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
 
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => string.Empty.MustNotBeNullOrWhiteSpace(exception: exception)));
-            testData.Add(new CustomExceptionTest(exception => "    ".MustNotBeNullOrWhiteSpace(exception: exception)));
-            testData.Add(new CustomExceptionTest(exception => "\t\r\n".MustNotBeNullOrWhiteSpace(exception: exception)));
-            testData.Add(new CustomExceptionTest(exception => ((string) null).MustNotBeNullOrWhiteSpace(exception: exception)));
+            testData.AddExceptionTest(exception => string.Empty.MustNotBeNullOrWhiteSpace(exception: exception))
+                    .AddExceptionTest(exception => "    ".MustNotBeNullOrWhiteSpace(exception: exception))
+                    .AddExceptionTest(exception => "\t\r\n".MustNotBeNullOrWhiteSpace(exception: exception));
 
-            testData.Add(new CustomMessageTest<EmptyStringException>(message => string.Empty.MustNotBeNullOrWhiteSpace(message: message)));
-            testData.Add(new CustomMessageTest<StringIsOnlyWhiteSpaceException>(message => "    ".MustNotBeNullOrWhiteSpace(message: message)));
-            testData.Add(new CustomMessageTest<StringIsOnlyWhiteSpaceException>(message => "\t\r\n".MustNotBeNullOrWhiteSpace(message: message)));
-            testData.Add(new CustomMessageTest<ArgumentNullException>(message => ((string)null).MustNotBeNullOrWhiteSpace(message: message)));
+            testData.AddMessageTest<EmptyStringException>(message => string.Empty.MustNotBeNullOrWhiteSpace(message: message))
+                    .AddMessageTest<StringIsOnlyWhiteSpaceException>(message => "    ".MustNotBeNullOrWhiteSpace(message: message))
+                    .AddMessageTest<StringIsOnlyWhiteSpaceException>(message => "\t\r\n".MustNotBeNullOrWhiteSpace(message: message));
         }
     }
 }

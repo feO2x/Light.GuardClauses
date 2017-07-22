@@ -15,26 +15,24 @@ namespace Light.GuardClauses
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="ArgumentNullException" /> or <see cref="EmptyStringException" /> (optional).
+        ///     The message that will be injected into the <see cref="EmptyStringException" /> (optional).
         /// </param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> is either null or empty (optional).
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is null.
         /// </exception>
         /// <exception cref="EmptyStringException">
         ///     Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
         /// </exception>
         public static string MustNotBeNullOrEmpty(this string parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            // TODO: this can be simplified using MustNotBeNull
-            if (parameter == null)
-                throw exception != null ? exception() : new ArgumentNullException(parameterName, message);
+            parameter.MustNotBeNull(parameterName);
 
             if (parameter == string.Empty)
-                throw exception != null ? exception() : (message == null ? new EmptyStringException(parameterName) : new EmptyStringException(message, parameterName));
+                throw exception?.Invoke() ?? (message == null ? new EmptyStringException(parameterName) : new EmptyStringException(message, parameterName));
 
             return parameter;
         }
@@ -62,7 +60,7 @@ namespace Light.GuardClauses
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null and no <paramref name="exception" /> is specified.
+        ///     Thrown when <paramref name="parameter" /> is null.
         /// </exception>
         /// <exception cref="EmptyStringException">
         ///     Thrown when <paramref name="parameter" /> is empty and no <paramref name="exception" /> is specified.
@@ -80,7 +78,7 @@ namespace Light.GuardClauses
                 if (char.IsWhiteSpace(character) == false)
                     return parameter;
             }
-            throw exception != null ? exception() : (message == null ? StringIsOnlyWhiteSpaceException.CreateDefault(parameterName, parameter) : new StringIsOnlyWhiteSpaceException(message, parameterName));
+            throw exception?.Invoke() ?? (message == null ? StringIsOnlyWhiteSpaceException.CreateDefault(parameterName, parameter) : new StringIsOnlyWhiteSpaceException(message, parameterName));
         }
 
         /// <summary>

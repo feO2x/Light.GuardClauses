@@ -44,11 +44,8 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
 
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => string.Empty.MustNotBeNullOrEmpty(exception: exception)));
-            testData.Add(new CustomExceptionTest(exception => ((string) null).MustNotBeNullOrEmpty(exception: exception)));
-
-            testData.Add(new CustomMessageTest<EmptyStringException>(message => string.Empty.MustNotBeNullOrEmpty(message: message)));
-            testData.Add(new CustomMessageTest<ArgumentNullException>(message => ((string) null).MustNotBeNullOrEmpty(message: message)));
+            testData.AddExceptionTest(exception => string.Empty.MustNotBeNullOrEmpty(exception: exception))
+                    .AddMessageTest<EmptyStringException>(message => string.Empty.MustNotBeNullOrEmpty(message: message));
         }
     }
 }
