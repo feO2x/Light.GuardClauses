@@ -6,8 +6,7 @@ using System.Text;
 namespace Light.GuardClauses.FrameworkExtensions
 {
     /// <summary>
-    ///     The <see cref="StringBuilderExtensions" /> class contains an extension method that encapsulates the adding of items from a
-    ///     collection or dictionary to a string builder.
+    ///     This class provides extension methods for the <see cref="StringBuilder" /> class.
     /// </summary>
     public static class StringBuilderExtensions
     {
@@ -245,6 +244,38 @@ namespace Light.GuardClauses.FrameworkExtensions
             return stringBuilder.MustNotBeNull(nameof(stringBuilder))
                                 .AppendLine(headerLine)
                                 .AppendKeyValuePairsWithNewLine(dictionary);
+        }
+
+        /// <summary>
+        ///     Appends the messages of the <paramref name="exception" /> and its nested exceptions to the
+        ///     specified <paramref name="stringBuilder" />.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
+        public static StringBuilder AppendExceptionMessages(this StringBuilder stringBuilder, Exception exception)
+        {
+            stringBuilder.MustNotBeNull();
+            exception.MustNotBeNull();
+
+            var currentException = exception;
+            while (true)
+            {
+                stringBuilder.AppendLine(currentException.Message);
+                if (currentException.InnerException != null)
+                    stringBuilder.AppendLine();
+                else
+                    return stringBuilder;
+                currentException = exception.InnerException;
+            }
+        }
+
+        /// <summary>
+        ///     Formats all messages of the <paramref name="exception" /> and its nested exceptions into
+        ///     a single string.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="exception" /> is null.</exception>
+        public static string GetAllExceptionMessages(this Exception exception)
+        {
+            return new StringBuilder().AppendExceptionMessages(exception).ToString();
         }
     }
 }
