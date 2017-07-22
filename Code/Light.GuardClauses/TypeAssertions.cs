@@ -884,6 +884,64 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        ///     Ensures that the type implements the specified <paramref name="interfaceType" />, or otherwise throws a <see cref="TypeException" />.
+        ///     By default, this method uses <see cref="IsEquivalentTo" /> internally so that constructed generic types and their corrsponding
+        ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
+        ///     <paramref name="typeComparer" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="interfaceType">The type describing the interface that <paramref name="parameter" /> should implement.</param>
+        /// <param name="typeComparer">The equality comparer that is used to check if two types are equal (optional). By default, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> does not implement <paramref name="interfaceType" /> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="interfaceType" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> does not implement <paramref name="interfaceType" />.</exception>
+        public static Type MustImplement(this Type parameter, Type interfaceType, IEqualityComparer<Type> typeComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+            interfaceType.MustNotBeNull(nameof(interfaceType));
+
+            if (parameter.IsImplementing(interfaceType)) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must implement \"{interfaceType}\", but it does not.");
+        }
+
+        /// <summary>
+        ///     Ensures that the type does not implement the specified <paramref name="other" /> type, or otherwise throws a <see cref="TypeException" />.
+        ///     By default, this method uses <see cref="IsEquivalentTo" /> internally so that constructed generic types and their corrsponding
+        ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
+        ///     <paramref name="typeComparer" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="other">The type that <paramref name="parameter" /> must not implement.</param>
+        /// <param name="typeComparer">The equality comparer that is used to check if two types are equal (optional). By default, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> does implement <paramref name="other" /> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="other" /> is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> does implement <paramref name="other" />.</exception>
+        public static Type MustNotImplement(this Type parameter, Type other, IEqualityComparer<Type> typeComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+            other.MustNotBeNull(nameof(other));
+
+            if (parameter.IsImplementing(other) == false) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not implement \"{other}\", but it does.");
+        }
+
+        /// <summary>
         ///     Checks if the given type derives from the specified base class or interface type. Internally, this method uses <see cref="IsEquivalentTo" />
         ///     so that bound generic types and their corresponding generic type defintions are regarded as equal.
         ///     If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
