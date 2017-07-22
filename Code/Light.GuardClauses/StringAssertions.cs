@@ -92,6 +92,26 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        ///     Checks if the specified string is equivalent to the other string. This is done by calling <see cref="string.Equals(string, string, StringComparison)" />
+        ///     with comparison type <see cref="StringComparison.OrdinalIgnoreCase" />. If you are not satisfied with this default behavior, then provide
+        ///     your own <paramref name="comparisonType" /> value.
+        /// </summary>
+        /// <param name="string">The string to be checked.</param>
+        /// <param name="other">The other string.</param>
+        /// <param name="comparisonType">
+        /// The value indicating how strings are compared (optional). The default value is <see cref="StringComparison.OrdinalIgnoreCase"/> to use the
+        /// culture indipendent character sorting rules and ignore casing.
+        /// </param>
+        /// <exception cref="EnumValueNotDefinedException">Thrown when <paramref name="comparisonType"/> is no valid enum value.</exception>
+        /// <returns>True if both strings are null, or equivalent according to the <paramref name="comparisonType"/>.</returns>
+        public static bool IsEquivalentTo(this string @string, string other, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
+        {
+            comparisonType.MustBeValidEnumValue(nameof(comparisonType));
+
+            return string.Equals(@string, other, comparisonType);
+        }
+
+        /// <summary>
         ///     Ensures that <paramref name="parameter" /> matches the specified regular expression, or otherwise throws an <see cref="StringDoesNotMatchException" />.
         /// </summary>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -105,7 +125,7 @@ namespace Light.GuardClauses
         /// <exception cref="StringDoesNotMatchException">
         ///     Thrown when <paramref name="parameter" /> does not match the <paramref name="pattern" /> and no <paramref name="exception" /> is specified.
         /// </exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="pattern" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="pattern" /> is null.</exception>
         public static string MustMatch(this string parameter, Regex pattern, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
