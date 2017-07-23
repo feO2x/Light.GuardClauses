@@ -50,7 +50,7 @@ public void SetMovieRating(Guid movieId, int numberOfStars)
 }
 ```
 
-Inspired by [FluentAssertions](https://github.com/dennisdoomen/FluentAssertions), there are many more methods tailored for strings, URIs, `DateTime`, `IComparable<T>`, `IEnumerable<T>`, `IEquatable<T>`, and `IDictionary<T>`. See a list of all of them [in the release notes](https://github.com/feO2x/Light.GuardClauses/releases) or discover them on the fly via IntelliSense - all the methods are fully documented. Just be sure to add the following `using` statement at the top of your code files to see the extension methods: `using Light.GuardClauses;`.
+Inspired by [FluentAssertions](https://github.com/dennisdoomen/FluentAssertions), there are many more methods tailored for strings, URIs, `DateTime`, `Type` and `TypeInfo`, `IComparable<T>`, `IEnumerable<T>`, `IEquatable<T>`, and `IDictionary<T>`. See a list of all of them [in the release notes](https://github.com/feO2x/Light.GuardClauses/releases) or discover them on the fly via IntelliSense - all the methods are fully documented. Just be sure to add the following `using` statement at the top of your code files to see the extension methods: `using Light.GuardClauses;`.
 
 ## Where do I get it?
 
@@ -137,16 +137,16 @@ Of course, you can write your own extension methods, too.
 If you want to write your own assertion method, you should follow these recommendations (which of course can be ignored when you only want to use them in your own solution):
 * Create an extension method that should return the value that it is checking, i.e. the `this` parameter type should also be the return type to provide a fluent API.
 * Apart from the parameters you need, add the three optional parameters **parameterName**, **message**, and **exception**. They should behave as mentioned above in the [Customizing messages and exceptions](https://github.com/feO2x/Light.GuardClauses#customizing-messages-and-exceptions) section.
-* Using the Conditional Operator (?:) and the Null-Coalescing-Operator (??) is recommended to check if the optional parameters are specified.
+* Using the Null-Coalescing-Operator (??) is recommended to check if the optional parameters are specified.
 
 Check out the existing methods in the source code of this repository and the following template:
 
 ```csharp
-[Conditional(Check.CompileAssertionsSymbol)]
-public static void *YourMethodName*(this *YourType* parameter, *Your other necessary parameters*, string parameterName = null, string message = null, Func<Exception> exception = null)
+public static *YourType* *YourMethodName*(this *YourType* parameter, *Your other necessary parameters*, string parameterName = null, string message = null, Func<Exception> exception = null)
 {
-    if (*check something here*)
-        throw exception != null ? exception() : new *YourExceptionType*(message ?? $"{parameterName ?? "The value"} must not be ...");
+    if (*check something here*) return parameter;
+    
+    throw exception?.Invoke() ?? new *YourExceptionType*(message ?? $"{parameterName ?? "The value"} must not be ...");
 }
 ```
 
