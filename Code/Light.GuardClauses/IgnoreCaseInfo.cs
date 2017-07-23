@@ -5,7 +5,7 @@ using Light.GuardClauses.Exceptions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     Represents information about how substrings are searched case-sensitive or not.
+    ///     Represents information indicating if substrings are searched case-sensitive or not.
     /// </summary>
     public struct IgnoreCaseInfo
     {
@@ -43,17 +43,20 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the first string contains the second string.
+        ///     Checks if the <paramref name="string"/> contains the <paramref name="substring"/>.
         /// </summary>
-        public bool StringContains(string first, string second)
+        /// <param name="string">The string to be checked.</param>
+        /// <param name="substring">The string to seek.</param>
+        /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
+        public bool StringContains(string @string, string substring)
         {
-            first.MustNotBeNull();
-            second.MustNotBeNull();
+            @string.MustNotBeNull();
+            substring.MustNotBeNull();
 
             if (CultureInfo == null)
-                return first.Contains(second);
+                return @string.Contains(substring);
 
-            return CultureInfo.CompareInfo.IndexOf(first, second, CompareOptions) != -1;
+            return CultureInfo.CompareInfo.IndexOf(@string, substring, CompareOptions) != -1;
         }
     }
 }
