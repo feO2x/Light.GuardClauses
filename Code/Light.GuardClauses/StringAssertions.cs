@@ -209,7 +209,7 @@ namespace Light.GuardClauses
         ///     to turn on case-insensitivity, as there is a implicit conversion from <see cref="bool" /> to <see cref="IgnoreCaseInfo" />.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="string" /> or <paramref name="text" /> is null.</exception>
-        public static bool Contains(this string @string, string text, IgnoreCaseInfo ignoreCase = default(IgnoreCaseInfo))
+        public static bool IsContaining(this string @string, string text, IgnoreCaseInfo ignoreCase = default(IgnoreCaseInfo))
         {
             @string.MustNotBeNull(nameof(@string));
             text.MustNotBeNull(nameof(text));
