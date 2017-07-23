@@ -240,7 +240,7 @@ namespace Light.GuardClauses
             parameter.MustNotBeNull(parameterName);
             text.MustNotBeNull(nameof(text));
 
-            if (ignoreCase.StringContains(parameter, text)) return parameter;
+            if (parameter.IsContaining(text, ignoreCase)) return parameter;
 
             throw exception?.Invoke() ?? new StringException(message ?? $"\"{parameter}\" must contain \"{text}\", but it does not.", parameterName);
         }
@@ -268,7 +268,7 @@ namespace Light.GuardClauses
             parameter.MustNotBeNull(parameterName);
             text.MustNotBeNull(nameof(text));
 
-            if (ignoreCase.StringContains(parameter, text) == false) return parameter;
+            if (parameter.IsContaining(text, ignoreCase)) return parameter;
 
             throw exception?.Invoke() ?? new StringException(message ?? $"\"{parameter}\" must not contain \"{text}\", but it does.", parameterName);
         }
