@@ -323,7 +323,7 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
-            superset.MustNotBeNullOrEmpty(nameof(superset), "Your precondition is set up wrongly: superset is an empty collection.");
+            superset.MustNotBeNullOrEmpty(nameof(superset));
 
             if (parameter.All(superset.Contains))
                 return parameter;
@@ -365,7 +365,7 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
-            subset.MustNotBeNullOrEmpty(nameof(subset), "Your precondition is set up wrongly: subset is an empty collection.");
+            subset.MustNotBeNullOrEmpty(nameof(subset));
 
             if (subset.All(parameter.Contains))
                 return parameter;
@@ -417,7 +417,7 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustNotBeNull(parameterName);
-            set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.");
+            set.MustNotBeNullOrEmpty(nameof(set));
 
             if (set.Any(parameter.Contains) == false)
                 return parameter;
@@ -611,7 +611,7 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
-            var second = set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is null or an empty collection.").AsReadOnlyList();
+            var second = set.MustNotBeNullOrEmpty(nameof(set)).AsReadOnlyList();
             equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
             if (first.Count < second.Count)
@@ -657,7 +657,7 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
-            var second = set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.").AsReadOnlyList();
+            var second = set.MustNotBeNullOrEmpty(nameof(set)).AsReadOnlyList();
             equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
             if (first.Count < second.Count)
@@ -705,7 +705,7 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
-            var second = set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.").AsReadOnlyList();
+            var second = set.MustNotBeNullOrEmpty(nameof(set)).AsReadOnlyList();
             equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
             if (first.Count < second.Count)
@@ -749,7 +749,7 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
-            var second = set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.").AsReadOnlyList();
+            var second = set.MustNotBeNullOrEmpty(nameof(set)).AsReadOnlyList();
             equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
             if (first.Count < second.Count)
@@ -794,7 +794,7 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
-            var second = set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.").AsReadOnlyList();
+            var second = set.MustNotBeNullOrEmpty(nameof(set)).AsReadOnlyList();
             equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
             if (first.Count < second.Count)
@@ -841,7 +841,7 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
-            var second = set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.").AsReadOnlyList();
+            var second = set.MustNotBeNullOrEmpty(nameof(set)).AsReadOnlyList();
             equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
             if (first.Count < second.Count)
@@ -896,7 +896,7 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
-            var second = set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.").AsReadOnlyList();
+            var second = set.MustNotBeNullOrEmpty(nameof(set)).AsReadOnlyList();
             equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
             if (first.Count < second.Count)
@@ -945,7 +945,7 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
-            var second = set.MustNotBeNullOrEmpty(nameof(set), "Your precondition is set up wrongly: set is an empty collection.").AsReadOnlyList();
+            var second = set.MustNotBeNullOrEmpty(nameof(set)).AsReadOnlyList();
             equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
 
             if (first.Count < second.Count)
