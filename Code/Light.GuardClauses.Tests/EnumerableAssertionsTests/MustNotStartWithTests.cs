@@ -59,7 +59,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
             Action act = () => collection.MustNotStartWith(new List<string>());
 
             act.ShouldThrow<EmptyCollectionException>()
-               .And.Message.Should().Contain("Your precondition is set up wrongly: set is an empty collection.");
+               .And.ParamName.Should().Be("set");
         }
 
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

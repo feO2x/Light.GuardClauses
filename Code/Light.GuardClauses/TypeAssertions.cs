@@ -59,7 +59,7 @@ namespace Light.GuardClauses
             if (parameter.IsEquivalentTo(other))
                 return parameter;
 
-            throw exception != null ? exception() : new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be equivalent to \"{other?.ToString() ?? "null"}\", but it is not.", parameterName);
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be equivalent to \"{other?.ToString() ?? "null"}\", but it is not.", parameterName);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Light.GuardClauses
             if (parameter.IsEquivalentTo(other) == false)
                 return parameter;
 
-            throw exception != null ? exception() : new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be equivalent to \"{other?.ToString() ?? "null"}\", but it is.", parameterName);
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be equivalent to \"{other?.ToString() ?? "null"}\", but it is.", parameterName);
         }
 
         /// <summary>
