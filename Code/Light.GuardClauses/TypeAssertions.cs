@@ -59,7 +59,7 @@ namespace Light.GuardClauses
             if (parameter.IsEquivalentTo(other))
                 return parameter;
 
-            throw exception != null ? exception() : new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be equivalent to \"{other?.ToString() ?? "null"}\", but it is not.");
+            throw exception != null ? exception() : new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be equivalent to \"{other?.ToString() ?? "null"}\", but it is not.", parameterName);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Light.GuardClauses
             if (parameter.IsEquivalentTo(other) == false)
                 return parameter;
 
-            throw exception != null ? exception() : new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be equivalent to \"{other?.ToString() ?? "null"}\", but it is.");
+            throw exception != null ? exception() : new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be equivalent to \"{other?.ToString() ?? "null"}\", but it is.", parameterName);
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace Light.GuardClauses
             if (parameter.IsClass())
                 return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a class, but it is not.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a class, but it is not.", parameterName);
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace Light.GuardClauses
             if (parameter.IsClass())
                 return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be a class, but it is not.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be a class, but it is not.", parameterName);
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace Light.GuardClauses
             if (parameter.IsClass() == false)
                 return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be a class, but it is.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be a class, but it is.", parameterName);
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace Light.GuardClauses
             if (parameter.IsClass() == false)
                 return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must not be a class, but it is.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must not be a class, but it is.", parameterName);
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace Light.GuardClauses
             if (parameter.IsInterface())
                 return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be an interface, but it is not.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be an interface, but it is not.", parameterName);
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsInterface) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be an interface, but it is not.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be an interface, but it is not.", parameterName);
         }
 
         /// <summary>
@@ -286,7 +286,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsInterface() == false) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be an interface, but it is.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be an interface, but it is.", parameterName);
         }
 
         /// <summary>
@@ -309,7 +309,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsInterface == false) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must not be an interface, but it is.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must not be an interface, but it is.", parameterName);
         }
 
         /// <summary>
@@ -354,7 +354,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsDelegate()) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a delegate, but it is not.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a delegate, but it is not.", parameterName);
         }
 
         /// <summary>
@@ -377,7 +377,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsDelegate()) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a delegate, but it is not.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a delegate, but it is not.", parameterName);
         }
 
         /// <summary>
@@ -400,7 +400,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsDelegate() == false) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be a delegate, but it is.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be a delegate, but it is.", parameterName);
         }
 
         /// <summary>
@@ -423,7 +423,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsDelegate() == false) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be a delegate, but it is.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be a delegate, but it is.", parameterName);
         }
 
         /// <summary>
@@ -468,7 +468,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsStruct()) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a struct, but it is not.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a struct, but it is not.", parameterName);
         }
 
         /// <summary>
@@ -491,7 +491,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsStruct()) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be a struct, but it is not.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be a struct, but it is not.", parameterName);
         }
 
         /// <summary>
@@ -514,7 +514,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsStruct() == false) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be a struct, but it is.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be a struct, but it is.", parameterName);
         }
 
         /// <summary>
@@ -537,7 +537,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsStruct() == false) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must not be a struct, but it is.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must not be a struct, but it is.", parameterName);
         }
 
         /// <summary>
@@ -571,7 +571,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsEnum()) return parameter;
 
-            throw exception?.Invoke() ?? throw new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be an enum, but it is not.");
+            throw exception?.Invoke() ?? throw new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be an enum, but it is not.", parameterName);
         }
 
         /// <summary>
@@ -594,7 +594,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsEnum) return parameter;
 
-            throw exception?.Invoke() ?? throw new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be an enum, but it is not.");
+            throw exception?.Invoke() ?? throw new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be an enum, but it is not.", parameterName);
         }
 
         /// <summary>
@@ -617,7 +617,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsEnum() == false) return parameter;
 
-            throw exception?.Invoke() ?? throw new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be an enum, but it is.");
+            throw exception?.Invoke() ?? throw new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be an enum, but it is.", parameterName);
         }
 
         /// <summary>
@@ -640,7 +640,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsEnum == false) return parameter;
 
-            throw exception?.Invoke() ?? throw new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must not be an enum, but it is.");
+            throw exception?.Invoke() ?? throw new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must not be an enum, but it is.", parameterName);
         }
 
         /// <summary>
@@ -687,7 +687,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsReferenceType()) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a reference type, but it is a value type.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a reference type, but it is a value type.", parameterName);
         }
 
         /// <summary>
@@ -710,7 +710,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsReferenceType()) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be a reference type, but it is a value type.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be a reference type, but it is a value type.", parameterName);
         }
 
         /// <summary>
@@ -744,7 +744,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsValueType()) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a value type, but it is a reference type.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a value type, but it is a reference type.", parameterName);
         }
 
         /// <summary>
@@ -767,7 +767,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsValueType) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be a value type, but it is a reference type.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be a value type, but it is a reference type.", parameterName);
         }
 
         /// <summary>
@@ -824,7 +824,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsDerivingFrom(baseClass, typeComparer)) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must derive from \"{baseClass}\", but it does not.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must derive from \"{baseClass}\", but it does not.", parameterName);
         }
 
         /// <summary>
@@ -853,7 +853,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsDerivingFrom(other, typeComparer) == false) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not derive from \"{other}\", but it does.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not derive from \"{other}\", but it does.", parameterName);
         }
 
         /// <summary>
@@ -909,7 +909,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsImplementing(interfaceType, typeComparer)) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must implement \"{interfaceType}\", but it does not.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must implement \"{interfaceType}\", but it does not.", parameterName);
         }
 
         /// <summary>
@@ -938,7 +938,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsImplementing(other, typeComparer) == false) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not implement \"{other}\", but it does.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not implement \"{other}\", but it does.", parameterName);
         }
 
         /// <summary>
@@ -984,7 +984,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsDerivingFromOrImplementing(baseClassOrInterfaceType, typeComparer)) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must derive from or implement \"{baseClassOrInterfaceType}\", but it does not.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must derive from or implement \"{baseClassOrInterfaceType}\", but it does not.", parameterName);
         }
 
         /// <summary>
@@ -1013,7 +1013,7 @@ namespace Light.GuardClauses
 
             if (parameter.IsDerivingFromOrImplementing(other, typeComparer) == false) return parameter;
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not derive from or implement \"{other}\", but it does.");
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not derive from or implement \"{other}\", but it does.", parameterName);
         }
 
         /// <summary>
