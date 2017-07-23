@@ -15,10 +15,10 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("1, 2, 3", ". ")]
         public void StringDoesNotContainText(string value, string containedText)
         {
-            Action act = () => value.MustContain(containedText, nameof(value));
+            Action act = () => value.MustContain(containedText, parameterName: nameof(value));
 
             act.ShouldThrow<StringException>()
-               .And.Message.Should().Contain($"{nameof(value)} must contain the text \"{containedText}\", but you specified \"{value}\".");
+               .And.Message.Should().Contain($"\"{value}\" must contain \"{containedText}\", but it does not.");
         }
 
         [Theory(DisplayName = "MustContain must not throw an exception when the text is contained.")]
@@ -27,7 +27,17 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("1, 2, 3", ", ")]
         public void StringContainsText(string value, string containedText)
         {
-            Action act = () => value.MustContain(containedText, nameof(value));
+            Action act = () => value.MustContain(containedText, parameterName: nameof(value));
+
+            act.ShouldNotThrow();
+        }
+
+        [Fact(DisplayName = "MustContain must not throw an exception when case sensitivity is turned off and the text is contained in the string.")]
+        public void IgnoreCase()
+        {
+            const string text = "I suppose I'll have to kill the Mountain myself. Won't that make for a great song.";
+
+            Action act = () => text.MustContain("KILL", true);
 
             act.ShouldNotThrow();
         }
@@ -38,15 +48,6 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
             Action act = () => "someText".MustContain(null);
 
             act.ShouldThrow<ArgumentNullException>()
-               .And.ParamName.Should().Be("text");
-        }
-
-        [Fact(DisplayName = "MustContain must throw an exception when the specified text is an empty string.")]
-        public void ContainedTextEmpty()
-        {
-            Action act = () => "someText".MustContain(string.Empty);
-
-            act.ShouldThrow<EmptyStringException>()
                .And.ParamName.Should().Be("text");
         }
 

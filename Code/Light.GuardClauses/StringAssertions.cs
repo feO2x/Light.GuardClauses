@@ -125,7 +125,7 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="StringException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is not equivalent to <paramref name="other"/> (optional).
+        ///     The exception that is thrown when <paramref name="parameter" /> is not equivalent to <paramref name="other" /> (optional).
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> is not equivalent to <paramref name="other" />.</exception>
@@ -155,7 +155,7 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="StringException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is equivalent to <paramref name="other"/> (optional).
+        ///     The exception that is thrown when <paramref name="parameter" /> is equivalent to <paramref name="other" /> (optional).
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> is not equivalent to <paramref name="other" />.</exception>
@@ -199,89 +199,78 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> contains the specified text, or otherwise throws a <see cref="StringException" />.
+        ///     Returns a value indicating whether the specified <paramref name="text" /> occurs within the string.
         /// </summary>
-        /// <param name="parameter">The parameter to be checked.</param>
-        /// <param name="text">The text that must be contained in <paramref name="parameter" />.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="ignoreCaseSensitivity">
-        ///     The value indicating whether the two strings should be compared without regarding case-sensitivity (defaults to false).
+        /// <param name="string">The string to be checked.</param>
+        /// <param name="text">The text that should be contained within <paramref name="string" />.</param>
+        /// <param name="ignoreCase">
+        ///     The value indicating whether case sensitivity is ignored or active during search (optional).
+        ///     By default, the search is performed case-sensitive. You can also specify a simple boolean value here
+        ///     to turn on case-insensitivity, as there is a implicit conversion from <see cref="bool" /> to <see cref="IgnoreCaseInfo" />.
         /// </param>
-        /// <param name="message">
-        ///     The message that will be injected into the <see cref="StringException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> does not contain the specified text (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="StringException">
-        ///     Thrown when <paramref name="parameter" /> does not contain the specified text and no <paramref name="exception" /> is specified.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.
-        /// </exception>
-        /// <exception cref="EmptyStringException">Thrown when <paramref name="text" /> is an empty string.</exception>
-        public static string MustContain(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="string" /> or <paramref name="text" /> is null.</exception>
+        public static bool Contains(this string @string, string text, IgnoreCaseInfo ignoreCase = default(IgnoreCaseInfo))
         {
-            parameter.MustNotBeNull(parameterName);
-            text.MustNotBeNullOrEmpty(nameof(text));
+            @string.MustNotBeNull(nameof(@string));
+            text.MustNotBeNull(nameof(text));
 
-            // TODO: this could be optimized
-            var parameterCompareValue = parameter;
-            if (ignoreCaseSensitivity)
-            {
-                parameterCompareValue = parameter.ToLower();
-                // ReSharper disable once PossibleNullReferenceException
-                text = text.ToLower();
-            }
-
-            if (parameterCompareValue.Contains(text))
-                return parameter;
-
-            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must contain the text \"{text}\", but you specified \"{parameter}\".", parameterName);
+            return ignoreCase.StringContains(@string, text);
         }
 
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> does not contain the specified text, or otherwise throws a <see cref="StringException" />.
+        ///     Ensures that the string contains the specified text, or otherwise throws a <see cref="StringException" />.
         /// </summary>
-        /// <param name="parameter">The parameter to be checked.</param>
-        /// <param name="text">The text that should not be part of <paramref name="parameter" />.</param>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="text">The text that should be contained in the string.</param>
+        /// <param name="ignoreCase">
+        ///     The value indicating whether case sensitivity is ignored or active during search (optional).
+        ///     By default, the search is performed case-sensitive. You can also specify a simple boolean value here
+        ///     to turn on case-insensitivity, as there is a implicit conversion from <see cref="bool" /> to <see cref="IgnoreCaseInfo" />.
+        /// </param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="ignoreCaseSensitivity">
-        ///     The value indicating whether the two strings should be compared without regarding case-sensitivity (defaults to false).
-        /// </param>
-        /// <param name="message">
-        ///     The message that should be injected into the <see cref="StringException" /> (optional).
-        /// </param>
+        /// <param name="message">The message that will be injected into the <see cref="StringException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> does contain the specified text (optional).
+        ///     The exception that is thrown when <paramref name="parameter" /> does not contain <paramref name="text" /> (optional).
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
-        /// <exception cref="StringException">
-        ///     Thrown when <paramref name="parameter" /> contains <paramref name="text" /> an no <paramref name="exception" /> is specified.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.
-        /// </exception>
-        /// <exception cref="EmptyStringException">Thrown when <paramref name="text" /> is an empty string.</exception>
-        public static string MustNotContain(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
+        /// <exception cref="StringException">Thrown when <paramref name="parameter" /> does not contain <paramref name="text" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
+        public static string MustContain(this string parameter, string text, IgnoreCaseInfo ignoreCase = default(IgnoreCaseInfo), string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
-            text.MustNotBeNullOrEmpty(nameof(text));
+            text.MustNotBeNull(nameof(text));
 
-            // TODO: this could be optimized
-            var parameterCompareValue = parameter;
-            if (ignoreCaseSensitivity)
-            {
-                parameterCompareValue = parameter.ToLower();
-                // ReSharper disable once PossibleNullReferenceException
-                text = text.ToLower();
-            }
+            if (ignoreCase.StringContains(parameter, text)) return parameter;
 
-            if (parameterCompareValue.Contains(text) == false)
-                return parameter;
+            throw exception?.Invoke() ?? new StringException(message ?? $"\"{parameter}\" must contain \"{text}\", but it does not.", parameterName);
+        }
 
-            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must not contain the text \"{text}\", but you specified \"{parameter}\".", parameterName);
+        /// <summary>
+        ///     Ensures that the string does not contain the specified text, or otherwise throws a <see cref="StringException" />.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="text">The text that should not be contained in the string.</param>
+        /// <param name="ignoreCase">
+        ///     The value indicating whether case sensitivity is ignored or active during search (optional).
+        ///     By default, the search is performed case-sensitive. You can also specify a simple boolean value here
+        ///     to turn on case-insensitivity, as there is a implicit conversion from <see cref="bool" /> to <see cref="IgnoreCaseInfo" />.
+        /// </param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="StringException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> contains <paramref name="text" /> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="StringException">Thrown when <paramref name="parameter" /> contains <paramref name="text" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
+        public static string MustNotContain(this string parameter, string text, IgnoreCaseInfo ignoreCase = default(IgnoreCaseInfo), string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+            text.MustNotBeNull(nameof(text));
+
+            if (ignoreCase.StringContains(parameter, text) == false) return parameter;
+
+            throw exception?.Invoke() ?? new StringException(message ?? $"\"{parameter}\" must not contain \"{text}\", but it does.", parameterName);
         }
 
         /// <summary>

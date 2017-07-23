@@ -14,10 +14,10 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("Say herro to my littre friend", "herro")]
         public void TextContained(string value, string containedText)
         {
-            Action act = () => value.MustNotContain(containedText, nameof(value));
+            Action act = () => value.MustNotContain(containedText, parameterName: nameof(value));
 
             act.ShouldThrow<StringException>()
-               .And.Message.Should().Contain($"{nameof(value)} must not contain the text \"{containedText}\", but you specified \"{value}\".");
+               .And.Message.Should().Contain($"\"{value}\" must not contain \"{containedText}\", but it does.");
         }
 
         [Theory(DisplayName = "MustNotContain must not throw an exception when the specified string does not contain the given text.")]
@@ -25,7 +25,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("Say herro to my littre friend", "hello")]
         public void TextNotContained(string value, string containedText)
         {
-            Action act = () => value.MustNotContain(containedText, nameof(value));
+            Action act = () => value.MustNotContain(containedText, parameterName: nameof(value));
 
             act.ShouldNotThrow();
         }
@@ -36,7 +36,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("PwnD", "pwnd")]
         public void CompareCaseInsensitive(string @string, string comparedText)
         {
-            Action act = () => @string.MustNotContain(comparedText, ignoreCaseSensitivity: true);
+            Action act = () => @string.MustNotContain(comparedText, true);
 
             act.ShouldThrow<StringException>();
         }
@@ -47,15 +47,6 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
             Action act = () => "someText".MustNotContain(null);
 
             act.ShouldThrow<ArgumentNullException>()
-               .And.ParamName.Should().Be("text");
-        }
-
-        [Fact(DisplayName = "MustNotContain must throw an exception when the specified text is an empty string.")]
-        public void ContainedTextEmpty()
-        {
-            Action act = () => "someText".MustNotContain(string.Empty);
-
-            act.ShouldThrow<EmptyStringException>()
                .And.ParamName.Should().Be("text");
         }
 
