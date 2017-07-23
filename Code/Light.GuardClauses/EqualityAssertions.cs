@@ -35,7 +35,7 @@ namespace Light.GuardClauses
             if (equalityComparer.EqualsWithHashCode(parameter, other))
                 return parameter;
 
-            throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must be {other}, but you specified {parameter}.", parameterName);
+            throw exception?.Invoke() ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must be {other}, but you specified {parameter}.", parameterName);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Light.GuardClauses
             if (equalityComparer.EqualsWithHashCode(parameter, other) == false)
                 return parameter;
 
-            throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be {other}, but you specified this very value.", parameterName);
+            throw exception?.Invoke() ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be {other}, but you specified this very value.", parameterName);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Light.GuardClauses
             if (ReferenceEquals(parameter, other))
                 return parameter;
 
-            throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The reference"} must point to the object instance \"{other}\", but it does not.", parameterName);
+            throw exception?.Invoke() ?? new ArgumentException(message ?? $"{parameterName ?? "The reference"} must point to the object instance \"{other}\", but it does not.", parameterName);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Light.GuardClauses
             if (ReferenceEquals(parameter, other) == false)
                 return parameter;
 
-            throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The reference"} must not point to the object instance \"{other}\", but it does.", parameterName);
+            throw exception?.Invoke() ?? new ArgumentException(message ?? $"{parameterName ?? "The reference"} must not point to the object instance \"{other}\", but it does.", parameterName);
         }
 
         /// <summary>
