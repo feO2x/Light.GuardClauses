@@ -53,10 +53,10 @@ namespace Light.GuardClauses
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="ArgumentNullException" />, or the <see cref="EmptyStringException" />, or  the <see cref="StringIsOnlyWhiteSpaceException" /> (optional).
+        ///     The message that will be injected into the the <see cref="EmptyStringException" /> or  the <see cref="StringIsOnlyWhiteSpaceException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is either null, empty, or whitespace (optional).
+        ///     The exception that is thrown when <paramref name="parameter" /> is empty, or whitespace (optional).
         ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">
@@ -99,16 +99,76 @@ namespace Light.GuardClauses
         /// <param name="string">The string to be checked.</param>
         /// <param name="other">The other string.</param>
         /// <param name="comparisonType">
-        /// The value indicating how strings are compared (optional). The default value is <see cref="StringComparison.OrdinalIgnoreCase"/> to use the
-        /// culture indipendent character sorting rules and ignore casing.
+        ///     The value indicating how strings are compared (optional). The default value is <see cref="StringComparison.OrdinalIgnoreCase" /> to use the
+        ///     culture independent character sorting rules and ignore casing.
         /// </param>
-        /// <exception cref="EnumValueNotDefinedException">Thrown when <paramref name="comparisonType"/> is no valid enum value.</exception>
-        /// <returns>True if both strings are null, or equivalent according to the <paramref name="comparisonType"/>.</returns>
+        /// <exception cref="EnumValueNotDefinedException">Thrown when <paramref name="comparisonType" /> is no valid enum value.</exception>
+        /// <returns>True if both strings are null, or equivalent according to the <paramref name="comparisonType" />.</returns>
         public static bool IsEquivalentTo(this string @string, string other, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
         {
             comparisonType.MustBeValidEnumValue(nameof(comparisonType));
 
             return string.Equals(@string, other, comparisonType);
+        }
+
+        /// <summary>
+        ///     Ensures that the string is equivalent to the specified other string. This is done by calling <see cref="string.Equals(string, string, StringComparison)" />
+        ///     with comparison type <see cref="StringComparison.OrdinalIgnoreCase" />. If you are not satisfied with this default behavior, then provide
+        ///     your own <paramref name="comparisonType" /> value.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="other">The other string.</param>
+        /// <param name="comparisonType">
+        ///     The value indicating how strings are compared (optional). The default value is <see cref="StringComparison.OrdinalIgnoreCase" /> to use the
+        ///     culture independent character sorting rules and ignore casing.
+        /// </param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="StringException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is not equivalent to <paramref name="other"/> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="StringException">Thrown when <paramref name="parameter" /> is not equivalent to <paramref name="other" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="other" /> is null.</exception>
+        /// <exception cref="EnumValueNotDefinedException">Thrown when <paramref name="comparisonType" /> is no valid enum value.</exception>
+        public static string MustBeEquivalentTo(this string parameter, string other, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+            other.MustNotBeNull(nameof(other));
+
+            if (parameter.IsEquivalentTo(other, comparisonType)) return parameter;
+
+            throw exception?.Invoke() ?? new StringException(message ?? $"\"{parameter}\" must be equivalent to \"{other}\" (using {comparisonType}), but it is not.", parameterName);
+        }
+
+        /// <summary>
+        ///     Ensures that the string is not equivalent to the specified other string. This is done by calling <see cref="string.Equals(string, string, StringComparison)" />
+        ///     with comparison type <see cref="StringComparison.OrdinalIgnoreCase" />. If you are not satisfied with this default behavior, then provide
+        ///     your own <paramref name="comparisonType" /> value.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="other">The other string.</param>
+        /// <param name="comparisonType">
+        ///     The value indicating how strings are compared (optional). The default value is <see cref="StringComparison.OrdinalIgnoreCase" /> to use the
+        ///     culture independent character sorting rules and ignore casing.
+        /// </param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="StringException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is equivalent to <paramref name="other"/> (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="StringException">Thrown when <paramref name="parameter" /> is not equivalent to <paramref name="other" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="other" /> is null.</exception>
+        /// <exception cref="EnumValueNotDefinedException">Thrown when <paramref name="comparisonType" /> is no valid enum value.</exception>
+        public static string MustNotBeEquivalentTo(this string parameter, string other, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+            other.MustNotBeNull(nameof(other));
+
+            if (parameter.IsEquivalentTo(other, comparisonType) == false) return parameter;
+
+            throw exception?.Invoke() ?? new StringException(message ?? $"\"{parameter}\" must not be equivalent to \"{other}\" (using {comparisonType}), but it is.", parameterName);
         }
 
         /// <summary>
