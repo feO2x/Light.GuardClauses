@@ -25,7 +25,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("Say herro to my littre friend", "hello")]
         public void TextNotContained(string value, string containedText)
         {
-            Action act = () => value.MustNotContain(containedText, parameterName: nameof(value));
+            Action act = () => value.MustNotContain(containedText);
 
             act.ShouldNotThrow();
         }

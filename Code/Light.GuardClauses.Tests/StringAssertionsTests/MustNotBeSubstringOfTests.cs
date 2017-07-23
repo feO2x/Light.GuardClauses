@@ -16,10 +16,10 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("wear this", " I shall wear this as a badge of honor.")]
         public void IsSubstring(string invalidString, string text)
         {
-            Action act = () => invalidString.MustNotBeSubstringOf(text, nameof(invalidString));
+            Action act = () => invalidString.MustNotBeSubstringOf(text, parameterName: nameof(invalidString));
 
             act.ShouldThrow<StringException>()
-               .And.Message.Should().Contain($"{nameof(invalidString)} must not be a substring of \"{text}\", but you specified \"{invalidString}\".");
+               .And.Message.Should().Contain($"\"{invalidString}\" must not be a substring of \"{text}\", but it is.");
         }
 
         [Theory(DisplayName = "MustNotBeSubstringOf must not throw an exception when the specified string is no substring of text.")]
@@ -39,7 +39,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("I AM", "I am here to serve you")]
         public void IgnoreCaseSensitivity(string invalidString, string text)
         {
-            Action act = () => invalidString.MustNotBeSubstringOf(text, ignoreCaseSensitivity: true);
+            Action act = () => invalidString.MustNotBeSubstringOf(text, true);
 
             act.ShouldThrow<StringException>();
         }

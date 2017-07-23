@@ -268,7 +268,7 @@ namespace Light.GuardClauses
             parameter.MustNotBeNull(parameterName);
             text.MustNotBeNull(nameof(text));
 
-            if (parameter.IsContaining(text, ignoreCase)) return parameter;
+            if (parameter.IsContaining(text, ignoreCase) == false) return parameter;
 
             throw exception?.Invoke() ?? new StringException(message ?? $"\"{parameter}\" must not contain \"{text}\", but it does.", parameterName);
         }
@@ -279,8 +279,10 @@ namespace Light.GuardClauses
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="text">The text that <paramref name="parameter" /> is compared against.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="ignoreCaseSensitivity">
-        ///     The value indicating whether the two strings should be compared without regarding case-sensitivity (defaults to false).
+        /// <param name="ignoreCase">
+        ///     The value indicating whether case sensitivity is ignored or active during search (optional).
+        ///     By default, the search is performed case-sensitive. You can also specify a simple boolean value here
+        ///     to turn on case-insensitivity, as there is a implicit conversion from <see cref="bool" /> to <see cref="IgnoreCaseInfo" />.
         /// </param>
         /// <param name="message">
         ///     The message that should be injected into the <see cref="StringException" /> (optional).
@@ -295,28 +297,14 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.
         /// </exception>
-        /// <exception cref="EmptyStringException">
-        ///     Thrown when <paramref name="parameter" /> or <paramref name="text" /> is empty.
-        /// </exception>
-        public static string MustBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
+        public static string MustBeSubstringOf(this string parameter, string text, IgnoreCaseInfo ignoreCase = default(IgnoreCaseInfo), string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            parameter.MustNotBeNullOrEmpty(parameterName);
-            text.MustNotBeNullOrEmpty(nameof(text));
+            parameter.MustNotBeNull(parameterName);
+            text.MustNotBeNull(nameof(text));
 
-            // TODO: this could be optimized
-            var parameterCompareValue = parameter;
-            if (ignoreCaseSensitivity)
-            {
-                parameterCompareValue = parameter.ToLower();
-                // ReSharper disable once PossibleNullReferenceException
-                text = text.ToLower();
-            }
+            if (text.IsContaining(parameter, ignoreCase)) return parameter;
 
-            // ReSharper disable once PossibleNullReferenceException
-            if (text.Contains(parameterCompareValue))
-                return parameter;
-
-            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must be a substring of \"{text}\", but you specified \"{parameter}\".", parameterName);
+            throw exception?.Invoke() ?? new StringException(message ?? $"\"{parameter}\" must be a substring of \"{text}\", but it is not.", parameterName);
         }
 
         /// <summary>
@@ -325,8 +313,10 @@ namespace Light.GuardClauses
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="text">The text <paramref name="parameter" /> is compared with.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="ignoreCaseSensitivity">
-        ///     The value indicating whether the two strings should be compared without regarding case-sensitivity (defaults to false).
+        /// <param name="ignoreCase">
+        ///     The value indicating whether case sensitivity is ignored or active during search (optional).
+        ///     By default, the search is performed case-sensitive. You can also specify a simple boolean value here
+        ///     to turn on case-insensitivity, as there is a implicit conversion from <see cref="bool" /> to <see cref="IgnoreCaseInfo" />.
         /// </param>
         /// <param name="message">
         ///     The message that should be injected into the <see cref="StringException" /> (optional).
@@ -339,26 +329,14 @@ namespace Light.GuardClauses
         ///     Thrown when <paramref name="parameter" /> is a substring of <paramref name="text" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is null.</exception>
-        /// <exception cref="EmptyStringException">Thrown when <paramref name="parameter" /> or <paramref name="text" /> is empty.</exception>
-        public static string MustNotBeSubstringOf(this string parameter, string text, string parameterName = null, bool ignoreCaseSensitivity = false, string message = null, Func<Exception> exception = null)
+        public static string MustNotBeSubstringOf(this string parameter, string text, IgnoreCaseInfo ignoreCase = default(IgnoreCaseInfo), string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNullOrEmpty(parameter);
             text.MustNotBeNullOrEmpty(nameof(text));
 
-            // TODO: this could be optimized
-            var parameterCompareValue = parameter;
-            if (ignoreCaseSensitivity)
-            {
-                parameterCompareValue = parameter.ToLower();
-                // ReSharper disable once PossibleNullReferenceException
-                text = text.ToLower();
-            }
+            if (text.IsContaining(parameter, ignoreCase) == false) return parameter;
 
-            // ReSharper disable once PossibleNullReferenceException
-            if (text.Contains(parameterCompareValue) == false)
-                return parameter;
-
-            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must not be a substring of \"{text}\", but you specified \"{parameter}\".", parameterName);
+            throw exception?.Invoke() ?? new StringException(message ?? $"\"{parameter}\" must not be a substring of \"{text}\", but it is.", parameterName);
         }
 
         /// <summary>

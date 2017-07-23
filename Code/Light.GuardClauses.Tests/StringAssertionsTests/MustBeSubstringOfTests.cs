@@ -15,10 +15,10 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("Hey, you over there!", "Where is the pigeon pie?")]
         public void IsNotSubstring(string invalidString, string text)
         {
-            Action act = () => invalidString.MustBeSubstringOf(text, nameof(invalidString));
+            Action act = () => invalidString.MustBeSubstringOf(text, parameterName: nameof(invalidString));
 
             act.ShouldThrow<StringException>()
-               .And.Message.Should().Contain($"{nameof(invalidString)} must be a substring of \"{text}\", but you specified \"{invalidString}\".");
+               .And.Message.Should().Contain($"\"{invalidString}\" must be a substring of \"{text}\", but it is not.");
         }
 
         [Theory(DisplayName = "MustBeSubstringOf must not throw an exception when the specified string is substring of text.")]
@@ -42,21 +42,12 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
                .And.ParamName.Should().Be("text");
         }
 
-        [Fact(DisplayName = "MustBeSubstringOf must throw an EmptyStringException when text is an empty string.")]
-        public void TextEmpty()
-        {
-            Action act = () => "someText".MustBeSubstringOf(string.Empty);
-
-            act.ShouldThrow<EmptyStringException>()
-               .And.ParamName.Should().Be("text");
-        }
-
         [Theory(DisplayName = "MustBeSubstringOf must not throw an exception when the specified string is a substring of text ingoring case-sensitivity.")]
         [InlineData("ABC", "abc")]
         [InlineData("NOBODY cares", "Nobody cares what your father once told you.")]
         public void CaseInsensitive(string validString, string text)
         {
-            Action act = () => validString.MustBeSubstringOf(text, ignoreCaseSensitivity: true);
+            Action act = () => validString.MustBeSubstringOf(text, true);
 
             act.ShouldNotThrow();
         }
