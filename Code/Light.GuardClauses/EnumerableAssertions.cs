@@ -570,7 +570,6 @@ namespace Light.GuardClauses
 
         /// <summary>
         ///     Ensures that the specified collection contains only instances of different subtypes / subclasses, or otherwise throws a <see cref="CollectionException" />.
-        ///     Calls <see cref="MustNotContainNull{T}" /> internally.
         /// </summary>
         /// <typeparam name="T">The item type of the collection. This usually should be an interface / a base class type.</typeparam>
         /// <param name="parameter">The collection to be checked.</param>
@@ -585,25 +584,62 @@ namespace Light.GuardClauses
         public static IEnumerable<T> MustContainInstancesOfDifferentTypes<T>(this IEnumerable<T> parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
         {
             // ReSharper disable PossibleMultipleEnumeration
-            var list = parameter.MustNotContainNull(parameterName).AsReadOnlyList();
+            var list = parameter.AsReadOnlyList();
 
             var hashSet = new HashSet<Type>();
             for (var i = 0; i < list.Count; i++)
             {
-                var type = list[i].GetType();
+                var currentItem = list[i];
+                if (currentItem == null)
+                    throw new CollectionException(new StringBuilder().AppendLine($"{parameterName ?? "The collection"} contains null at index {i}.")
+                                                                     .AppendLine().AppendCollectionContent(list)
+                                                                     .ToString(),
+                                                  parameterName);
+                var type = currentItem.GetType();
                 if (hashSet.Add(type))
                     continue;
 
                 throw exception?.Invoke() ??
                       new CollectionException(message ??
                                               new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain instances of different subtypes, but \"{type}\" occurs a second time at index \"{i}\".")
-                                                                 .AppendLine().AppendCollectionContent(parameter)
+                                                                 .AppendLine().AppendCollectionContent(list)
                                                                  .ToString(),
                                               parameterName);
             }
 
             return parameter;
             // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
+        ///     Checks if the specified collection contains instances of different types.
+        /// </summary>
+        /// <typeparam name="T">The item type of the collection.</typeparam>
+        /// <param name="enumerable">The collection to be checked.</param>
+        /// <returns>True if all instances in the collection have a unique type (no items with same type), else false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> is null.</exception>
+        /// <exception cref="CollectionException">Thrown when any item in the collection is null.</exception>
+        public static bool IsContainingInstancesOfDifferentTypes<T>(this IEnumerable<T> enumerable) where T : class
+        {
+            var list = enumerable.MustNotBeNull(nameof(enumerable)).AsReadOnlyList();
+
+            var hashSet = new HashSet<Type>();
+            for (var i = 0; i < list.Count; i++)
+            {
+                var currentItem = list[i];
+                if (currentItem == null)
+                    throw new CollectionException(new StringBuilder().AppendLine($"The collection contains null at index {i}.")
+                                                                     .AppendLine().AppendCollectionContent(list)
+                                                                     .ToString(),
+                                                  nameof(enumerable));
+                var type = currentItem.GetType();
+                if (hashSet.Add(type))
+                    continue;
+
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>

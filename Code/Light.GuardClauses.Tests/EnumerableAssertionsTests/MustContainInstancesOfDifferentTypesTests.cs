@@ -53,7 +53,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
             Action act = () => collectionWithNull.MustContainInstancesOfDifferentTypes();
 
             act.ShouldThrow<CollectionException>()
-               .And.Message.Should().Contain("The value must be a collection not containing null, but you specified null at index 1.");
+               .And.Message.Should().Contain("The collection contains null at index 1.");
         }
 
         public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
