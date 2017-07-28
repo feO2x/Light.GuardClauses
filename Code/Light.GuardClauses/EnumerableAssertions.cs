@@ -679,11 +679,10 @@ namespace Light.GuardClauses
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
             var second = set.MustNotBeNullOrEmpty(nameof(set)).AsReadOnlyList();
-            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
-
             if (first.Count < second.Count)
                 goto ThrowException;
 
+            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
             for (var i = 0; i < second.Count; i++)
             {
                 if (equalityComparer.EqualsWithHashCode(first[i], second[i]) == false)
@@ -710,7 +709,7 @@ namespace Light.GuardClauses
         /// <param name="enumerable">The collection to be checked.</param>
         /// <param name="set">The items that the collection must start with.</param>
         /// <param name="equalityComparer">The equality comparer that is used to compare items (optional). If null is specified, then <see cref="EqualityComparer{T}.Default" /> is used.</param>
-        /// <returns>True if <paramref name="enumerable" /> starts with the items specified in <paramref name="set" />, else false.</returns>
+        /// <returns>True if <paramref name="enumerable" /> starts with the items specified in <paramref name="set" /> in the same order, else false.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> or <paramref name="set" /> is null.</exception>
         public static bool IsStartingWith<T>(this IEnumerable<T> enumerable, IEnumerable<T> set, IEqualityComparer<T> equalityComparer = null)
         {
@@ -749,11 +748,10 @@ namespace Light.GuardClauses
             // ReSharper disable PossibleMultipleEnumeration
             var first = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
             var second = set.MustNotBeNullOrEmpty(nameof(set)).AsReadOnlyList();
-            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
-
             if (first.Count < second.Count)
                 goto ThrowException;
 
+            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
             for (var i = 0; i < second.Count; i++)
             {
                 var targetIndex = first.Count - second.Count + i;
@@ -773,6 +771,32 @@ namespace Light.GuardClauses
                                           parameterName);
 
             // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
+        ///     Cheks if <paramref name="enumerable" /> ends with the specified <paramref name="set" /> (same order).
+        /// </summary>
+        /// <typeparam name="T">The item type of the collection.</typeparam>
+        /// <param name="enumerable">The collection to be checked.</param>
+        /// <param name="set">The items that the collection must end with.</param>
+        /// <param name="equalityComparer">The equality comparer that is used to compare items (optional). If null is specified, then <see cref="EqualityComparer{T}.Default" /> is used.</param>
+        /// <returns>True if <paramref name="enumerable" /> ends with the items specified in <paramref name="set" /> in the same order, else false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> or <paramref name="set" /> is null.</exception>
+        public static bool IsEndingWith<T>(this IEnumerable<T> enumerable, IEnumerable<T> set, IEqualityComparer<T> equalityComparer = null)
+        {
+            var first = enumerable.MustNotBeNull(nameof(enumerable)).AsReadOnlyList();
+            var second = set.MustNotBeNull(nameof(set)).AsReadOnlyList();
+            if (first.Count < second.Count)
+                return false;
+
+            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
+            for (var i = 0; i < second.Count; i++)
+            {
+                var targetIndex = first.Count - second.Count + i;
+                if (equalityComparer.EqualsWithHashCode(first[targetIndex], second[i]) == false)
+                    return false;
+            }
+            return true;
         }
 
         /// <summary>

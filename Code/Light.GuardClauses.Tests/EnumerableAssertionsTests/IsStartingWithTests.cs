@@ -7,7 +7,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
     [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsStartingWithTests
     {
-        [Fact(DisplayName = "IsStartingWith must return true when the specified enumerable has items that are equal to the items of the specified set (same order).")]
+        [Fact(DisplayName = "IsStartingWith must return true when the specified enumerable starts with items that are equal to the items of the specified set (same order).")]
         public void StartsWith()
         {
             var result = new[] { "Foo", "Bar", "Baz" }.IsStartingWith(new[] { "Foo", "Bar" });
