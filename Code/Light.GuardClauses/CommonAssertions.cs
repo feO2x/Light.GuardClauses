@@ -234,5 +234,41 @@ namespace Light.GuardClauses
 
             throw exception?.Invoke() ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must be true, but you specified false.", parameterName);
         }
+
+        /// <summary>
+        ///     Ensures that the specified Boolean value is not false, or otherwise throws an <see cref="ArgumentException" />.
+        /// </summary>
+        /// <param name="parameter">The paramter to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="ArgumentException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when the specified bool is false (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is true and no <paramref name="exception" /> is specified.</exception>
+        public static bool MustNotBeFalse(this bool parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            if (parameter) return true;
+
+            throw exception?.Invoke() ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be false, but you specified false.", parameterName);
+        }
+
+        /// <summary>
+        ///     Ensures that the specified Boolean value is not true, or otherwise throws an <see cref="ArgumentException" />.
+        /// </summary>
+        /// <param name="parameter">The paramter to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="ArgumentException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when the specified bool is true (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is false and no <paramref name="exception" /> is specified.</exception>
+        public static bool MustNotBeTrue(this bool parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            if (parameter == false) return false;
+
+            throw exception?.Invoke() ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be true, but you specified true.", parameterName);
+        }
     }
 }
