@@ -152,29 +152,45 @@ namespace Light.GuardClauses
         {
             // ReSharper disable PossibleMultipleEnumeration
             var collection = parameter.MustNotBeNull(parameterName).AsReadOnlyList();
-            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
+            if (collection.Count == 0) return parameter;
 
-            if (collection.Count == 0)
-                return parameter;
-
+            var hashSet = new HashSet<T>(equalityComparer ?? EqualityComparer<T>.Default);
             for (var i = 0; i < collection.Count; i++)
             {
-                var itemToCompare = collection[i];
-                for (var j = i + 1; j < collection.Count; j++)
-                {
-                    if (equalityComparer.EqualsWithHashCode(itemToCompare, collection[j]) == false)
-                        continue;
+                if (hashSet.Add(collection[i]))
+                    continue;
 
-                    throw exception?.Invoke() ??
-                          new CollectionException(message ??
-                                                  new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be a collection with unique items, but there is a duplicate at index {j}.")
-                                                                     .AppendCollectionContent(collection)
-                                                                     .ToString(),
-                                                  parameterName);
-                }
+                throw exception?.Invoke() ??
+                      new CollectionException(message ??
+                                              new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be a collection with unique items, but there is a duplicate at index {i}.")
+                                                                 .AppendCollectionContent(collection)
+                                                                 .ToString(),
+                                              parameterName);
             }
             return parameter;
             // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
+        ///     Checks if the specified collection contains duplicates.
+        /// </summary>
+        /// <typeparam name="T">The type of the items in the collection.</typeparam>
+        /// <param name="enumerable">The collection to be checked.</param>
+        /// <param name="equalityComparer">The equality comparer that is used to compare items (optional). If null is specified, then <see cref="EqualityComparer{T}.Default" /> is used.</param>
+        /// <returns>True if the collection contains two or more items that are equal, else false.</returns>
+        public static bool IsContainingDuplicates<T>(this IEnumerable<T> enumerable, IEqualityComparer<T> equalityComparer = null)
+        {
+            var collection = enumerable.MustNotBeNull(nameof(enumerable)).AsReadOnlyList();
+            if (collection.Count == 0) return false;
+
+            var hashSet = new HashSet<T>(equalityComparer ?? EqualityComparer<T>.Default);
+            for (var i = 0; i < collection.Count; i++)
+            {
+                if (hashSet.Add(collection[i]) == false)
+                    return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -359,7 +375,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> or <paramref name="superset" /> are null.</exception>
         public static bool IsSubsetOf<T>(this IEnumerable<T> enumerable, params T[] superset)
         {
-            return enumerable.IsSubsetOf((IEnumerable<T>) superset);
+            return enumerable.IsSubsetOf((IEnumerable<T>)superset);
         }
 
         /// <summary>
@@ -417,7 +433,7 @@ namespace Light.GuardClauses
         /// </exception>
         public static IEnumerable<T> MustContain<T>(this IEnumerable<T> parameter, params T[] subset)
         {
-            return MustContain(parameter, (IEnumerable<T>) subset);
+            return MustContain(parameter, (IEnumerable<T>)subset);
         }
 
         /// <summary>
@@ -464,7 +480,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when any of the parameters is null.</exception>
         public static IEnumerable<T> MustNotContain<T>(this IEnumerable<T> parameter, params T[] set)
         {
-            return MustNotContain(parameter, (IEnumerable<T>) set);
+            return MustNotContain(parameter, (IEnumerable<T>)set);
         }
 
         /// <summary>
