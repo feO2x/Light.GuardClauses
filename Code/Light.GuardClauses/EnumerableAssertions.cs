@@ -375,7 +375,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> or <paramref name="superset" /> are null.</exception>
         public static bool IsSubsetOf<T>(this IEnumerable<T> enumerable, params T[] superset)
         {
-            return enumerable.IsSubsetOf((IEnumerable<T>)superset);
+            return enumerable.IsSubsetOf((IEnumerable<T>) superset);
         }
 
         /// <summary>
@@ -433,7 +433,7 @@ namespace Light.GuardClauses
         /// </exception>
         public static IEnumerable<T> MustContain<T>(this IEnumerable<T> parameter, params T[] subset)
         {
-            return MustContain(parameter, (IEnumerable<T>)subset);
+            return MustContain(parameter, (IEnumerable<T>) subset);
         }
 
         /// <summary>
@@ -480,7 +480,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when any of the parameters is null.</exception>
         public static IEnumerable<T> MustNotContain<T>(this IEnumerable<T> parameter, params T[] set)
         {
-            return MustNotContain(parameter, (IEnumerable<T>)set);
+            return MustNotContain(parameter, (IEnumerable<T>) set);
         }
 
         /// <summary>
@@ -701,6 +701,31 @@ namespace Light.GuardClauses
                                                              .ToString(),
                                           parameterName);
             // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
+        ///     Cheks if <paramref name="enumerable" /> starts with the specified <paramref name="set" /> (same order).
+        /// </summary>
+        /// <typeparam name="T">The item type of the collection.</typeparam>
+        /// <param name="enumerable">The collection to be checked.</param>
+        /// <param name="set">The items that the collection must start with.</param>
+        /// <param name="equalityComparer">The equality comparer that is used to compare items (optional). If null is specified, then <see cref="EqualityComparer{T}.Default" /> is used.</param>
+        /// <returns>True if <paramref name="enumerable" /> starts with the items specified in <paramref name="set" />, else false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> or <paramref name="set" /> is null.</exception>
+        public static bool IsStartingWith<T>(this IEnumerable<T> enumerable, IEnumerable<T> set, IEqualityComparer<T> equalityComparer = null)
+        {
+            var first = enumerable.MustNotBeNull(nameof(enumerable)).AsReadOnlyList();
+            var second = set.MustNotBeNull(nameof(set)).AsReadOnlyList();
+            if (first.Count < second.Count)
+                return false;
+
+            equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
+            for (var i = 0; i < second.Count; i++)
+            {
+                if (equalityComparer.EqualsWithHashCode(first[i], second[i]) == false)
+                    return false;
+            }
+            return true;
         }
 
         /// <summary>
