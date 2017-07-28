@@ -332,6 +332,37 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        ///     Checks if all items of <paramref name="enumerable" /> are part of <paramref name="superset" />. This method is not aware of duplicates.
+        /// </summary>
+        /// <typeparam name="T">The type of the items of the collection.</typeparam>
+        /// <param name="enumerable">The collection to be checked.</param>
+        /// <param name="superset">The collection that can be the superset of <paramref name="enumerable" />.</param>
+        /// <returns>True when all items of <paramref name="enumerable" /> are also contained in <paramref name="superset" /> or when both collections are empty, else false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> or <paramref name="superset" /> are null.</exception>
+        public static bool IsSubsetOf<T>(this IEnumerable<T> enumerable, IEnumerable<T> superset)
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            enumerable.MustNotBeNull(nameof(enumerable));
+            superset.MustNotBeNull(nameof(superset));
+
+            return enumerable.All(superset.Contains);
+            // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
+        ///     Checks if all items of <paramref name="enumerable" /> are part of <paramref name="superset" />. This method is not aware of duplicates.
+        /// </summary>
+        /// <typeparam name="T">The type of the items of the collection.</typeparam>
+        /// <param name="enumerable">The collection to be checked.</param>
+        /// <param name="superset">The collection that can be the superset of <paramref name="enumerable" />.</param>
+        /// <returns>True when all items of <paramref name="enumerable" /> are also contained in <paramref name="superset" /> or when both collections are empty, else false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> or <paramref name="superset" /> are null.</exception>
+        public static bool IsSubsetOf<T>(this IEnumerable<T> enumerable, params T[] superset)
+        {
+            return enumerable.IsSubsetOf((IEnumerable<T>) superset);
+        }
+
+        /// <summary>
         ///     Ensures that the collection contains the specified subset, or otherwise throws a <see cref="CollectionException" />.
         ///     This method is not aware of duplicates.
         /// </summary>
