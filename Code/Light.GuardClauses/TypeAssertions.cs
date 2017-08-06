@@ -1071,10 +1071,10 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Checks if the given <paramref name="type"/> is a generic type that has no open generic parameters (e.g. typeof(List&lt;string&gt;)).
+        ///     Checks if the given <paramref name="type" /> is a generic type that has no open generic parameters (e.g. typeof(List&lt;string&gt;)).
         /// </summary>
         /// <param name="type">The type to be checked.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
         public static bool IsClosedConstructedGenericType(this Type type)
         {
             var typeInfo = type.GetTypeInfo();
@@ -1084,21 +1084,21 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Checks if the given <paramref name="type"/> is a generic type definition (e.g. typeof(List&lt;&gt;)).
+        ///     Checks if the given <paramref name="type" /> is a generic type definition (e.g. typeof(List&lt;&gt;)).
         /// </summary>
         /// <param name="type">The type to be checked.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
         public static bool IsGenericTypeDefinition(this Type type)
         {
             return type.GetTypeInfo().IsGenericTypeDefinition;
         }
 
         /// <summary>
-        /// Checks if the given <paramref name="type"/> is a generic type that has open generic parameters, 
-        /// but is no generic type definition (e.g. if you derive from Dictionary&lt;string, T&gt;).
+        ///     Checks if the given <paramref name="type" /> is a generic type that has open generic parameters,
+        ///     but is no generic type definition (e.g. if you derive from Dictionary&lt;string, T&gt;).
         /// </summary>
         /// <param name="type">The type to be checked.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
         public static bool IsOpenConstructedGenericType(this Type type)
         {
             var typeInfo = type.GetTypeInfo();
@@ -1106,6 +1106,16 @@ namespace Light.GuardClauses
             return typeInfo.IsGenericType &&
                    typeInfo.ContainsGenericParameters &&
                    typeInfo.IsGenericTypeDefinition == false;
+        }
+
+        /// <summary>
+        ///     Checks if the given <paramref name="type" /> is a generic type parameter (e.g the T in List&lt;T&gt;)
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
+        public static bool IsGenericTypeParameter(this Type type)
+        {
+            return type.GetTypeInfo().IsGenericParameter;
         }
     }
 }
