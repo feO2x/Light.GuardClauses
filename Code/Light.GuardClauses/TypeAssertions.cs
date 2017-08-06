@@ -1069,5 +1069,18 @@ namespace Light.GuardClauses
 
             return typeComparer.Equals(type, otherType) || type.IsDerivingFromOrImplementing(otherType, typeComparer);
         }
+
+        /// <summary>
+        /// Checks if the given <paramref name="type"/> is a generic type that has no open generic parameters (e.g. typeof(List&lt;string&gt;)).
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
+        public static bool IsClosedConstructedGenericType(this Type type)
+        {
+            var typeInfo = type.GetTypeInfo();
+
+            return typeInfo.IsGenericType &&
+                   typeInfo.ContainsGenericParameters == false;
+        }
     }
 }
