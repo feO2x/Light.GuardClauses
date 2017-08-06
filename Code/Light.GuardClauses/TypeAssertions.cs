@@ -1082,5 +1082,15 @@ namespace Light.GuardClauses
             return typeInfo.IsGenericType &&
                    typeInfo.ContainsGenericParameters == false;
         }
+
+        /// <summary>
+        /// Checks if the given <paramref name="type"/> is a generic type definition (e.g. typeof(List&lt;&gt;)).
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
+        public static bool IsGenericTypeDefinition(this Type type)
+        {
+            return type.GetTypeInfo().IsGenericTypeDefinition;
+        }
     }
 }
