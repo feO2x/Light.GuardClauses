@@ -109,7 +109,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
         public static bool IsClass(this TypeInfo typeInfo)
         {
-            return typeInfo.MustNotBeNull().IsClass && typeInfo.BaseType != typeof(MulticastDelegate);
+            return typeInfo.MustNotBeNull(nameof(typeInfo)).IsClass && typeInfo.BaseType != typeof(MulticastDelegate);
         }
 
         /// <summary>
@@ -331,7 +331,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
         public static bool IsDelegate(this TypeInfo typeInfo)
         {
-            return typeInfo.MustNotBeNull().IsClass && typeInfo.BaseType == typeof(MulticastDelegate);
+            return typeInfo.MustNotBeNull(nameof(typeInfo)).IsClass && typeInfo.BaseType == typeof(MulticastDelegate);
         }
 
         /// <summary>
@@ -445,7 +445,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
         public static bool IsStruct(this TypeInfo typeInfo)
         {
-            return typeInfo.MustNotBeNull().IsValueType && typeInfo.IsEnum == false;
+            return typeInfo.MustNotBeNull(nameof(typeInfo)).IsValueType && typeInfo.IsEnum == false;
         }
 
         /// <summary>
@@ -664,7 +664,7 @@ namespace Light.GuardClauses
         /// <returns>True if the specified type is a class, delegate, or interface, else false.</returns>
         public static bool IsReferenceType(this TypeInfo typeInfo)
         {
-            return typeInfo.MustNotBeNull().IsValueType == false;
+            return typeInfo.MustNotBeNull(nameof(typeInfo)).IsValueType == false;
         }
 
         /// <summary>
@@ -1077,10 +1077,17 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
         public static bool IsClosedConstructedGenericType(this Type type)
         {
-            var typeInfo = type.GetTypeInfo();
+            return type.GetTypeInfo().IsClosedConstructedGenericType();
+        }
 
-            return typeInfo.IsGenericType &&
-                   typeInfo.ContainsGenericParameters == false;
+        /// <summary>
+        ///     Checks if the given <paramref name="typeInfo" /> describes a generic type that has no open generic parameters (e.g. typeof(List&lt;string&gt;)).
+        /// </summary>
+        /// <param name="typeInfo">The type info to be checked.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
+        public static bool IsClosedConstructedGenericType(this TypeInfo typeInfo)
+        {
+            return typeInfo.MustNotBeNull(nameof(typeInfo)).IsGenericType && typeInfo.ContainsGenericParameters == false;
         }
 
         /// <summary>
@@ -1101,9 +1108,18 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
         public static bool IsOpenConstructedGenericType(this Type type)
         {
-            var typeInfo = type.GetTypeInfo();
+            return type.GetTypeInfo().IsOpenConstructedGenericType();
+        }
 
-            return typeInfo.IsGenericType &&
+        /// <summary>
+        ///     Checks if the given <paramref name="typeInfo" /> describes a generic type that has open generic parameters,
+        ///     but is no generic type definition (e.g. if you derive from Dictionary&lt;string, T&gt;).
+        /// </summary>
+        /// <param name="typeInfo">The type info to be checked.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
+        public static bool IsOpenConstructedGenericType(this TypeInfo typeInfo)
+        {
+            return typeInfo.MustNotBeNull(nameof(typeInfo)).IsGenericType &&
                    typeInfo.ContainsGenericParameters &&
                    typeInfo.IsGenericTypeDefinition == false;
         }
