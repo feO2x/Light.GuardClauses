@@ -1092,5 +1092,20 @@ namespace Light.GuardClauses
         {
             return type.GetTypeInfo().IsGenericTypeDefinition;
         }
+
+        /// <summary>
+        /// Checks if the given <paramref name="type"/> is a generic type that has open generic parameters, 
+        /// but is no generic type definition (e.g. if you derive from Dictionary&lt;string, T&gt;).
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
+        public static bool IsOpenConstructedGenericType(this Type type)
+        {
+            var typeInfo = type.GetTypeInfo();
+
+            return typeInfo.IsGenericType &&
+                   typeInfo.ContainsGenericParameters &&
+                   typeInfo.IsGenericTypeDefinition == false;
+        }
     }
 }
