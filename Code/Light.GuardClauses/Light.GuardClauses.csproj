@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
     <Description>A lightweight .NET library for expressive Guard Clauses.</Description>
-    <Version>3.0.0</Version>
+    <Version>3.1.0</Version>
     <Authors>Kenny Pflug</Authors>
     <Company>Kenny Pflug</Company>
     <Copyright>Copyright © Kenny Pflug</Copyright>
@@ -12,32 +12,22 @@
     <PackageLicenseUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>Assertions Preconditions GuardClauses DesignByContract DbC</PackageTags>
-    <PackageReleaseNotes>New Features in version 3.0.0
+    <PackageReleaseNotes>New Features in version 3.1.0
 --------------------------------------
+Added assertion methods for generic types:
+- IsClosedConstructedGenericType
+- IsOpenConstructedGenericType
+- IsGenericTypeDefinition
+- IsGenericParameterType
 
-New assertions for Type and TypeInfo:
-- IsEquivalentTo, MustBeEquivalentTo, and MustNotBeEquivalentTo
-- IsClass, MustBeClass, and MustNotBeClass
-- IsInterface, MustBeInterface and MustNotBeInterface
-- IsStruct, MustBeStruct and MustNotBeStruct
-- IsDelegate, MustBeDelegate and MustNotBeDelegate
-- IsEnum, MustBeEnum and MustNotBeEnum
-- IsReferenceType, IsValueType, MustBeReferenceType, and MustBeValueType
-- IsDerivingFrom, IsImplementing, MustDeriveFrom, MustNotDeriveFrom, MustImplement, MustNotImplement, MustDeriveFromOrImplement, MustNotDeriveFromOrImplement
-- IsOrImplements, IsOrDerivesFrom, and IsInInheritanceHierarchyOf
+Added boolean assertion methods:
+- MustNotBeTrue
+- MustNotBeFalse
 
-New assertions for strings:
-- IsEquivalentTo, MustBeEquivalentTo, MustNotBeEquivalentTo
-- IsContaining
-
-GetAllExceptionMessages and AppendExceptionMessages can be used to append all exception message into one string.
-
-Breaking Changes:
---------------------------------------
-The API of StringAssertions has changed as MustContain, MustNotContain, MustBeSubstringOf, and MustNotBeSubstringOf were reimplemented to search more efficiently for substring (no additional string creation when case sensitivity is turned off). MustNotBeNullOrEmpty and MustNotBeNullOrWhiteSpace now always throw ArgumentNullExceptions, even when a custom exception is provided.
-
-The second parameter of Check.That and Check.Against is now called exception instead of createException.
-</PackageReleaseNotes>
+Added more variants of existing assertion methods throwing no exception:
+- IsStartingWith and IsEndingWith
+- IsContainingDuplicates
+- IsSubsetOf</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
