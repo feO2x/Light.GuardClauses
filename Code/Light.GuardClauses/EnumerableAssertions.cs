@@ -13,6 +13,23 @@ namespace Light.GuardClauses
     public static class EnumerableAssertions
     {
         /// <summary>
+        ///     Checks if the given <paramref name="item" /> is one of the specified <paramref name="items" />.
+        /// </summary>
+        /// <typeparam name="T">The item type of the collection.</typeparam>
+        /// <param name="item">The item to be checked.</param>
+        /// <param name="items">The collection that might contain the <paramref name="item" />.</param>
+        /// <param name="equalityComparer">The equality comparer that is used to compare items (optional). If null is specified, then <see cref="EqualityComparer{T}.Default" /> is used.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="items" /> is null.</exception>
+        public static bool IsOneOf<T>(this T item, IEnumerable<T> items, IEqualityComparer<T> equalityComparer = null)
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            items.MustNotBeNull(nameof(items));
+
+            return items.Contains(item, equalityComparer ?? EqualityComparer<T>.Default);
+            // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
         ///     Ensures that <paramref name="parameter" /> is one of the specified <paramref name="items" />, or otherwise throws a <see cref="ArgumentOutOfRangeException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter.</typeparam>
