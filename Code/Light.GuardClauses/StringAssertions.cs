@@ -191,11 +191,24 @@ namespace Light.GuardClauses
             parameter.MustNotBeNull(parameterName);
             pattern.MustNotBeNull(nameof(pattern));
 
-            var match = pattern.Match(parameter);
-            if (match.Success)
+            if (pattern.IsMatch(parameter))
                 return parameter;
 
             throw exception?.Invoke() ?? (message == null ? new StringDoesNotMatchException(parameterName, parameter, pattern) : new StringDoesNotMatchException(message, parameterName));
+        }
+
+        /// <summary>
+        ///     Checks if the specified string matches the given regular expression.
+        /// </summary>
+        /// <param name="string">The string to be checked.</param>
+        /// <param name="pattern">The regular expression the string is checked against.</param>
+        /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
+        public static bool IsMatching(this string @string, Regex pattern)
+        {
+            @string.MustNotBeNull(nameof(@string));
+            pattern.MustNotBeNull(nameof(pattern));
+
+            return pattern.IsMatch(@string);
         }
 
         /// <summary>
