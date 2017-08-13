@@ -33,56 +33,56 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             TestEquivalence(typeof(List<>), typeof(List<>), true);
         }
 
-        [Fact(DisplayName = "IsEquivalentTo must return true when two closed bound generic types are passed in that are equal.")]
-        public void ClosedBoundGenericType()
+        [Fact(DisplayName = "IsEquivalentTo must return true when two closed constructed generic types are passed in that are equal.")]
+        public void ClosedConstructedGenericType()
         {
             TestEquivalence(typeof(IList<string>), typeof(IList<string>), true);
         }
 
-        [Fact(DisplayName = "IsEquivalentTo must return false when two closed bound generic types are passed in that are not equal.")]
-        public void UnequalClosedBoundGenericType()
+        [Fact(DisplayName = "IsEquivalentTo must return false when two closed constructed generic types are passed in that are not equal.")]
+        public void UnequalClosedConstructedGenericType()
         {
             TestEquivalence(typeof(IReadOnlyList<string>), typeof(IReadOnlyList<object>), false);
         }
 
-        [Fact(DisplayName = "IsEquivalentTo must return true when the open bound generic type (base class) is compared to the generic type definition.")]
-        public void OpenBoundGenericTypeAndGenericTypeDefinition()
+        [Fact(DisplayName = "IsEquivalentTo must return true when the open constructed generic type (base class) is compared to the generic type definition.")]
+        public void OpenConstructedGenericTypeAndGenericTypeDefinition()
         {
             TestEquivalence(typeof(SubTypeA<>).GetTypeInfo().BaseType, typeof(GenericType<>), true);
         }
 
-        [Fact(DisplayName = "IsEquivalentTo must return true when the closed bound generic type (base class) is compared to the closed bound generic type. ")]
-        public void ClosedBoundBaseType()
+        [Fact(DisplayName = "IsEquivalentTo must return true when the closed constructed generic type (base class) is compared to the closed constructed generic type. ")]
+        public void ClosedConstructedBaseType()
         {
             TestEquivalence(typeof(SubTypeB).GetTypeInfo().BaseType, typeof(GenericType<string>), true);
         }
 
-        [Fact(DisplayName = "IsEquivalentTo must return true when the closed bound generic type (base class) is compared to the generic type definition.")]
-        public void ClosedBoundBaseTypeAndGenericTypeDefinition()
+        [Fact(DisplayName = "IsEquivalentTo must return true when the closed constructed generic type (base class) is compared to the generic type definition.")]
+        public void ClosedConstructedBaseTypeAndGenericTypeDefinition()
         {
             TestEquivalence(typeof(SubTypeA<int>).GetTypeInfo().BaseType, typeof(GenericType<>), true);
         }
 
-        [Fact(DisplayName = "IsEquivalentTo must return false when the closed bound generic type (base class) is compared to another generic type definition.")]
+        [Fact(DisplayName = "IsEquivalentTo must return false when the closed constructed generic type (base class) is compared to another generic type definition.")]
         public void DifferentTypes()
         {
             TestEquivalence(typeof(SubTypeA<int>).GetTypeInfo().BaseType, typeof(List<>), false);
         }
 
-        [Fact(DisplayName = "IsEquivalentTo must return true when a open bound generic type (return type) is compared to the generic type definition.")]
-        public void OpenBoundReturnTypeAndGenericTypeDefinition()
+        [Fact(DisplayName = "IsEquivalentTo must return true when a open constructed generic type (return type) is compared to the generic type definition.")]
+        public void OpenConstructedReturnTypeAndGenericTypeDefinition()
         {
             TestEquivalence(CreateDictionaryOfTKeyTValue.ReturnType, typeof(Dictionary<,>), true);
         }
 
-        [Fact(DisplayName = "IsEquivalentTo must return true when a partially open bound generic type (return type) is compared to the generic type definition.")]
-        public void PartiallyOpenBoundReturnTypeAndGenericTypeDefinition()
+        [Fact(DisplayName = "IsEquivalentTo must return true when a partially open constructed generic type (return type) is compared to the generic type definition.")]
+        public void PartiallyConstructedReturnTypeAndGenericTypeDefinition()
         {
             TestEquivalence(CreateDictionaryOfTKey.ReturnType, typeof(Dictionary<,>), true);
         }
 
-        [Fact(DisplayName = "IsEquivalentTo must return false when two different open bound generic types having the same generic type definition are compared.")]
-        public void DifferentOpenBoundGenericTypes()
+        [Fact(DisplayName = "IsEquivalentTo must return false when two different open constructed generic types having the same generic type definition are compared.")]
+        public void DifferentConstructedGenericTypes()
         {
             TestEquivalence(CreateDictionaryOfTKeyTValue.ReturnType, CreateDictionaryOfTKey.ReturnType, false);
         }

@@ -6,7 +6,7 @@ namespace Light.GuardClauses
     /// <summary>
     ///     Represents an <see cref="IEqualityComparer{T}" /> that uses <see cref="TypeAssertions.IsEquivalentTo" />
     ///     to compare types. This check works like the normal type equality comparison, but when two
-    ///     generic types are compared, they are regarded as equal when one of them is a bound generic type
+    ///     generic types are compared, they are regarded as equal when one of them is a constructed generic type
     ///     and the other one is the corresponding generic type definition.
     /// </summary>
     public sealed class EqualivalentTypeComparer : IEqualityComparer<Type>
@@ -19,7 +19,7 @@ namespace Light.GuardClauses
         /// <summary>
         ///     Checks if the two types are equivalent (using <see cref="TypeAssertions.IsEquivalentTo" />).
         ///     This check works like the normal type equality comparison, but when two
-        ///     generic types are compared, they are regarded as equal when one of them is a bound generic type
+        ///     generic types are compared, they are regarded as equal when one of them is a constructed generic type
         ///     and the other one is the corresponding generic type definition.
         /// </summary>
         /// <param name="x">The first type.</param>
