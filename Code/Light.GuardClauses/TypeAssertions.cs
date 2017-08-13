@@ -1133,5 +1133,38 @@ namespace Light.GuardClauses
         {
             return type.GetTypeInfo().IsGenericParameter;
         }
+
+        /// <summary>
+        ///     Checks if the specified type is an abstract base class or interface.
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
+        public static bool IsAbstraction(this Type type)
+        {
+            var typeInfo = type.GetTypeInfo();
+
+            return typeInfo.IsInterface || typeInfo.IsClass && typeInfo.IsAbstract && typeInfo.IsSealed == false;
+        }
+
+        /// <summary>
+        ///     Ensures that the specified type is an abstract base class or interface, or otherwise throws a <see cref="TypeException" />.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">
+        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// </param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is not an abstract base class or interface (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or is null.</exception>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is not an abstract base class or interface.</exception>
+        public static Type MustBeAbstraction(this Type parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            if (parameter.MustNotBeNull(parameterName).IsAbstraction()) return parameter;
+
+            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be an abstract base class or interface, but it is not.", parameterName);
+        }
     }
 }
