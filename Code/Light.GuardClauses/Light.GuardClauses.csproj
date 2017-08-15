@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
     <Description>A lightweight .NET library for expressive Guard Clauses.</Description>
-    <Version>3.2.0</Version>
+    <Version>3.3.0</Version>
     <Authors>Kenny Pflug</Authors>
     <Company>Kenny Pflug</Company>
     <Copyright>Copyright © Kenny Pflug</Copyright>
@@ -12,11 +12,11 @@
     <PackageLicenseUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>Assertions Preconditions GuardClauses DesignByContract DbC</PackageTags>
-    <PackageReleaseNotes>New Features in version 3.2.0
+    <PackageReleaseNotes>New Features in version 3.3.0
 --------------------------------------
-- added IsMatching for strings
-- added MustBeAbstraction and IsAbstraction for types
-- added ForEach and IsOneOf for enumerables</PackageReleaseNotes>
+- added IsStaticClass, MustBeStaticClass, and MustNotBeStaticClass for Types
+- added MustHaveMinimumLength and MustHaveMaximumLength for Strings
+- added IsLengthIn, MustHaveLengthIn, and MustNotHaveLengthIn for Strings</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
