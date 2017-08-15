@@ -662,5 +662,57 @@ namespace Light.GuardClauses
 
             return true;
         }
+
+        /// <summary>
+        ///     Ensures that the string has at least the specified length, or otherwise throws a <see cref="StringException" />.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="minimumLength">The minimnum length that the string should have.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="StringException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is shorter than the specified length (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you
+        ///     specify exception.
+        /// </param>
+        /// <exception cref="StringException">Thrown when <paramref name="parameter" /> is shorter than the specified length.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="minimumLength" /> is less than zero.</exception>
+        public static string MustHaveMinimumLength(this string parameter, int minimumLength, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+            minimumLength.MustNotBeLessThan(0, nameof(minimumLength));
+
+            if (parameter.Length >= minimumLength)
+                return parameter;
+
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} \"{parameter}\" must have a minimum length of {minimumLength}, but it actually is only {parameter.Length} characters long.", parameterName);
+        }
+
+        /// <summary>
+        ///     Ensures that the string has at most the specified length, or otherwise throws a <see cref="StringException" />.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="maximumLength">The maximum length that the string should have.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="StringException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> is longer than specified length (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you
+        ///     specify exception.
+        /// </param>
+        /// <exception cref="StringException">Thrown when <paramref name="parameter" /> is longer than the specified length.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="maximumLength" /> is less than zero.</exception>
+        public static string MustHaveMaximumLength(this string parameter, int maximumLength, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+            maximumLength.MustNotBeLessThan(0, nameof(maximumLength));
+
+            if (parameter.Length <= maximumLength)
+                return parameter;
+
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} \"{parameter}\" must have a maximum length of {maximumLength}, but it actually is {parameter.Length} characters long.", parameterName);
+        }
     }
 }
