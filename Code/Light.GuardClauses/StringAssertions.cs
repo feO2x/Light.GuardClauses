@@ -672,8 +672,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be injected into the <see cref="StringException" /> (optional).</param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> is shorter than the specified length (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you
-        ///     specify exception.
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> is shorter than the specified length.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
@@ -698,8 +697,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be injected into the <see cref="StringException" /> (optional).</param>
         /// <param name="exception">
         ///     The exception that is thrown when <paramref name="parameter" /> is longer than specified length (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you
-        ///     specify exception.
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter" /> is longer than the specified length.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
@@ -713,6 +711,66 @@ namespace Light.GuardClauses
                 return parameter;
 
             throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} \"{parameter}\" must have a maximum length of {maximumLength}, but it actually is {parameter.Length} characters long.", parameterName);
+        }
+
+        /// <summary>
+        ///     Ensures that the length of the string is within the specified range, or otherwise throws a <see cref="StringException" />.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="range">The range describing the minimum and maximum length that the string must have.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="StringException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when the length of <paramref name="parameter" /> is not within the specified range (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="StringException">Thrown when length of <paramref name="parameter" /> is not within the specified range.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        public static string MustHaveLengthIn(this string parameter, Range<int> range, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (range.IsValueWithinRange(parameter.Length))
+                return parameter;
+            var fromBoundaryKind = range.IsFromInclusive ? "inclusive" : "exclusive";
+            var toBoundaryKind = range.IsToInclusive ? "inclusive" : "exclusive";
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} \"{parameter}\" must have a length between {range.From} ({fromBoundaryKind}) and {range.To} ({toBoundaryKind}), but it actually has a length of {parameter.Length}.", parameterName);
+        }
+
+        /// <summary>
+        ///     Ensures that the length of the string is not within the specified range, or otherwise throws a <see cref="StringException" />.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="range">The range describing the minimum and maximum length that the string must not have.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="StringException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when the length of <paramref name="parameter" /> is within the specified range (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="StringException">Thrown when length of <paramref name="parameter" /> is not within the specified range.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        public static string MustMotHaveLengthIn(this string parameter, Range<int> range, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (range.IsValueWithinRange(parameter.Length) == false)
+                return parameter;
+            var fromBoundaryKind = range.IsFromInclusive ? "inclusive" : "exclusive";
+            var toBoundaryKind = range.IsToInclusive ? "inclusive" : "exclusive";
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} \"{parameter}\" must not have a length between {range.From} ({fromBoundaryKind}) and {range.To} ({toBoundaryKind}), but it actually has a length of {parameter.Length}.", parameterName);
+        }
+
+        /// <summary>
+        ///     Checks if the length of the string is within the specified range.
+        /// </summary>
+        /// <param name="string">The string to be checked.</param>
+        /// <param name="range">The range defining a minimum and maximum value.</param>
+        /// <returns>True if the length of the string is within the boundaries of the specified range, else false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="string" /> is null.</exception>
+        public static bool IsLengthIn(this string @string, Range<int> range)
+        {
+            return range.IsValueWithinRange(@string.MustNotBeNull(nameof(@string)).Length);
         }
     }
 }
