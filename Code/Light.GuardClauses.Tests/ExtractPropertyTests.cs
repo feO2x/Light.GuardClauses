@@ -31,12 +31,7 @@ namespace Light.GuardClauses.Tests
                .And.Message.Should().Contain("The specified expression is not valid. Please use an expression like the following one: o => o.Property");
         }
 
-        public class Foo
-        {
-            public string Bar { get; set; }
-
-            public int Baz;
-        }
+        
 
         [Fact(DisplayName = "ExtractProperty must throw an ArgumentNullException when the specified expression is null.")]
         public void ExpressionNull()
@@ -46,5 +41,12 @@ namespace Light.GuardClauses.Tests
             act.ShouldThrow<ArgumentNullException>()
                .And.ParamName.Should().Be("expression");
         }
+    }
+
+    public class Foo
+    {
+        public string Bar { get; set; }
+
+        public int Baz;
     }
 }
