@@ -1096,6 +1096,37 @@ namespace Light.GuardClauses
             // ReSharper restore PossibleMultipleEnumeration
         }
 
+        /// <summary>
+        ///     Checks if the two enumerables are structurally equal. This is true when both of them have equal items in the same order.
+        /// </summary>
+        /// <typeparam name="T">The item type of the collections.</typeparam>
+        /// <param name="enumerable">The first enumerable.</param>
+        /// <param name="other">The other enumerable.</param>
+        /// <param name="itemComparer">The object used to compare the items of the enumerables (optional). By default, <see cref="EqualityComparer{T}.Default" /> will be used.</param>
+        /// <returns>True if both enumerables are null, or if both of them contain equal items in the same order, else false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when either <paramref name="enumerable" /> or <paramref name="other" /> are null.</exception>
+        public static bool IsStructurallyEqualTo<T>(this IEnumerable<T> enumerable, IEnumerable<T> other, IEqualityComparer<T> itemComparer = null)
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            if (ReferenceEquals(enumerable, other))
+                return true;
+            enumerable.MustNotBeNull(nameof(enumerable));
+            other.MustNotBeNull(nameof(other));
+            var first = enumerable.AsReadOnlyList();
+            var second = other.AsReadOnlyList();
+            if (first.Count != second.Count)
+                return false;
+
+            itemComparer = itemComparer ?? EqualityComparer<T>.Default;
+            for (var i = 0; i < first.Count; i++)
+            {
+                if (itemComparer.EqualsWithHashCode(first[i], second[i]) == false)
+                    return false;
+            }
+            return true;
+            // ReSharper restore PossibleMultipleEnumeration
+        }
+
         private static bool ContainsAtEnd<T>(IReadOnlyList<T> collection, int lowerIndex, T item, IEqualityComparer<T> equalityComparer)
         {
             for (var i = lowerIndex; i < collection.Count; i++)
