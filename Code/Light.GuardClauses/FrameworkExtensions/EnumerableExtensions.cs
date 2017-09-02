@@ -45,6 +45,24 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
+        ///     Tries to cast the specified enumerable as an <see cref="IReadOnlyList{T}" />, or
+        ///     creates a new collection containing the enumerable's items by calling the specified delegate.
+        /// </summary>
+        /// <typeparam name="T">The item type of the collection.</typeparam>
+        /// <param name="enumerable">The enumerable that will be converted to <see cref="IReadOnlyList{T}" />.</param>
+        /// <param name="createCollection">The delegate that creates the collection containing the specified items.</param>
+        /// <returns>The casted enumerable, or a new collection containing the enumerable's items.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> or <paramref name="createCollection" /> is null.</exception>
+        public static IReadOnlyList<T> AsReadOnlyList<T>(this IEnumerable<T> enumerable, Func<IEnumerable<T>, IReadOnlyList<T>> createCollection)
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            enumerable.MustNotBeNull(nameof(enumerable));
+
+            return enumerable as IReadOnlyList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(enumerable);
+            // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
         ///     Performs the action on each item of the specified enumerable.
         /// </summary>
         /// <typeparam name="T">The item type of the enumerable.</typeparam>
@@ -52,7 +70,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <param name="action">The action that exectues for each item of the collection.</param>
         /// <param name="throwWhenItemIsNull">The value indicating whether this method should throw a <see cref="CollectionException" /> when any of the items is null (optional). Defaults to true.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> or <paramref name="action" /> is null.</exception>
-        /// <exception cref="CollectionException">Thrown when <paramref name="enumerable"/> contains a value that is null and <paramref name="throwWhenItemIsNull"/> is set to true.</exception>
+        /// <exception cref="CollectionException">Thrown when <paramref name="enumerable" /> contains a value that is null and <paramref name="throwWhenItemIsNull" /> is set to true.</exception>
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> enumerable, Action<T> action, bool throwWhenItemIsNull = true)
         {
             // ReSharper disable PossibleMultipleEnumeration

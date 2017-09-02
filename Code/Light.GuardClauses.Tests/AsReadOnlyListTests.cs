@@ -24,6 +24,17 @@ namespace Light.GuardClauses.Tests
             // ReSharper restore PossibleMultipleEnumeration
         }
 
+        [Theory(DisplayName = "AsReadOnlyList will return the same collection instance casted as an IReadOnlyList<T> when the cast is possible, even when a custom Create-Collection-Delegate was passed in.")]
+        [MemberData(nameof(ReturnsCastedInstanceIfPossibleData))]
+        public void ReturnsCastedInstanceIfPossibleWithCustomFactory<T>(IEnumerable<T> enumerable)
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            var readOnlyList = enumerable.AsReadOnlyList(items => new ObservableCollection<T>(items));
+
+            readOnlyList.Should().BeSameAs(enumerable);
+            // ReSharper restore PossibleMultipleEnumeration
+        }
+
         public static readonly TestData ReturnsCastedInstanceIfPossibleData =
             new[]
             {
@@ -54,6 +65,22 @@ namespace Light.GuardClauses.Tests
 
             act.ShouldThrow<ArgumentNullException>()
                .And.ParamName.Should().Be("enumerable");
+        }
+
+        [Fact(DisplayName = "AsReadOnlyList must allow the client to create a custom collection.")]
+        public void CreateCollection()
+        {
+            var collection = LazyEnumerable().AsReadOnlyList(items => new ObservableCollection<string>(items));
+
+            collection.Should().BeAssignableTo<ObservableCollection<string>>();
+            collection.Should().Equal(LazyEnumerable());
+        }
+
+        private static IEnumerable<string> LazyEnumerable()
+        {
+            yield return "Foo";
+            yield return "Bar";
+            yield return "Baz";
         }
     }
 }
