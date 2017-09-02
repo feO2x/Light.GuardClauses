@@ -49,6 +49,27 @@ public void SetMovieRating(Guid movieId, int numberOfStars)
     movie.AddRating(numberOfStars);
 }
 ```
+In addition to methods that throw exceptions, Light.GuardClauses also provides a lot of assertions the simply tell you that a statement is true or false - this way you can easily perform complex condition checks in a simple statement:
+
+```csharp
+private Expression[] ResolveDependenciesRecursivelyIfNecessary(IReadOnlyList<Dependency> dependencies, ResolveExpressionContext context)
+{
+    if (dependencies.IsNullOrEmpty())
+        return null;
+
+    var resolvedDependencyExpressions = new Expression[dependencies.Count];
+    for (var i = 0; i < dependencies.Count; i++)
+    {
+        var dependency = dependencies[i];
+        var dependencyType = dependency.DependencyType;
+        if (dependencyType.IsGenericTypeParameter())
+            dependencyType = context.ResolveGenericTypeParameter(dependencyType);
+        resolvedDependencyExpressions[i] = CreateResolveExpressionRecursively(new TypeKey(dependencyType, dependency.TargetRegistrationName), context.Container, dependency.ResolveAll);
+    }
+
+    return resolvedDependencyExpressions;
+}
+```
 
 Inspired by [FluentAssertions](https://github.com/dennisdoomen/FluentAssertions), there are many more methods tailored for strings, URIs, `DateTime`, `Type` and `TypeInfo`, `IComparable<T>`, `IEnumerable<T>`, `IEquatable<T>`, and `IDictionary<T>`. See a list of all of them [in the release notes](https://github.com/feO2x/Light.GuardClauses/releases) or discover them on the fly via IntelliSense - all the methods are fully documented. Just be sure to add the following `using` statement at the top of your code files to see the extension methods: `using Light.GuardClauses;`.
 
@@ -56,14 +77,14 @@ Inspired by [FluentAssertions](https://github.com/dennisdoomen/FluentAssertions)
 
 [Download the assembly via NuGet](https://www.nuget.org/packages/Light.GuardClauses/): `Install-Package Light.GuardClauses` - Or use the code from this repo.
 
-Light.GuardClauses is a .NET Standard 1.0 library since v2.0.0 (before it was a PCL with profile 259). This means it is compatible with e.g. .NET 4.5 or later, .NET Core 1.0 and UWP, Mono 4.6, Xamarin.iOS 10.0, Xamarin.Android 7.0, Windows 8 / 8.1 Store Apps, and Windows Phone 8.1 / Windows Phone 8 Silverlight.
+Light.GuardClauses is a .NET Standard 1.0 library since v2.0.0. This means it is compatible with e.g. .NET 4.5 or later, .NET Core 1.0 and UWP, Mono 4.6, Xamarin.iOS 10.0, Xamarin.Android 7.0, Windows 8 / 8.1 Store Apps, and Windows Phone 8.1 / Windows Phone 8 Silverlight.
 
 ## And what's the difference to other assertion libraries?
 
 Light.GuardClauses is specifically tailored for the scenario of creating precondition checks in production code. While the purpose of many other libraries is to provide a fluent syntax for assertions in automated tests, Light.GuardClauses achieves the following two goals: 
 
 1) Light.GuardClauses is high-performant as all checks involve only static method calls which create as less objects as possible (to keep the pressure on the Garbage Collector low)
-2) Light.GuardClauses provides meaningful exception messages that you would expect from production code. Additionally, you can easily customize the message or the expception being thrown for every assertion call.
+2) Light.GuardClauses provides meaningful exception messages that you would expect from production code. Additionally, you can easily customize the message or the exception being thrown for every assertion call.
 
 Check out the following section to learn how you can customize the resulting exceptions when precondition checks fail.
 
@@ -134,7 +155,7 @@ Of course, you can write your own extension methods, too.
 
 ## I want to extend Light.GuardClauses
 
-If you want to write your own assertion method, you should follow these recommendations (which of course can be ignored when you only want to use them in your own solution):
+If you want to write your own assertion method that throws an exception, you should follow these recommendations (which of course can be ignored when you only want to use them in your own solution):
 * Create an extension method that should return the value that it is checking, i.e. the `this` parameter type should also be the return type to provide a fluent API.
 * Apart from the parameters you need, add the three optional parameters **parameterName**, **message**, and **exception**. They should behave as mentioned above in the [Customizing messages and exceptions](https://github.com/feO2x/Light.GuardClauses#customizing-messages-and-exceptions) section.
 * Using the Null-Coalescing-Operator (??) is recommended to check if the optional parameters are specified.
