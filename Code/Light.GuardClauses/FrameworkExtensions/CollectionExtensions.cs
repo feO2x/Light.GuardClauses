@@ -33,5 +33,21 @@ namespace Light.GuardClauses.FrameworkExtensions
 
             return -1;
         }
+
+        /// <summary>
+        ///     Checks if the specified collection contains the given item.
+        /// </summary>
+        /// <typeparam name="T">The item type of the collection.</typeparam>
+        /// <param name="collection">The collection that might contain the specified item.</param>
+        /// <param name="item">The item being checked.</param>
+        /// <param name="equalityComparer">
+        ///     The equality comparer used to compare the items (optional). By default,
+        ///     <see cref="EqualityComparer{T}.Default" /> is used.
+        /// </param>
+        /// <returns>True if the item is contained in the collection, else false.</returns>
+        public static bool IsContaining<T>(this IReadOnlyList<T> collection, T item, IEqualityComparer<T> equalityComparer = null)
+        {
+            return collection.IndexOf(item, equalityComparer) != -1;
+        }
     }
 }
