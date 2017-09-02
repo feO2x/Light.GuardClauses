@@ -1127,6 +1127,50 @@ namespace Light.GuardClauses
             // ReSharper restore PossibleMultipleEnumeration
         }
 
+        /// <summary>
+        ///     Checks if the two enumerables are structurally equal. This is true when both of them have equal items in any order.
+        ///     This method is not aware of duplicate items - i.e. it only checks if the collection count is equal and that each item 
+        ///     of <paramref name="enumerable" /> is contained in <paramref name="other" />.
+        /// </summary>
+        /// <typeparam name="T">The item type of the collections.</typeparam>
+        /// <param name="enumerable">The first enumerable.</param>
+        /// <param name="other">The other enumerable.</param>
+        /// <param name="itemComparer">The object used to compare the items of the enumerables (optional). By default, <see cref="EqualityComparer{T}.Default" /> will be used.</param>
+        /// <returns>True if both enumerables are null, or if both of them contain equal items in any order, else false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when either <paramref name="enumerable" /> or <paramref name="other" /> are null.</exception>
+        public static bool IsStructurallyEquivalentTo<T>(this IEnumerable<T> enumerable, IEnumerable<T> other, IEqualityComparer<T> itemComparer = null)
+        {
+            if (ReferenceEquals(enumerable, other))
+                return true;
+            // ReSharper disable PossibleMultipleEnumeration
+            enumerable.MustNotBeNull(nameof(enumerable));
+            other.MustNotBeNull(nameof(other));
+            var first = enumerable.AsReadOnlyList();
+            var second = other.AsReadOnlyList();
+            if (first.Count != second.Count)
+                return false;
+
+            itemComparer = itemComparer ?? EqualityComparer<T>.Default;
+            for (var i = 0; i < first.Count; i++)
+            {
+                if (Contains(second, first[i], itemComparer) == false)
+                    return false;
+            }
+            return true;
+
+            bool Contains(IReadOnlyList<T> collection, T item, IEqualityComparer<T> comparer)
+            {
+                for (var i = 0; i < collection.Count; i++)
+                {
+                    if (comparer.EqualsWithHashCode(item, collection[i]))
+                        return true;
+                }
+                return false;
+            }
+
+            // ReSharper restore PossibleMultipleEnumeration
+        }
+
         private static bool ContainsAtEnd<T>(IReadOnlyList<T> collection, int lowerIndex, T item, IEqualityComparer<T> equalityComparer)
         {
             for (var i = lowerIndex; i < collection.Count; i++)
