@@ -28,6 +28,24 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
+        ///     Tries to cast the specified enumerable as an <see cref="IList{T}" />, or
+        ///     creates a new collection containing the enumerable's items by calling the specified delegate.
+        /// </summary>
+        /// <typeparam name="T">The item type of the collection.</typeparam>
+        /// <param name="enumerable">The enumerable that will be converted to <see cref="IList{T}" />.</param>
+        /// <param name="createCollection">The delegate that creates the collection containing the specified items.</param>
+        /// <returns>The casted enumerable, or a new collection containing the enumerable's items.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> or <paramref name="createCollection" /> is null.</exception>
+        public static IList<T> AsList<T>(this IEnumerable<T> enumerable, Func<IEnumerable<T>, IList<T>> createCollection)
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            enumerable.MustNotBeNull(nameof(enumerable));
+
+            return enumerable as IList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(enumerable);
+            // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
         ///     Tries to cast the specified enumerable as an <see cref="IReadOnlyList{T}" />, or
         ///     creates a new <see cref="List{T}" /> containing the enumerable's items.
         /// </summary>
