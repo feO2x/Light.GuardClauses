@@ -90,7 +90,7 @@ Check out the following section to learn how you can customize the resulting exc
 
 ## Customizing messages and exceptions
 
-Every extension method of Light.GuardClauses has three optional parameters: **parameterName**, **message** and **exception**. With these, you can customize the outcome of an assertion:
+Every exception-throwing assertion of Light.GuardClauses has three optional parameters: **parameterName**, **message** and **exception**. With these, you can customize the outcome of an assertion:
 
 * **parameterName** lets you inject the name of the parameter being checked into the resulting exception message. By default, the standard exception messages use e.g. "The value", "The string", or "The URI" to talk about the subject - these parts are exchanged when you specify the name of the parameter. My advise is to not use `paramterName` when developing application-specific code, but if you create framework, library, or any other type of reusable code, it is better to use `parameterName` so that exception messages immediately point to the erroneous parameter.
 * **message** lets you exchange the entire exception message if you are not satisfied with the default message in your current context.
@@ -155,7 +155,7 @@ Of course, you can write your own extension methods, too.
 
 ## I want to extend Light.GuardClauses
 
-If you want to write your own assertion method that throws an exception, you should follow these recommendations (which of course can be ignored when you only want to use them in your own solution):
+If you want to write your own assertion method throwing an exception, you should follow these recommendations (which of course can be ignored when you only want to use them in your own solution):
 * Create an extension method that should return the value that it is checking, i.e. the `this` parameter type should also be the return type to provide a fluent API.
 * Apart from the parameters you need, add the three optional parameters **parameterName**, **message**, and **exception**. They should behave as mentioned above in the [Customizing messages and exceptions](https://github.com/feO2x/Light.GuardClauses#customizing-messages-and-exceptions) section.
 * Using the Null-Coalescing-Operator (??) is recommended to check if the optional parameters are specified.
