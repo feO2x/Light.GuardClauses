@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
     <Description>A lightweight .NET library for expressive Guard Clauses.</Description>
-    <Version>3.4.0</Version>
+    <Version>3.5.0</Version>
     <Authors>Kenny Pflug</Authors>
     <Company>Kenny Pflug</Company>
     <Copyright>Copyright © Kenny Pflug</Copyright>
@@ -12,9 +12,11 @@
     <PackageLicenseUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>Assertions Preconditions GuardClauses DesignByContract DbC</PackageTags>
-    <PackageReleaseNotes>New Features in version 3.4.0
+    <PackageReleaseNotes>New Features in version 3.5.0
 --------------------------------------
-- added ExtractPropery and ExtractField for Expressions</PackageReleaseNotes>
+- added structural equality testing for collections: IsStructurallyEquivalentTo and IsStructurallyEqualTo
+- added overloads for AsList and AsReadOnlyList that allow you to specify a create-collection delegate
+- added IndexOf and IsContaining for IReadOnlyList&lt;T&gt;</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
