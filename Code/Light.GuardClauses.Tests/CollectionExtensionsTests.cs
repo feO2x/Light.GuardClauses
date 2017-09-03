@@ -22,6 +22,19 @@ namespace Light.GuardClauses.Tests
             index.Should().Be(expectedIndex);
         }
 
+        [Theory(DisplayName = "IsContaining must return true if the corresponding item was found, else false.")]
+        [InlineData(new[] { 1, 2, 3 }, 3, true)]
+        [InlineData(new[] { 1, 2, 3 }, 2, true)]
+        [InlineData(new[] { 1, 2, 3 }, 1, true)]
+        [InlineData(new[] { 1, 2, 3 }, 47, false)]
+        [InlineData(new[] { "Foo", "Bar" }, "Baz", false)]
+        [InlineData(new[] { "Foo", "Bar", "Baz", "Qux" }, "Foo", true)]
+        [InlineData(new string[] { }, "Foo", false)]
+        public void ÎsContaining<T>(IReadOnlyList<T> collection, T item, bool expected)
+        {
+            collection.IsContaining(item).Should().Be(expected);
+        }
+
         [Fact(DisplayName = "IsContaining must be able to be used with a custom equality comparer.")]
         public void ContainsWithEqualityComparer()
         {
