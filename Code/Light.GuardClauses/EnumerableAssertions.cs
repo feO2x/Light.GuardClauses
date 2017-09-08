@@ -1128,7 +1128,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the two enumerables are structurally equal. This is true when both of them have equal items in any order.
+        ///     Checks if the two enumerables are structurally equivalent. This is true when both of them have equal items in any order.
         ///     This method is not aware of duplicate items - i.e. it only checks if the collection count is equal and that each item 
         ///     of <paramref name="enumerable" /> is contained in <paramref name="other" />.
         /// </summary>
