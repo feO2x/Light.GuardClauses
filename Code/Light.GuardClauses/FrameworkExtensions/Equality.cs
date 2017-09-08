@@ -28,10 +28,13 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <returns>The computed hash code.</returns>
         public static int CreateHashCode<T1, T2>(T1 value1, T2 value2)
         {
-            var hash = FirstPrime;
-            if (value1 != null) hash = hash * SecondPrime + value1.GetHashCode();
-            if (value2 != null) hash = hash * SecondPrime + value2.GetHashCode();
-            return hash;
+            unchecked
+            {
+                var hash = FirstPrime;
+                if (value1 != null) hash = hash * SecondPrime + value1.GetHashCode();
+                if (value2 != null) hash = hash * SecondPrime + value2.GetHashCode();
+                return hash;
+            }
         }
 
         /// <summary>
@@ -46,11 +49,14 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <returns>The computed hash code.</returns>
         public static int CreateHashCode<T1, T2, T3>(T1 value1, T2 value2, T3 value3)
         {
-            var hash = FirstPrime;
-            if (value1 != null) hash = hash * SecondPrime + value1.GetHashCode();
-            if (value2 != null) hash = hash * SecondPrime + value2.GetHashCode();
-            if (value3 != null) hash = hash * SecondPrime + value3.GetHashCode();
-            return hash;
+            unchecked
+            {
+                var hash = FirstPrime;
+                if (value1 != null) hash = hash * SecondPrime + value1.GetHashCode();
+                if (value2 != null) hash = hash * SecondPrime + value2.GetHashCode();
+                if (value3 != null) hash = hash * SecondPrime + value3.GetHashCode();
+                return hash;
+            }
         }
 
         /// <summary>
@@ -67,12 +73,15 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <returns>The computed hash code.</returns>
         public static int CreateHashCode<T1, T2, T3, T4>(T1 value1, T2 value2, T3 value3, T4 value4)
         {
-            var hash = FirstPrime;
-            if (value1 != null) hash = hash * SecondPrime + value1.GetHashCode();
-            if (value2 != null) hash = hash * SecondPrime + value2.GetHashCode();
-            if (value3 != null) hash = hash * SecondPrime + value3.GetHashCode();
-            if (value4 != null) hash = hash * SecondPrime + value4.GetHashCode();
-            return hash;
+            unchecked
+            {
+                var hash = FirstPrime;
+                if (value1 != null) hash = hash * SecondPrime + value1.GetHashCode();
+                if (value2 != null) hash = hash * SecondPrime + value2.GetHashCode();
+                if (value3 != null) hash = hash * SecondPrime + value3.GetHashCode();
+                if (value4 != null) hash = hash * SecondPrime + value4.GetHashCode();
+                return hash;
+            }
         }
 
         /// <summary>
@@ -96,14 +105,17 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="values" /> is null.</exception>
         public static int CreateHashCode<T>(IEnumerable<T> values)
         {
-            var hash = FirstPrime;
-            // ReSharper disable once LoopCanBeConvertedToQuery
-            foreach (var @object in values)
+            unchecked
             {
-                if (@object != null)
-                    hash = hash * SecondPrime + @object.GetHashCode();
+                var hash = FirstPrime;
+                // ReSharper disable once LoopCanBeConvertedToQuery
+                foreach (var @object in values)
+                {
+                    if (@object != null)
+                        hash = hash * SecondPrime + @object.GetHashCode();
+                }
+                return hash;
             }
-            return hash;
         }
 
         /// <summary>
