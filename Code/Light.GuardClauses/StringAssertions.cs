@@ -664,6 +664,46 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        ///     Ensures that the specified string contains only digits, or otherwise throws a <see cref="StringException" />.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message to be injected into the <see cref="StringException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when <paramref name="parameter" /> contains other characters than letters or digits (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="StringException">Thrown when <paramref name="parameter"/> contains other characters than digits.</exception>
+        /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter"/> is null.</exception>
+        public static string MustContainOnlyDigits(this string parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.ContainsOnlyDigits())
+                return parameter;
+
+            throw exception?.Invoke() ?? new StringException(message ?? $"{parameterName ?? "The string"} must contain only digits, but you specified \"{parameter}\".", parameterName);
+        }
+
+        /// <summary>
+        ///     Checks if the specified string contains only digits. Empty strings or null will return false.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <returns>True if the string is not null or empty and contains only digits.</returns>
+        public static bool ContainsOnlyDigits(this string parameter)
+        {
+            if (string.IsNullOrEmpty(parameter))
+                return false;
+
+            for (var i = 0; i < parameter.Length; i++)
+            {
+                if (char.IsDigit(parameter[i]) == false)
+                    return false;
+            }
+            return true;
+        }
+
+        /// <summary>
         ///     Ensures that the string has at least the specified length, or otherwise throws a <see cref="StringException" />.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
