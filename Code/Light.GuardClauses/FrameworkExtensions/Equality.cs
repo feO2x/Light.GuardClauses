@@ -130,7 +130,7 @@ namespace Light.GuardClauses.FrameworkExtensions
                     }
                     return hash;
                 }
-                
+
                 // ReSharper disable once LoopCanBeConvertedToQuery
                 foreach (var @object in values)
                 {
@@ -156,6 +156,35 @@ namespace Light.GuardClauses.FrameworkExtensions
 
             return equalityComparer.GetHashCode(first) == equalityComparer.GetHashCode(second) &&
                    equalityComparer.Equals(first, second);
+        }
+
+        /// <summary>
+        ///     Checks if the specified object is equal to the other object. Performs null reference checking and afterwards calls
+        ///     GetHashCode and Equals to determine equality. If you are dealing with value types, please use <see cref="EqualsValueWithHashCode{T}" />
+        ///     instead as no null checks are performed in that method.
+        /// </summary>
+        /// <typeparam name="T">The reference type of the items to be compared.</typeparam>
+        /// <param name="value">The first value to be compared.</param>
+        /// <param name="other">The second value to be compared.</param>
+        /// <returns>True if both hash codes are equal and Equals returns true, else false.</returns>
+        public static bool EqualsWithHashCode<T>(this T value, T other) where T : IEquatable<T>
+        {
+            if (value == null) return other == null;
+            if (other == null) return false;
+
+            return value.GetHashCode() == other.GetHashCode() && value.Equals(other);
+        }
+
+        /// <summary>
+        ///     Checks if the specified value is equal to the other value. Calls GetHashCode and Equals to determine equality.
+        /// </summary>
+        /// <typeparam name="T">The value type of the items to be compared.</typeparam>
+        /// <param name="value">The first value to be compared.</param>
+        /// <param name="other">The second value to be compared.</param>
+        /// <returns>True if both hash codes are equal and Equals returns true, else false.</returns>
+        public static bool EqualsValueWithHashCode<T>(this T value, T other) where T : struct, IEquatable<T>
+        {
+            return value.GetHashCode() == other.GetHashCode() && value.Equals(other);
         }
     }
 }
