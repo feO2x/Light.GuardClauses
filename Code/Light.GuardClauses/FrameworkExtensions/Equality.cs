@@ -9,14 +9,16 @@ namespace Light.GuardClauses.FrameworkExtensions
     public static class Equality
     {
         /// <summary>
-        ///     One of the two prime numbers that are used to create hash codes. It defaults to 17.
+        ///     This prime number is used as an initial hash code value when calculating hash codes. Its value is 1322837333.
         /// </summary>
-        public static int FirstPrime = 17;
+        public const int FirstPrime = 1322837333;
 
         /// <summary>
-        ///     The second prime number used to create hash codes. It defaults to 31.
+        ///     The second prime number (397) used for hash code generation. It is applied using the following calculation:
+        ///     <c>hash = hash * SecondPrime + value.GetHashCode();</c> when the corresponding value is not null.
+        ///     It is the same value that ReSharper (2017.2.1) uses for hash code generation.
         /// </summary>
-        public static int SecondPrime = 31;
+        public const int SecondPrime = 397;
 
         /// <summary>
         ///     Creates a hash code from the two specified values. It is implemented according to the guidelines of this Stack Overflow answer: http://stackoverflow.com/a/263416/1560623.
@@ -93,7 +95,17 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="values" /> is null.</exception>
         public static int CreateHashCode<T>(params T[] values)
         {
-            return CreateHashCode((IEnumerable<T>) values);
+            unchecked
+            {
+                var hash = FirstPrime;
+                for (var i = 0; i < values.Length; ++i)
+                {
+                    var currentValue = values[i];
+                    if (currentValue != null)
+                        hash = hash * SecondPrime + currentValue.GetHashCode();
+                }
+                return hash;
+            }
         }
 
         /// <summary>
@@ -108,6 +120,17 @@ namespace Light.GuardClauses.FrameworkExtensions
             unchecked
             {
                 var hash = FirstPrime;
+                if (values is IReadOnlyList<T> list)
+                {
+                    for (var i = 0; i < list.Count; ++i)
+                    {
+                        var currentValue = list[i];
+                        if (currentValue != null)
+                            hash = hash * SecondPrime + currentValue.GetHashCode();
+                    }
+                    return hash;
+                }
+                
                 // ReSharper disable once LoopCanBeConvertedToQuery
                 foreach (var @object in values)
                 {
