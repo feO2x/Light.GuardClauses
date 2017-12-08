@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Light.GuardClauses.Exceptions;
+using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses
 {
@@ -175,7 +178,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is not a value of an enum.</exception>
         public static T MustBeValidEnumValue<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
-            if (Enum.IsDefined(typeof(T), parameter))
+            if (parameter.IsValidEnumValue())
                 return parameter;
 
             throw exception?.Invoke() ?? (message == null ? new EnumValueNotDefinedException(parameterName, parameter, typeof(T)) : new EnumValueNotDefinedException(message, parameterName));
@@ -184,12 +187,152 @@ namespace Light.GuardClauses
         /// <summary>
         ///     Checks if the specified value is a valid enum value of its type.
         /// </summary>
-        /// <typeparam name="T">The type of the parameter.</typeparam>
         /// <param name="parameter">The enum value to be checked.</param>
         /// <returns>True if the specified value is a valid value of an enum type, else false.</returns>
-        public static bool IsValidEnumValue<T>(this T parameter)
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        public static bool IsValidEnumValue(this object parameter)
         {
-            return Enum.IsDefined(typeof(T), parameter);
+            var enumType = parameter.MustNotBeNull(nameof(parameter)).GetType();
+            var typeInfo = enumType.GetTypeInfo();
+            if (typeInfo.IsEnum == false)
+                throw new ArgumentException($"The specified type \"{typeInfo}\" is not an enum.");
+
+            var fields = typeInfo.DeclaredFields.AsReadOnlyList();
+
+            // If enum does not have the flags attribute, then just get all fields via reflection and check if one is equal to the given value
+            if (typeInfo.GetCustomAttribute(Types.FlagsAttributeType) == null)
+            {
+                for (var i = 0; i < fields.Count; i++)
+                {
+                    var field = fields[i];
+                    if (field.IsStatic &&
+                        field.IsLiteral &&
+                        field.GetValue(null).Equals(parameter))
+                        return true;
+                }
+                return false;
+            }
+
+            // Else get all values 
+            var enumInfo = GetEnumInfo(fields);
+            if (enumInfo.NumberOfConstants == 0)
+                return false;
+
+            return enumInfo.UnderlyingType == Types.UInt64Type ? CheckFlagsEnumValueUsingUInt64Conversion(Convert.ToUInt64(parameter), enumInfo.NumberOfConstants, fields) : CheckFlagsEnumValueUsingInt64Conversion(Convert.ToInt64(parameter), enumInfo.NumberOfConstants, fields);
+        }
+
+        private static bool CheckFlagsEnumValueUsingInt64Conversion(long parameter, int numberOfConstants, IReadOnlyList<FieldInfo> fields)
+        {
+            var array = new long[numberOfConstants];
+            var currentStartIndex = default(int);
+
+            for (var i = 0; i < fields.Count; i++)
+            {
+                var field = fields[i];
+                if (field.IsStatic && field.IsLiteral)
+                {
+                    array[currentStartIndex++] = Convert.ToInt64(field.GetValue(null));
+                }
+            }
+            Array.Sort(array);
+            var foundIndex = Array.BinarySearch(array, parameter);
+            if (foundIndex >= 0 && foundIndex < array.Length)
+                return true;
+
+            var bit = 1L;
+            if (parameter < bit)
+                return false;
+
+            currentStartIndex = 0;
+
+            while (true)
+            {
+                if ((bit & parameter) != 0)
+                {
+                    currentStartIndex = UpdateIndexIfNecessary(bit, currentStartIndex, array);
+                    if (currentStartIndex == -1)
+                        return false;
+
+                    if (FindTarget(bit, currentStartIndex, array) == false)
+                        return false;
+                }
+
+                var newBit = bit << 1;
+                if (newBit > parameter || newBit < bit)
+                    break;
+
+                bit = newBit;
+            }
+
+            return true;
+
+            int UpdateIndexIfNecessary(long currentBit, int index, long[] sortedEnumValues)
+            {
+                var value = sortedEnumValues[index];
+                while (value < currentBit)
+                {
+                    if (++index >= sortedEnumValues.Length)
+                        return -1;
+
+                    value = sortedEnumValues[index];
+                }
+
+                return index;
+            }
+
+            bool FindTarget(long currentBit, int startingIndex, long[] sortedEnumValues)
+            {
+                for (var i = startingIndex; i < sortedEnumValues.Length; i++)
+                {
+                    var enumValue = sortedEnumValues[i];
+                    if ((enumValue & currentBit) != -1)
+                        return true;
+                }
+                return false;
+            }
+        }
+
+        private static bool CheckFlagsEnumValueUsingUInt64Conversion(ulong parameter, int numberOfConstants, IReadOnlyList<FieldInfo> fields)
+        {
+            var array = new ulong[numberOfConstants];
+            var currentIndex = default(int);
+
+            for (var i = 0; i < fields.Count; i++)
+            {
+                var field = fields[i];
+                if (field.IsStatic && field.IsLiteral)
+                {
+                    array[currentIndex++] = (ulong) field.GetValue(null);
+                }
+            }
+            Array.Sort(array);
+            if (Array.BinarySearch(array, parameter) != -1)
+                return true;
+
+            var bit = 1ul;
+            currentIndex = 0;
+
+            while (true)
+            {
+                var isActivated = (bit & parameter) != 0;
+            }
+        }
+
+        private static EnumInfo GetEnumInfo(IReadOnlyList<FieldInfo> fields)
+        {
+            var numberOfConstants = default(int);
+            var underlyingType = default(Type);
+            for (var i = 0; i < fields.Count; i++)
+            {
+                var field = fields[i];
+                if (!field.IsStatic || !field.IsLiteral)
+                    continue;
+                if (underlyingType == null)
+                    underlyingType = field.FieldType;
+                numberOfConstants++;
+            }
+
+            return new EnumInfo(numberOfConstants, underlyingType);
         }
 
         /// <summary>
@@ -296,6 +439,18 @@ namespace Light.GuardClauses
             if (parameter == false) return false;
 
             throw exception?.Invoke() ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be true, but you specified true.", parameterName);
+        }
+
+        private struct EnumInfo
+        {
+            public readonly int NumberOfConstants;
+            public readonly Type UnderlyingType;
+
+            public EnumInfo(int numberOfConstants, Type underlyingType)
+            {
+                NumberOfConstants = numberOfConstants;
+                UnderlyingType = underlyingType;
+            }
         }
     }
 }
