@@ -102,8 +102,7 @@ namespace Light.GuardClauses
         /// <returns>The downcasted reference to <paramref name="parameter" />.</returns>
         public static T MustBeOfType<T>(this object parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
         {
-            var castedValue = parameter as T;
-            if (castedValue != null)
+            if (parameter is T castedValue)
                 return castedValue;
 
             throw exception?.Invoke() ?? new TypeMismatchException(message ?? $"{parameterName ?? "The object"} is of type {parameter.GetType().FullName} and cannot be downcasted to {typeof(T).FullName}.", parameterName);
