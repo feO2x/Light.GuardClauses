@@ -6,7 +6,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsOrDerivesFromTests
     {
         [Fact(DisplayName = "IsOrDerivesFrom must return true when the specified type is equal to the other type or if it derives from it.")]

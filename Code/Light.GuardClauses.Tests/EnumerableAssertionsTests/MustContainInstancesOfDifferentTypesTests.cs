@@ -7,17 +7,21 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustContainInstancesOfDifferentTypesTests : ICustomMessageAndExceptionTestDataProvider
     {
         private static readonly List<IInterface> ValidTestData = new List<IInterface>
                                                                  {
-                                                                     new A(), new B(), new C()
+                                                                     new A(),
+                                                                     new B(),
+                                                                     new C()
                                                                  };
 
         private static readonly List<IInterface> InvalidTestData = new List<IInterface>
                                                                    {
-                                                                       new A(), new B(), new A(), new C()
+                                                                       new A(),
+                                                                       new B(),
+                                                                       new A(),
+                                                                       new C()
                                                                    };
 
         [Fact(DisplayName = "MustContainInstancesOfDifferentTypes must throw a CollectionException when the specified collection contains instances of the same type.")]

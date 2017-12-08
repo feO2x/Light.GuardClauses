@@ -5,7 +5,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsOrImplementsTests
     {
         [Fact(DisplayName = "IsOrImplements must return true when the specified type is equal to or implements the other type.")]

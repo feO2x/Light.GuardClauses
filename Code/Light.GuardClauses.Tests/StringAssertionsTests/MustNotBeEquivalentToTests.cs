@@ -6,7 +6,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustNotBeEquivalentToTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotBeEquivalentTo must throw a StringException when the two strings are equivalent.")]

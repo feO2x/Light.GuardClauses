@@ -9,7 +9,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustEndWithEquivalentOfTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustEndWithEquivalentOf for collections must throw a CollectionException when the collection does not end with the items of the specified set in any order.")]

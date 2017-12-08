@@ -5,7 +5,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsContainingDuplicatesTests
     {
         [Fact(DisplayName = "IsContainingDuplicates must return false when all items are unique.")]

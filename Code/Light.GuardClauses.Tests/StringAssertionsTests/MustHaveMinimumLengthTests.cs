@@ -6,7 +6,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustHaveMinimumLengthTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustHaveMinimumLength must throw a StringException when the specified string is shorter than the minimum length.")]

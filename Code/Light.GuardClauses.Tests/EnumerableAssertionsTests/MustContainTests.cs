@@ -9,7 +9,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustContainTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustContain must throw a CollectionException when the specified value is not part of the collection.")]

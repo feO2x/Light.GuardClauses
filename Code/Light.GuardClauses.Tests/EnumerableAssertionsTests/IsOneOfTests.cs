@@ -4,7 +4,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsOneOfTests
     {
         [Theory(DisplayName = "IsOneOf must return true when the specified item is part of the collection.")]

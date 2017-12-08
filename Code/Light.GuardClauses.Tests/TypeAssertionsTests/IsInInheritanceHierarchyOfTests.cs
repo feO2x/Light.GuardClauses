@@ -5,7 +5,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsInInheritanceHierarchyOfTests
     {
         [Fact(DisplayName = "IsPartOfInheritanceHierarchyOf must return true if the specified type is equivalent to other type, or if it implements or derives from it.")]

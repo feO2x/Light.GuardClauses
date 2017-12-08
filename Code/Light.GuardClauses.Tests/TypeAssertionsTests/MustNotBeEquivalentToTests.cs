@@ -8,7 +8,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustNotBeEquivalentToTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustNotBeEquivalentTo must throw a TypeException when the two types are equivalent.")]

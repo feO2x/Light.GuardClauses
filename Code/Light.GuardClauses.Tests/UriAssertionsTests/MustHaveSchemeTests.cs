@@ -6,7 +6,6 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests.UriAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustHaveSchemeTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustHaveScheme must throw an ArgumentException when the URI does not have the specified scheme.")]

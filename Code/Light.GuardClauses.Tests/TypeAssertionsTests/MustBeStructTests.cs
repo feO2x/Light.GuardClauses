@@ -7,7 +7,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeStructTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustBeStruct must throw a TypeException when the specified type is no struct.")]
@@ -30,7 +29,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             typeof(float).GetTypeInfo().MustBeStruct().Should().Be(typeof(float).GetTypeInfo());
         }
 
-        [Fact (DisplayName = "MustBeStruct must throw an ArgumentNullException when parameter is null.")]
+        [Fact(DisplayName = "MustBeStruct must throw an ArgumentNullException when parameter is null.")]
         public void ParameterNull()
         {
             new Action(() => ((Type) null).MustBeStruct()).ShouldThrow<ArgumentNullException>();

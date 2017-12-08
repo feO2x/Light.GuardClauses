@@ -7,7 +7,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustNotContainKeyTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustNotContainKey must throw a DictioanaryException when the specified key is part of the dictionary.")]

@@ -6,7 +6,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustNotContainDuplicatesTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotContainDuplicates must throw an exception when the collection has duplicates.")]

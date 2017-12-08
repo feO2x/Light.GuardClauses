@@ -6,7 +6,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustNotDeriveFromOrImplementTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustNotDeriveFromOrImplement must throw a TypeException when the specified type does derive from or implement the other type.")]

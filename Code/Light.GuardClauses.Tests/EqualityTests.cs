@@ -6,7 +6,6 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class EqualityTests
     {
         [Theory(DisplayName = "The CreateHashCode methods must not throw an exception when one of the passed in parameters is null.")]
@@ -19,16 +18,16 @@ namespace Light.GuardClauses.Tests
         public static readonly TestData NoExceptionOnNullData =
             new[]
             {
-                new object[] { new Action(() => Equality.CreateHashCode(42, (string)null)) },
-                new object[] { new Action(() => Equality.CreateHashCode((string)null, 42)) },
-                new object[] { new Action(() => Equality.CreateHashCode((string)null, 42, 56)) },
-                new object[] { new Action(() => Equality.CreateHashCode(42, (string)null, 56)) },
-                new object[] { new Action(() => Equality.CreateHashCode(42, 56, (string)null)) },
-                new object[] { new Action(() => Equality.CreateHashCode((string)null, 42, 56, 87)) },
-                new object[] { new Action(() => Equality.CreateHashCode(42, (string)null, 56, 87)) },
-                new object[] { new Action(() => Equality.CreateHashCode(42, 56, (string)null, 87)) },
-                new object[] { new Action(() => Equality.CreateHashCode(42, 56, 87, (string)null)) },
-                new object[] { new Action(() => Equality.CreateHashCode(new object(), 42, 44, "Foo", null)) },
+                new object[] { new Action(() => Equality.CreateHashCode(42, (string) null)) },
+                new object[] { new Action(() => Equality.CreateHashCode((string) null, 42)) },
+                new object[] { new Action(() => Equality.CreateHashCode((string) null, 42, 56)) },
+                new object[] { new Action(() => Equality.CreateHashCode(42, (string) null, 56)) },
+                new object[] { new Action(() => Equality.CreateHashCode(42, 56, (string) null)) },
+                new object[] { new Action(() => Equality.CreateHashCode((string) null, 42, 56, 87)) },
+                new object[] { new Action(() => Equality.CreateHashCode(42, (string) null, 56, 87)) },
+                new object[] { new Action(() => Equality.CreateHashCode(42, 56, (string) null, 87)) },
+                new object[] { new Action(() => Equality.CreateHashCode(42, 56, 87, (string) null)) },
+                new object[] { new Action(() => Equality.CreateHashCode(new object(), 42, 44, "Foo", null)) }
             };
     }
 }

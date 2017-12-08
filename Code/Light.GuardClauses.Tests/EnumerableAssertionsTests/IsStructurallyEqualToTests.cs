@@ -5,7 +5,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsStructurallyEqualToTests
     {
         [Theory(DisplayName = "IsStructurallyEqualTo must return true when both collections have the same items in the same order.")]

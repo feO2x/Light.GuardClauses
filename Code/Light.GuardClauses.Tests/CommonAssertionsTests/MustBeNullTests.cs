@@ -6,7 +6,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.CommonAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeNullTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustBeNull throws an exception when the specified value is not null.")]

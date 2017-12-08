@@ -6,7 +6,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class EquivalentTypeComparerTests
     {
         [Fact(DisplayName = "Equals must return true when two types are equivalent.")]

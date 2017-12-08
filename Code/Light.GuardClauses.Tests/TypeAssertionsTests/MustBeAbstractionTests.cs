@@ -8,7 +8,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeAbstractionTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustBeAbstract must not throw an exception when the specified type is an interface.")]

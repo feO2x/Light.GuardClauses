@@ -5,7 +5,6 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests.StringAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsLengthInTests
     {
         [Theory(DisplayName = "IsLengthIn must return true when the length of the string is within the boundaries of the specified string, else false.")]

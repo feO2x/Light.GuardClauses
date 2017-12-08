@@ -9,7 +9,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustNotContainPairTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustNotContainPair must throw a DictioanryException when the specified pair is part of the dictionary.")]

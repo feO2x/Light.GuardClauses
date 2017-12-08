@@ -8,7 +8,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeClassTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustBeClass must throw a TypeException when the specified type is not a class.")]

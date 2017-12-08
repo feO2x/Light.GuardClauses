@@ -7,7 +7,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class ExtractFieldTests
     {
         [Fact(DisplayName = "ExtractField must return the field info of a valid expression \"o => o.Field\".")]

@@ -1,10 +1,9 @@
-﻿using FluentAssertions;
-using System;
+﻿using System;
+using FluentAssertions;
 using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class AgainstTests
     {
         [Fact(DisplayName = "Against must throw the specified exception when condition returns true.")]

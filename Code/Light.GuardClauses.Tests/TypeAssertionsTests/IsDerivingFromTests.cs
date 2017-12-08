@@ -5,7 +5,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", "Functional Tests")]
     public sealed class IsDerivingFromTests
     {
         // All the following facts (except the argument null tests) can be 

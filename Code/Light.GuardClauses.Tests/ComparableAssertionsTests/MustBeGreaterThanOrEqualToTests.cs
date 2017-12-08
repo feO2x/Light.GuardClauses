@@ -5,7 +5,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.ComparableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeGreaterThanOrEqualToTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustBeGreaterThanOrEqualTo must throw an ArgumentOutOfRangeException when the specified parameter is less than the boundary value.")]

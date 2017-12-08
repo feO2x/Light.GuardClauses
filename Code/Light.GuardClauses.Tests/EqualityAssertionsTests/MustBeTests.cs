@@ -6,7 +6,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.EqualityAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustBe must throw an exception when the specified values are different.")]

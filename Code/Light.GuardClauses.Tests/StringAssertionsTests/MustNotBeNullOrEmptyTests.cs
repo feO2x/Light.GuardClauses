@@ -6,7 +6,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustNotBeNullOrEmptyTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustNotBeNullOrEmpty must throw an ArgumentNullException when a string is null.")]

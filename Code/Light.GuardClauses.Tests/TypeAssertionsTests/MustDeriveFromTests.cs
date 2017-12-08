@@ -7,7 +7,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustDeriveFromTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustDeriveFrom must throw a TypeException when the specified type does not derive from baseClass.")]
@@ -26,7 +25,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         public void DerivesFrom()
         {
             var type = typeof(ObservableCollection<string>);
-            
+
             var result = type.MustDeriveFrom(typeof(Collection<>));
 
             result.Should().BeSameAs(type);

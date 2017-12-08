@@ -9,7 +9,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsEquivalentToTests
     {
         [Theory(DisplayName = "IsEquivalentTo must return true when two non-generic types are passed in that are equal, else false must be returned.")]

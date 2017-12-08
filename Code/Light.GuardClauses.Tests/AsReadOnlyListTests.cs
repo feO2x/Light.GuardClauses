@@ -9,7 +9,6 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class AsReadOnlyListTests
     {
         [Theory(DisplayName = "AsReadOnlyList will return the same collection instance casted as an IReadOnlyList<T> when the cast is possible.")]

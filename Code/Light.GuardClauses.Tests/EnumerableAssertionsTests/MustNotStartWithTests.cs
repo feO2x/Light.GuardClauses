@@ -9,7 +9,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustNotStartWithTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotStartWith for collections must throw a CollectionException when the collection starts with the specified subset in the same order.")]

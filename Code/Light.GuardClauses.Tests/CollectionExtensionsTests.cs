@@ -5,7 +5,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class CollectionExtensionsTests
     {
         [Theory(DisplayName = "IndexOf must return the index of the item when the target collection contains it.")]

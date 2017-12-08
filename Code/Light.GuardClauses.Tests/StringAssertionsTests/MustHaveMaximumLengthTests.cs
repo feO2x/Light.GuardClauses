@@ -6,7 +6,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustHaveMaximumLengthTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustHaveMaximumLength must throw a StringException when the specified string is longer than the maximum length.")]

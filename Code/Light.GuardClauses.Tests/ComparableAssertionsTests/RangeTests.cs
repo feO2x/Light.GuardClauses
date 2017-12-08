@@ -4,7 +4,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.ComparableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class RangeTests
     {
         [Theory(DisplayName = "IsValueWithinRange must return true when the given value is between the specified range.")]

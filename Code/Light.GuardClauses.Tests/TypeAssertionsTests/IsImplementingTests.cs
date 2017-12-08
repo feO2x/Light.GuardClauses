@@ -7,7 +7,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsImplementingTests
     {
         [Fact(DisplayName = "IsImplementing must return true if the specified interface is implemented by the target type.")]

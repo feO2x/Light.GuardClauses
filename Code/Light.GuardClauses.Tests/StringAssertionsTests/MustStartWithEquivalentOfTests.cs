@@ -6,7 +6,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustStartWithEquivalentOfTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustStartWithEquivalentOf for strings must throw a StringException when the string does not start with the specified text (ignoring case-sensitivity).")]

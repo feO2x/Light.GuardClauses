@@ -6,7 +6,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustNotBeSubstringOfTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotBeSubstringOf must throw a StringException when the specified string is a substring of text.")]

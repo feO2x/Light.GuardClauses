@@ -8,7 +8,6 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustHaveCountTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustHaveCount must throw a CollectionException when the collection does not have the specified count.")]

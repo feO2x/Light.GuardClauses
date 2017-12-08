@@ -5,7 +5,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsEquivalentToTests
     {
         [Theory(DisplayName = "IsEquivalentTo must return true when the two strings are null or equal according to StringComparison.OrdinalIgnoreCase.")]

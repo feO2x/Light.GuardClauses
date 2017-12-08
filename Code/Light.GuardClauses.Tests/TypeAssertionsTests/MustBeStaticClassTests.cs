@@ -7,7 +7,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeStaticClassTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustBeStaticClass must throw a TypeException when the specified type is not a static class.")]

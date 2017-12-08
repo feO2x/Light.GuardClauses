@@ -3,7 +3,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.EqualityAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsSameAsTests
     {
         [Fact(DisplayName = "IsSameAs must return true if the two references point to the same object.")]

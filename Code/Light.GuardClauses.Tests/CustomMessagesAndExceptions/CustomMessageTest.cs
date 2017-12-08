@@ -13,7 +13,7 @@ namespace Light.GuardClauses.Tests.CustomMessagesAndExceptions
             callAssertionWithCustomMessage.MustNotBeNull(nameof(callAssertionWithCustomMessage));
 
             CallAssertionWithCustomMessage = callAssertionWithCustomMessage;
-            ExpectedExceptionType = typeof (TException);
+            ExpectedExceptionType = typeof(TException);
         }
 
         void IRunnableTest.RunTest()

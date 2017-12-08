@@ -4,7 +4,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.CommonAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsValidEnumValueTests
     {
         [Theory(DisplayName = "IsValidEnumValue must return true when the enum value is valid.")]

@@ -4,7 +4,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsStartingWithTests
     {
         [Fact(DisplayName = "IsStartingWith must return true when the specified enumerable starts with items that are equal to the items of the specified set (same order).")]

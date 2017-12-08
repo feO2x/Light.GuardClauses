@@ -3,46 +3,31 @@ using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
-using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests.DateTimeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeUtcTests : ICustomMessageAndExceptionTestDataProvider
     {
-        [Theory(DisplayName = "MustBeUtc must throw an exception when the specified DateTime.Kind is not DateTimeKind.UTC")]
-        [MemberData(nameof(NotUtcData))]
-        public void NotUtc(DateTime invalidDateTime)
+        [Fact(DisplayName = "MustBeUtc must throw an exception when the specified DateTime.Kind is not DateTimeKind.UTC")]
+        public void NotUtc()
         {
+            var invalidDateTime = DateTime.Now;
+
             Action act = () => invalidDateTime.MustBeUtc(nameof(invalidDateTime));
 
             act.ShouldThrow<InvalidDateTimeException>()
                .And.Message.Should().Contain($"The specified date time \"{invalidDateTime:O}\" must be of kind {DateTimeKind.Utc}, but actually is {invalidDateTime.Kind}.");
         }
 
-        public static readonly TestData NotUtcData =
-            new[]
-            {
-                new object[] { new DateTime(2017, 1, 26, 18, 50, 5, DateTimeKind.Local) },
-                new object[] { new DateTime(1333, 3, 30, 0, 16, 49, DateTimeKind.Unspecified) },
-                new object[] { DateTime.Now }
-            };
-
-        [Theory(DisplayName = "MustBeUtc must not throw an exception when the specified DateTime is of kind UTC.")]
-        [MemberData(nameof(UtcData))]
-        public void Utc(DateTime utcDateTime)
+        [Fact(DisplayName = "MustBeUtc must not throw an exception when the specified DateTime is of kind UTC.")]
+        public void Utc()
         {
+            var utcDateTime = DateTime.UtcNow;
+
             var result = utcDateTime.MustBeUtc();
 
             result.Should().Be(utcDateTime);
         }
-
-        public static readonly TestData UtcData =
-            new[]
-            {
-                new object[] { DateTime.UtcNow },
-                new object[] { new DateTime(2017, 1, 26, 18, 1, 51, DateTimeKind.Utc) }
-            };
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {

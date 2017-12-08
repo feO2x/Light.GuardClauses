@@ -7,7 +7,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustNotHaveLengthInTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustMotHaveLengthIn must throw a StringException when the length of the specified string is within the given range.")]

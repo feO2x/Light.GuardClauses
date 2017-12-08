@@ -5,7 +5,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.UriAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustHaveOneSchemeOfTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustHaveOneSchemeOf must throw an ArgumentException when the specified URI is not an absolute one or does not have one of the specified schemes.")]
@@ -19,7 +18,7 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
                .And.Message.Should().Contain($"{nameof(uri)} must have one of the following schemes:");
         }
 
-        [Theory (DisplayName = "MustHaveOneSchemeOf must not throw an exception when the specified URI is an absolute one having one of the specified schemes.")]
+        [Theory(DisplayName = "MustHaveOneSchemeOf must not throw an exception when the specified URI is an absolute one having one of the specified schemes.")]
         [InlineData("http://www.feo2x.com")]
         [InlineData("https://docs.microsoft.com")]
         public void ValidScheme(string uriText)

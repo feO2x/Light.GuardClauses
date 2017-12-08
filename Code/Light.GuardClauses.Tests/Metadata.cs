@@ -5,7 +5,6 @@ using Xunit.Abstractions;
 
 namespace Light.GuardClauses.Tests
 {
-    [Trait("Category", Traits.InformativeTests)]
     public sealed class Metadata
     {
         private readonly ITestOutputHelper _output;

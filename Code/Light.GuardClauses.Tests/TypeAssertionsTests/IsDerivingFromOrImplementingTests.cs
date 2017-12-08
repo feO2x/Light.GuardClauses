@@ -7,7 +7,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsDerivingFromOrImplementingTests
     {
         [Fact(DisplayName = "IsDerivingFromOrImplementing must return true when the specified type derives from the given base class.")]

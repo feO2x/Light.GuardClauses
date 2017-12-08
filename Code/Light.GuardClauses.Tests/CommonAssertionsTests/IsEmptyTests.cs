@@ -4,7 +4,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.CommonAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsEmptyTests
     {
         [Fact(DisplayName = "IsEmpty must return true if the specified value is an empty GUID.")]

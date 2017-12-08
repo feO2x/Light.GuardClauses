@@ -8,7 +8,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustNotBeKeyOfTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustNotBeKeyOf must throw an ArgumentOutOfRangeException when the specified key is present in the dictionary.")]

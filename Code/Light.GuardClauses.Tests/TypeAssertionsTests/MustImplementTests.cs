@@ -9,7 +9,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustImplementTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustImplement must throw a TypeException when the specified type does not implement interfaceType.")]

@@ -6,7 +6,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsContainingInstancesOfDifferentTypesTests
     {
         [Fact(DisplayName = "IsContainingInstancesOfDifferentTypes must return true when all instances of the collection have a unique type.")]

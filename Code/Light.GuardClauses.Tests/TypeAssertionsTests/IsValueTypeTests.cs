@@ -7,7 +7,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsValueTypeTests
     {
         [Fact(DisplayName = "IsValueType must return false if the specified type is a class.")]

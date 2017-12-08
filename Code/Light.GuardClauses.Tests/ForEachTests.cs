@@ -9,7 +9,6 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class ForEachTests
     {
         [Theory(DisplayName = "ForEach must call the specified action for each element in the given enumerable.")]

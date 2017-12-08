@@ -8,7 +8,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeInterfaceTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustBeInterface must throw a TypeException when the specified type is no interface.")]

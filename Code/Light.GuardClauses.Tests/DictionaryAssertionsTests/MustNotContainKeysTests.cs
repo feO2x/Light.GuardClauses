@@ -10,7 +10,6 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustNotContainKeysTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotContainKeys must throw a DictionaryException when the dictionary contains any of the specified keys.")]

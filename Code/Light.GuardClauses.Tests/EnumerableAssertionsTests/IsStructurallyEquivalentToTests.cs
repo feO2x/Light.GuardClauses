@@ -5,7 +5,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsStructurallyEquivalentToTests
     {
         [Theory(DisplayName = "IsStructurallyEquivalentTo must return true when both collections have the same items in any order.")]
@@ -40,7 +39,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         [Fact(DisplayName = "IsStructurallyEquivalentTo must return true when both collections are null.")]
         public void BothNull()
         {
-            ((IEnumerable<string>)null).IsStructurallyEquivalentTo(null).Should().BeTrue();
+            ((IEnumerable<string>) null).IsStructurallyEquivalentTo(null).Should().BeTrue();
         }
 
         [Fact(DisplayName = "IsStructurallyEquivalentTo must support custom item comparers.")]

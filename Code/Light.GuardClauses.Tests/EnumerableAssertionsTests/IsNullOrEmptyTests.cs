@@ -4,7 +4,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsNullOrEmptyTests
     {
         [Fact(DisplayName = "IsNullOrEmpty must return true when the specified collection is null.")]

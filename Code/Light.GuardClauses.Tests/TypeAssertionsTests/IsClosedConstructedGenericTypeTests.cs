@@ -4,7 +4,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsClosedConstructedGenericTypeTests
     {
         [Fact(DisplayName = "IsClosedConstructedGenericType must return false when the specified type is a non-generic type.")]

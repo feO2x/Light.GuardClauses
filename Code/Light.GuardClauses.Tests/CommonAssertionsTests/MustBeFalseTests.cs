@@ -5,7 +5,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.CommonAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeFalseTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustBeFalse must throw an ArgumentException when the specified value is true.")]

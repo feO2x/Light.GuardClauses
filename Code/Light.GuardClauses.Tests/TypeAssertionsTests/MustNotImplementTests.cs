@@ -8,7 +8,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustNotImplementTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustNotImplement must throw a TypeException when the specified type implements the other type.")]

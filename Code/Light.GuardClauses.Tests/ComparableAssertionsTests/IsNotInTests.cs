@@ -3,7 +3,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.ComparableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsNotInTests
     {
         [Fact(DisplayName = "IsNotIn must return true when the specified value is not within the specified range.")]

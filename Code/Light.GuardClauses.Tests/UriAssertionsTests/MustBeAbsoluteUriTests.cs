@@ -6,7 +6,6 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests.UriAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeAbsoluteUriTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustBeAbsoluteUri must not throw an exception when the specified uri is an absolute one.")]

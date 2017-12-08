@@ -8,7 +8,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.CommonAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeOfTypeTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustBeOfType must throw an exception when object cannot be downcasted.")]

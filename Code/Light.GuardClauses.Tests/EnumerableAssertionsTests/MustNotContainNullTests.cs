@@ -6,7 +6,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustNotContainNullTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotContainNull must throw an exception when the specified collection contains at least one item that is null.")]

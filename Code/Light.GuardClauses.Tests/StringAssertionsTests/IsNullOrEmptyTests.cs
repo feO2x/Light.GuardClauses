@@ -3,7 +3,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsNullOrEmptyTests
     {
         [Fact(DisplayName = "IsNullOrEmpty must return true when the specified string is null.")]

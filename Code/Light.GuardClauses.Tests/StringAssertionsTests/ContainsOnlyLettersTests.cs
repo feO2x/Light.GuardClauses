@@ -3,7 +3,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class ContainsOnlyLettersTests
     {
         [Theory(DisplayName = "ContainsOnlyLetters must return true when the specified string contains only uppercase or lowercase characters.")]

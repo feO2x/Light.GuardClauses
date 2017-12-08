@@ -4,7 +4,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsSubsetOfTests
     {
         [Theory(DisplayName = "IsSubsetOf must return true when all items of the specified collection are part of the superset collection.")]

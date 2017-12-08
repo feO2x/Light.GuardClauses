@@ -6,7 +6,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustNotStartWithTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotStartWith for strings must throw a StringException when the string starts with the specified text.")]

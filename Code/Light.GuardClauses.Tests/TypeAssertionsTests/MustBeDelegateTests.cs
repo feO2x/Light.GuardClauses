@@ -8,7 +8,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeDelegateTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustBeDelegate must throw a TypeException when the specified type is no delegate.")]

@@ -5,7 +5,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class IsMatchingTests
     {
         [Fact(DisplayName = "IsMatching must return false when the specified string does not match the regular expression.")]

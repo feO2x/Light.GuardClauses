@@ -7,7 +7,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeReferenceTypeTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustBeReferenceType must throw a TypeException when the specified type is a value type.")]

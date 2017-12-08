@@ -9,7 +9,6 @@ using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class AsListTests
     {
         [Theory(DisplayName = "AsList will return the same collection instance casted as an IList<T> when the cast is possible.")]

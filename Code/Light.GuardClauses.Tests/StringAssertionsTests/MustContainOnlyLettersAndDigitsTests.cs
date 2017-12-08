@@ -6,7 +6,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustContainOnlyLettersAndDigitsTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustContainOnlyLettersAndDigits must throw a StringException when the specified string contains characters that are no letters or digits.")]

@@ -3,7 +3,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class ContainsOnlyLettersAndDigitsTests
     {
         [Theory(DisplayName = "ContainsOnlyLettersAndDigits must return true when the specified string contains only letters and digit characters.")]

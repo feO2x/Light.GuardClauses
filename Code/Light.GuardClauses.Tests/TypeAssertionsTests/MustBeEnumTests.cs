@@ -9,7 +9,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustBeEnumTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustBeEnum must throw a TypeException when the specified type is no enum.")]

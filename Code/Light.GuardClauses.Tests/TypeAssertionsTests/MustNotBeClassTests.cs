@@ -9,7 +9,6 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.TypeAssertionsTests
 {
-    [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustNotBeClassTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Fact(DisplayName = "MustNotBeClass must throw a TypeException when the specified type is a class.")]
@@ -31,7 +30,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             typeof(Action).MustNotBeClass().Should().Be(typeof(Action));
             typeof(IEnumerator).GetTypeInfo().MustNotBeClass().Should().Be(typeof(IEnumerator).GetTypeInfo());
         }
-        
+
         [Fact(DisplayName = "MustNotBeClass must throw an ArgumentNullException when parameter is null.")]
         public void ParameterNull()
         {
