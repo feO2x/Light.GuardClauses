@@ -5,7 +5,6 @@ using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
 using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
-using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
@@ -13,8 +12,9 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
     public sealed class MustNotContainTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotContain must throw a CollectionException when the specified item is part of the collection.")]
-        [MemberData(nameof(CollectionContainsItemData))]
-        public void CollectionContainsItem<T>(T[] collection, T item)
+        [InlineData(new[] { "Hello", "World" }, "Hello")]
+        [InlineData(new[] { "There is something", null }, null)]
+        public void CollectionContainsItem(string[] collection, string item)
         {
             Action act = () => collection.MustNotContain(item, nameof(collection));
 
@@ -22,30 +22,16 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
                .And.Message.Should().Contain($"{nameof(collection)} must not contain value \"{item.ToStringOrNull()}\", but it does.");
         }
 
-        public static readonly TestData CollectionContainsItemData =
-            new[]
-            {
-                new object[] { new[] { 1, 2, 3 }, 2 },
-                new object[] { new[] { "Hello", "World" }, "Hello" },
-                new object[] { new[] { "There is something", null }, null }
-            };
-
-        [Theory(DisplayName = "MustNotContain must not throw an exception when the specified item is not part of the collection.")]
-        [MemberData(nameof(CollectionDoesNotContainItemData))]
-        public void CollectionDoesNotContainItem<T>(T[] collection, T item)
+        [Fact(DisplayName = "MustNotContain must not throw an exception when the specified item is not part of the collection.")]
+        public void CollectionDoesNotContainItem()
         {
-            Action act = () => collection.MustNotContain(item);
+            const char item = 'd';
+            var collection = new[] { 'a', 'b', 'c' };
 
-            act.ShouldNotThrow();
+            var result = collection.MustNotContain(item);
+
+            result.Should().BeSameAs(collection);
         }
-
-        public static readonly TestData CollectionDoesNotContainItemData =
-            new[]
-            {
-                new object[] { new[] { 'a', 'b', 'c' }, 'd' },
-                new object[] { new[] { 42, 87, -188 }, 10555 },
-                new object[] { new[] { true }, false }
-            };
 
         [Fact(DisplayName = "MustNotContain must throw an ArgumentNullException when the specified collection is null.")]
         public void CollectionNull()
@@ -59,8 +45,10 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         }
 
         [Theory(DisplayName = "MustNotContain must throw a CollectionException when the collection contains any of the items of the specified set.")]
-        [MemberData(nameof(SetContainedData))]
-        public void SetContained<T>(T[] collection, T[] set)
+        [InlineData(new[] { 1, 2, 3, 4, 5 }, new[] { 1, 2 })]
+        [InlineData(new[] { 1, 2, 3 }, new[] { 1, 2, 3 })]
+        [InlineData(new[] { 1, 42, 3 }, new[] { 42 })]
+        public void SetContained(int[] collection, int[] set)
         {
             Action act = () => collection.MustNotContain(set, nameof(collection));
 
@@ -68,29 +56,16 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
                .And.Message.Should().Contain($"{nameof(collection)} must not contain any of the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(set)}");
         }
 
-        public static readonly TestData SetContainedData =
-            new[]
-            {
-                new object[] { new[] { "Hello", "World" }, new[] { "Hello", "There" } },
-                new object[] { new object[] { 1, 2, 3, 4, 5 }, new object[] { 2, 5 } },
-                new object[] { new[] { new object(), null }, new object[] { null } }
-            };
-
-        [Theory(DisplayName = "MustNotContain must not throw an exception when the collection does not contain any items of the specified set.")]
-        [MemberData(nameof(SetNotContainedData))]
-        public void SetNotContained<T>(T[] collection, T[] set)
+        [Fact(DisplayName = "MustNotContain must not throw an exception when the collection does not contain any items of the specified set.")]
+        public void SetNotContained()
         {
-            Action act = () => collection.MustNotContain(set);
+            var collection = new[] { "Hello", "There" };
+            var set = new[] { "What's", "Up?" };
 
-            act.ShouldNotThrow();
+            var result = collection.MustNotContain(set);
+
+            result.Should().BeSameAs(collection);
         }
-
-        public static readonly TestData SetNotContainedData =
-            new[]
-            {
-                new object[] { new[] { "Hello", "There" }, new[] { "What's", "Up?" } },
-                new object[] { new object[] { 1, 2, 3, 4 }, new object[] { 81, -34445, 20 } }
-            };
 
         [Theory(DisplayName = "MustNotContain must throw an ArgumentNullException when the specified parameter or set is null.")]
         [InlineData(new object[0], null)]
@@ -102,7 +77,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => new[] { 1, 2, 3 }.MustNotContain(2, exception: exception)))
                     .Add(new CustomMessageTest<CollectionException>(message => new[] { 1, 2, 3 }.MustNotContain(2, message: message)));

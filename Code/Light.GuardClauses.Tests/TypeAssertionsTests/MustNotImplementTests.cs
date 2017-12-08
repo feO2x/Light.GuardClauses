@@ -29,9 +29,9 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             var first = typeof(string);
             var second = typeof(IDictionary);
 
-            Action act = () => first.MustNotImplement(second);
+            var result = first.MustNotImplement(second);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(first);
         }
 
         [Fact(DisplayName = "MustNotImplement must throw an ArgumentNullException when either parameter or other is null.")]
@@ -41,7 +41,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             new Action(() => typeof(double).MustNotImplement(null)).ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => typeof(string).MustNotImplement(typeof(IEnumerable<>), exception: exception))
                     .AddMessageTest<TypeException>(message => typeof(string).MustNotImplement(typeof(IEnumerable<char>), message: message));

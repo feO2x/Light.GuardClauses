@@ -26,13 +26,8 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         [Fact(DisplayName = "MustBeReferenceType must not throw an exception when the specified type is a reference type.")]
         public void IsReferenceType()
         {
-            TestIsReferenceType(() => typeof(string).MustBeReferenceType());
-            TestIsReferenceType(() => typeof(Action).GetTypeInfo().MustBeReferenceType());
-        }
-
-        private static void TestIsReferenceType(Action act)
-        {
-            act.ShouldNotThrow();
+            typeof(string).MustBeReferenceType().Should().Be(typeof(string));
+            typeof(Action).GetTypeInfo().MustBeReferenceType().Should().Be(typeof(Action).GetTypeInfo());
         }
 
         [Fact(DisplayName = "MustBeReferenceType must throw an ArgumentNullException when parameter is null.")]
@@ -42,7 +37,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             new Action(() => ((TypeInfo) null).MustBeReferenceType()).ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => typeof(int).MustBeReferenceType(exception: exception))
                     .AddMessageTest<TypeException>(message => typeof(float).MustBeReferenceType(message: message));

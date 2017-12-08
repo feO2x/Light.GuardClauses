@@ -3,7 +3,6 @@ using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
-using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
@@ -11,8 +10,9 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
     public sealed class MustNotContainDuplicatesTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotContainDuplicates must throw an exception when the collection has duplicates.")]
-        [MemberData(nameof(DuplicateItemsTestData))]
-        public void DuplicateItems<T>(T[] collection, int duplicateIndex)
+        [InlineData(new[] { "1", "2", "3", "1" }, 3)]
+        [InlineData(new[] { "1", null, "1" }, 2)]
+        public void DuplicateItems(string[] collection, int duplicateIndex)
         {
             Action act = () => collection.MustNotContainDuplicates(parameterName: nameof(collection));
 
@@ -20,35 +20,20 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
                .And.Message.Should().Contain($"{nameof(collection)} must be a collection with unique items, but there is a duplicate at index {duplicateIndex}.");
         }
 
-        public static readonly TestData DuplicateItemsTestData =
-            new[]
-            {
-                new object[] { new[] { "1", "2", "3", "1" }, 3 },
-                new object[] { new object[] { 1, 42, 42, 87 }, 2 },
-                new object[] { new[] { "1", null, "1" }, 2 }
-            };
-
-        [Theory(DisplayName = "MustNotContainDuplicates must not throw an exception when the items are unique.")]
-        [MemberData(nameof(UniqueItemsTestData))]
-        public void UniqueItems<T>(T[] collection)
+        [Fact(DisplayName = "MustNotContainDuplicates must not throw an exception when the items are unique.")]
+        public void UniqueItems()
         {
-            Action act = () => collection.MustNotContainDuplicates(parameterName: nameof(collection));
+            var collection = new[] { 1, 2, 3, 4, 5 };
 
-            act.ShouldNotThrow();
+            var result = collection.MustNotContainDuplicates(parameterName: nameof(collection));
+
+            result.Should().BeSameAs(collection);
         }
 
-        public static readonly TestData UniqueItemsTestData =
-            new[]
-            {
-                new object[] { new[] { "41", "42", "43" } },
-                new object[] { new object[] { 1, 2, 3, 4, 5 } }
-            };
-
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => new[] { 1, 2, 1 }.MustNotContainDuplicates(exception: exception)));
-
-            testData.Add(new CustomMessageTest<CollectionException>(message => new[] { 1, 2, 1 }.MustNotContainDuplicates(message: message)));
+            testData.Add(new CustomExceptionTest(exception => new[] { 1, 2, 1 }.MustNotContainDuplicates(exception: exception)))
+                    .Add(new CustomMessageTest<CollectionException>(message => new[] { 1, 2, 1 }.MustNotContainDuplicates(message: message)));
         }
     }
 }

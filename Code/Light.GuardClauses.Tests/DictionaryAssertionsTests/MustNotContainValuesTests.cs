@@ -62,11 +62,10 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
                 new object[] { null, new object[0] }
             };
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => new Dictionary<int, string> { [1] = "Foo", [2] = "Bar" }.MustNotContainValues(new[] { "Bar", "foo" }, exception: exception)));
-
-            testData.Add(new CustomMessageTest<DictionaryException>(message => new Dictionary<int, string> { [1] = "Foo", [2] = "Bar" }.MustNotContainValues(new[] { "Bar", "foo" }, message: message)));
+            testData.Add(new CustomExceptionTest(exception => new Dictionary<int, string> { [1] = "Foo", [2] = "Bar" }.MustNotContainValues(new[] { "Bar", "foo" }, exception: exception)))
+                    .Add(new CustomMessageTest<DictionaryException>(message => new Dictionary<int, string> { [1] = "Foo", [2] = "Bar" }.MustNotContainValues(new[] { "Bar", "foo" }, message: message)));
         }
     }
 }

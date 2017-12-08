@@ -27,9 +27,9 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("Can a man still be brave if he's afraid?", "he's afraid?")]
         public void StringEndsEqual(string @string, string endText)
         {
-            Action act = () => @string.MustEndWith(endText);
+            var result = @string.MustEndWith(endText);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(@string);
         }
 
         [Theory(DisplayName = "MustEndWith for strings must throw an ArgumentNullException when either paramter or text is null.")]
@@ -42,7 +42,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => "That is the only time a man can be brave".MustEndWith("afraid", exception: exception)))
                     .Add(new CustomMessageTest<StringException>(message => "Foo".MustEndWith("Bar", message: message)));

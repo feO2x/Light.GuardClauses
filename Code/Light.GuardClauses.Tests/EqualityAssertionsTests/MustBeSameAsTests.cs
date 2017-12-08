@@ -11,8 +11,7 @@ namespace Light.GuardClauses.Tests.EqualityAssertionsTests
         [Theory(DisplayName = "MustBeSameAs must throw an ArgumentException when the two specified references do not point to the same instance.")]
         [InlineData("Hello", "World")]
         [InlineData("1", "2")]
-        [InlineData(new object[] { }, new object[] { "Foo" })]
-        public void ReferencesDifferent<T>(T first, T second) where T : class
+        public void ReferencesDifferent(string first, string second)
         {
             Action act = () => first.MustBeSameAs(second, nameof(first));
 
@@ -25,16 +24,15 @@ namespace Light.GuardClauses.Tests.EqualityAssertionsTests
         [InlineData("Bar")]
         public void ReferencesEqual(string reference)
         {
-            Action act = () => reference.MustBeSameAs(reference);
+            var result = reference.MustBeSameAs(reference);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(reference);
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => "foo".MustBeSameAs("bar", exception: exception)));
-
-            testData.Add(new CustomMessageTest<ArgumentException>(message => "foo".MustBeSameAs("bar", message: message)));
+            testData.Add(new CustomExceptionTest(exception => "foo".MustBeSameAs("bar", exception: exception)))
+                    .Add(new CustomMessageTest<ArgumentException>(message => "foo".MustBeSameAs("bar", message: message)));
         }
     }
 }

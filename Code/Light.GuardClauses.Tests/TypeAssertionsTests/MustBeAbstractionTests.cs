@@ -22,9 +22,11 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         [Fact(DisplayName = "MustBeAbstract must not throw an exception when the specified type is an abstract class.")]
         public void AbstractClass()
         {
-            Action act = () => typeof(CollectionBase).MustBeAbstraction();
+            var type = typeof(CollectionBase);
 
-            act.ShouldNotThrow();
+            var result = type.MustBeAbstraction();
+
+            result.Should().BeSameAs(type);
         }
 
         [Theory(DisplayName = "MustBeAbstract must throw a TypeException when the specified type is an instantiatable class.")]
@@ -48,7 +50,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => typeof(double).MustBeAbstraction(exception: exception))
                     .AddMessageTest<TypeException>(message => typeof(Version).MustBeAbstraction(message: message));

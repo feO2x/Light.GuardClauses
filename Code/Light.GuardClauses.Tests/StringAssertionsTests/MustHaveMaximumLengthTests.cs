@@ -52,7 +52,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => "Foo".MustHaveMaximumLength(2, exception: exception))
                     .AddMessageTest<StringException>(message => "Bar".MustHaveMaximumLength(1, message: message));

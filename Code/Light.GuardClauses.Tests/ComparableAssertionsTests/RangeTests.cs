@@ -14,10 +14,9 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         [InlineData(0, 5, 1, false, false)]
         [InlineData(-4, 4, 0, false, false)]
         [InlineData(42, 80, 42, true, false)]
-        [InlineData(42L, 43L, 43L, true, true)]
-        public void ValueInRange<T>(T from, T to, T value, bool isFromInclusive, bool isToInclusive) where T : IComparable<T>
+        public void ValueInRange(long from, long to, long value, bool isFromInclusive, bool isToInclusive)
         {
-            var testTarget = new Range<T>(from, to, isFromInclusive, isToInclusive);
+            var testTarget = new Range<long>(from, to, isFromInclusive, isToInclusive);
 
             var result = testTarget.IsValueWithinRange(value);
 
@@ -31,10 +30,9 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         [InlineData(0, 5, 0, false, false)]
         [InlineData(-4, 4, -80, false, false)]
         [InlineData(42, 80, 42, false, false)]
-        [InlineData(42L, 43L, 43L, false, false)]
-        public void ValueOutOfRange<T>(T from, T to, T value, bool isFromInclusive, bool isToInclusive) where T : IComparable<T>
+        public void ValueOutOfRange(int from, int to, int value, bool isFromInclusive, bool isToInclusive)
         {
-            var testTarget = new Range<T>(from, to, isFromInclusive, isToInclusive);
+            var testTarget = new Range<int>(from, to, isFromInclusive, isToInclusive);
 
             var result = testTarget.IsValueWithinRange(value);
 

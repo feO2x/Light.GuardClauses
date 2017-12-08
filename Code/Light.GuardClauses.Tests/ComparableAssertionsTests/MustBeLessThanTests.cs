@@ -13,8 +13,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         [InlineData(2, 2)]
         [InlineData(short.MaxValue, short.MinValue)]
         [InlineData('Z', 'Z')]
-        [InlineData("I'm", "greater than you")]
-        public void ParameterNotLess<T>(T first, T second) where T : IComparable<T>
+        public void ParameterNotLess(int first, int second)
         {
             Action act = () => first.MustBeLessThan(second, nameof(first));
 
@@ -23,19 +22,18 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         }
 
         [Theory(DisplayName = "MustBeLessThan must not throw an ArgumentOutOfRangeException when the specified paramter is less than the boundary value.")]
-        [InlineData(1, 2)]
-        [InlineData(-444, -410)]
+        [InlineData(1L, 2L)]
+        [InlineData(-444L, -410L)]
         [InlineData(long.MinValue, long.MinValue + 14)]
         [InlineData('A', 'a')]
-        [InlineData("Hello", "There")]
-        public void ParameterLess<T>(T first, T second) where T : IComparable<T>
+        public void ParameterLess(long first, long second)
         {
-            Action act = () => first.MustBeLessThan(second);
+            var result = first.MustBeLessThan(second);
 
-            act.ShouldNotThrow();
+            result.Should().Be(first);
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => 14.MustBeLessThan(2, exception: exception)))
                     .Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => 2.MustBeLessThan(2, message: message)));

@@ -11,20 +11,17 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         [Theory(DisplayName = "IsStructurallyEqualTo must return true when both collections have the same items in the same order.")]
         [InlineData(new[] { "Foo", "Bar" }, new[] { "Foo", "Bar" })]
         [InlineData(new[] { "Qux", "Quux" }, new[] { "Qux", "Quux" })]
-        [InlineData(new[] { 1, 2, 3, 4, 5 }, new[] { 1, 2, 3, 4, 5 })]
-        [InlineData(new object[] { }, new object[] { })]
-        public void StructurallyEqual<T>(T[] first, T[] second)
+        [InlineData(new string[] { }, new string[] { })]
+        public void StructurallyEqual(string[] first, string[] second)
         {
             first.IsStructurallyEqualTo(second).Should().BeTrue();
         }
 
         [Theory(DisplayName = "IsStructurallyEqualTo must return false when the collections do not have the same items in the same order.")]
-        [InlineData(new[] { "Foo", "Bar", "Baz" }, new[] { "Foo", "Baz", "Bar" })]
-        [InlineData(new[] { "Foo", "Bar", "Baz" }, new[] { "Foo", "Bar" })]
         [InlineData(new[] { 1, 5, 7, 9 }, new[] { 7, 1, 9, 5 })]
         [InlineData(new[] { 1, 5, 7, 9 }, new int[] { })]
         [InlineData(new int[] { }, new[] { 1, 5, 7, 9 })]
-        public void NotStructurallyEqual<T>(T[] first, T[] second)
+        public void NotStructurallyEqual(int[] first, int[] second)
         {
             first.IsStructurallyEqualTo(second).Should().BeFalse();
         }

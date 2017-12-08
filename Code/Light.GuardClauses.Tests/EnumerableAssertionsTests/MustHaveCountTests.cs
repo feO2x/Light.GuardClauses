@@ -33,9 +33,9 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         [MemberData(nameof(CountSameData))]
         public void CountSame(int[] collection, int count)
         {
-            Action act = () => collection.MustHaveCount(count);
+            var result = collection.MustHaveCount(count);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(collection);
         }
 
         public static readonly TestData CountSameData =
@@ -64,11 +64,10 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
             act.ShouldThrow<ArgumentOutOfRangeException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => new[] { 1, 2, 3 }.MustHaveCount(1, exception: exception)));
-
-            testData.Add(new CustomMessageTest<CollectionException>(message => new[] { 'a', 'b' }.MustHaveCount(42, message: message)));
+            testData.Add(new CustomExceptionTest(exception => new[] { 1, 2, 3 }.MustHaveCount(1, exception: exception)))
+                    .Add(new CustomMessageTest<CollectionException>(message => new[] { 'a', 'b' }.MustHaveCount(42, message: message)));
         }
     }
 }

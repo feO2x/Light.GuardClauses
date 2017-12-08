@@ -76,7 +76,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             TestIsDerivingFrom(typeof(Exception), typeof(ArgumentException), false);
         }
 
-        public static void TestIsDerivingFrom(Type type, Type baseClass, bool expected)
+        private static void TestIsDerivingFrom(Type type, Type baseClass, bool expected)
         {
             type.IsDerivingFrom(baseClass).Should().Be(expected);
         }

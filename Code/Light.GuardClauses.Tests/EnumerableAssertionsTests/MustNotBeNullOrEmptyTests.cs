@@ -38,9 +38,9 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         [MemberData(nameof(ListNotEmptyTestData))]
         public void ListNotEmpty(List<int> list)
         {
-            Action act = () => list.MustNotBeNullOrEmpty(nameof(list));
+            var result = list.MustNotBeNullOrEmpty(nameof(list));
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(list);
         }
 
         public static readonly IEnumerable<object[]> ListNotEmptyTestData =
@@ -51,11 +51,10 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
                 new object[] { new List<int> { 10, -11, 187, 22557 } }
             };
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => new object[0].MustNotBeNullOrEmpty(exception: exception)));
-
-            testData.Add(new CustomMessageTest<EmptyCollectionException>(message => new object[0].MustNotBeNullOrEmpty(message: message)));
+            testData.Add(new CustomExceptionTest(exception => new object[0].MustNotBeNullOrEmpty(exception: exception)))
+                    .Add(new CustomMessageTest<EmptyCollectionException>(message => new object[0].MustNotBeNullOrEmpty(message: message)));
         }
     }
 }

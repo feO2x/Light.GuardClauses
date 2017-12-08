@@ -32,11 +32,10 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
             downcastedValue.Should().BeSameAs(@string);
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => "Wow!".MustBeOfType<Stream>(exception: exception)));
-
-            testData.Add(new CustomMessageTest<TypeMismatchException>(message => "Hello".MustBeOfType<StringBuilder>(message: message)));
+            testData.Add(new CustomExceptionTest(exception => "Wow!".MustBeOfType<Stream>(exception: exception)))
+                    .Add(new CustomMessageTest<TypeMismatchException>(message => "Hello".MustBeOfType<StringBuilder>(message: message)));
         }
     }
 }

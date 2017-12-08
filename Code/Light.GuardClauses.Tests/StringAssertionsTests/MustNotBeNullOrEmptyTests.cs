@@ -37,12 +37,12 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("Hello World")]
         public void ProperString(string @string)
         {
-            Action act = () => @string.MustNotBeNullOrEmpty(nameof(@string));
+            var result = @string.MustNotBeNullOrEmpty(nameof(@string));
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(@string);
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => string.Empty.MustNotBeNullOrEmpty(exception: exception))
                     .AddMessageTest<EmptyStringException>(message => string.Empty.MustNotBeNullOrEmpty(message: message));

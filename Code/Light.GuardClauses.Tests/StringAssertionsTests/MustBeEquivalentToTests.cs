@@ -26,9 +26,9 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("bar", "bAR")]
         public void StringsEquivalent(string first, string second)
         {
-            Action act = () => first.MustBeEquivalentTo(second);
+            var result = first.MustBeEquivalentTo(second);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(first);
         }
 
         [Theory(DisplayName = "MustBeEquivalentTo must throw an ArgumentNullException when parameter or other is null.")]
@@ -41,7 +41,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => "Foo".MustBeEquivalentTo("Bar", exception: exception))
                     .AddMessageTest<StringException>(message => "Foo".MustBeEquivalentTo("Bar", message: message));

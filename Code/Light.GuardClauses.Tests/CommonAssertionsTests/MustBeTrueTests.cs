@@ -20,12 +20,12 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
         [Fact(DisplayName = "MustBeTrue must not throw an exception when the specified value is true.")]
         public void ParameterTrue()
         {
-            Action act = () => true.MustBeTrue();
+            var result = true.MustBeTrue();
 
-            act.ShouldNotThrow();
+            result.Should().BeTrue();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => false.MustBeTrue(exception: exception)))
                     .Add(new CustomMessageTest<ArgumentException>(message => false.MustBeTrue(message: message)));

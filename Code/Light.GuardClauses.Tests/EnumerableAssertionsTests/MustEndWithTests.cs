@@ -30,11 +30,11 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         [InlineData(new[] { 1, 2, 3, 4 }, new[] { 2, 3, 4 })]
         [InlineData(new[] { 10, 15, 20 }, new[] { 20 })]
         [InlineData(new[] { -8000 }, new[] { -8000 })]
-        public void CollectionEndsSame(IEnumerable<int> collection, IEnumerable<int> set)
+        public void CollectionEndsSame(int[] collection, int[] set)
         {
-            Action act = () => collection.MustEndWith(set);
+            var result = collection.MustEndWith(set);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(collection);
         }
 
         [Theory(DisplayName = "MustEndWith must throw an ArgumentNullException when the collection or the set are null.")]
@@ -47,7 +47,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => new[] { 1, 2, 3 }.MustEndWith(new[] { 4 }, exception: exception)))
                     .Add(new CustomMessageTest<CollectionException>(message => new[] { 1, 2, 3 }.MustEndWith(new[] { 4 }, message: message)));

@@ -62,12 +62,12 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("{\r\n\tid: 1\r\n}")]
         public void NonWhiteSpace(string value)
         {
-            Action act = () => value.MustNotBeNullOrWhiteSpace(nameof(value));
+            var result = value.MustNotBeNullOrWhiteSpace(nameof(value));
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(value);
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => string.Empty.MustNotBeNullOrWhiteSpace(exception: exception))
                     .AddExceptionTest(exception => "    ".MustNotBeNullOrWhiteSpace(exception: exception))

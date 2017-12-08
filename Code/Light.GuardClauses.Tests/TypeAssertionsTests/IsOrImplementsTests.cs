@@ -45,7 +45,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
                .And.ParamName.Should().Be(nameof(otherType));
         }
 
-        public static void CheckIsOrImplements(Type type, Type otherType, bool expected)
+        private static void CheckIsOrImplements(Type type, Type otherType, bool expected)
         {
             type.IsOrImplements(otherType).Should().Be(expected);
         }

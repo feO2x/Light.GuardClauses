@@ -27,9 +27,9 @@ namespace Light.GuardClauses.Tests.EqualityAssertionsTests
         [InlineData("Hey")]
         public void ValuesEqual<T>(T value)
         {
-            Action act = () => value.MustBe(value, parameterName: nameof(value));
+            var result = value.MustBe(value, parameterName: nameof(value));
 
-            act.ShouldNotThrow();
+            result.Should().Be(value);
         }
 
         [Fact(DisplayName = "MustBe must throw an exception when the specified values are different, using an equality comparer for comparison.")]
@@ -40,11 +40,10 @@ namespace Light.GuardClauses.Tests.EqualityAssertionsTests
             act.ShouldThrow<ArgumentException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => "Hello".MustBe("World", exception: exception)));
-
-            testData.Add(new CustomMessageTest<ArgumentException>(message => 42.MustBe(48, message: message)));
+            testData.Add(new CustomExceptionTest(exception => "Hello".MustBe("World", exception: exception)))
+                    .Add(new CustomMessageTest<ArgumentException>(message => 42.MustBe(48, message: message)));
         }
     }
 }

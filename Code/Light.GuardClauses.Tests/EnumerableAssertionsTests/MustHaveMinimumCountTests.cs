@@ -33,11 +33,11 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 
         [Theory(DisplayName = "MustHaveMinimumCount must not throw an exception when the collection has equal or more items than the specified count.")]
         [MemberData(nameof(EnoughItemsData))]
-        public void EnoughItems(IEnumerable<int> validCollection, int count)
+        public void EnoughItems(IReadOnlyList<int> validCollection, int count)
         {
-            Action act = () => validCollection.MustHaveMinimumCount(count);
+            var result = validCollection.MustHaveMinimumCount(count);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(validCollection);
         }
 
         public static readonly TestData EnoughItemsData =
@@ -53,11 +53,10 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
             return count == 1 ? "item" : "items";
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => new List<bool>().MustHaveMinimumCount(42, exception: exception)));
-
-            testData.Add(new CustomMessageTest<CollectionException>(message => new List<object>().MustHaveMinimumCount(1, message: message)));
+            testData.Add(new CustomExceptionTest(exception => new List<bool>().MustHaveMinimumCount(42, exception: exception)))
+                    .Add(new CustomMessageTest<CollectionException>(message => new List<object>().MustHaveMinimumCount(1, message: message)));
         }
     }
 }

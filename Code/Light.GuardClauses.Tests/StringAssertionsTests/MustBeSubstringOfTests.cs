@@ -28,9 +28,9 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("I'll have you", "If you ever call me sister again, I'll have you strangled in your sleep.")]
         public void IsSubstring(string validString, string text)
         {
-            Action act = () => validString.MustBeSubstringOf(text);
+            var result = validString.MustBeSubstringOf(text);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(validString);
         }
 
         [Fact(DisplayName = "MustBeSubstringOf must throw an ArgumentNullException when text is null.")]
@@ -47,16 +47,15 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("NOBODY cares", "Nobody cares what your father once told you.")]
         public void CaseInsensitive(string validString, string text)
         {
-            Action act = () => validString.MustBeSubstringOf(text, true);
+            var result = validString.MustBeSubstringOf(text, true);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(validString);
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => "123".MustBeSubstringOf("42", exception: exception)));
-
-            testData.Add(new CustomMessageTest<StringException>(message => "abc".MustBeSubstringOf("cde", message: message)));
+            testData.Add(new CustomExceptionTest(exception => "123".MustBeSubstringOf("42", exception: exception)))
+                    .Add(new CustomMessageTest<StringException>(message => "abc".MustBeSubstringOf("cde", message: message)));
         }
     }
 }

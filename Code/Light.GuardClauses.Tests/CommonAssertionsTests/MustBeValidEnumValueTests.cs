@@ -25,16 +25,15 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
         {
             const ConsoleColor validValue = ConsoleColor.DarkRed;
 
-            Action act = () => validValue.MustBeValidEnumValue(nameof(validValue));
+            var result = validValue.MustBeValidEnumValue(nameof(validValue));
 
-            act.ShouldNotThrow();
+            result.Should().Be(validValue);
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => ((ConsoleSpecialKey) 15).MustBeValidEnumValue(exception: exception)));
-
-            testData.Add(new CustomMessageTest<EnumValueNotDefinedException>(message => ((ConsoleSpecialKey) 15).MustBeValidEnumValue(message: message)));
+            testData.Add(new CustomExceptionTest(exception => ((ConsoleSpecialKey) 15).MustBeValidEnumValue(exception: exception)))
+                    .Add(new CustomMessageTest<EnumValueNotDefinedException>(message => ((ConsoleSpecialKey) 15).MustBeValidEnumValue(message: message)));
         }
     }
 }

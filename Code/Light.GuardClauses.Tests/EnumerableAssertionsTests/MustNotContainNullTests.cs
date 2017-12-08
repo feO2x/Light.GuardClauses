@@ -3,7 +3,6 @@ using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
-using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 {
@@ -11,8 +10,9 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
     public sealed class MustNotContainNullTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustNotContainNull must throw an exception when the specified collection contains at least one item that is null.")]
-        [MemberData(nameof(CollectionWithNullData))]
-        public void CollectionWithNull<T>(T[] collection, int erroneousIndex) where T : class
+        [InlineData(new[] { "Here", "Is", null }, 2)]
+        [InlineData(new[] { null, "1", "2", "3", "4" }, 0)]
+        public void CollectionWithNull(string[] collection, int erroneousIndex)
         {
             Action act = () => collection.MustNotContainNull(nameof(collection));
 
@@ -20,29 +20,15 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
                .And.Message.Should().Contain($"{nameof(collection)} must be a collection not containing null, but you specified null at index {erroneousIndex}.");
         }
 
-        public static readonly TestData CollectionWithNullData =
-            new[]
-            {
-                new object[] { new[] { "Here", "Is", null }, 2 },
-                new object[] { new[] { null, "1", "2", "3", "4" }, 0 },
-                new object[] { new[] { new object(), null, new object() }, 1 }
-            };
-
-        [Theory(DisplayName = "MustNotContainNull must not thrown when the specified collection does not contain items that are null.")]
-        [MemberData(nameof(CollectionsWithoutNullData))]
-        public void CollectionsWithoutNull<T>(T[] collection) where T : class
+        [Fact(DisplayName = "MustNotContainNull must not thrown when the specified collection does not contain items that are null.")]
+        public void CollectionsWithoutNull()
         {
-            Action act = () => collection.MustNotContainNull(nameof(collection));
+            var collection = new[] { "a", "b", "c" };
 
-            act.ShouldNotThrow();
+            var result = collection.MustNotContainNull();
+
+            result.Should().BeSameAs(collection);
         }
-
-        public static readonly TestData CollectionsWithoutNullData =
-            new[]
-            {
-                new object[] { new[] { "a", "b", "c" } },
-                new object[] { new[] { new object(), new object() } }
-            };
 
         [Fact(DisplayName = "MustNotContainNull must throw an ArgumentNullException when the specified collection is null.")]
         public void CollectionNull()
@@ -56,12 +42,11 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
                .And.ParamName.Should().Be(nameof(collection));
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => new object[] { null }.MustNotContainNull(exception: exception)));
-            testData.Add(new CustomExceptionTest(exception => new[] { "This collection contains null", null }.MustNotContainNull(exception: exception)));
-
-            testData.Add(new CustomMessageTest<CollectionException>(message => new[] { "This collection contains null", null }.MustNotContainNull(message: message)));
+            testData.Add(new CustomExceptionTest(exception => new object[] { null }.MustNotContainNull(exception: exception)))
+                    .Add(new CustomExceptionTest(exception => new[] { "This collection contains null", null }.MustNotContainNull(exception: exception)))
+                    .Add(new CustomMessageTest<CollectionException>(message => new[] { "This collection contains null", null }.MustNotContainNull(message: message)));
         }
     }
 }

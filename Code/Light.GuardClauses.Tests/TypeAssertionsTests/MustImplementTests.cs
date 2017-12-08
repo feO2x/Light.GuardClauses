@@ -30,9 +30,9 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             var first = typeof(ObservableCollection<string>);
             var second = typeof(IList<>);
 
-            Action act = () => first.MustImplement(second);
+            var result = first.MustImplement(second);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(first);
         }
 
         [Fact(DisplayName = "MustImplement must throw an ArgumentNullException when either parameter or interfaceType is null.")]
@@ -42,7 +42,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             new Action(() => typeof(double).MustImplement(null)).ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => typeof(Action).MustImplement(typeof(IProgress<>), exception: exception))
                     .AddMessageTest<TypeException>(message => typeof(Exception).MustImplement(typeof(IComparable), message: message));

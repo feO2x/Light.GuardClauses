@@ -27,27 +27,20 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
                 new object[] { new Dictionary<string, object> { ["a"] = 'a', ["b"] = 'b' }, "foo" }
             };
 
-        [Theory(DisplayName = "MustContainKey must not throw an exception when the specified key is present in the dictionary.")]
-        [MemberData(nameof(KeyPresentData))]
-        public void KeyPresent<TKey>(IDictionary<TKey, object> dictionary, TKey key)
+        [Fact(DisplayName = "MustContainKey must not throw an exception when the specified key is present in the dictionary.")]
+        public void KeyPresent()
         {
-            Action act = () => dictionary.MustContainKey(key);
+            var dictionary = new Dictionary<int, object> { [1] = 'a', [2] = 'b' };
 
-            act.ShouldNotThrow();
+            var result = dictionary.MustContainKey(2);
+
+            result.Should().BeSameAs(dictionary);
         }
 
-        public static readonly TestData KeyPresentData =
-            new[]
-            {
-                new object[] { new Dictionary<string, object> { ["1"] = 1, ["2"] = 2 }, "1" },
-                new object[] { new Dictionary<int, object> { [1] = 'a', [2] = 'b' }, 2 }
-            };
-
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => new Dictionary<string, string> { ["1"] = "Hey" }.MustContainKey("2", exception: exception)));
-
-            testData.Add(new CustomMessageTest<KeyNotFoundException>(message => new Dictionary<string, string> { ["1"] = "Hey" }.MustContainKey("2", message: message)));
+            testData.Add(new CustomExceptionTest(exception => new Dictionary<string, string> { ["1"] = "Hey" }.MustContainKey("2", exception: exception)))
+                    .Add(new CustomMessageTest<KeyNotFoundException>(message => new Dictionary<string, string> { ["1"] = "Hey" }.MustContainKey("2", message: message)));
         }
     }
 }

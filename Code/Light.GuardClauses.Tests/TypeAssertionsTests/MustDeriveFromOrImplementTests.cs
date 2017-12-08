@@ -29,9 +29,9 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             var first = typeof(Dictionary<string, object>);
             var second = typeof(IDictionary<,>);
 
-            Action act = () => first.MustDeriveFromOrImplement(second);
+            var result = first.MustDeriveFromOrImplement(second);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(first);
         }
 
         [Fact(DisplayName = "MustDeriveFromOrImplement must throw an ArgumentNullException when parameter or baseClassOrInterfaceType is null.")]
@@ -42,7 +42,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         }
 
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => typeof(string).MustDeriveFromOrImplement(typeof(double), exception: exception))
                     .AddMessageTest<TypeException>(message => typeof(decimal).MustDeriveFromOrImplement(typeof(ICollection<>), message: message));

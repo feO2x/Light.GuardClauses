@@ -26,7 +26,7 @@ namespace Light.GuardClauses.Tests.CustomMessagesAndExceptions
 
         public override string ToString()
         {
-            return "CustomExceptionTest";
+            return "Custom Exception Test";
         }
     }
 }

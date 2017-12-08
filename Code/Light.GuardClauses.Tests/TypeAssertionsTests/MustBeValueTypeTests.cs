@@ -26,13 +26,8 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         [Fact(DisplayName = "MustBeValueType must not throw an exception when the specified type is a value type.")]
         public void IsValueType()
         {
-            TestIsValueType(() => typeof(double).MustBeValueType());
-            TestIsValueType(() => typeof(ConsoleKey).GetTypeInfo().MustBeValueType());
-        }
-
-        private static void TestIsValueType(Action act)
-        {
-            act.ShouldNotThrow();
+            typeof(double).MustBeValueType().Should().Be(typeof(double));
+            typeof(ConsoleKey).GetTypeInfo().MustBeValueType().Should().Be(typeof(ConsoleKey).GetTypeInfo());
         }
 
         [Fact(DisplayName = "MustBeValueType must throw an ArgumentNullException when parameter is null.")]
@@ -42,7 +37,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             new Action(() => ((TypeInfo) null).MustBeValueType()).ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => typeof(object).MustBeValueType(exception: exception))
                     .AddMessageTest<TypeException>(message => typeof(Action).MustBeValueType(message: message));

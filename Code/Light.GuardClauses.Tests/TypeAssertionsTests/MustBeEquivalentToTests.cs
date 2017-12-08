@@ -41,7 +41,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             act.ShouldThrow<ArgumentNullException>().And.ParamName.Should().Be("foo");
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => typeof(string).MustBeEquivalentTo(typeof(int), exception: exception)))
                     .Add(new CustomMessageTest<TypeException>(message => typeof(Delegate).MustBeEquivalentTo(typeof(Math), message: message)));

@@ -25,16 +25,15 @@ namespace Light.GuardClauses.Tests.EqualityAssertionsTests
         [InlineData(new object[] { }, new object[] { "Foo" })]
         public void ReferencesDifferent<T>(T first, T second) where T : class
         {
-            Action act = () => first.MustNotBeSameAs(second);
+            var result = first.MustNotBeSameAs(second);
 
-            act.ShouldNotThrow();
+            result.Should().Be(first);
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => "foo".MustNotBeSameAs("foo", exception: exception)));
-
-            testData.Add(new CustomMessageTest<ArgumentException>(message => "foo".MustNotBeSameAs("foo", message: message)));
+            testData.Add(new CustomExceptionTest(exception => "foo".MustNotBeSameAs("foo", exception: exception)))
+                    .Add(new CustomMessageTest<ArgumentException>(message => "foo".MustNotBeSameAs("foo", message: message)));
         }
     }
 }

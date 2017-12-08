@@ -27,13 +27,8 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         [Fact(DisplayName = "MustBeClass must not throw an exception when the specified type is a class.")]
         public void IsClass()
         {
-            TestIsClass(() => typeof(string).MustBeClass());
-            TestIsClass(() => typeof(object).GetTypeInfo().MustBeClass());
-        }
-
-        private static void TestIsClass(Action act)
-        {
-            act.ShouldNotThrow();
+            typeof(string).MustBeClass().Should().Be(typeof(string));
+            typeof(object).GetTypeInfo().MustBeClass().Should().Be(typeof(object).GetTypeInfo());
         }
 
         [Fact(DisplayName = "MustBeClass must throw an ArgumentNullException when parameter is null.")]
@@ -43,7 +38,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             new Action(() => ((TypeInfo) null).MustBeClass()).ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => typeof(IComparable).MustBeClass(exception: exception))
                     .AddMessageTest<TypeException>(message => typeof(Func<object>).MustBeClass(message: message));

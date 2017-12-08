@@ -26,9 +26,9 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("And I have a tender spot in my heart for cripples and bastards and broken things", "broken glass")]
         public void StringEndsDiffer(string @string, string endText)
         {
-            Action act = () => @string.MustNotEndWithEquivalentOf(endText);
+            var result = @string.MustNotEndWithEquivalentOf(endText);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(@string);
         }
 
         [Theory(DisplayName = "MustNotEndWithEquivalentOf for strings must throw an ArgumentNullException when either paramter or text is null.")]
@@ -41,7 +41,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => "Foo".MustNotEndWithEquivalentOf("foo", exception: exception)))
                     .Add(new CustomMessageTest<StringException>(message => "Bar".MustNotEndWithEquivalentOf("Bar", message: message)));

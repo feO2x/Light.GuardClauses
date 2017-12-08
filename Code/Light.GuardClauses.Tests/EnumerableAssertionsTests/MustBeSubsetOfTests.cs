@@ -59,11 +59,10 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
                .And.ParamName.Should().Be("superset");
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => new[] { 'a', 'b' }.MustBeSubsetOf(new[] { 'a' }, exception: exception)));
-
-            testData.Add(new CustomMessageTest<CollectionException>(message => new[] { 'a', 'b' }.MustBeSubsetOf(new[] { 'a' }, message: message)));
+            testData.Add(new CustomExceptionTest(exception => new[] { 'a', 'b' }.MustBeSubsetOf(new[] { 'a' }, exception: exception)))
+                    .Add(new CustomMessageTest<CollectionException>(message => new[] { 'a', 'b' }.MustBeSubsetOf(new[] { 'a' }, message: message)));
         }
     }
 }

@@ -61,7 +61,7 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
                 new object[] { new Dictionary<char, object>(), null }
             };
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => new Dictionary<char, object>().MustContainKeys(new[] { 'a', 'b' }, exception: exception)));
 

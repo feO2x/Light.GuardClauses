@@ -2,23 +2,13 @@
 using FluentAssertions;
 using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
-using TestData = System.Collections.Generic.IEnumerable<object[]>;
 
 namespace Light.GuardClauses.Tests.CommonAssertionsTests
 {
     [Trait("Category", Traits.FunctionalTests)]
     public sealed class MustNotBeNullTests : ICustomMessageAndExceptionTestDataProvider
     {
-        [Fact(DisplayName = "MustNotBeNull must throw an ArgumentNullException when null is provided.")]
-        public void NullIsGiven()
-        {
-            Action act = () => DummyMethod<string>(null);
-
-            act.ShouldThrow<ArgumentNullException>()
-               .And.ParamName.Should().Be("someObject");
-        }
-
-        [Fact(DisplayName = "MustNotBeNull must provide a default message for the ArgumentNullException.")]
+        [Fact(DisplayName = "MustNotBeNull must throw an ArgumentNullException when the specified value is null.")]
         public void NullMessage()
         {
             object @object = null;
@@ -30,32 +20,18 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
                .And.Message.Should().Contain($"{nameof(@object)} must not be null.");
         }
 
-        [Theory(DisplayName = "MustNotBeNull must not throw an exception when the specified reference is not null.")]
-        [MemberData(nameof(ObjectReferenceTestData))]
-        public void ValidObjectReferenceIsGiven<T>(T value) where T : class
+        [Fact(DisplayName = "MustNotBeNull must not throw an exception when the specified reference is not null.")]
+        public void ValidObjectReferenceIsGiven()
         {
-            Action act = () => DummyMethod(value);
+            var result = string.Empty.MustNotBeNull();
 
-            act.ShouldNotThrow();
+            result.Should().Be(string.Empty);
         }
 
-        public static readonly TestData ObjectReferenceTestData =
-            new[]
-            {
-                new object[] { string.Empty },
-                new[] { new object() }
-            };
-
-        private static void DummyMethod<T>(T someObject) where T : class
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            someObject.MustNotBeNull(nameof(someObject));
-        }
-
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
-        {
-            testData.Add(new CustomExceptionTest(exception => ((object) null).MustNotBeNull(exception: exception)));
-
-            testData.Add(new CustomMessageTest<ArgumentNullException>(message => ((object) null).MustNotBeNull(message: message)));
+            testData.Add(new CustomExceptionTest(exception => ((object) null).MustNotBeNull(exception: exception)))
+                    .Add(new CustomMessageTest<ArgumentNullException>(message => ((object) null).MustNotBeNull(message: message)));
         }
     }
 }

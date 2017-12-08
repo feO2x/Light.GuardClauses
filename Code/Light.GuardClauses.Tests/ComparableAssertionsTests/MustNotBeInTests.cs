@@ -15,9 +15,9 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         [InlineData('b', 'b', 'f')]
         [InlineData('c', 'b', 'f')]
         [InlineData('e', 'b', 'f')]
-        public void ParameterWithinInclusiveLowerAndExclusiveUpperBoundary<T>(T value, T lowerBoundary, T upperBoundary) where T : IComparable<T>
+        public void ParameterWithinInclusiveLowerAndExclusiveUpperBoundary(int value, int lowerBoundary, int upperBoundary)
         {
-            Action act = () => value.MustNotBeIn(Range<T>.FromInclusive(lowerBoundary).ToExclusive(upperBoundary), nameof(value));
+            Action act = () => value.MustNotBeIn(Range<int>.FromInclusive(lowerBoundary).ToExclusive(upperBoundary), nameof(value));
 
             act.ShouldThrow<ArgumentOutOfRangeException>()
                .And.Message.Should().Contain($"{nameof(value)} must not be between {lowerBoundary} (inclusive) and {upperBoundary} (exclusive), but you specified {value}.");
@@ -30,9 +30,9 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         [InlineData('c', 'b', 'f')]
         [InlineData('d', 'b', 'f')]
         [InlineData('f', 'b', 'f')]
-        public void ParameterWithinExclusiveLowerAndInclusiveUpperBoundary<T>(T value, T lowerBoundary, T upperBoundary) where T : IComparable<T>
+        public void ParameterWithinExclusiveLowerAndInclusiveUpperBoundary(short value, short lowerBoundary, short upperBoundary)
         {
-            Action act = () => value.MustNotBeIn(Range<T>.FromExclusive(lowerBoundary).ToInclusive(upperBoundary), nameof(value));
+            Action act = () => value.MustNotBeIn(Range<short>.FromExclusive(lowerBoundary).ToInclusive(upperBoundary), nameof(value));
 
             act.ShouldThrow<ArgumentOutOfRangeException>()
                .And.Message.Should().Contain($"{nameof(value)} must not be between {lowerBoundary} (exclusive) and {upperBoundary} (inclusive), but you specified {value}.");
@@ -44,19 +44,18 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         [InlineData(20, 10, 20, true, false)]
         [InlineData(10, 10, 20, false, false)]
         [InlineData(181, 10, 20, false, false)]
-        public void ParameterOutOfRange<T>(T value, T lowerBoundary, T upperBoundary, bool isLowerBoundaryInclusive, bool isUpperBoundaryInclusive) where T : IComparable<T>
+        public void ParameterOutOfRange(int value, int lowerBoundary, int upperBoundary, bool isLowerBoundaryInclusive, bool isUpperBoundaryInclusive)
         {
-            var range = new Range<T>(lowerBoundary, upperBoundary, isLowerBoundaryInclusive, isUpperBoundaryInclusive);
-            Action act = () => value.MustNotBeIn(range, nameof(value));
+            var range = new Range<int>(lowerBoundary, upperBoundary, isLowerBoundaryInclusive, isUpperBoundaryInclusive);
+            var result = value.MustNotBeIn(range, nameof(value));
 
-            act.ShouldNotThrow();
+            result.Should().Be(value);
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => 30.MustNotBeIn(Range<int>.FromInclusive(30).ToExclusive(35), exception: exception)));
-
-            testData.Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => 42.MustNotBeIn(Range<int>.FromInclusive(40).ToExclusive(50), message: message)));
+            testData.Add(new CustomExceptionTest(exception => 30.MustNotBeIn(Range<int>.FromInclusive(30).ToExclusive(35), exception: exception)))
+                    .Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => 42.MustNotBeIn(Range<int>.FromInclusive(40).ToExclusive(50), message: message)));
         }
     }
 }

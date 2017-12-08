@@ -25,16 +25,15 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
         {
             var validGuid = Guid.NewGuid();
 
-            Action act = () => validGuid.MustNotBeEmpty(nameof(validGuid));
+            var result = validGuid.MustNotBeEmpty();
 
-            act.ShouldNotThrow();
+            result.Should().Be(validGuid);
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => Guid.Empty.MustNotBeEmpty(exception: exception)));
-
-            testData.Add(new CustomMessageTest<EmptyGuidException>(message => Guid.Empty.MustNotBeEmpty(message: message)));
+            testData.Add(new CustomExceptionTest(exception => Guid.Empty.MustNotBeEmpty(exception: exception)))
+                    .Add(new CustomMessageTest<EmptyGuidException>(message => Guid.Empty.MustNotBeEmpty(message: message)));
         }
     }
 }

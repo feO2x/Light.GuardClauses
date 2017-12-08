@@ -11,10 +11,8 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         [Theory(DisplayName = "MustNotBeLessThan must throw an exception when the specified value is below the given boundary.")]
         [InlineData(1, 2)]
         [InlineData(-87, 2)]
-        [InlineData("a", "b")]
-        [InlineData("X", "Y")]
         [InlineData(15U, 16U)]
-        public void ParameterBelowBoundary<T>(T value, T boundary) where T : IComparable<T>
+        public void ParameterBelowBoundary(int value, int boundary)
         {
             Action act = () => value.MustNotBeLessThan(boundary, nameof(value));
 
@@ -26,21 +24,17 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         [InlineData(1, 0)]
         [InlineData(42, 42)]
         [InlineData(-87, -88)]
-        [InlineData("b", "a")]
-        [InlineData("b", "b")]
-        [InlineData("X", "f")]
-        public void ParameterAtOrAboveBoundary<T>(T value, T boundary) where T : IComparable<T>
+        public void ParameterAtOrAboveBoundary(short value, short boundary)
         {
-            Action act = () => value.MustNotBeLessThan(boundary, nameof(value));
+            var result = value.MustNotBeLessThan(boundary, nameof(value));
 
-            act.ShouldNotThrow();
+            result.Should().Be(value);
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => 42.MustNotBeLessThan(43, exception: exception)));
-
-            testData.Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => 42.MustNotBeLessThan(43, message: message)));
+            testData.Add(new CustomExceptionTest(exception => 42.MustNotBeLessThan(43, exception: exception)))
+                    .Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => 42.MustNotBeLessThan(43, message: message)));
         }
     }
 }

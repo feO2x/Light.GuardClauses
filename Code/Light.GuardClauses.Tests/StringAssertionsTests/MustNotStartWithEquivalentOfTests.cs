@@ -28,9 +28,9 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("As impossible as it seems, there was once a time I was unaccustomed to wine.", "I was unaccustomed")]
         public void StartTextDifferent(string @string, string startText)
         {
-            Action act = () => @string.MustNotStartWithEquivalentOf(startText);
+            var result = @string.MustNotStartWithEquivalentOf(startText);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(@string);
         }
 
         [Theory(DisplayName = "MustNotStartWithEquivalentOf for strings must throw an ArgumentNullException when parameter or text is null.")]
@@ -43,7 +43,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => "Foo".MustNotStartWithEquivalentOf("foo", exception: exception)))
                     .Add(new CustomMessageTest<StringException>(message => "Foo".MustNotStartWithEquivalentOf("foo", message: message)));

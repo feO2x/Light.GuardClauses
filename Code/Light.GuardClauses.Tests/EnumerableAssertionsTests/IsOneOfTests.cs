@@ -10,8 +10,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         [Theory(DisplayName = "IsOneOf must return true when the specified item is part of the collection.")]
         [InlineData("Foo", new[] { "Bar", "Baz", "Foo" })]
         [InlineData("Foo", new[] { "Foo" })]
-        [InlineData(1, new[] { 3, 1, 225, -554 })]
-        public void IsOneOf<T>(T item, T[] items)
+        public void IsOneOf(string item, string[] items)
         {
             item.IsOneOf(items).Should().BeTrue();
         }
@@ -20,8 +19,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         [InlineData("Foo", new[] { "Bar", "Baz" })]
         [InlineData("Foo", new[] { "Qux", "Quux" })]
         [InlineData("Foo", new string[] { })]
-        [InlineData(42, new[] { 1, 2, 3, 4 })]
-        public void IsNotOneOf<T>(T item, T[] items)
+        public void IsNotOneOf(string item, string[] items)
         {
             item.IsOneOf(items).Should().BeFalse();
         }

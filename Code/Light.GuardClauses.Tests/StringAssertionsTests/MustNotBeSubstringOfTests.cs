@@ -12,7 +12,6 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [Theory(DisplayName = "MustNotBeSubstringOf must throw a StringException when the specified string is a substring of text.")]
         [InlineData("abc", "abc")]
         [InlineData("123", "01234")]
-        [InlineData("123", "01234")]
         [InlineData("wear this", " I shall wear this as a badge of honor.")]
         public void IsSubstring(string invalidString, string text)
         {
@@ -29,9 +28,9 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("Confess!", "Look at me! Look at my face!")]
         public void IsNotSubstring(string validString, string text)
         {
-            Action act = () => validString.MustNotBeSubstringOf(text);
+            var result = validString.MustNotBeSubstringOf(text);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(validString);
         }
 
         [Theory(DisplayName = "MustNotBeSubstringOf must throw an exception when the specified string is a substring of text, ignoring case-sensitivity.")]
@@ -44,11 +43,10 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
             act.ShouldThrow<StringException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => "someText".MustNotBeSubstringOf("someText", exception: exception)));
-
-            testData.Add(new CustomMessageTest<StringException>(message => "someText".MustNotBeSubstringOf("someText", message: message)));
+            testData.Add(new CustomExceptionTest(exception => "someText".MustNotBeSubstringOf("someText", exception: exception)))
+                    .Add(new CustomMessageTest<StringException>(message => "someText".MustNotBeSubstringOf("someText", message: message)));
         }
     }
 }

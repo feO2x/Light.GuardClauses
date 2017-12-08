@@ -21,26 +21,26 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
                .And.ParamName.Should().Be(nameof(value));
         }
 
-        [Fact(DisplayName = "MustHaveValue must not throw an exception when the specified Nullable<T> has a value.")]
-        public void HasValue()
+        [Theory(DisplayName = "MustHaveValue must not throw an exception when the specified Nullable<T> has a value.")]
+        [InlineData(42)]
+        [InlineData(20)]
+        [InlineData(-187)]
+        public void HasValue(int? value)
         {
-            int? value = 42;
+            var result = value.MustHaveValue(nameof(value));
 
-            Action act = () => value.MustHaveValue(nameof(value));
-
-            act.ShouldNotThrow();
+            result.Should().Be(value);
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception =>
                                                  {
                                                      double? value = null;
                                                      // ReSharper disable once ExpressionIsAlwaysNull
                                                      value.MustHaveValue(exception: exception);
-                                                 }));
-
-            testData.Add(new CustomMessageTest<NullableHasNoValueException>(message =>
+                                                 }))
+                    .Add(new CustomMessageTest<NullableHasNoValueException>(message =>
                                                                             {
                                                                                 double? value = null;
                                                                                 // ReSharper disable once ExpressionIsAlwaysNull

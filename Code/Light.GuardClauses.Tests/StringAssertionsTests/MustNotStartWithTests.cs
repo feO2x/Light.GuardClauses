@@ -27,9 +27,9 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("Those are brave men knocking at our door. Let's go kill them!", "These are brave")]
         public void StartTextDifferent(string @string, string startText)
         {
-            Action act = () => @string.MustNotStartWith(startText);
+            var result = @string.MustNotStartWith(startText);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(@string);
         }
 
         [Theory(DisplayName = "MustNotStartWith for strings must throw an ArgumentNullException when parameter or text is null.")]
@@ -42,7 +42,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => "Foo".MustNotStartWith("Foo", exception: exception)))
                     .Add(new CustomMessageTest<StringException>(message => "Foo".MustNotStartWith("Foo", message: message)));

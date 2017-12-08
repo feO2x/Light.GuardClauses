@@ -30,11 +30,11 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         [InlineData(new[] { 1, 2, 3, 4, 5 }, new[] { 2 })]
         [InlineData(new[] { 1, 2, 3, 4, 5 }, new[] { 3, 2 })]
         [InlineData(new[] { 2500 }, new[] { 2500, 2600 })]
-        public void CollectionsStartDifferent(IEnumerable<int> collection, IEnumerable<int> set)
+        public void CollectionsStartDifferent(int[] collection, int[] set)
         {
-            Action act = () => collection.MustNotStartWithEquivalentOf(set);
+            var result = collection.MustNotStartWithEquivalentOf(set);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(collection);
         }
 
         [Theory(DisplayName = "MustNotStartWithEquivalentOf for collections must throw an ArgumentNullException when parameter or set is null.")]
@@ -47,7 +47,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => new[] { 1, 2, 3 }.MustNotStartWithEquivalentOf(new[] { 1 }, exception: exception)))
                     .Add(new CustomMessageTest<CollectionException>(message => new[] { 1, 2, 3 }.MustNotStartWithEquivalentOf(new[] { 1 }, message: message)));

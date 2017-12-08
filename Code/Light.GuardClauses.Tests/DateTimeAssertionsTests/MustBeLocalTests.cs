@@ -32,9 +32,9 @@ namespace Light.GuardClauses.Tests.DateTimeAssertionsTests
         [MemberData(nameof(LocalData))]
         public void Local(DateTime dateTime)
         {
-            Action act = () => dateTime.MustBeLocal();
+            var result = dateTime.MustBeLocal();
 
-            act.ShouldNotThrow();
+            result.Should().Be(dateTime);
         }
 
         public static readonly TestData LocalData =
@@ -44,7 +44,7 @@ namespace Light.GuardClauses.Tests.DateTimeAssertionsTests
                 new object[] { new DateTime(2017, 1, 26, 19, 22, 26, DateTimeKind.Local) }
             };
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => DateTime.UtcNow.MustBeLocal(exception: exception)))
                     .Add(new CustomMessageTest<InvalidDateTimeException>(message => DateTime.UtcNow.MustBeLocal(message: message)));

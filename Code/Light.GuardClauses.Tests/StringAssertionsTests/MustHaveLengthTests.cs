@@ -27,9 +27,9 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("I suppose I'll have to kill the Mountain myself.")]
         public void LengthEqual(string @string)
         {
-            Action act = () => @string.MustHaveLength(@string.Length);
+            var result = @string.MustHaveLength(@string.Length);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(@string);
         }
 
         [Fact(DisplayName = "MustHaveLength must throw an ArgumentOutOfRangeException when length is less than zero.")]
@@ -49,11 +49,10 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => "someText".MustHaveLength(13, exception: exception)));
-
-            testData.Add(new CustomMessageTest<StringException>(message => "foo".MustHaveLength(2, message: message)));
+            testData.Add(new CustomExceptionTest(exception => "someText".MustHaveLength(13, exception: exception)))
+                    .Add(new CustomMessageTest<StringException>(message => "foo".MustHaveLength(2, message: message)));
         }
     }
 }

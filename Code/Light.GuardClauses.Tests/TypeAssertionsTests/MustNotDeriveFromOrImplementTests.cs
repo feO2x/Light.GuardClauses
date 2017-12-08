@@ -27,9 +27,9 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             var first = typeof(int);
             var second = typeof(bool);
 
-            Action act = () => first.MustNotDeriveFromOrImplement(second);
+            var result = first.MustNotDeriveFromOrImplement(second);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(first);
         }
 
         [Fact(DisplayName = "MustNotDeriveFromOrImplement must throw an ArgumentNullException when parameter or other is null.")]
@@ -40,7 +40,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         }
 
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => typeof(string).MustNotDeriveFromOrImplement(typeof(object), exception: exception))
                     .AddMessageTest<TypeException>(message => typeof(decimal).MustNotDeriveFromOrImplement(typeof(ValueType), message: message));

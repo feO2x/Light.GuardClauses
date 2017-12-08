@@ -35,11 +35,11 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 
         [Theory(DisplayName = "MustHaveMaximumCount must not throw an exception when the number of items does not exceed the specified count.")]
         [MemberData(nameof(CountNotExceededData))]
-        public void CountNotExceeded(IEnumerable<int> collection, int count)
+        public void CountNotExceeded(int[] collection, int count)
         {
-            Action act = () => collection.MustHaveMaximumCount(count);
+            var result = collection.MustHaveMaximumCount(count);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(collection);
         }
 
         public static readonly TestData CountNotExceededData =
@@ -55,7 +55,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
             return count == 1 ? "item" : "items";
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => new[] { 3 }.MustHaveMaximumCount(0, exception: exception)));
 

@@ -13,9 +13,9 @@ namespace Light.GuardClauses.Tests
         [InlineData(new[] { 1, 2, 3, 4, 5 }, 5, 4)]
         [InlineData(new[] { 42 }, 42, 0)]
         [InlineData(new[] { 42 }, 47, -1)]
-        [InlineData(new string[] { }, "Foo", -1)]
-        [InlineData(new[] { "Foo", "Bar", "Baz" }, "Qux", -1)]
-        public void IndexOf<T>(IReadOnlyList<T> collection, T item, int expectedIndex)
+        [InlineData(new int[] { }, 42, -1)]
+        [InlineData(new[] { 1, 2, 3 }, 4, -1)]
+        public void IndexOf(IReadOnlyList<int> collection, int item, int expectedIndex)
         {
             var index = collection.IndexOf(item);
 
@@ -23,14 +23,14 @@ namespace Light.GuardClauses.Tests
         }
 
         [Theory(DisplayName = "IsContaining must return true if the corresponding item was found, else false.")]
-        [InlineData(new[] { 1, 2, 3 }, 3, true)]
-        [InlineData(new[] { 1, 2, 3 }, 2, true)]
-        [InlineData(new[] { 1, 2, 3 }, 1, true)]
-        [InlineData(new[] { 1, 2, 3 }, 47, false)]
+        [InlineData(new[] { "Foo", "Bar", "Baz" }, "Baz", true)]
+        [InlineData(new[] { "Foo", "Bar", "Baz" }, "Bar", true)]
+        [InlineData(new[] { "Foo", "Bar", "Baz" }, "Foo", true)]
+        [InlineData(new[] { "Foo", "Bar", "Baz" }, "Qux", false)]
         [InlineData(new[] { "Foo", "Bar" }, "Baz", false)]
         [InlineData(new[] { "Foo", "Bar", "Baz", "Qux" }, "Foo", true)]
         [InlineData(new string[] { }, "Foo", false)]
-        public void ÎsContaining<T>(IReadOnlyList<T> collection, T item, bool expected)
+        public void IsContaining(IReadOnlyList<string> collection, string item, bool expected)
         {
             collection.IsContaining(item).Should().Be(expected);
         }

@@ -28,11 +28,11 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         [InlineData(new[] { 1, 2, 3, 4, 5 }, new[] { 1, 2, 3 })]
         [InlineData(new[] { -10, 355, 2 }, new[] { -10, 355 })]
         [InlineData(new[] { 99, 104, 4 }, new[] { 99, 104, 4 })]
-        public void StartItemsEqual(IEnumerable<int> collection, IEnumerable<int> subset)
+        public void StartItemsEqual(int[] collection, int[] subset)
         {
-            Action act = () => collection.MustStartWith(subset);
+            var result = collection.MustStartWith(subset);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(collection);
         }
 
         [Theory(DisplayName = "MustStartWith for collections must throw an ArgumentNullException when any of the collection parameters is null.")]
@@ -57,7 +57,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
                .And.ParamName.Should().Be("set");
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => new[] { 1, 2 }.MustStartWith(new[] { 3 }, exception: exception)))
                     .Add(new CustomMessageTest<CollectionException>(message => new[] { 1, 2 }.MustStartWith(new[] { 3 }, message: message)));

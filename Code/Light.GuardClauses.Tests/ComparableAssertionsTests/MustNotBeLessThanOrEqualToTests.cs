@@ -12,10 +12,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         [InlineData(-1, 0)]
         [InlineData(0, 0)]
         [InlineData(-80, -40)]
-        [InlineData("a", "b")]
-        [InlineData("b", "b")]
-        [InlineData("a", "Z")]
-        public void ParameterAtOrBelowBoundary<T>(T value, T boundary) where T : IComparable<T>
+        public void ParameterAtOrBelowBoundary(int value, int boundary)
         {
             Action act = () => value.MustNotBeLessThanOrEqualTo(boundary, nameof(value));
 
@@ -24,19 +21,17 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         }
 
         [Theory(DisplayName = "MustNotBeLessThanOrEqualTo must not throw an exception when the specified value is above the given boundary.")]
-        [InlineData(5, 4)]
-        [InlineData(100, 1)]
-        [InlineData(-87, -90)]
-        [InlineData("A", "a")]
-        [InlineData("b", "a")]
-        public void ParamterAboveBoundary<T>(T value, T boundary) where T : IComparable<T>
+        [InlineData(5L, 4L)]
+        [InlineData(100L, 1L)]
+        [InlineData(-87L, -90L)]
+        public void ParamterAboveBoundary(long value, long boundary)
         {
-            Action act = () => value.MustNotBeLessThanOrEqualTo(boundary, nameof(value));
+            var result = value.MustNotBeLessThanOrEqualTo(boundary, nameof(value));
 
-            act.ShouldNotThrow();
+            result.Should().Be(value);
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => 42.MustNotBeLessThanOrEqualTo(42, exception: exception)));
 

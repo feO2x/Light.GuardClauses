@@ -28,16 +28,15 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
             var pattern = new Regex(@"\w{5}");
             const string @string = "abcde";
 
-            Action act = () => @string.MustMatch(pattern, nameof(@string));
+            var result = @string.MustMatch(pattern, nameof(@string));
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(@string);
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => "12345".MustMatch(new Regex(@"\W{5}"), exception: exception)));
-
-            testData.Add(new CustomMessageTest<StringDoesNotMatchException>(message => "12345".MustMatch(new Regex(@"\W{5}"), message: message)));
+            testData.Add(new CustomExceptionTest(exception => "12345".MustMatch(new Regex(@"\W{5}"), exception: exception)))
+                    .Add(new CustomMessageTest<StringDoesNotMatchException>(message => "12345".MustMatch(new Regex(@"\W{5}"), message: message)));
         }
     }
 }

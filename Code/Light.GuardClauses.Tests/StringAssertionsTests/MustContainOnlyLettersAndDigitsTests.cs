@@ -53,9 +53,9 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("1234")]
         public void WithoutSpecialCharacters(string validString)
         {
-            Action act = () => validString.MustContainOnlyLettersAndDigits();
+            var result = validString.MustContainOnlyLettersAndDigits();
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(validString);
         }
 
         [Fact(DisplayName = "MustContainOnlyLettersAndDigits must throw an ArgumentNullException when the specified string is null.")]
@@ -74,11 +74,10 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
             act.ShouldThrow<EmptyStringException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => "200.00$".MustContainOnlyLettersAndDigits(exception: exception)));
-
-            testData.Add(new CustomMessageTest<StringException>(message => "!".MustContainOnlyLettersAndDigits(message: message)));
+            testData.Add(new CustomExceptionTest(exception => "200.00$".MustContainOnlyLettersAndDigits(exception: exception)))
+                    .Add(new CustomMessageTest<StringException>(message => "!".MustContainOnlyLettersAndDigits(message: message)));
         }
     }
 }

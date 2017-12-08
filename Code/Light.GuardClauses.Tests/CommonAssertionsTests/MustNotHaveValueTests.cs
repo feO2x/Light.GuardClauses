@@ -26,16 +26,17 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
             double? value = null;
 
             // ReSharper disable once ExpressionIsAlwaysNull
-            Action act = () => value.MustNotHaveValue(nameof(value));
+            var result = value.MustNotHaveValue();
 
-            act.ShouldNotThrow();
+            result.Should().BeNull();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => new int?(42).MustNotHaveValue(exception: exception)));
-
-            testData.Add(new CustomMessageTest<NullableHasValueException>(message => new double?(42.0).MustNotHaveValue(message: message)));
+            // ReSharper disable RedundantExplicitNullableCreation
+            testData.Add(new CustomExceptionTest(exception => new int?(42).MustNotHaveValue(exception: exception)))
+                    .Add(new CustomMessageTest<NullableHasValueException>(message => new double?(42.0).MustNotHaveValue(message: message)));
+            // ReSharper restore RedundantExplicitNullableCreation
         }
     }
 }

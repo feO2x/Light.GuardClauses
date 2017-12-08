@@ -29,14 +29,14 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         [InlineData(new[] { 1, 2, 3 }, new[] { 2, 3, 1 })]
         [InlineData(new[] { -144, 155, 166 }, new[] { -144 })]
         [InlineData(new int[0], new[] { 42 })]
-        public void CollectionEndsDiffer(IEnumerable<int> collection, IEnumerable<int> set)
+        public void CollectionEndsDiffer(int[] collection, int[] set)
         {
-            Action act = () => collection.MustNotEndWith(set);
+            var result = collection.MustNotEndWith(set);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(collection);
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => new[] { 1, 2, 3 }.MustNotEndWith(new[] { 1, 2, 3 }, exception: exception)))
                     .Add(new CustomMessageTest<CollectionException>(message => new[] { 42 }.MustNotEndWith(new[] { 42 }, message: message)));

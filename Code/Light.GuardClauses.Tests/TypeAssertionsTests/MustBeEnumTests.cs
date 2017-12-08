@@ -28,13 +28,8 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         [Fact(DisplayName = "MustBeEnum must not throw an exception when the specified type is an enum.")]
         public void IsEnum()
         {
-            TestIsEnum(() => typeof(ConsoleKey).MustBeEnum());
-            TestIsEnum(() => typeof(LockRecursionPolicy).GetTypeInfo().MustBeEnum());
-        }
-
-        private static void TestIsEnum(Action act)
-        {
-            act.ShouldNotThrow();
+            typeof(ConsoleKey).MustBeEnum().Should().Be(typeof(ConsoleKey));
+            typeof(LockRecursionPolicy).GetTypeInfo().MustBeEnum().Should().Be(typeof(LockRecursionPolicy).GetTypeInfo());
         }
 
         [Fact(DisplayName = "MustBeEnum must throw an ArgumentNullException when parameter is null.")]
@@ -44,8 +39,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             new Action(() => ((TypeInfo) null).MustBeEnum()).ShouldThrow<ArgumentNullException>();
         }
 
-
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => typeof(string).MustBeEnum(exception: exception))
                     .AddMessageTest<TypeException>(message => typeof(IComparable).MustBeEnum(message: message));

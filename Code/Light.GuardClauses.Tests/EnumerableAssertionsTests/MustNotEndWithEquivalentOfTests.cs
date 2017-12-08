@@ -29,11 +29,11 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         [InlineData(new[] { 1, 2, 3, 4 }, new[] { 42, 87 })]
         [InlineData(new[] { 1, 2, 3, 4 }, new[] { 2, 3 })]
         [InlineData(new[] { 603 }, new[] { 499, 717 })]
-        public void CollectionEndsDiffer(IEnumerable<int> collection, IEnumerable<int> set)
+        public void CollectionEndsDiffer(int[] collection, int[] set)
         {
-            Action act = () => collection.MustNotEndWithEquivalentOf(set);
+            var result = collection.MustNotEndWithEquivalentOf(set);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(collection);
         }
 
         [Theory(DisplayName = "MustNotEndWithEquivalentOf for collections must throw an ArgumentNullException when parameter or set is null.")]
@@ -46,7 +46,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => new[] { 1, 2, 3 }.MustNotEndWithEquivalentOf(new[] { 3, 2 }, exception: exception)))
                     .Add(new CustomMessageTest<CollectionException>(message => new[] { 1, 2, 3 }.MustNotEndWithEquivalentOf(new[] { 3, 2 }, message: message)));

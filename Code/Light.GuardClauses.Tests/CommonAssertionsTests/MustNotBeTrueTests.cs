@@ -22,12 +22,12 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
         [Fact(DisplayName = "MustNotBeTrue must not throw an exception when the specified boolean is false.")]
         public void BooleanTrue()
         {
-            Action act = () => false.MustNotBeTrue();
+            var result = false.MustNotBeTrue();
 
-            act.ShouldNotThrow();
+            result.Should().BeFalse();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => true.MustNotBeTrue(exception: exception))
                     .AddMessageTest<ArgumentException>(message => true.MustNotBeTrue(message: message));

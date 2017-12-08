@@ -13,9 +13,9 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
         [MemberData(nameof(AbsoluteUriData))]
         public void AbsoluteUri(Uri absoluteUri)
         {
-            Action act = () => absoluteUri.MustBeAbsoluteUri();
+            var result = absoluteUri.MustBeAbsoluteUri();
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(absoluteUri);
         }
 
         public static readonly TestData AbsoluteUriData =
@@ -50,7 +50,7 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => new Uri("/api/buildings", UriKind.Relative).MustBeAbsoluteUri(exception: exception)))
                     .Add(new CustomMessageTest<ArgumentException>(message => new Uri("/api/buildings", UriKind.Relative).MustBeAbsoluteUri(message: message)));

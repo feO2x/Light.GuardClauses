@@ -22,11 +22,12 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
         [Theory (DisplayName = "MustHaveOneSchemeOf must not throw an exception when the specified URI is an absolute one having one of the specified schemes.")]
         [InlineData("http://www.feo2x.com")]
         [InlineData("https://docs.microsoft.com")]
-        public void ValidScheme(string uri)
+        public void ValidScheme(string uriText)
         {
-            Action act = () => new Uri(uri).MustHaveOneSchemeOf(new[] { "http", "https" });
+            var uri = new Uri(uriText);
+            var result = uri.MustHaveOneSchemeOf(new[] { "http", "https" });
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(uri);
         }
 
         [Fact(DisplayName = "MustHaveOneSchemeOf must throw an ArgumentNullException when the specified URI is null.")]
@@ -37,7 +38,7 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => new Uri("http://foo.com").MustHaveOneSchemeOf(new[] { "https" }, exception: exception)))
                     .Add(new CustomMessageTest<ArgumentException>(message => new Uri("http://foo.com").MustHaveOneSchemeOf(new[] { "ftp" }, message: message)));

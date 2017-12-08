@@ -29,13 +29,8 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         [Fact(DisplayName = "MustNotBeInterface must not throw an exception when the specified type is no interface.")]
         public void IsNotInterface()
         {
-            TestIsNotInterface(() => typeof(string).MustNotBeInterface());
-            TestIsNotInterface(() => typeof(Assembly).GetTypeInfo().MustNotBeInterface());
-        }
-
-        private static void TestIsNotInterface(Action act)
-        {
-            act.ShouldNotThrow();
+            typeof(string).MustNotBeInterface().Should().Be(typeof(string));
+            typeof(Assembly).GetTypeInfo().MustNotBeInterface().Should().Be(typeof(Assembly).GetTypeInfo());
         }
 
         [Fact(DisplayName = "MustNotBeInterface must throw an ArgumentNullException when parameter is null.")]
@@ -45,7 +40,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             new Action(() => ((TypeInfo) null).MustNotBeInterface()).ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => typeof(IContainer).MustNotBeInterface(exception: exception))
                     .AddMessageTest<TypeException>(message => typeof(IChangeTracking).MustNotBeInterface(message: message));

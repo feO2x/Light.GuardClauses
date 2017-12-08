@@ -26,9 +26,9 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("The things we love destroy us every time, lad. Remember that.", "Consider that.")]
         public void StringEndsDiffer(string @string, string endText)
         {
-            Action act = () => @string.MustNotEndWith(endText);
+            var result = @string.MustNotEndWith(endText);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(@string);
         }
 
         [Theory(DisplayName = "MustNotEndWith for strings must throw an ArgumentNullException when either paramter or text is null.")]
@@ -41,7 +41,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => "Foo".MustNotEndWith("Foo", exception: exception)))
                     .Add(new CustomMessageTest<StringException>(message => "Bar".MustNotEndWith("Bar", message: message)));

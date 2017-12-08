@@ -26,16 +26,15 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
             object @object = null;
 
             // ReSharper disable once ExpressionIsAlwaysNull
-            Action act = () => @object.MustBeNull(nameof(@object));
+            var result = @object.MustBeNull(nameof(@object));
 
-            act.ShouldNotThrow();
+            result.Should().BeNull();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => new object().MustBeNull(exception: exception)));
-
-            testData.Add(new CustomMessageTest<ArgumentNotNullException>(message => new object().MustBeNull(message: message)));
+            testData.Add(new CustomExceptionTest(exception => new object().MustBeNull(exception: exception)))
+                    .Add(new CustomMessageTest<ArgumentNotNullException>(message => new object().MustBeNull(message: message)));
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using FluentAssertions;
 using Light.GuardClauses.FrameworkExtensions;
 using Xunit;
@@ -15,7 +14,7 @@ namespace Light.GuardClauses.Tests
     {
         [Theory(DisplayName = "AsReadOnlyList will return the same collection instance casted as an IReadOnlyList<T> when the cast is possible.")]
         [MemberData(nameof(ReturnsCastedInstanceIfPossibleData))]
-        public void ReturnsCastedInstanceIfPossible<T>(IEnumerable<T> enumerable)
+        public void ReturnsCastedInstanceIfPossible(IEnumerable<string> enumerable)
         {
             // ReSharper disable PossibleMultipleEnumeration
             var readOnlyList = enumerable.AsReadOnlyList();
@@ -26,10 +25,10 @@ namespace Light.GuardClauses.Tests
 
         [Theory(DisplayName = "AsReadOnlyList will return the same collection instance casted as an IReadOnlyList<T> when the cast is possible, even when a custom Create-Collection-Delegate was passed in.")]
         [MemberData(nameof(ReturnsCastedInstanceIfPossibleData))]
-        public void ReturnsCastedInstanceIfPossibleWithCustomFactory<T>(IEnumerable<T> enumerable)
+        public void ReturnsCastedInstanceIfPossibleWithCustomFactory(IEnumerable<string> enumerable)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            var readOnlyList = enumerable.AsReadOnlyList(items => new ObservableCollection<T>(items));
+            var readOnlyList = enumerable.AsReadOnlyList(items => new ObservableCollection<string>(items));
 
             readOnlyList.Should().BeSameAs(enumerable);
             // ReSharper restore PossibleMultipleEnumeration
@@ -40,8 +39,7 @@ namespace Light.GuardClauses.Tests
             {
                 new object[] { new List<string> { "Foo", "Bar" } },
                 new object[] { new[] { "Foo", "Bar", "Baz" } },
-                new object[] { new List<object>() },
-                new object[] { new ObservableCollection<Encoding> { Encoding.ASCII, Encoding.UTF8 } }
+                new object[] { new ObservableCollection<string>() }
             };
 
         [Fact(DisplayName = "AsReadOnlyList will return a new List<T> instance when the enumerable cannot be downcasted to IReadOnlyList<T>.")]

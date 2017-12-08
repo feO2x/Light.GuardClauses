@@ -32,9 +32,9 @@ namespace Light.GuardClauses.Tests.DateTimeAssertionsTests
         [MemberData(nameof(UnspecifiedData))]
         public void Unspecified(DateTime dateTime)
         {
-            Action act = () => dateTime.MustBeUnspecified();
+            var result = dateTime.MustBeUnspecified();
 
-            act.ShouldNotThrow();
+            result.Should().Be(dateTime);
         }
 
         public static readonly TestData UnspecifiedData =
@@ -44,7 +44,7 @@ namespace Light.GuardClauses.Tests.DateTimeAssertionsTests
                 new object[] { new DateTime(2017, 1, 26, 19, 22, 26, DateTimeKind.Unspecified) }
             };
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => DateTime.UtcNow.MustBeUnspecified(exception: exception)))
                     .Add(new CustomMessageTest<InvalidDateTimeException>(message => DateTime.UtcNow.MustBeUnspecified(message: message)));

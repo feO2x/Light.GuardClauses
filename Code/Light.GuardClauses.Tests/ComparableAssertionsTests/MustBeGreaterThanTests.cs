@@ -13,10 +13,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         [InlineData(1, 2)]
         [InlineData(-1, -1)]
         [InlineData(0, 0)]
-        [InlineData(short.MinValue, short.MinValue)]
-        [InlineData('F', 'c')]
-        [InlineData("aaa", "bbb")]
-        public void ParameterEqualOrLess<T>(T first, T second) where T : IComparable<T>
+        public void ParameterEqualOrLess(int first, int second)
         {
             Action act = () => first.MustBeGreaterThan(second, nameof(first));
 
@@ -28,16 +25,14 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         [InlineData(133, 99)]
         [InlineData(int.MaxValue, int.MaxValue - 1)]
         [InlineData(byte.MaxValue, byte.MinValue)]
-        [InlineData('Z', 'X')]
-        [InlineData("Hello", "ah yeah")]
-        public void ParameterGreater<T>(T first, T second) where T : IComparable<T>
+        public void ParameterGreater(int first, int second)
         {
-            Action act = () => first.MustBeGreaterThan(second);
+            var result = first.MustBeGreaterThan(second);
 
-            act.ShouldNotThrow();
+            result.Should().Be(first);
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => 1.MustBeGreaterThan(2, exception: exception)))
                     .Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => 42.MustBeGreaterThan(87, message: message)));

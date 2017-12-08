@@ -56,7 +56,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
                .And.Message.Should().Contain("The collection contains null at index 1.");
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => InvalidTestData.MustContainInstancesOfDifferentTypes(exception: exception)))
                     .Add(new CustomMessageTest<CollectionException>(message => InvalidTestData.MustContainInstancesOfDifferentTypes(message: message)));

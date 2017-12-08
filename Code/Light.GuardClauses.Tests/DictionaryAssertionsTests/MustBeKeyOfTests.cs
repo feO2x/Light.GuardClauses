@@ -45,11 +45,10 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
                 new object[] { 2, new Dictionary<int, string> { [1] = "Hello", [2] = "World" } }
             };
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => "a".MustBeKeyOf(new Dictionary<string, int> { ["b"] = 42 }, exception: exception)));
-
-            testData.Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => "a".MustBeKeyOf(new Dictionary<string, int> { ["b"] = 42 }, message: message)));
+            testData.Add(new CustomExceptionTest(exception => "a".MustBeKeyOf(new Dictionary<string, int> { ["b"] = 42 }, exception: exception)))
+                    .Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => "a".MustBeKeyOf(new Dictionary<string, int> { ["b"] = 42 }, message: message)));
         }
     }
 }

@@ -32,11 +32,11 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         [InlineData(new[] { 1, 2, 3, 4, 5 }, new[] { 2, 1 })]
         [InlineData(new[] { 150, -200, 240, -290 }, new[] { -200, 150 })]
         [InlineData(new[] { 1 }, new[] { 1 })]
-        public void CollectionStartsEqual(IEnumerable<int> collection, IEnumerable<int> set)
+        public void CollectionStartsEqual(int[] collection, int[] set)
         {
-            Action act = () => collection.MustStartWithEquivalentOf(set);
+            var result = collection.MustStartWithEquivalentOf(set);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(collection);
         }
 
         [Theory(DisplayName = "MustStartWithEquivalentOf for collections must throw an ArgumentNullException when parameter or set are null.")]
@@ -49,7 +49,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => new[] { 1, 2, 3 }.MustStartWithEquivalentOf(new[] { 4 }, exception: exception)))
                     .Add(new CustomMessageTest<CollectionException>(message => new[] { 1, 2, 3 }.MustStartWithEquivalentOf(new[] { 4 }, message: message)));

@@ -26,13 +26,8 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         [Fact(DisplayName = "MustNotBeEnum must not throw an exception when the specified type is no enum.")]
         public void IsNotEnum()
         {
-            TestIsNotEnum(() => typeof(int).MustNotBeEnum());
-            TestIsNotEnum(() => typeof(IEquatable<string>).GetTypeInfo().MustNotBeEnum());
-        }
-
-        private static void TestIsNotEnum(Action act)
-        {
-            act.ShouldNotThrow();
+            typeof(int).MustNotBeEnum().Should().Be(typeof(int));
+            typeof(IEquatable<string>).GetTypeInfo().MustNotBeEnum().Should().Be(typeof(IEquatable<string>).GetTypeInfo());
         }
 
         [Fact(DisplayName = "MustNotBeEnum must throw an ArgumentNullException when parameter is null.")]
@@ -43,7 +38,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         }
 
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => typeof(ConsoleColor).MustNotBeEnum(exception: exception))
                     .AddMessageTest<TypeException>(message => typeof(ConsoleColor).MustNotBeEnum(message: message));

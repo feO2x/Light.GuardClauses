@@ -25,9 +25,9 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("Say herro to my littre friend", "hello")]
         public void TextNotContained(string value, string containedText)
         {
-            Action act = () => value.MustNotContain(containedText);
+            var result = value.MustNotContain(containedText);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(value);
         }
 
         [Theory(DisplayName = "MustNotContain must throw an exception when the two strings have the same content with different capital letters.")]
@@ -50,13 +50,12 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
                .And.ParamName.Should().Be("text");
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => "I am here".MustNotContain("am", exception: exception)));
-            testData.Add(new CustomExceptionTest(exception =>
-                                                 "When you play the game of thrones you win, or you die. There is no middle ground.".MustNotContain("game of thrones", exception: exception)));
-
-            testData.Add(new CustomMessageTest<StringException>(message => "I am here".MustNotContain("am", message: message)));
+            testData.Add(new CustomExceptionTest(exception => "I am here".MustNotContain("am", exception: exception)))
+                    .Add(new CustomExceptionTest(exception =>
+                                                     "When you play the game of thrones you win, or you die. There is no middle ground.".MustNotContain("game of thrones", exception: exception)))
+                    .Add(new CustomMessageTest<StringException>(message => "I am here".MustNotContain("am", message: message)));
         }
     }
 }

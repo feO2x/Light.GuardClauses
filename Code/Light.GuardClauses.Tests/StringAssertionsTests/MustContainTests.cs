@@ -27,9 +27,9 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("1, 2, 3", ", ")]
         public void StringContainsText(string value, string containedText)
         {
-            Action act = () => value.MustContain(containedText, parameterName: nameof(value));
+            var result = value.MustContain(containedText, parameterName: nameof(value));
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(value);
         }
 
         [Fact(DisplayName = "MustContain must not throw an exception when case sensitivity is turned off and the text is contained in the string.")]
@@ -37,9 +37,9 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             const string text = "I suppose I'll have to kill the Mountain myself. Won't that make for a great song.";
 
-            Action act = () => text.MustContain("KILL", true);
+            var result = text.MustContain("KILL", true);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(text);
         }
 
         [Fact(DisplayName = "MustContain must throw an exception when the specified text is null.")]
@@ -51,12 +51,11 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
                .And.ParamName.Should().Be("text");
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => "Hello there!".MustContain("world", exception: exception)));
-
-            testData.Add(new CustomMessageTest<StringException>(message => "42".MustContain("b", message: message)));
-            testData.Add(new CustomMessageTest<StringException>(message => string.Empty.MustContain("a", message: message)));
+            testData.Add(new CustomExceptionTest(exception => "Hello there!".MustContain("world", exception: exception)))
+                    .Add(new CustomMessageTest<StringException>(message => "42".MustContain("b", message: message)))
+                    .Add(new CustomMessageTest<StringException>(message => string.Empty.MustContain("a", message: message)));
         }
     }
 }

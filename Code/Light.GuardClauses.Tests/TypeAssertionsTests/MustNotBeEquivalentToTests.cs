@@ -29,9 +29,9 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             var first = typeof(Expression);
             var second = typeof(IComparer<>);
 
-            Action act = () => first.MustNotBeEquivalentTo(second);
+            var result = first.MustNotBeEquivalentTo(second);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(first);
         }
 
         [Fact(DisplayName = "MustNotBeEquivalentTo must throw an ArgumentNullException when parameter is null.")]
@@ -42,7 +42,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             act.ShouldThrow<ArgumentNullException>().And.ParamName.Should().Be("foo");
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => typeof(string).MustNotBeEquivalentTo(typeof(string), exception: exception)))
                     .Add(new CustomMessageTest<TypeException>(message => typeof(string).MustNotBeEquivalentTo(typeof(string), message: message)));

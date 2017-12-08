@@ -52,9 +52,9 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("abcd")]
         public void OnlyLetters(string validString)
         {
-            Action act = () => validString.MustContainOnlyLetters();
+            var result = validString.MustContainOnlyLetters();
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(validString);
         }
 
         [Fact(DisplayName = "MustContainOnlyLetters must throw an ArgumentNullException when the specified string is null.")]
@@ -73,11 +73,10 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
             act.ShouldThrow<EmptyStringException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => "!".MustContainOnlyLetters(exception: exception)));
-
-            testData.Add(new CustomMessageTest<StringException>(message => "$".MustContainOnlyLetters(message: message)));
+            testData.Add(new CustomExceptionTest(exception => "!".MustContainOnlyLetters(exception: exception)))
+                    .Add(new CustomMessageTest<StringException>(message => "$".MustContainOnlyLetters(message: message)));
         }
     }
 }

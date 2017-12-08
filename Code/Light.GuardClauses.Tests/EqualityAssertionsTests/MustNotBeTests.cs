@@ -15,9 +15,9 @@ namespace Light.GuardClauses.Tests.EqualityAssertionsTests
         [InlineData("Hello", "World!")]
         public void ValuesNotEqual<T>(T value, T other)
         {
-            Action act = () => value.MustNotBe(other);
+            var result = value.MustNotBe(other);
 
-            act.ShouldNotThrow();
+            result.Should().Be(value);
         }
 
         [Theory(DisplayName = "MustNotBe must throw an ArgumentException when the specified values are equal.")]
@@ -40,7 +40,7 @@ namespace Light.GuardClauses.Tests.EqualityAssertionsTests
             act.ShouldThrow<ArgumentException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => "Hello".MustNotBe("Hello", exception: exception)))
                     .Add(new CustomMessageTest<ArgumentException>(message => 42.MustNotBe(42, message: message)));

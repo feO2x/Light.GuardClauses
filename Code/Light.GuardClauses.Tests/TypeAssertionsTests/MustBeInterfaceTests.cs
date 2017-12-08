@@ -27,13 +27,8 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         [Fact(DisplayName = "MustBeInterface must not throw an exception when the specified type is an interface.")]
         public void IsInterface()
         {
-            TestIsInterface(() => typeof(IConvertible).MustBeInterface());
-            TestIsInterface(() => typeof(IDictionary<,>).GetTypeInfo().MustBeInterface());
-        }
-
-        private static void TestIsInterface(Action act)
-        {
-            act.ShouldNotThrow();
+            typeof(IConvertible).MustBeInterface().Should().Be(typeof(IConvertible));
+            typeof(IDictionary<,>).GetTypeInfo().MustBeInterface().Should().Be(typeof(IDictionary<,>).GetTypeInfo());
         }
 
         [Fact(DisplayName = "MustBeInterface must throw an ArgumentNullException when parameter is null.")]
@@ -43,7 +38,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             new Action(() => ((TypeInfo) null).MustBeInterface()).ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => typeof(ConsoleColor).MustBeInterface(exception: exception))
                     .AddMessageTest<TypeException>(message => typeof(Action).MustBeInterface(message: message));

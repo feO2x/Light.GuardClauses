@@ -33,9 +33,9 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
         [MemberData(nameof(ValueContainedData))]
         public void ValueContained(IDictionary<string, string> dictionary, string value)
         {
-            Action act = () => dictionary.MustContainValue(value);
+            var result = dictionary.MustContainValue(value);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(dictionary);
         }
 
         public static readonly TestData ValueContainedData =
@@ -53,11 +53,10 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => new Dictionary<int, string> { [1] = "Foo" }.MustContainValue("Bar", exception: exception)));
-
-            testData.Add(new CustomMessageTest<ValueNotFoundException>(message => new Dictionary<int, string> { [1] = "Foo" }.MustContainValue("Bar", message: message)));
+            testData.Add(new CustomExceptionTest(exception => new Dictionary<int, string> { [1] = "Foo" }.MustContainValue("Bar", exception: exception)))
+                    .Add(new CustomMessageTest<ValueNotFoundException>(message => new Dictionary<int, string> { [1] = "Foo" }.MustContainValue("Bar", message: message)));
         }
     }
 }

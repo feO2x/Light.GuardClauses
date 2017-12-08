@@ -12,9 +12,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         [InlineData(2, 1)]
         [InlineData(1, 1)]
         [InlineData(-87, -88)]
-        [InlineData("a", "a")]
-        [InlineData("B", "A")]
-        public void ParameterAtOrAboveBoundary<T>(T value, T boundary) where T : IComparable<T>
+        public void ParameterAtOrAboveBoundary(int value, int boundary)
         {
             Action act = () => value.MustNotBeGreaterThanOrEqualTo(boundary, nameof(value));
 
@@ -23,22 +21,19 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         }
 
         [Theory(DisplayName = "MustNotBeGreaterThanOrEqualTo must not throw an exception when the specified value is less than the given boundary.")]
-        [InlineData(0, 1)]
-        [InlineData(-80, -70)]
-        [InlineData("A", "B")]
-        [InlineData("a", "A")]
-        public void ParameterBelowBoundary<T>(T value, T boundary) where T : IComparable<T>
+        [InlineData(0L, 1L)]
+        [InlineData(-80L, -70L)]
+        public void ParameterBelowBoundary(long value, long boundary)
         {
-            Action act = () => value.MustNotBeGreaterThanOrEqualTo(boundary);
+            var result = value.MustNotBeGreaterThanOrEqualTo(boundary);
 
-            act.ShouldNotThrow();
+            result.Should().Be(value);
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => 42.MustNotBeGreaterThanOrEqualTo(41, exception: exception)));
-
-            testData.Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => 42.MustNotBeGreaterThanOrEqualTo(42, message: message)));
+            testData.Add(new CustomExceptionTest(exception => 42.MustNotBeGreaterThanOrEqualTo(41, exception: exception)))
+                    .Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => 42.MustNotBeGreaterThanOrEqualTo(42, message: message)));
         }
     }
 }

@@ -32,9 +32,9 @@ namespace Light.GuardClauses.Tests.DateTimeAssertionsTests
         [MemberData(nameof(UtcData))]
         public void Utc(DateTime utcDateTime)
         {
-            Action act = () => utcDateTime.MustBeUtc();
+            var result = utcDateTime.MustBeUtc();
 
-            act.ShouldNotThrow();
+            result.Should().Be(utcDateTime);
         }
 
         public static readonly TestData UtcData =
@@ -44,7 +44,7 @@ namespace Light.GuardClauses.Tests.DateTimeAssertionsTests
                 new object[] { new DateTime(2017, 1, 26, 18, 1, 51, DateTimeKind.Utc) }
             };
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => DateTime.Now.MustBeUtc(exception: exception)))
                     .Add(new CustomMessageTest<InvalidDateTimeException>(message => DateTime.Now.MustBeUtc(message: message)));

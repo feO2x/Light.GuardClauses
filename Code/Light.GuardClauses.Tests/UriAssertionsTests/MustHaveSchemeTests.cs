@@ -31,9 +31,9 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
         [MemberData(nameof(ValidSchemeData))]
         public void ValidScheme(Uri uri, string scheme)
         {
-            Action act = () => uri.MustHaveScheme(scheme);
+            var result = uri.MustHaveScheme(scheme);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(uri);
         }
 
         public static readonly TestData ValidSchemeData =
@@ -51,7 +51,7 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => new Uri("http://localhost").MustHaveScheme("https", exception: exception)))
                     .Add(new CustomMessageTest<ArgumentException>(message => new Uri("http://localhost").MustHaveScheme("https", message: message)));

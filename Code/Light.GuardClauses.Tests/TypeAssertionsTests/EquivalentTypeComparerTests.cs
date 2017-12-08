@@ -10,7 +10,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
     public sealed class EquivalentTypeComparerTests
     {
         [Fact(DisplayName = "Equals must return true when two types are equivalent.")]
-        public void Equals()
+        public void CheckEquality()
         {
             CheckEquals(typeof(string), typeof(string), true);
             CheckEquals(typeof(IComparer), typeof(IEnumerator), false);
@@ -37,7 +37,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             CheckGetHashCode(typeof(Dictionary<string, object>), typeof(IDictionary<,>), false);
         }
 
-        private void CheckGetHashCode(Type x, Type y, bool shouldBeEqualHashCodes)
+        private static void CheckGetHashCode(Type x, Type y, bool shouldBeEqualHashCodes)
         {
             var comparer = new EqualivalentTypeComparer();
             var firstHashCode = comparer.GetHashCode(x);

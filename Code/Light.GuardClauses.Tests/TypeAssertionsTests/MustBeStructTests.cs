@@ -26,13 +26,8 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         [Fact(DisplayName = "MustBeStruct must not throw an exception when the specified type is a struct.")]
         public void IsStruct()
         {
-            TestIsStruct(() => typeof(int).MustBeStruct());
-            TestIsStruct(() => typeof(float).MustBeStruct());
-        }
-
-        private static void TestIsStruct(Action act)
-        {
-            act.ShouldNotThrow();
+            typeof(int).MustBeStruct().Should().Be(typeof(int));
+            typeof(float).GetTypeInfo().MustBeStruct().Should().Be(typeof(float).GetTypeInfo());
         }
 
         [Fact (DisplayName = "MustBeStruct must throw an ArgumentNullException when parameter is null.")]
@@ -42,7 +37,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             new Action(() => ((TypeInfo) null).MustBeStruct()).ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => typeof(IDisposable).MustBeStruct(exception: exception))
                     .AddMessageTest<TypeException>(message => typeof(ConsoleKey).MustBeStruct(message: message));

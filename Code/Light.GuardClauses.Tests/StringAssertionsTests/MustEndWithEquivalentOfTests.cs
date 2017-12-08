@@ -27,9 +27,9 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         [InlineData("Why are all the gods such vicious cunts? Where is the god of tits and wine?", "Tits and Wine?")]
         public void StringEndsEqual(string @string, string endText)
         {
-            Action act = () => @string.MustEndWithEquivalentOf(endText);
+            var result = @string.MustEndWithEquivalentOf(endText);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(@string);
         }
 
         [Theory(DisplayName = "MustEndWithEquivalentOf for strings must throw an ArgumentNullException when either paramter or text is null.")]
@@ -42,7 +42,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.Add(new CustomExceptionTest(exception => "The Lord of Light wants his enemies burnt".MustEndWithEquivalentOf("One should treat others as one would like others to treat oneself", exception: exception)))
                     .Add(new CustomMessageTest<StringException>(message => "The Drowned God wants his enemies drowned".MustEndWithEquivalentOf("altruism", message: message)));

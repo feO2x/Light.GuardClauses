@@ -68,7 +68,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             act.ShouldThrow<ArgumentNullException>();
         }
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => typeof(IFormattable).MustBeStaticClass(exception: exception))
                     .AddMessageTest<TypeException>(message => typeof(Action).MustBeStaticClass(message: message));

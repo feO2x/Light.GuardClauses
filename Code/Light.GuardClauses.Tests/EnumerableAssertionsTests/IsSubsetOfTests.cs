@@ -11,9 +11,9 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         [InlineData(new[] { "Foo", "Bar", "Baz" }, new[] { "Foo", "Bar", "Baz", "Qux" }, true)]
         [InlineData(new[] { "Qux", "Baz" }, new[] { "Foo", "Bar", "Baz", "Qux" }, true)]
         [InlineData(new[] { "Corge", "Baz" }, new[] { "Foo", "Bar", "Baz", "Qux" }, false)]
-        [InlineData(new[] { 1, 3, 5 }, new[] { 1, 4, 5, 7, 9 }, false)]
+        [InlineData(new[] { "Foo", "Baz", "Quux" }, new[] { "Foo", "Qux", "Quux", "Corge", "Grault" }, false)]
         [InlineData(new string[] { }, new string[] { }, true)]
-        public void CheckIsSubsetOf<T>(T[] collection, T[] superset, bool expected)
+        public void CheckIsSubsetOf(string[] collection, string[] superset, bool expected)
         {
             collection.IsSubsetOf(superset).Should().Be(expected);
         }

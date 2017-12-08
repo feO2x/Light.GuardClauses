@@ -36,9 +36,9 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
         [MemberData(nameof(DoesNotHaveKeysData))]
         public void DoesNotHaveKeys(IDictionary<string, object> dictionary, string[] keys)
         {
-            Action act = () => dictionary.MustNotContainKeys(keys);
+            var result = dictionary.MustNotContainKeys(keys);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(dictionary);
         }
 
         public static readonly TestData DoesNotHaveKeysData =
@@ -65,11 +65,10 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
                 new object[] { new Dictionary<char, object>(), null }
             };
 
-        public void PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
+        void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => new Dictionary<char, string> { ['a'] = "What?" }.MustNotContainKeys(new[] { 'a' }, exception: exception)));
-
-            testData.Add(new CustomMessageTest<DictionaryException>(message => new Dictionary<char, string> { ['a'] = "What?" }.MustNotContainKeys(new[] { 'a' }, message: message)));
+            testData.Add(new CustomExceptionTest(exception => new Dictionary<char, string> { ['a'] = "What?" }.MustNotContainKeys(new[] { 'a' }, exception: exception)))
+                    .Add(new CustomMessageTest<DictionaryException>(message => new Dictionary<char, string> { ['a'] = "What?" }.MustNotContainKeys(new[] { 'a' }, message: message)));
         }
     }
 }
