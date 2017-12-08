@@ -32,6 +32,34 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        ///     Ensures that the specified parameter is not the default value, or otherwise throws an <see cref="ArgumentNullException" />
+        ///     for reference types, or an <see cref="ArgumentException" /> for value types.
+        /// </summary>
+        /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="ArgumentNullException" /> or <see cref="ArgumentException" /> (optional).</param>
+        /// <param name="exception">
+        ///     The exception that is thrown when the specified <paramref name="parameter" /> is the default value (optional).
+        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is the default value of its type.</exception>
+        public static T MustNotBeDefault<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            if (default(T) == null)
+            {
+                if (parameter == null)
+                    throw exception?.Invoke() ?? new ArgumentNullException(parameterName, message ?? $"{parameterName ?? "The value"} must not be null.");
+                return parameter;
+            }
+            if (parameter.Equals(default(T)))
+                throw exception?.Invoke() ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be the default value.");
+
+            return parameter;
+        }
+
+        /// <summary>
         ///     Ensures that the specified parameter is null, or otherwise throws an <see cref="ArgumentNotNullException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
