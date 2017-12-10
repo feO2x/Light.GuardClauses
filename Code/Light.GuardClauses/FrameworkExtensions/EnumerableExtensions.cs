@@ -20,11 +20,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> is null.</exception>
         public static IList<T> AsList<T>(this IEnumerable<T> enumerable)
         {
-            // ReSharper disable PossibleMultipleEnumeration
-            enumerable.MustNotBeNull(nameof(enumerable));
-
-            return enumerable as IList<T> ?? enumerable.ToList();
-            // ReSharper restore PossibleMultipleEnumeration
+            return enumerable as IList<T> ?? enumerable.MustNotBeNull(nameof(enumerable)).ToList();
         }
 
         /// <summary>
@@ -38,11 +34,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> or <paramref name="createCollection" /> is null.</exception>
         public static IList<T> AsList<T>(this IEnumerable<T> enumerable, Func<IEnumerable<T>, IList<T>> createCollection)
         {
-            // ReSharper disable PossibleMultipleEnumeration
-            enumerable.MustNotBeNull(nameof(enumerable));
-
-            return enumerable as IList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(enumerable);
-            // ReSharper restore PossibleMultipleEnumeration
+            return enumerable as IList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(enumerable.MustNotBeNull(nameof(enumerable)));
         }
 
         /// <summary>
@@ -55,11 +47,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> is null.</exception>
         public static IReadOnlyList<T> AsReadOnlyList<T>(this IEnumerable<T> enumerable)
         {
-            // ReSharper disable PossibleMultipleEnumeration
-            enumerable.MustNotBeNull(nameof(enumerable));
-
-            return enumerable as IReadOnlyList<T> ?? enumerable.ToList();
-            // ReSharper restore PossibleMultipleEnumeration
+            return enumerable as IReadOnlyList<T> ?? enumerable.MustNotBeNull(nameof(enumerable)).ToList();
         }
 
         /// <summary>
@@ -73,11 +61,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> or <paramref name="createCollection" /> is null.</exception>
         public static IReadOnlyList<T> AsReadOnlyList<T>(this IEnumerable<T> enumerable, Func<IEnumerable<T>, IReadOnlyList<T>> createCollection)
         {
-            // ReSharper disable PossibleMultipleEnumeration
-            enumerable.MustNotBeNull(nameof(enumerable));
-
-            return enumerable as IReadOnlyList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(enumerable);
-            // ReSharper restore PossibleMultipleEnumeration
+            return enumerable as IReadOnlyList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(enumerable.MustNotBeNull(nameof(enumerable)));
         }
 
         /// <summary>
