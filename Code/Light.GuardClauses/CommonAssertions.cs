@@ -213,52 +213,54 @@ namespace Light.GuardClauses
                 return false;
             }
 
-            // Else get all values 
-            var enumInfo = GetEnumInfo(fields);
+            // Else check if the value is a valid flags combination
+            var enumInfo = EnumInfo.FromEnumFields(fields);
             if (enumInfo.NumberOfConstants == 0)
                 return false;
 
-            return enumInfo.UnderlyingType == Types.UInt64Type ? CheckFlagsEnumValueUsingUInt64Conversion(Convert.ToUInt64(parameter), enumInfo.NumberOfConstants, fields) : CheckFlagsEnumValueUsingInt64Conversion(Convert.ToInt64(parameter), enumInfo.NumberOfConstants, fields);
+            return enumInfo.UnderlyingType == Types.UInt64Type ? 
+                CheckEnumFlagsUsingUInt64Conversion(Convert.ToUInt64(parameter), fields, enumInfo.NumberOfConstants) :
+                CheckEnumFlagsUsingInt64Conversion(Convert.ToInt64(parameter), fields, enumInfo.NumberOfConstants);
         }
 
-        private static bool CheckFlagsEnumValueUsingInt64Conversion(long parameter, int numberOfConstants, IReadOnlyList<FieldInfo> fields)
+        private static bool CheckEnumFlagsUsingInt64Conversion(long parameterValue, IReadOnlyList<FieldInfo> enumFields, int numberOfEnumConstants)
         {
-            var array = new long[numberOfConstants];
-            var currentStartIndex = default(int);
-
-            for (var i = 0; i < fields.Count; i++)
+            var enumValues = new long[numberOfEnumConstants];
+            var currentIndex = 0;
+            for (var i = 0; i < enumFields.Count; i++)
             {
-                var field = fields[i];
-                if (field.IsStatic && field.IsLiteral)
-                {
-                    array[currentStartIndex++] = Convert.ToInt64(field.GetValue(null));
-                }
+                var field = enumFields[i];
+                if (!field.IsStatic || !field.IsLiteral)
+                    continue;
+                var enumValue = Convert.ToInt64(field.GetValue(null));
+                if (enumValue == parameterValue)
+                    return true;
+
+                enumValues[currentIndex++] = enumValue;
             }
-            Array.Sort(array);
-            var foundIndex = Array.BinarySearch(array, parameter);
-            if (foundIndex >= 0 && foundIndex < array.Length)
-                return true;
+
+            Array.Sort(enumValues);
 
             var bit = 1L;
-            if (parameter < bit)
+            if (parameterValue < bit)
                 return false;
 
-            currentStartIndex = 0;
+            var currentStartIndex = 0;
 
             while (true)
             {
-                if ((bit & parameter) != 0)
+                if ((bit & parameterValue) != 0)
                 {
-                    currentStartIndex = UpdateIndexIfNecessary(bit, currentStartIndex, array);
+                    currentStartIndex = UpdateIndexIfNecessary(bit, currentStartIndex, enumValues);
                     if (currentStartIndex == -1)
                         return false;
 
-                    if (FindTarget(bit, currentStartIndex, array) == false)
+                    if (FindEnumFlag(bit, currentStartIndex, enumValues) == false)
                         return false;
                 }
 
                 var newBit = bit << 1;
-                if (newBit > parameter || newBit < bit)
+                if (newBit > parameterValue || newBit < bit)
                     break;
 
                 bit = newBit;
@@ -280,59 +282,87 @@ namespace Light.GuardClauses
                 return index;
             }
 
-            bool FindTarget(long currentBit, int startingIndex, long[] sortedEnumValues)
+            bool FindEnumFlag(long currentBit, int startingIndex, long[] sortedEnumValues)
             {
                 for (var i = startingIndex; i < sortedEnumValues.Length; i++)
                 {
                     var enumValue = sortedEnumValues[i];
-                    if ((enumValue & currentBit) != -1)
+                    if ((enumValue & currentBit) != 0)
                         return true;
                 }
                 return false;
             }
         }
 
-        private static bool CheckFlagsEnumValueUsingUInt64Conversion(ulong parameter, int numberOfConstants, IReadOnlyList<FieldInfo> fields)
+        private static bool CheckEnumFlagsUsingUInt64Conversion(ulong parameterValue, IReadOnlyList<FieldInfo> enumFields, int numberOfEnumConstants)
         {
-            var array = new ulong[numberOfConstants];
-            var currentIndex = default(int);
-
-            for (var i = 0; i < fields.Count; i++)
+            var enumValues = new ulong[numberOfEnumConstants];
+            var currentIndex = 0;
+            for (var i = 0; i < enumFields.Count; i++)
             {
-                var field = fields[i];
-                if (field.IsStatic && field.IsLiteral)
-                {
-                    array[currentIndex++] = (ulong) field.GetValue(null);
-                }
-            }
-            Array.Sort(array);
-            if (Array.BinarySearch(array, parameter) != -1)
-                return true;
+                var field = enumFields[i];
+                if (!field.IsStatic || !field.IsLiteral)
+                    continue;
+                var enumValue = Convert.ToUInt64(field.GetValue(null));
+                if (enumValue == parameterValue)
+                    return true;
 
-            var bit = 1ul;
-            currentIndex = 0;
+                enumValues[currentIndex++] = enumValue;
+            }
+
+            Array.Sort(enumValues);
+
+            var bit = 1UL;
+            if (parameterValue < bit)
+                return false;
+
+            var currentStartIndex = 0;
 
             while (true)
             {
-                var isActivated = (bit & parameter) != 0;
-            }
-        }
+                if ((bit & parameterValue) != 0)
+                {
+                    currentStartIndex = UpdateIndexIfNecessary(bit, currentStartIndex, enumValues);
+                    if (currentStartIndex == -1)
+                        return false;
 
-        private static EnumInfo GetEnumInfo(IReadOnlyList<FieldInfo> fields)
-        {
-            var numberOfConstants = default(int);
-            var underlyingType = default(Type);
-            for (var i = 0; i < fields.Count; i++)
+                    if (FindEnumFlag(bit, currentStartIndex, enumValues) == false)
+                        return false;
+                }
+
+                var newBit = bit << 1;
+                if (newBit > parameterValue || newBit < bit)
+                    break;
+
+                bit = newBit;
+            }
+
+            return true;
+
+            int UpdateIndexIfNecessary(ulong currentBit, int index, ulong[] sortedEnumValues)
             {
-                var field = fields[i];
-                if (!field.IsStatic || !field.IsLiteral)
-                    continue;
-                if (underlyingType == null)
-                    underlyingType = field.FieldType;
-                numberOfConstants++;
+                var value = sortedEnumValues[index];
+                while (value < currentBit)
+                {
+                    if (++index >= sortedEnumValues.Length)
+                        return -1;
+
+                    value = sortedEnumValues[index];
+                }
+
+                return index;
             }
 
-            return new EnumInfo(numberOfConstants, underlyingType);
+            bool FindEnumFlag(ulong currentBit, int startingIndex, ulong[] sortedEnumValues)
+            {
+                for (var i = startingIndex; i < sortedEnumValues.Length; i++)
+                {
+                    var enumValue = sortedEnumValues[i];
+                    if ((enumValue & currentBit) != 0)
+                        return true;
+                }
+                return false;
+            }
         }
 
         /// <summary>
@@ -446,10 +476,33 @@ namespace Light.GuardClauses
             public readonly int NumberOfConstants;
             public readonly Type UnderlyingType;
 
-            public EnumInfo(int numberOfConstants, Type underlyingType)
+            private EnumInfo(int numberOfConstants, Type underlyingType)
             {
-                NumberOfConstants = numberOfConstants;
+                NumberOfConstants = numberOfConstants.MustBeGreaterThanOrEqualTo(0, nameof(numberOfConstants));
+                if (numberOfConstants > 0)
+                    underlyingType.MustNotBeNull(nameof(underlyingType));
                 UnderlyingType = underlyingType;
+            }
+
+            public static EnumInfo FromEnumFields(IReadOnlyList<FieldInfo> enumFields)
+            {
+                var numberOfConstants = default(int);
+                var underlyingType = default(Type);
+
+                for (var i = 0; i < enumFields.Count; i++)
+                {
+                    var field = enumFields[i];
+
+                    if (underlyingType == null && field.IsSpecialName && field.IsPublic)
+                        underlyingType = field.FieldType;
+
+                    if (field.IsStatic == false || field.IsLiteral == false)
+                        continue;
+
+                    numberOfConstants++;
+                }
+
+                return new EnumInfo(numberOfConstants, underlyingType);
             }
         }
     }
