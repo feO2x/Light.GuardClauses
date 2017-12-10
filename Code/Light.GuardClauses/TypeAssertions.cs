@@ -21,7 +21,7 @@ namespace Light.GuardClauses
         ///     True if both types are null, or if both are equal, or if one type
         ///     is a constructed generic type and the other one is the corresponding generic type definition, else false.
         /// </returns>
-        public static bool IsEquivalentTo(this Type type, Type other)
+        public static bool IsEquivalentTypeTo(this Type type, Type other)
         {
             if (ReferenceEquals(type, other)) return true;
             if (ReferenceEquals(type, null) || ReferenceEquals(other, null)) return false;
@@ -56,7 +56,7 @@ namespace Light.GuardClauses
         {
             parameter.MustNotBeNull(parameterName);
 
-            if (parameter.IsEquivalentTo(other))
+            if (parameter.IsEquivalentTypeTo(other))
                 return parameter;
 
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be equivalent to \"{other?.ToString() ?? "null"}\", but it is not.", parameterName);
@@ -82,7 +82,7 @@ namespace Light.GuardClauses
         {
             parameter.MustNotBeNull(parameterName);
 
-            if (parameter.IsEquivalentTo(other) == false)
+            if (parameter.IsEquivalentTypeTo(other) == false)
                 return parameter;
 
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be equivalent to \"{other?.ToString() ?? "null"}\", but it is.", parameterName);
@@ -771,7 +771,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the specified type derives from the other type. Internally, this method uses <see cref="IsEquivalentTo" />
+        ///     Checks if the specified type derives from the other type. Internally, this method uses <see cref="IsEquivalentTypeTo" />
         ///     by default so that constructed generic types and their corresponding generic type definitions are regarded as equal.
         ///     If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
         /// </summary>
@@ -800,7 +800,7 @@ namespace Light.GuardClauses
 
         /// <summary>
         ///     Ensures that the type derives from the specified <paramref name="baseClass" />, or otherwise throws a <see cref="TypeException" />.
-        ///     By default, this method uses <see cref="IsEquivalentTo" /> internally so that constructed generic types and their corrsponding
+        ///     By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
         ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
         ///     <paramref name="typeComparer" />.
         /// </summary>
@@ -829,7 +829,7 @@ namespace Light.GuardClauses
 
         /// <summary>
         ///     Ensures that the type does not derive from the specified <paramref name="other" /> type, or otherwise throws a <see cref="TypeException" />.
-        ///     By default, this method uses <see cref="IsEquivalentTo" /> internally so that constructed generic types and their corrsponding
+        ///     By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
         ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
         ///     <paramref name="typeComparer" />.
         /// </summary>
@@ -857,7 +857,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the specified type implements the given interface type. Internally, this method uses <see cref="IsEquivalentTo" />
+        ///     Checks if the specified type implements the given interface type. Internally, this method uses <see cref="IsEquivalentTypeTo" />
         ///     so that constructed generic types and their corresponding generic type defintions are regarded as equal.
         ///     If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
         /// </summary>
@@ -885,7 +885,7 @@ namespace Light.GuardClauses
 
         /// <summary>
         ///     Ensures that the type implements the specified <paramref name="interfaceType" />, or otherwise throws a <see cref="TypeException" />.
-        ///     By default, this method uses <see cref="IsEquivalentTo" /> internally so that constructed generic types and their corrsponding
+        ///     By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
         ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
         ///     <paramref name="typeComparer" />.
         /// </summary>
@@ -914,7 +914,7 @@ namespace Light.GuardClauses
 
         /// <summary>
         ///     Ensures that the type does not implement the specified <paramref name="other" /> type, or otherwise throws a <see cref="TypeException" />.
-        ///     By default, this method uses <see cref="IsEquivalentTo" /> internally so that constructed generic types and their corrsponding
+        ///     By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
         ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
         ///     <paramref name="typeComparer" />.
         /// </summary>
@@ -942,7 +942,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the given type derives from the specified base class or interface type. Internally, this method uses <see cref="IsEquivalentTo" />
+        ///     Checks if the given type derives from the specified base class or interface type. Internally, this method uses <see cref="IsEquivalentTypeTo" />
         ///     so that constructed generic types and their corresponding generic type defintions are regarded as equal.
         ///     If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
         /// </summary>
@@ -960,7 +960,7 @@ namespace Light.GuardClauses
 
         /// <summary>
         ///     Ensures that the type derives from or implements the specified <paramref name="baseClassOrInterfaceType" />, or otherwise throws a <see cref="TypeException" />.
-        ///     By default, this method uses <see cref="IsEquivalentTo" /> internally so that constructed generic types and their corrsponding
+        ///     By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
         ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
         ///     <paramref name="typeComparer" />.
         /// </summary>
@@ -989,7 +989,7 @@ namespace Light.GuardClauses
 
         /// <summary>
         ///     Ensures that the type does not derive from or implement the specified <paramref name="other" /> type, or otherwise throws a <see cref="TypeException" />.
-        ///     By default, this method uses <see cref="IsEquivalentTo" /> internally so that constructed generic types and their corrsponding
+        ///     By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
         ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
         ///     <paramref name="typeComparer" />.
         /// </summary>
@@ -1018,7 +1018,7 @@ namespace Light.GuardClauses
 
         /// <summary>
         ///     Checks if the given <paramref name="type" /> is equal to the specified <paramref name="otherType" /> or if it implements it. Internally, this
-        ///     method uses <see cref="IsEquivalentTo" /> so that constructed generic types and their corresponding generic type defintions are regarded as equal.
+        ///     method uses <see cref="IsEquivalentTypeTo" /> so that constructed generic types and their corresponding generic type defintions are regarded as equal.
         ///     If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
@@ -1036,7 +1036,7 @@ namespace Light.GuardClauses
 
         /// <summary>
         ///     Checks if the given <paramref name="type" /> is equal to the specified <paramref name="otherType" /> or if it derives from it. Internally, this
-        ///     method uses <see cref="IsEquivalentTo" /> so that constructed generic types and their corresponding generic type defintions are regarded as equal.
+        ///     method uses <see cref="IsEquivalentTypeTo" /> so that constructed generic types and their corresponding generic type defintions are regarded as equal.
         ///     If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
@@ -1054,7 +1054,7 @@ namespace Light.GuardClauses
 
         /// <summary>
         ///     Checks if the given <paramref name="type" /> is equal to the specified <paramref name="otherType" /> or if it derives from it or implements it.
-        ///     Internally, this method uses <see cref="IsEquivalentTo" /> so that constructed generic types and their corresponding generic type defintions
+        ///     Internally, this method uses <see cref="IsEquivalentTypeTo" /> so that constructed generic types and their corresponding generic type defintions
         ///     are regarded as equal. If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="type">The type to be checked.</param>

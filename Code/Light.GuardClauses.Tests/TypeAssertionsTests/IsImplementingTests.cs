@@ -30,7 +30,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         {
             CheckIsImplementing(typeof(Array), typeof(MulticastDelegate), false);
             CheckIsImplementing(typeof(string), typeof(object), false);
-            CheckIsImplementing(typeof(IsEquivalentToTests.GenericType<>), typeof(int), false);
+            CheckIsImplementing(typeof(IsEquivalentTypeToTests.GenericType<>), typeof(int), false);
         }
 
         [Fact(DisplayName = "IsImplementing must throw an ArgumentNullException when type is null.")]
