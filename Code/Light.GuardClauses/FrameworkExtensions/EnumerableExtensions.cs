@@ -81,6 +81,41 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
+        ///     Tries to downcast the specified enumerable as an array, or creates a new collection
+        /// </summary>
+        /// <typeparam name="T">The item type of the collection.</typeparam>
+        /// <param name="enumerable">The enumerable that will be converted to an array.</param>
+        /// <returns>The casted array, or a new array containing the enumerable's items.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> is null.</exception>
+        public static T[] AsArray<T>(this IEnumerable<T> enumerable)
+        {
+            // ReSharper disable PossibleMultipleEnumeration
+            enumerable.MustNotBeNull(nameof(enumerable));
+
+            if (enumerable is T[] array)
+                return array;
+
+            var i = 0;
+            if (enumerable is IReadOnlyList<T> list)
+            {
+                array = new T[list.Count];
+                for (; i < list.Count; i++)
+                {
+                    array[i] = list[i];
+                }
+                return array;
+            }
+
+            array = new T[enumerable.Count()];
+            foreach (var item in enumerable)
+            {
+                array[i++] = item;
+            }
+            return array;
+            // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        /// <summary>
         ///     Performs the action on each item of the specified enumerable.
         /// </summary>
         /// <typeparam name="T">The item type of the enumerable.</typeparam>

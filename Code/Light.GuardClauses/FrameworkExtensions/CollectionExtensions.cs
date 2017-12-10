@@ -18,7 +18,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         ///     The equality comparer used to compare the items (optional). By default, <see cref="EqualityComparer{T}.Default" /> is used.
         /// </param>
         /// <returns>The index of the specified item, or -1 when the item could not be found.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="collection"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="collection" /> is null.</exception>
         public static int IndexOf<T>(this IReadOnlyList<T> collection, T item, IEqualityComparer<T> equalityComparer = null)
         {
             collection.MustNotBeNull(nameof(collection));
@@ -43,7 +43,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         ///     The equality comparer used to compare the items (optional). By default, <see cref="EqualityComparer{T}.Default" /> is used.
         /// </param>
         /// <returns>True if the item is contained in the collection, else false.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="collection"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="collection" /> is null.</exception>
         public static bool IsContaining<T>(this IReadOnlyList<T> collection, T item, IEqualityComparer<T> equalityComparer = null)
         {
             return collection.IndexOf(item, equalityComparer) != -1;
