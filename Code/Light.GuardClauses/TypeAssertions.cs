@@ -24,7 +24,7 @@ namespace Light.GuardClauses
         public static bool IsEquivalentTypeTo(this Type type, Type other)
         {
             if (ReferenceEquals(type, other)) return true;
-            if (ReferenceEquals(type, null) || ReferenceEquals(other, null)) return false;
+            if (type is null || other is null) return false;
 
             if (type == other) return true;
 
@@ -88,18 +88,32 @@ namespace Light.GuardClauses
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be equivalent to \"{other?.ToString() ?? "null"}\", but it is.", parameterName);
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Checks if the specified type is a class. This is true when <see cref="TypeInfo.IsClass" />
         ///     returns true and the type is no delegate (i.e. its <see cref="TypeInfo.BaseType" /> is no
         ///     <see cref="MulticastDelegate" />).
         /// </summary>
+        /// /// <param name="type">The type to check.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
+#else
+        /// <summary>
+        ///     Checks if the specified type is a class. This is true when <see cref="Type.IsClass" />
+        ///     returns true and the type is no delegate (i.e. its <see cref="Type.BaseType" /> is no
+        ///     <see cref="MulticastDelegate" />).
+        /// </summary>
         /// <param name="type">The type to check.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
+#endif
         public static bool IsClass(this Type type)
         {
+#if NETSTANDARD1_0
             return type.GetTypeInfo().IsClass();
+#else
+            return type.MustNotBeNull(nameof(type)).IsClass && type.BaseType != Types.MulticastDelegateType;
+#endif
         }
-
+#if NETSTANDARD1_0
         /// <summary>
         ///     Checks if the specified type info describes a class. This is true when <see cref="TypeInfo.IsClass" />
         ///     returns true and the type is no delegate (i.e. its <see cref="TypeInfo.BaseType" /> is no
@@ -109,8 +123,9 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
         public static bool IsClass(this TypeInfo typeInfo)
         {
-            return typeInfo.MustNotBeNull(nameof(typeInfo)).IsClass && typeInfo.BaseType != typeof(MulticastDelegate);
+            return typeInfo.MustNotBeNull(nameof(typeInfo)).IsClass && typeInfo.BaseType != Types.MulticastDelegateType;
         }
+#endif
 
         /// <summary>
         ///     Ensures that the specified type is a class (no delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
@@ -136,6 +151,7 @@ namespace Light.GuardClauses
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a class, but it is not.", parameterName);
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Ensures that the specified type info describes a class (no delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
@@ -159,6 +175,7 @@ namespace Light.GuardClauses
 
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be a class, but it is not.", parameterName);
         }
+#endif
 
         /// <summary>
         ///     Ensures that the specified type is no class (but a delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
@@ -184,6 +201,7 @@ namespace Light.GuardClauses
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be a class, but it is.", parameterName);
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Ensures that the specified type info does not describe a class (but a delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
@@ -218,6 +236,7 @@ namespace Light.GuardClauses
         {
             return type.GetTypeInfo().IsInterface;
         }
+#endif
 
         /// <summary>
         ///     Ensures that the specified type is an interface (no class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
@@ -236,13 +255,17 @@ namespace Light.GuardClauses
         public static Type MustBeInterface(this Type parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
-
+#if NETSTANDARD1_0
             if (parameter.IsInterface())
+#else
+            if (parameter.IsInterface)
+#endif
                 return parameter;
 
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be an interface, but it is not.", parameterName);
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Ensures that the specified type info describes an interface (no class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
@@ -265,6 +288,7 @@ namespace Light.GuardClauses
 
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be an interface, but it is not.", parameterName);
         }
+#endif
 
         /// <summary>
         ///     Ensures that the specified type is no interface (but a class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
@@ -284,11 +308,17 @@ namespace Light.GuardClauses
         {
             parameter.MustNotBeNull(parameterName);
 
-            if (parameter.IsInterface() == false) return parameter;
+#if NETSTANDARD1_0
+            if (parameter.IsInterface() == false)
+#else
+            if (parameter.IsInterface == false)
+#endif
+                return parameter;
 
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be an interface, but it is.", parameterName);
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Ensures that the specified type info does not describe an interface (but a class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
@@ -318,11 +348,24 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
+#else
+        /// <summary>
+        ///     Checks if the specified type is a delegate. This is true when <see cref="Type.IsClass" />
+        ///     returns true and <see cref="Type.BaseType" /> is the <see cref="MulticastDelegate" /> type.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
+#endif
         public static bool IsDelegate(this Type type)
         {
+#if NETSTANDARD1_0
             return type.GetTypeInfo().IsDelegate();
+#else
+            return type.MustNotBeNull(nameof(type)).IsClass && type.BaseType == Types.MulticastDelegateType;
+#endif
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Checks if the specified type info describes a delegate. This is true when <see cref="TypeInfo.IsClass" />
         ///     returns true and <see cref="TypeInfo.BaseType" /> is the <see cref="MulticastDelegate" />) type.
@@ -331,8 +374,9 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
         public static bool IsDelegate(this TypeInfo typeInfo)
         {
-            return typeInfo.MustNotBeNull(nameof(typeInfo)).IsClass && typeInfo.BaseType == typeof(MulticastDelegate);
+            return typeInfo.MustNotBeNull(nameof(typeInfo)).IsClass && typeInfo.BaseType == Types.MulticastDelegateType;
         }
+#endif
 
         /// <summary>
         ///     Ensures that the specified type is a delegate (no class, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
@@ -357,6 +401,7 @@ namespace Light.GuardClauses
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a delegate, but it is not.", parameterName);
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Ensures that the specified type info describes a delegate (no class, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
@@ -379,6 +424,7 @@ namespace Light.GuardClauses
 
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a delegate, but it is not.", parameterName);
         }
+#endif
 
         /// <summary>
         ///     Ensures that the specified type is not a delegate (but a class, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
@@ -403,6 +449,7 @@ namespace Light.GuardClauses
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be a delegate, but it is.", parameterName);
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Ensures that the specified type info does not describe a delegate (but a class, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
@@ -432,11 +479,24 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
+#else
+        /// <summary>
+        ///     Checks if the specified type is a struct. This is true when <see cref="Type.IsValueType" />
+        ///     returns true and <see cref="Type.IsEnum" /> returns false.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
+#endif
         public static bool IsStruct(this Type type)
         {
+#if NETSTANDARD1_0
             return type.GetTypeInfo().IsStruct();
+#else
+            return type.MustNotBeNull(nameof(type)).IsValueType && type.IsEnum == false;
+#endif
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Checks if the specified type info describes a struct. This is true when <see cref="TypeInfo.IsValueType" />
         ///     returns true and <see cref="TypeInfo.IsEnum" /> returns false.
@@ -447,6 +507,7 @@ namespace Light.GuardClauses
         {
             return typeInfo.MustNotBeNull(nameof(typeInfo)).IsValueType && typeInfo.IsEnum == false;
         }
+#endif
 
         /// <summary>
         ///     Ensures that the specified type is a struct (no class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
@@ -471,6 +532,7 @@ namespace Light.GuardClauses
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a struct, but it is not.", parameterName);
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Ensures that the specified type info describes a struct (no class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
@@ -493,6 +555,7 @@ namespace Light.GuardClauses
 
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be a struct, but it is not.", parameterName);
         }
+#endif
 
         /// <summary>
         ///     Ensures that the specified type is no struct (but a class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
@@ -517,6 +580,7 @@ namespace Light.GuardClauses
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be a struct, but it is.", parameterName);
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Ensures that the specified type info does not describe a struct (but a class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
@@ -550,6 +614,7 @@ namespace Light.GuardClauses
         {
             return type.GetTypeInfo().IsEnum;
         }
+#endif
 
         /// <summary>
         ///     Ensures that the specified type is an enum (no class, interface, delegate, or struct), or otherwise throws a <see cref="TypeException" />.
@@ -569,11 +634,17 @@ namespace Light.GuardClauses
         {
             parameter.MustNotBeNull(parameterName);
 
-            if (parameter.IsEnum()) return parameter;
+#if NETSTANDARD1_0
+            if (parameter.IsEnum())
+#else
+            if (parameter.IsEnum)
+#endif
+                return parameter;
 
             throw exception?.Invoke() ?? throw new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be an enum, but it is not.", parameterName);
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Ensures that the specified type info describes an enum (no class, interface, delegate, or struct), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
@@ -596,6 +667,7 @@ namespace Light.GuardClauses
 
             throw exception?.Invoke() ?? throw new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be an enum, but it is not.", parameterName);
         }
+#endif
 
         /// <summary>
         ///     Ensures that the specified type is no enum (but a class, interface, delegate, or struct), or otherwise throws a <see cref="TypeException" />.
@@ -615,11 +687,17 @@ namespace Light.GuardClauses
         {
             parameter.MustNotBeNull(parameterName);
 
-            if (parameter.IsEnum() == false) return parameter;
+#if NETSTANDARD1_0
+            if (parameter.IsEnum() == false)
+#else
+            if (parameter.IsEnum == false)
+#endif
+                return parameter;
 
             throw exception?.Invoke() ?? throw new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be an enum, but it is.", parameterName);
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Ensures that the specified type info does not describe an enum (but a class, interface, delegate, or struct), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
@@ -645,16 +723,30 @@ namespace Light.GuardClauses
 
         /// <summary>
         ///     Checks if the specified type is a reference type. This is true when <see cref="TypeInfo.IsValueType" />
-        ///     return false.
+        ///     returns false.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
         /// <returns>True if the specified type is a class, delegate, or interface, else false.</returns>
+#else
+        /// <summary>
+        ///     Checks if the specified type is a reference type. This is true when <see cref="Type.IsValueType" />
+        ///     returns false.
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
+        /// <returns>True if the specified type is a class, delegate, or interface, else false.</returns>
+#endif
         public static bool IsReferenceType(this Type type)
         {
+#if NETSTANDARD1_0
             return type.GetTypeInfo().IsValueType == false;
+#else
+            return type.MustNotBeNull(nameof(type)).IsValueType == false;
+#endif
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Checks if the specified type info describes a reference type. This is true when <see cref="TypeInfo.IsValueType" />
         ///     return false.
@@ -666,6 +758,7 @@ namespace Light.GuardClauses
         {
             return typeInfo.MustNotBeNull(nameof(typeInfo)).IsValueType == false;
         }
+#endif
 
         /// <summary>
         ///     Ensures that the specified type is a reference type (i.e. a class, interface, or delegate), or otherwise throws a <see cref="TypeException" />.
@@ -690,6 +783,7 @@ namespace Light.GuardClauses
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a reference type, but it is a value type.", parameterName);
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Ensures that the specified type info describes a reference type (i.e. a class, interface, or delegate), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
@@ -723,6 +817,8 @@ namespace Light.GuardClauses
         {
             return type.GetTypeInfo().IsValueType;
         }
+#endif
+
 
         /// <summary>
         ///     Ensures that the specified type is a value type (i.e. a struct or enum), or otherwise throws a <see cref="TypeException" />.
@@ -742,11 +838,17 @@ namespace Light.GuardClauses
         {
             parameter.MustNotBeNull(parameterName);
 
-            if (parameter.IsValueType()) return parameter;
+#if NETSTANDARD1_0
+            if (parameter.IsValueType())
+#else
+            if (parameter.IsValueType)
+#endif
+                return parameter;
 
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a value type, but it is a reference type.", parameterName);
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Ensures that the specified type info describes a value type (i.e. a struct or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
@@ -769,6 +871,7 @@ namespace Light.GuardClauses
 
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be a value type, but it is a reference type.", parameterName);
         }
+#endif
 
         /// <summary>
         ///     Checks if the specified type derives from the other type. Internally, this method uses <see cref="IsEquivalentTypeTo" />
@@ -869,7 +972,12 @@ namespace Light.GuardClauses
         public static bool IsImplementing(this Type type, Type interfaceType, IEqualityComparer<Type> typeComparer = null)
         {
             interfaceType.MustNotBeNull(nameof(interfaceType));
-            if (interfaceType.IsInterface() == false) return false;
+#if NETSTANDARD1_0
+            if (interfaceType.IsInterface() == false)
+#else
+            if (interfaceType.IsInterface == false)
+#endif
+                return false;
 
             typeComparer = typeComparer ?? EqualivalentTypeComparer.Instance;
 
@@ -953,7 +1061,11 @@ namespace Light.GuardClauses
         public static bool IsDerivingFromOrImplementing(this Type type, Type baseClassOrInterfaceType, IEqualityComparer<Type> typeComparer = null)
         {
             return baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType))
+#if NETSTANDARD1_0
                                            .IsInterface()
+#else
+                                           .IsInterface
+#endif
                        ? type.IsImplementing(baseClassOrInterfaceType, typeComparer)
                        : type.IsDerivingFrom(baseClassOrInterfaceType, typeComparer);
         }

@@ -1,3 +1,4 @@
+#if NETCOREAPP1_1
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -68,3 +69,4 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         }
     }
 }
+#endif

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if (NETCOREAPP2_0 || NET45)
+using System;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
@@ -25,3 +26,4 @@ namespace Light.GuardClauses.Tests
         }
     }
 }
+#endif

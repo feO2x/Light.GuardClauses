@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETCOREAPP1_1
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using FluentAssertions;
@@ -72,3 +73,4 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         }
     }
 }
+#endif

@@ -18,6 +18,11 @@ namespace Light.GuardClauses.FrameworkExtensions
         public static readonly Type UInt64Type = typeof(ulong);
 
         /// <summary>
+        /// Gets the <see cref="MulticastDelegate"/> type.
+        /// </summary>
+        public static readonly Type MulticastDelegateType = typeof(MulticastDelegate);
+
+        /// <summary>
         ///     This constructor is protected so that the <see cref="Types" /> class cannot be instantiated.
         /// </summary>
         protected Types() { }

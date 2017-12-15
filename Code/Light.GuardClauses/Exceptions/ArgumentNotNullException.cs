@@ -8,7 +8,6 @@ namespace Light.GuardClauses.Exceptions
 #if (NETSTANDARD2_0 || NET45)
     [Serializable]
 #endif
-
     public class ArgumentNotNullException : ArgumentException
     {
         /// <summary>
