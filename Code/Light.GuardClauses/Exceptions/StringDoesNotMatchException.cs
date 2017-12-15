@@ -6,6 +6,9 @@ namespace Light.GuardClauses.Exceptions
     /// <summary>
     ///     This exception indicates that a string does not match a certain regular  expression.
     /// </summary>
+#if NETSTANDARD2_0
+    [Serializable]
+#endif
     public class StringDoesNotMatchException : StringException
     {
         /// <summary>

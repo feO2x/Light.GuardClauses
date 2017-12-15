@@ -5,6 +5,9 @@ namespace Light.GuardClauses.Exceptions
     /// <summary>
     ///     This exception indicates that a GUID was empty.
     /// </summary>
+#if NETSTANDARD2_0
+    [Serializable]
+#endif
     public class EmptyGuidException : ArgumentException
     {
         /// <summary>

@@ -5,6 +5,9 @@ namespace Light.GuardClauses.Exceptions
     /// <summary>
     ///     This exception indicates that a string only consists of whitespace.
     /// </summary>
+#if NETSTANDARD2_0
+    [Serializable]
+#endif
     public class StringIsOnlyWhiteSpaceException : StringException
     {
         /// <summary>

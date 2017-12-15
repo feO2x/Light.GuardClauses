@@ -5,6 +5,9 @@ namespace Light.GuardClauses.Exceptions
     /// <summary>
     ///     This exception indicates a type mismatch resulting from a downcast.
     /// </summary>
+#if NETSTANDARD2_0
+    [Serializable]
+#endif
     public class TypeMismatchException : ArgumentException
     {
         /// <summary>

@@ -5,6 +5,9 @@ namespace Light.GuardClauses.Exceptions
     /// <summary>
     ///     This exception indicates that a <see cref="DateTime" /> value is invalid.
     /// </summary>
+#if NETSTANDARD2_0
+    [Serializable]
+#endif
     public class InvalidDateTimeException : ArgumentException
     {
         /// <summary>

@@ -5,6 +5,9 @@ namespace Light.GuardClauses.Exceptions
     /// <summary>
     ///     This exception indicates that a value in a dictionary is not present.
     /// </summary>
+#if NETSTANDARD2_0
+    [Serializable]
+#endif
     public class ValueNotFoundException : DictionaryException
     {
         /// <summary>

@@ -5,6 +5,9 @@ namespace Light.GuardClauses.Exceptions
     /// <summary>
     ///     This exception indicates an error with a dictionary.
     /// </summary>
+#if NETSTANDARD2_0
+    [Serializable]
+#endif
     public class DictionaryException : ArgumentException
     {
         /// <summary>

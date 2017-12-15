@@ -5,6 +5,9 @@ namespace Light.GuardClauses.Exceptions
     /// <summary>
     ///     This exception indicates that there is something wrong with a string.
     /// </summary>
+#if NETSTANDARD2_0
+    [Serializable]
+#endif
     public class StringException : ArgumentException
     {
         /// <summary>
