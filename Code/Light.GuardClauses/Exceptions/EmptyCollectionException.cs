@@ -5,7 +5,7 @@ namespace Light.GuardClauses.Exceptions
     /// <summary>
     ///     This exception indicates that a collection is empty although it should have at least one item.
     /// </summary>
-#if NETSTANDARD2_0
+#if (NETSTANDARD2_0 || NET45)
     [Serializable]
 #endif
     public class EmptyCollectionException : ArgumentException

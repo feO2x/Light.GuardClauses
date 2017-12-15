@@ -5,7 +5,7 @@ namespace Light.GuardClauses.Exceptions
     /// <summary>
     ///     This exception indicates that a string is empty.
     /// </summary>
-#if NETSTANDARD2_0
+#if (NETSTANDARD2_0 || NET45)
     [Serializable]
 #endif
     public class EmptyStringException : StringException

@@ -5,9 +5,10 @@ namespace Light.GuardClauses.Exceptions
     /// <summary>
     ///     This exception indicates that a value is not null although it should have been.
     /// </summary>
-#if NETSTANDARD2_0
+#if (NETSTANDARD2_0 || NET45)
     [Serializable]
 #endif
+
     public class ArgumentNotNullException : ArgumentException
     {
         /// <summary>

@@ -5,7 +5,7 @@ namespace Light.GuardClauses.Exceptions
     /// <summary>
     ///     This exception indicates that a Nullable has no value although it should have one.
     /// </summary>
-#if NETSTANDARD2_0
+#if (NETSTANDARD2_0 || NET45)
     [Serializable]
 #endif
     public class NullableHasNoValueException : ArgumentException

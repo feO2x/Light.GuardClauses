@@ -5,7 +5,7 @@ namespace Light.GuardClauses.Exceptions
     /// <summary>
     ///     This exception indicates that a value is not defined in the corresponding enum type.
     /// </summary>
-#if NETSTANDARD2_0
+#if (NETSTANDARD2_0 || NET45)
     [Serializable]
 #endif
     public class EnumValueNotDefinedException : ArgumentException

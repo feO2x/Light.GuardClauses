@@ -7,7 +7,7 @@ namespace Light.GuardClauses.Exceptions
     ///     This exception indicated that a <see cref="Type" /> or <see cref="TypeInfo" />
     ///     object is not in a valid state.
     /// </summary>
-#if NETSTANDARD2_0
+#if (NETSTANDARD2_0 || NET45)
     [Serializable]
 #endif
     public class TypeException : ArgumentException
