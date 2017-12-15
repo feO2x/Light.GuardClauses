@@ -890,13 +890,21 @@ namespace Light.GuardClauses
 
             typeComparer = typeComparer ?? EqualivalentTypeComparer.Instance;
 
+#if NETSTANDARD1_0
             var currentBaseType = type.GetTypeInfo().BaseType;
+#else
+            var currentBaseType = type.MustNotBeNull(nameof(type)).BaseType;
+#endif
             while (currentBaseType != null)
             {
                 if (typeComparer.Equals(currentBaseType, baseClass))
                     return true;
 
+#if NETSTANDARD1_0
                 currentBaseType = currentBaseType.GetTypeInfo().BaseType;
+#else
+                currentBaseType = currentBaseType.BaseType;
+#endif
             }
             return false;
         }
@@ -980,9 +988,12 @@ namespace Light.GuardClauses
                 return false;
 
             typeComparer = typeComparer ?? EqualivalentTypeComparer.Instance;
-
-            var implementedInterfaces = type.GetTypeInfo().ImplementedInterfaces.AsReadOnlyList();
-            for (var i = 0; i < implementedInterfaces.Count; i++)
+#if NETSTANDARD1_0
+            var implementedInterfaces = type.GetTypeInfo().ImplementedInterfaces.AsArray();
+#else
+            var implementedInterfaces = type.MustNotBeNull(nameof(type)).GetInterfaces();
+#endif
+            for (var i = 0; i < implementedInterfaces.Length; i++)
             {
                 if (typeComparer.Equals(implementedInterfaces[i], interfaceType))
                     return true;
@@ -1189,9 +1200,14 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
         public static bool IsClosedConstructedGenericType(this Type type)
         {
+#if NETSTANDARD1_0
             return type.GetTypeInfo().IsClosedConstructedGenericType();
+#else
+            return type.MustNotBeNull(nameof(type)).IsGenericType && type.ContainsGenericParameters == false;
+#endif
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Checks if the given <paramref name="typeInfo" /> describes a generic type that has no open generic parameters (e.g. typeof(List&lt;string&gt;)).
         /// </summary>
@@ -1201,6 +1217,7 @@ namespace Light.GuardClauses
         {
             return typeInfo.MustNotBeNull(nameof(typeInfo)).IsGenericType && typeInfo.ContainsGenericParameters == false;
         }
+#endif
 
         /// <summary>
         ///     Checks if the given <paramref name="type" /> is a generic type definition (e.g. typeof(List&lt;&gt;)).
@@ -1220,9 +1237,17 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
         public static bool IsOpenConstructedGenericType(this Type type)
         {
+#if NETSTANDARD1_0
             return type.GetTypeInfo().IsOpenConstructedGenericType();
+#else
+            return type.MustNotBeNull(nameof(type)).IsGenericType &&
+                   type.ContainsGenericParameters &&
+                   type.IsGenericTypeDefinition == false;
+
+#endif
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Checks if the given <paramref name="typeInfo" /> describes a generic type that has open generic parameters,
         ///     but is no generic type definition (e.g. if you derive from Dictionary&lt;string, T&gt;).
@@ -1235,6 +1260,7 @@ namespace Light.GuardClauses
                    typeInfo.ContainsGenericParameters &&
                    typeInfo.IsGenericTypeDefinition == false;
         }
+#endif
 
         /// <summary>
         ///     Checks if the given <paramref name="type" /> is a generic type parameter (e.g the T in List&lt;T&gt;)
@@ -1285,9 +1311,14 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
         public static bool IsStaticClass(this Type type)
         {
+#if NETSTANDARD1_0
             return type.GetTypeInfo().IsStaticClass();
+#else
+            return type.MustNotBeNull(nameof(type)).IsClass && type.IsAbstract && type.IsSealed;
+#endif
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Checks if the given type info describes a static class.
         /// </summary>
@@ -1298,6 +1329,7 @@ namespace Light.GuardClauses
 
             return typeInfo.IsClass && typeInfo.IsAbstract && typeInfo.IsSealed;
         }
+#endif
 
         /// <summary>
         ///     Ensures that the specified type is a static class, or otherwise throws a <see cref="TypeException" />.
@@ -1319,6 +1351,7 @@ namespace Light.GuardClauses
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a static class, but it is not.", parameterName);
         }
 
+#if NETSTANDARD1_0
         /// <summary>
         ///     Ensures that the specified type info describes a static class, or otherwise throws a <see cref="TypeException" />.
         /// </summary>
@@ -1338,6 +1371,7 @@ namespace Light.GuardClauses
 
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be a static class, but it is not.", parameterName);
         }
+#endif
 
         /// <summary>
         ///     Ensures that the specified type is not a static class, or otherwise throws a <see cref="TypeException" />.
@@ -1359,6 +1393,7 @@ namespace Light.GuardClauses
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be a static class, but it is.", parameterName);
         }
 
+#if (NETSTANDARD1_0)
         /// <summary>
         ///     Ensures that the specified type info does not describe a static class, or otherwise throws a <see cref="TypeException" />.
         /// </summary>
@@ -1378,5 +1413,6 @@ namespace Light.GuardClauses
 
             throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must not be a static class, but it is.", parameterName);
         }
+#endif
     }
 }
