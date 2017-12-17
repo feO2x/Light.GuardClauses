@@ -8,7 +8,6 @@ using BenchmarkDotNet.Attributes.Jobs;
 namespace Light.GuardClauses.Performance
 {
     [CoreJob, ClrJob]
-    [LegacyJitX86Job, LegacyJitX64Job, RyuJitX64Job]
     [MemoryDiagnoser]
     public class LoopCheck
     {
