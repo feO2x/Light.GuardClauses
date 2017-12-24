@@ -2,11 +2,12 @@
 
 namespace Light.GuardClauses.Performance
 {
-    internal class Program
+    public static class Program
     {
-        private static void Main()
+        public static void Main()
         {
             BenchmarkRunner.Run<LoopCheck>();
+            BenchmarkRunner.Run<IsSubSetOfPerformance>();
         }
     }
 }

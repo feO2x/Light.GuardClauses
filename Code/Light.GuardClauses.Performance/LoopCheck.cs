@@ -14,7 +14,8 @@ namespace Light.GuardClauses.Performance
         public int[] Array;
         public List<int> List;
 
-        [Params(10, 100, 1000, 10_000, 100_000, 1_000_000)] public int NumberOfItems;
+        [Params(10, 100, 1000, 10_000, 100_000, 1_000_000)]
+        public int NumberOfItems;
 
         public IReadOnlyList<int> ReadOnlyList => List;
         public IEnumerable<int> Enumerable => List;
@@ -40,6 +41,7 @@ namespace Light.GuardClauses.Performance
             {
                 var element = Array[i];
             }
+
             return Array;
         }
 
@@ -47,6 +49,7 @@ namespace Light.GuardClauses.Performance
         public object ArrayForEachLoop()
         {
             foreach (var element in Array) { }
+
             return Array;
         }
 
@@ -57,6 +60,7 @@ namespace Light.GuardClauses.Performance
             {
                 var element = List[i];
             }
+
             return List;
         }
 
@@ -64,6 +68,7 @@ namespace Light.GuardClauses.Performance
         public object ListForEachLoop()
         {
             foreach (var element in List) { }
+
             return List;
         }
 
@@ -76,6 +81,7 @@ namespace Light.GuardClauses.Performance
             {
                 var element = list[i];
             }
+
             return list;
         }
 
@@ -85,6 +91,7 @@ namespace Light.GuardClauses.Performance
             var enumerable = Enumerable;
 
             foreach (var element in enumerable) { }
+
             return enumerable;
         }
     }
