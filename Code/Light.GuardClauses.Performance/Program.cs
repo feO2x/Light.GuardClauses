@@ -6,8 +6,7 @@ namespace Light.GuardClauses.Performance
     {
         public static void Main()
         {
-            BenchmarkRunner.Run<LoopCheck>();
-            BenchmarkRunner.Run<IsSubSetOfPerformance>();
+            BenchmarkRunner.Run<IsSubsetOfPerformance>();
         }
     }
 }
