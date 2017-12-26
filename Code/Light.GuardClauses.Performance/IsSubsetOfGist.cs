@@ -18,7 +18,7 @@ namespace Light.GuardClauses.Performance
         [GlobalSetup]
         public void GlobalArraySetup()
         {
-            SupersetArray = new int[NumberOfItems];
+            SupersetArray = new int[NumberOfItems]; 
             for (var i = 0; i < NumberOfItems; i++)
             {
                 SupersetArray[i] = i + 1;
