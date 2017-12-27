@@ -58,7 +58,7 @@ namespace Light.GuardClauses.Performance
         }
 
         [Benchmark]
-        public bool ArrayWithLinq() => SubsetArray.All(i => SupersetArray.Contains(i, EqualityComparer<int>.Default));
+        public bool ArrayWithLinq() => SubsetArray.All(i => SupersetArray.Contains(i, null));
 
         [Benchmark]
         public bool ArrayWithForeachLoops() => IsSubsetOfWithForeachLoops(SubsetArray, SupersetArray);
