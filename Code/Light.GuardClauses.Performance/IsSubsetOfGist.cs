@@ -18,7 +18,7 @@ namespace Light.GuardClauses.Performance
         [GlobalSetup]
         public void GlobalArraySetup()
         {
-            SupersetArray = new int[NumberOfItems]; 
+            SupersetArray = new int[NumberOfItems];
             for (var i = 0; i < NumberOfItems; i++)
             {
                 SupersetArray[i] = i + 1;
@@ -34,17 +34,16 @@ namespace Light.GuardClauses.Performance
         [Benchmark(Baseline = true)]
         public bool ArrayWithForLoops() => IsSubsetOfWithForLoops(SubsetArray, SupersetArray);
 
-        private static bool IsSubsetOfWithForLoops<T>(T[] array, T[] superset, IEqualityComparer<T> comparer = null)
+        private static bool IsSubsetOfWithForLoops<T>(T[] set, T[] superset, IEqualityComparer<T> comparer = null)
         {
             comparer = comparer ?? EqualityComparer<T>.Default;
 
-            for (var i = 0; i < array.Length; i++)
+            for (var i = 0; i < set.Length; i++)
             {
-                var currentItem = array[i];
                 var wasItemFound = false;
                 for (var j = 0; j < superset.Length; j++)
                 {
-                    if (!comparer.Equals(superset[i], currentItem))
+                    if (!comparer.Equals(superset[j], set[i]))
                         continue;
 
                     wasItemFound = true;
@@ -59,7 +58,7 @@ namespace Light.GuardClauses.Performance
         }
 
         [Benchmark]
-        public bool ArrayWithLinq() => SubsetArray.All(SupersetArray.Contains);
+        public bool ArrayWithLinq() => SubsetArray.All(i => SupersetArray.Contains(i, EqualityComparer<int>.Default));
 
         [Benchmark]
         public bool ArrayWithForeachLoops() => IsSubsetOfWithForeachLoops(SubsetArray, SupersetArray);
@@ -72,11 +71,11 @@ namespace Light.GuardClauses.Performance
                 var wasItemFound = false;
                 foreach (var itemFromSuperset in superset)
                 {
-                    if (comparer.Equals(itemFromSet, itemFromSuperset))
-                    {
-                        wasItemFound = true;
-                        break;
-                    }
+                    if (!comparer.Equals(itemFromSet, itemFromSuperset))
+                        continue;
+
+                    wasItemFound = true;
+                    break;
                 }
 
                 if (!wasItemFound)
