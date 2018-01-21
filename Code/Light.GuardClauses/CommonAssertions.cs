@@ -60,25 +60,54 @@ namespace Light.GuardClauses
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="ArgumentNullException" /> or <see cref="ArgumentException" /> (optional).</param>
-        /// <param name="exception">
-        ///     The exception that is thrown when the specified <paramref name="parameter" /> is the default value (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is the default value of its type.</exception>
-        public static T MustNotBeDefault<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is a value type and the default value.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustNotBeDefault<T>(this T parameter, string parameterName = null, string message = null)
         {
             if (default(T) == null)
             {
-                if (parameter == null)
-                    throw exception?.Invoke() ?? new ArgumentNullException(parameterName, message ?? $"{parameterName ?? "The value"} must not be null.");
-                return parameter;
+                if (parameter != null)
+                    return parameter;
+
+                ThrowArgumentNullException(parameterName, message);
+                return default(T);
             }
 
-            if (parameter.Equals(default(T)))
-                throw exception?.Invoke() ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be the default value.");
+            if (parameter.Equals(default(T)) == false)
+                return parameter;
 
-            return parameter;
+            ThrowArgumentDefaultException(parameterName, message);
+            return default(T);
+        }
+
+        private static void ThrowArgumentDefaultException(string parameterName, string message)
+        {
+            throw new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be the default value.", parameterName);
+        }
+
+        /// <summary>
+        ///     Ensures that the specified parameter is not the default value, or otherwise throws your custom exception.
+        /// </summary>
+        /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="exception">The delegate that creates the exception to be thrown.</param>
+        /// <exception cref="Exception">Your custom exception when <paramref name="parameter"/> is the default value.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustNotBeDefault<T>(this T parameter, Func<Exception> exception)
+        {
+            if (default(T) == null)
+            {
+                if (parameter != null)
+                    return parameter;
+
+                throw exception();
+            }
+
+            if (parameter.Equals(default(T)) == false)
+                return parameter;
+
+            throw exception();
         }
 
         /// <summary>

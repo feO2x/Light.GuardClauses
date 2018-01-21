@@ -173,7 +173,7 @@ namespace Light.GuardClauses.Performance
 
         private static void ThrowMustNotBeNullException(string parameterName, string message)
         {
-            throw new ArgumentNullException(parameterName, message);
+            throw new ArgumentNullException(parameterName, message ?? $"{parameterName ?? "The value"} must not be null.");
         }
     }
 }
