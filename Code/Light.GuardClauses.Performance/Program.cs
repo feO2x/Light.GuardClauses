@@ -7,6 +7,7 @@ namespace Light.GuardClauses.Performance
         public static void Main()
         {
             BenchmarkRunner.Run<NullCheckWithParameterName>();
+            BenchmarkRunner.Run<NullCheckWithCustomException>();
         }
     }
 }

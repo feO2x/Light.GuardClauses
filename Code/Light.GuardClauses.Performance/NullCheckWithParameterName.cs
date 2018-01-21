@@ -19,38 +19,31 @@ namespace Light.GuardClauses.Performance
         }
 
         [Benchmark]
-        public object V1() => Instance.V1(nameof(Instance));
+        public object MustNotBeNullV1() => Instance.MustNotBeNullV1(nameof(Instance));
 
         [Benchmark]
-        public object V2() => Instance.V2(nameof(Instance));
+        public object MustNotBeNullV2() => Instance.MustNotBeNullV2(nameof(Instance));
 
         [Benchmark]
-        public object V3() => Instance.V3(nameof(Instance));
+        public object MustNotBeNullV3() => Instance.MustNotBeNullV3(nameof(Instance));
 
         [Benchmark]
-        public object V4() => Instance.V4(nameof(Instance));
+        public object MustNotBeNullV4() => Instance.MustNotBeNullV4(nameof(Instance));
 
         [Benchmark]
-        public object V5() => Instance.V5(nameof(Instance));
+        public object MustNotBeNullV5() => Instance.MustNotBeNullV5(nameof(Instance));
 
         [Benchmark]
-        public object V6()
+        public object MustNotBeNullV6()
         {
-            Instance.V6(nameof(Instance));
+            Instance.MustNotBeNullV6(nameof(Instance));
             return Instance;
         }
 
         [Benchmark]
-        public object V7() => Instance.V7(nameof(Instance));
-    }
+        public object MustNotBeNullV7() => Instance.MustNotBeNullV7(nameof(Instance));
 
-    public class SampleEntity
-    {
-        public readonly Guid Id;
-
-        public SampleEntity(Guid id)
-        {
-            Id = id.MustNotBeEmpty(nameof(id));
-        }
+        [Benchmark]
+        public object MustNotBeNullV8() => Instance.MustNotBeNullV8(nameof(Instance));
     }
 }

@@ -11,7 +11,7 @@ namespace Light.GuardClauses.Performance
          * Throws exception in same method
          * Returns fast
          */
-        public static T V1<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
+        public static T MustNotBeNullV1<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
         {
             if (parameter != null)
                 return parameter;
@@ -26,7 +26,7 @@ namespace Light.GuardClauses.Performance
          * Returns fast
          */
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T V2<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
+        public static T MustNotBeNullV2<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
         {
             if (parameter != null)
                 return parameter;
@@ -42,7 +42,7 @@ namespace Light.GuardClauses.Performance
          * Returns fast
          */
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T V3<T>(this T parameter, string parameterName = null, string message = null) where T : class
+        public static T MustNotBeNullV3<T>(this T parameter, string parameterName = null, string message = null) where T : class
         {
             if (parameter != null)
                 return parameter;
@@ -58,7 +58,7 @@ namespace Light.GuardClauses.Performance
          * Returns fast
          */
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T V4<T>(this T parameter, string parameterName = null) where T : class
+        public static T MustNotBeNullV4<T>(this T parameter, string parameterName = null) where T : class
         {
             if (parameter != null)
                 return parameter;
@@ -70,12 +70,12 @@ namespace Light.GuardClauses.Performance
         /*
          * All parameters
          * Aggressive inlining
-         * Throws exception in different method
+         * Throws exception in same method
          * Returns fast
          * No generic restriction
          */
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T V5<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static T MustNotBeNullV5<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             if (parameter != null)
                 return parameter;
@@ -86,13 +86,13 @@ namespace Light.GuardClauses.Performance
         /*
          * All parameters
          * Aggressive inlining
-         * Throws exception in different method
+         * Throws exception in same method
          * Returns fast
          * No generics
          * No return parameter
          */
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void V6(this object parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        public static void MustNotBeNullV6(this object parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             if (parameter != null)
                 return;
@@ -104,15 +104,45 @@ namespace Light.GuardClauses.Performance
          * All parameters
          * Aggressive inlining
          * Throws exception in same method
-         * Returns fast
+         * if block throws exception
          */
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T V7<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
+        public static T MustNotBeNullV7<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
         {
             if (parameter == null)
                 throw exception?.Invoke() ?? throw new ArgumentNullException(parameterName, message ?? $"{parameterName ?? "The value"} must not be null.");
 
             return parameter;
+        }
+
+        /*
+         * Only parameterName and message parameters
+         * Aggressive inlining
+         * Throws exception in same method
+         * Returns fast
+         */
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustNotBeNullV8<T>(this T parameter, string parameterName = null, string message = null) where T : class
+        {
+            if (parameter != null)
+                return parameter;
+
+            throw new ArgumentNullException(parameterName, message ?? $"{parameterName ?? "The value"} must not be null.");
+        }
+
+        /*
+         * Only exception parameter
+         * Aggressive inlining
+         * Throws exception in same method
+         * Returns fast
+         */
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustNotBeNullV9<T>(this T parameter, Func<Exception> exception)
+        {
+            if (parameter != null)
+                return parameter;
+
+            throw exception();
         }
 
         private static void ThrowMustNotBeNullException(string parameterName)
