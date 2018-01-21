@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     The <see cref="CommonAssertions" /> class contains the most common assertions like <see cref="MustNotBeNull{T}" /> and assertions that are not directly related to
+    ///     The <see cref="CommonAssertions" /> class contains the most common assertions like MustNotBeNull and assertions that are not directly related to
     ///     any categories like collection assertions or string assertions.
     /// </summary>
     public static class CommonAssertions
@@ -16,22 +17,39 @@ namespace Light.GuardClauses
         ///     Ensures that the specified parameter is not null, or otherwise throws an <see cref="ArgumentNullException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
-        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="parameter">The value to be checked  for null.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be injected into the <see cref="ArgumentNullException" /> (optional).</param>
-        /// <param name="exception">
-        ///     The exception that is thrown when the specified <paramref name="parameter" /> is null (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown when the specified parameter is null and no <paramref name="exception" /> is specified.
-        /// </exception>
-        public static T MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
+        /// <param name="message">The message that will be injected into the <see cref="ArgumentNullException" />.</param>
+        /// <exception cref="ArgumentNullException"> Thrown when <paramref name="parameter" /> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null) where T : class
         {
             if (parameter != null)
                 return parameter;
 
-            throw exception?.Invoke() ?? new ArgumentNullException(parameterName, message ?? $"{parameterName ?? "The value"} must not be null.");
+            ThrowArgumentNullException(parameterName, message);
+            return null;
+        }
+
+        private static void ThrowArgumentNullException(string paramName, string message)
+        {
+            throw new ArgumentNullException(paramName, message ?? $"{paramName ?? "The value"} must not be null.");
+        }
+
+        /// <summary>
+        /// Ensures that the specified parameter is not null, or otherwise throws your custom exception.
+        /// </summary>
+        /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
+        /// <param name="parameter">The value to be checked for null.</param>
+        /// <param name="exception">The delegate that creates the exception to be thrown.</param>
+        /// <exception cref="Exception">Your custom exception when <paramref name="parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustNotBeNull<T>(this T parameter, Func<Exception> exception) where T : class
+        {
+            if (parameter != null)
+                return parameter;
+
+            throw exception();
         }
 
         /// <summary>
@@ -56,6 +74,7 @@ namespace Light.GuardClauses
                     throw exception?.Invoke() ?? new ArgumentNullException(parameterName, message ?? $"{parameterName ?? "The value"} must not be null.");
                 return parameter;
             }
+
             if (parameter.Equals(default(T)))
                 throw exception?.Invoke() ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be the default value.");
 
@@ -210,6 +229,7 @@ namespace Light.GuardClauses
                         field.GetValue(null).Equals(parameter))
                         return true;
                 }
+
                 return false;
             }
 
@@ -218,9 +238,7 @@ namespace Light.GuardClauses
             if (enumInfo.NumberOfConstants == 0)
                 return false;
 
-            return enumInfo.UnderlyingType == Types.UInt64Type ? 
-                CheckEnumFlagsUsingUInt64Conversion(Convert.ToUInt64(parameter), fields, enumInfo.NumberOfConstants) :
-                CheckEnumFlagsUsingInt64Conversion(Convert.ToInt64(parameter), fields, enumInfo.NumberOfConstants);
+            return enumInfo.UnderlyingType == Types.UInt64Type ? CheckEnumFlagsUsingUInt64Conversion(Convert.ToUInt64(parameter), fields, enumInfo.NumberOfConstants) : CheckEnumFlagsUsingInt64Conversion(Convert.ToInt64(parameter), fields, enumInfo.NumberOfConstants);
         }
 
         private static bool CheckEnumFlagsUsingInt64Conversion(long parameterValue, IReadOnlyList<FieldInfo> enumFields, int numberOfEnumConstants)
@@ -290,6 +308,7 @@ namespace Light.GuardClauses
                     if ((enumValue & currentBit) != 0)
                         return true;
                 }
+
                 return false;
             }
         }
@@ -361,6 +380,7 @@ namespace Light.GuardClauses
                     if ((enumValue & currentBit) != 0)
                         return true;
                 }
+
                 return false;
             }
         }

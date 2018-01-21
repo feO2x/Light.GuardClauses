@@ -45,5 +45,11 @@ namespace Light.GuardClauses.Performance
 
         [Benchmark]
         public object MustNotBeNullV8() => Instance.MustNotBeNullV8(nameof(Instance));
+
+        [Benchmark]
+        public object MustNotBeNullV10() => Instance.MustNotBeNullV10(nameof(Instance));
+
+        [Benchmark]
+        public object LightGuardClausesVersion() => Instance.MustNotBeNull(nameof(Instance));
     }
 }

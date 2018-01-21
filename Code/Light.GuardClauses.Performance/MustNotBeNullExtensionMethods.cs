@@ -137,12 +137,33 @@ namespace Light.GuardClauses.Performance
          * Returns fast
          */
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustNotBeNullV9<T>(this T parameter, Func<Exception> exception)
+        public static T MustNotBeNullV9<T>(this T parameter, Func<Exception> exception) where T : class
         {
             if (parameter != null)
                 return parameter;
 
             throw exception();
+        }
+
+        /*
+         * Only exception parameter
+         * Aggressive inlining
+         * Throws exception in local function
+         * Returns fast
+         */
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustNotBeNullV10<T>(this T parameter, string parameterName = null, string message = null) where T : class
+        {
+            if (parameter != null)
+                return parameter;
+
+            ThrowMustNotBeNullException(parameterName, message);
+            return null;
+
+            void ThrowMustNotBeNullException(string p, string m)
+            {
+                throw new ArgumentNullException(p, m ?? $"{p ?? "The value"} must not be null.");
+            }
         }
 
         private static void ThrowMustNotBeNullException(string parameterName)
