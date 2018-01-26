@@ -6,7 +6,8 @@ namespace Light.GuardClauses.Performance
     {
         public static void Main()
         {
-            BenchmarkRunner.Run<DefaultCheckWithParameter>();
+            BenchmarkRunner.Run<MustNotBeNullWithParameterName>();
+            BenchmarkRunner.Run<MustNotBeNullWithCustomException>();
         }
     }
 }

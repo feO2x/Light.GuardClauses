@@ -166,6 +166,38 @@ namespace Light.GuardClauses.Performance
             }
         }
 
+        /*
+         * Only exception parameter
+         * Aggressive inlining
+         * Throws exception in different method
+         * Returns fast
+         */
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustNotBeNullV11<T>(this T parameter, Func<Exception> exception) where T : class
+        {
+            if (parameter != null)
+                return parameter;
+
+            ThrowCustomException(exception);
+            return null;
+        }
+
+        /*
+         * Only exception parameter
+         * Aggressive inlining
+         * Throws exception in different method, creating the exception in the same method
+         * Returns fast
+         */
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustNotBeNullV12<T>(this T parameter, Func<Exception> exception) where T : class
+        {
+            if (parameter != null)
+                return parameter;
+
+            ThrowCustomException(exception());
+            return null;
+        }
+
         private static void ThrowMustNotBeNullException(string parameterName)
         {
             throw new ArgumentNullException(parameterName);
@@ -174,6 +206,16 @@ namespace Light.GuardClauses.Performance
         private static void ThrowMustNotBeNullException(string parameterName, string message)
         {
             throw new ArgumentNullException(parameterName, message ?? $"{parameterName ?? "The value"} must not be null.");
+        }
+
+        private static void ThrowCustomException(Func<Exception> exception)
+        {
+            throw exception();
+        }
+
+        private static void ThrowCustomException(Exception exception)
+        {
+            throw exception;
         }
     }
 }

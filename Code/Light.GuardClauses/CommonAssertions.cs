@@ -27,13 +27,8 @@ namespace Light.GuardClauses
             if (parameter != null)
                 return parameter;
 
-            ThrowArgumentNullException(parameterName, message);
+            Throw.ArgumentNullException(parameterName, message);
             return null;
-        }
-
-        private static void ThrowArgumentNullException(string paramName, string message)
-        {
-            throw new ArgumentNullException(paramName, message ?? $"{paramName ?? "The value"} must not be null.");
         }
 
         /// <summary>
@@ -49,7 +44,8 @@ namespace Light.GuardClauses
             if (parameter != null)
                 return parameter;
 
-            throw exception();
+            Throw.CustomException(exception);
+            return null;
         }
 
         /// <summary>
@@ -70,21 +66,18 @@ namespace Light.GuardClauses
                 if (parameter != null)
                     return parameter;
 
-                ThrowArgumentNullException(parameterName, message);
+                Throw.ArgumentNullException(parameterName, message);
                 return default(T);
             }
 
             if (parameter.Equals(default(T)) == false)
                 return parameter;
 
-            ThrowArgumentDefaultException(parameterName, message);
+            Throw.ArgumentDefaultException(parameterName, message);
             return default(T);
         }
 
-        private static void ThrowArgumentDefaultException(string parameterName, string message)
-        {
-            throw new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be the default value.", parameterName);
-        }
+        
 
         /// <summary>
         ///     Ensures that the specified parameter is not the default value, or otherwise throws your custom exception.
@@ -101,13 +94,15 @@ namespace Light.GuardClauses
                 if (parameter != null)
                     return parameter;
 
-                throw exception();
+                Throw.CustomException(exception);
             }
 
+            // ReSharper disable once PossibleNullReferenceException
             if (parameter.Equals(default(T)) == false)
                 return parameter;
 
-            throw exception();
+            Throw.CustomException(exception);
+            return default(T);
         }
 
         /// <summary>

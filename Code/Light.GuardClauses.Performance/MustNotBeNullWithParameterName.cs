@@ -6,7 +6,7 @@ namespace Light.GuardClauses.Performance
 {
     [CoreJob, ClrJob]
     [MemoryDiagnoser]
-    public class NullCheckWithParameterName
+    public class MustNotBeNullWithParameterName
     {
         public static readonly object Instance = new SampleEntity(Guid.NewGuid());
 

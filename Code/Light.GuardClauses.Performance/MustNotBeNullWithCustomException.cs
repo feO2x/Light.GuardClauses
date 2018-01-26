@@ -6,7 +6,7 @@ namespace Light.GuardClauses.Performance
 {
     [ClrJob, CoreJob]
     [MemoryDiagnoser]
-    public class NullCheckWithCustomException
+    public class MustNotBeNullWithCustomException
     {
         public static readonly object Instance = new SampleEntity(Guid.NewGuid());
 
@@ -39,5 +39,14 @@ namespace Light.GuardClauses.Performance
 
         [Benchmark]
         public object MustNotBeNullV9() => Instance.MustNotBeNullV9(() => new ArgumentException("Instance must not be null.", nameof(Instance)));
+
+        [Benchmark]
+        public object MustNotBeNullV11() => Instance.MustNotBeNullV11(() => new ArgumentException("Instance must not be null.", nameof(Instance)));
+
+        [Benchmark]
+        public object MustNotBeNullV12() => Instance.MustNotBeNullV12(() => new ArgumentException("Instance must not be null.", nameof(Instance)));
+
+        [Benchmark]
+        public object LightGuardClauses() => Instance.MustNotBeNull(() => new ArgumentException("Instance must not be null.", nameof(Instance)));
     }
 }
