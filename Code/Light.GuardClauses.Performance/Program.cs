@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Running;
+using Light.GuardClauses.Performance.MustNotBeNullReference;
 
 namespace Light.GuardClauses.Performance
 {
@@ -6,8 +7,7 @@ namespace Light.GuardClauses.Performance
     {
         public static void Main()
         {
-            BenchmarkRunner.Run<MustNotBeNullWithParameterName>();
-            BenchmarkRunner.Run<MustNotBeNullWithCustomException>();
+            BenchmarkRunner.Run<MustNotBeNullReferenceWithParameterName>();
         }
     }
 }

@@ -32,19 +32,19 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that the specified parameter is not null, or otherwise throws your custom exception.
+        ///     Ensures that the specified parameter is not null, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The value to be checked for null.</param>
-        /// <param name="exception">The delegate that creates the exception to be thrown.</param>
-        /// <exception cref="Exception">Your custom exception when <paramref name="parameter"/> is null.</exception>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <exception cref="Exception">Your custom exception when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustNotBeNull<T>(this T parameter, Func<Exception> exception) where T : class
+        public static T MustNotBeNull<T>(this T parameter, Func<Exception> exceptionFactory) where T : class
         {
             if (parameter != null)
                 return parameter;
 
-            Throw.CustomException(exception);
+            Throw.CustomException(exceptionFactory);
             return null;
         }
 
@@ -77,31 +77,73 @@ namespace Light.GuardClauses
             return default(T);
         }
 
-        
 
         /// <summary>
         ///     Ensures that the specified parameter is not the default value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
-        /// <param name="exception">The delegate that creates the exception to be thrown.</param>
-        /// <exception cref="Exception">Your custom exception when <paramref name="parameter"/> is the default value.</exception>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <exception cref="Exception">Your custom exception when <paramref name="parameter" /> is the default value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustNotBeDefault<T>(this T parameter, Func<Exception> exception)
+        public static T MustNotBeDefault<T>(this T parameter, Func<Exception> exceptionFactory)
         {
             if (default(T) == null)
             {
                 if (parameter != null)
                     return parameter;
 
-                Throw.CustomException(exception);
+                Throw.CustomException(exceptionFactory);
             }
 
             // ReSharper disable once PossibleNullReferenceException
             if (parameter.Equals(default(T)) == false)
                 return parameter;
 
-            Throw.CustomException(exception);
+            Throw.CustomException(exceptionFactory);
+            return default(T);
+        }
+
+        /// <summary>
+        ///     Ensures that the specified parameter is not null when <typeparamref name="T" /> is a reference type, or otherwise
+        ///     throws an <see cref="ArgumentNullException" />. NOTICE: you should only use this assertion in generic contexts,
+        ///     use <see cref="MustNotBeNull{T}(T,string,string)" /> by default.
+        /// </summary>
+        /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="ArgumentNullException" /> (optional).</param>
+        /// <exception cref="ArgumentNullException">Thrown when <typeparamref name="T"/> is a reference type and <paramref name="parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustNotBeNullReference<T>(this T parameter, string parameterName = null, string message = null)
+        {
+            if (default(T) != null) return parameter;
+
+            if (parameter != null)
+                return parameter;
+
+            Throw.ArgumentNullException(parameterName, message);
+            return default(T);
+        }
+
+        /// <summary>
+        ///     Ensures that the specified parameter is not null when <typeparamref name="T" /> is a reference type, or otherwise
+        ///     throws your custom exception. NOTICE: you should only use this assertion in generic contexts,
+        ///     use <see cref="MustNotBeNull{T}(T,string,string)" /> by default.
+        /// </summary>
+        /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <exception cref="Exception">Your custom exception when <typeparamref name="T"/> is a reference type and <paramref name="parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustNotBeNullReference<T>(this T parameter, Func<Exception> exceptionFactory)
+        {
+            if (default(T) != null) return parameter;
+
+            if (parameter != null)
+                return parameter;
+
+            Throw.CustomException(exceptionFactory);
             return default(T);
         }
 

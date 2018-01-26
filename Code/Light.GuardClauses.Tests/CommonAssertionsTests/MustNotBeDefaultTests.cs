@@ -57,10 +57,10 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.AddExceptionTest(exception => 0.MustNotBeDefault(exception: exception))
+            testData.AddExceptionTest(exception => 0.MustNotBeDefault(exceptionFactory: exception))
                     .AddMessageTest<ArgumentException>(message => default(char).MustNotBeDefault(message: message));
 
-            testData.AddExceptionTest(exception => default(object).MustNotBeDefault(exception: exception))
+            testData.AddExceptionTest(exception => default(object).MustNotBeDefault(exceptionFactory: exception))
                     .AddMessageTest<ArgumentNullException>(message => default(string).MustNotBeDefault(message: message));
         }
     }
