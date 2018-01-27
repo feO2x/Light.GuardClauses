@@ -208,23 +208,55 @@ namespace Light.GuardClauses
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeMismatchException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when the specified <paramref name="parameter" /> cannot be downcasted (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="TypeMismatchException">
-        ///     Thrown when the specified <paramref name="parameter" /> cannot be downcasted and no <paramref name="exception" /> is specified.
-        /// </exception>
-        /// <returns>The downcasted reference to <paramref name="parameter" />.</returns>
-        public static T MustBeOfType<T>(this object parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
+        /// <param name="message">The message that will be injected into the <see cref="TypeMismatchException" /> (optional). </param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="TypeMismatchException">Thrown when <paramref name="parameter" /> cannot be downcasted to the specified value.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustBeOfType<T>(this object parameter, string parameterName = null, string message = null) where T : class
         {
-            if (parameter is T castedValue)
+            if (parameter.MustNotBeNull(parameterName) is T castedValue)
                 return castedValue;
 
-            throw exception?.Invoke() ?? new TypeMismatchException(message ?? $"{parameterName ?? "The object"} is of type {parameter.GetType().FullName} and cannot be downcasted to {typeof(T).FullName}.", parameterName);
+            Throw.TypeMismatchException(parameter, typeof(T), parameterName, message);
+            return null;
+        }
+
+        /// <summary>
+        ///     Ensures that parameter is of the specified type and returns the downcasted value, or otherwise throws your custom exception.
+        /// </summary>
+        /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> cannot be downcasted to the specified value.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustBeOfType<T>(this object parameter, Func<Exception> exceptionFactory, string parameterName = null) where T : class
+        {
+            if (parameter.MustNotBeNull(parameterName) is T castedValue)
+                return castedValue;
+
+            Throw.CustomException(exceptionFactory);
+            return null;
+        }
+
+        /// <summary>
+        ///     Ensures that parameter is of the specified type and returns the downcasted value, or otherwise throws your custom exception.
+        /// </summary>
+        /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> cannot be downcasted to the specified value.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustBeOfType<T>(this object parameter, Func<object, Exception> exceptionFactory, string parameterName = null) where T : class
+        {
+            if (parameter.MustNotBeNull(parameterName) is T castedValue)
+                return castedValue;
+
+            Throw.CustomException(exceptionFactory, parameter);
+            return null;
         }
 
         /// <summary>

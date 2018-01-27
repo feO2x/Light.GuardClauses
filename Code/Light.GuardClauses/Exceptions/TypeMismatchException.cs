@@ -16,7 +16,7 @@ namespace Light.GuardClauses.Exceptions
         /// <param name="message">The message of the exception.</param>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="innerException">The exception that led to this one (optional).</param>
-        public TypeMismatchException(string message, string parameterName, Exception innerException = null)
+        public TypeMismatchException(string parameterName = null, string message = null, Exception innerException = null)
             : base(message, parameterName, innerException) { }
     }
 }

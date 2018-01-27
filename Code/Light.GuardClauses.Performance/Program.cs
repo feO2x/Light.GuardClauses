@@ -1,5 +1,5 @@
 ﻿using BenchmarkDotNet.Running;
-using Light.GuardClauses.Performance.MustBeNull;
+using Light.GuardClauses.Performance.MustBeOfType;
 
 namespace Light.GuardClauses.Performance
 {
@@ -7,7 +7,7 @@ namespace Light.GuardClauses.Performance
     {
         public static void Main()
         {
-            BenchmarkRunner.Run<MustBeNullBenchmark>();
+            BenchmarkRunner.Run<MustBeOfTypeBenchmarks>();
         }
     }
 }

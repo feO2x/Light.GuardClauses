@@ -18,7 +18,7 @@ namespace Light.GuardClauses.Exceptions
         /// <summary>
         ///     Throws the default <see cref="ArgumentException" /> indicating that a value is the default value of its type, using the optional parameter name and message.
         /// </summary>
-        public static void ArgumentDefaultException(string parameterName, string message)
+        public static void ArgumentDefaultException(string parameterName = null, string message = null)
         {
             throw new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be the default value.", parameterName);
         }
@@ -32,6 +32,14 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
+        ///     Throws the default <see cref="TypeMismatchException" /> indicating that a reference cannot be downcasted, using the optional parameter name and message.
+        /// </summary>
+        public static void TypeMismatchException(object parameter, Type targetType, string parameterName = null, string message = null)
+        {
+            throw new TypeMismatchException(parameterName, message ?? $"{parameterName ?? "The object"} \"{parameter}\" cannot be downcasted to \"{targetType}\".");
+        }
+
+        /// <summary>
         ///     Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException(Func<Exception> exceptionFactory)
@@ -40,7 +48,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="value" /> is passed to <paramref name="exceptionFactory"/>.
+        ///     Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="value" /> is passed to <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException<T>(Func<T, Exception> exceptionFactory, T value)
         {
