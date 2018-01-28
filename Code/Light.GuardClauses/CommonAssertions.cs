@@ -24,11 +24,9 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null) where T : class
         {
-            if (parameter != null)
-                return parameter;
-
-            Throw.ArgumentNullException(parameterName, message);
-            return null;
+            if (parameter == null)
+                Throw.ArgumentNullException(parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -41,11 +39,10 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MustNotBeNull<T>(this T parameter, Func<Exception> exceptionFactory) where T : class
         {
-            if (parameter != null)
-                return parameter;
+            if (parameter == null)
+                Throw.CustomException(exceptionFactory);
 
-            Throw.CustomException(exceptionFactory);
-            return null;
+            return parameter;
         }
 
         /// <summary>
@@ -63,18 +60,14 @@ namespace Light.GuardClauses
         {
             if (default(T) == null)
             {
-                if (parameter != null)
-                    return parameter;
-
-                Throw.ArgumentNullException(parameterName, message);
-                return default(T);
+                if (parameter == null)
+                    Throw.ArgumentNullException(parameterName, message);
+                return parameter;
             }
 
-            if (parameter.Equals(default(T)) == false)
-                return parameter;
-
-            Throw.ArgumentDefaultException(parameterName, message);
-            return default(T);
+            if (parameter.Equals(default(T)))
+                Throw.ArgumentDefaultException(parameterName, message);
+            return parameter;
         }
 
 
@@ -90,19 +83,14 @@ namespace Light.GuardClauses
         {
             if (default(T) == null)
             {
-                if (parameter != null)
-                    return parameter;
-
-                Throw.CustomException(exceptionFactory);
+                if (parameter == null)
+                    Throw.CustomException(exceptionFactory);
                 return default(T);
             }
 
-            // ReSharper disable once PossibleNullReferenceException
-            if (parameter.Equals(default(T)) == false)
-                return parameter;
-
-            Throw.CustomException(exceptionFactory);
-            return default(T);
+            if (parameter.Equals(default(T)))
+                Throw.CustomException(exceptionFactory);
+            return parameter;
         }
 
         /// <summary>
@@ -121,11 +109,9 @@ namespace Light.GuardClauses
             if (default(T) != null)
                 return parameter;
 
-            if (parameter != null)
-                return parameter;
-
-            Throw.ArgumentNullException(parameterName, message);
-            return default(T);
+            if (parameter == null)
+                Throw.ArgumentNullException(parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -143,11 +129,9 @@ namespace Light.GuardClauses
             if (default(T) != null)
                 return parameter;
 
-            if (parameter != null)
-                return parameter;
-
-            Throw.CustomException(exceptionFactory);
-            return default(T);
+            if (parameter == null)
+                Throw.CustomException(exceptionFactory);
+            return parameter;
         }
 
         /// <summary>
@@ -161,10 +145,8 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MustBeNull<T>(this T parameter, string parameterName = null, string message = null) where T : class
         {
-            if (parameter == null)
-                return null;
-
-            Throw.ArgumentNotNullException(parameter, parameterName, message);
+            if (parameter != null)
+                Throw.ArgumentNotNullException(parameter, parameterName, message);
             return null;
         }
 
@@ -178,10 +160,8 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MustBeNull<T>(this T parameter, Func<Exception> exceptionFactory) where T : class
         {
-            if (parameter == null)
-                return null;
-
-            Throw.CustomException(exceptionFactory);
+            if (parameter != null)
+                Throw.CustomException(exceptionFactory);
             return null;
         }
 
@@ -195,10 +175,8 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MustBeNull<T>(this T parameter, Func<T, Exception> exceptionFactory) where T : class
         {
-            if (parameter == null)
-                return null;
-
-            Throw.CustomException(exceptionFactory, parameter);
+            if (parameter != null)
+                Throw.CustomException(exceptionFactory, parameter);
             return null;
         }
 
@@ -260,21 +238,19 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified nullable has a value, or otherwise throws a <see cref="NullableHasNoValueException"/>.
+        ///     Ensures that the specified nullable has a value, or otherwise throws a <see cref="NullableHasNoValueException" />.
         /// </summary>
         /// <typeparam name="T">The type of the struct encapsulated by the nullable.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="NullableHasNoValueException" /> (optional).</param>
-        /// <exception cref="NullableHasNoValueException">Thrown when <paramref name="parameter"/> is null.</exception>
+        /// <exception cref="NullableHasNoValueException">Thrown when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MustHaveValue<T>(this T? parameter, string parameterName = null, string message = null) where T : struct
         {
-            if (parameter.HasValue)
-                return parameter;
-            
-            Throw.NullableHasNoValueException(parameterName, message);
-            return null;
+            if (parameter.HasValue == false)
+                Throw.NullableHasNoValueException(parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -283,13 +259,12 @@ namespace Light.GuardClauses
         /// <typeparam name="T">The type of the struct encapsulated by the nullable.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MustHaveValue<T>(this T? parameter, Func<Exception> exceptionFactory) where T : struct
         {
             if (parameter.HasValue == false)
                 Throw.CustomException(exceptionFactory);
-
             return parameter;
         }
 
