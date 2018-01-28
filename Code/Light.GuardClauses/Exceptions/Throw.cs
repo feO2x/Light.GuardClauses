@@ -64,6 +64,14 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
+        ///     Throws the default <see cref="EmptyGuidException" /> indicating that a GUID is empty, using the optional parameter name and message.
+        /// </summary>
+        public static void EmptyGuid(string parameterName = null, string message = null)
+        {
+            throw new EmptyGuidException(parameterName, message ?? $"{parameterName ?? "The value"} must be a valid GUID, but it actually is an empty one.");
+        }
+
+        /// <summary>
         ///     Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException(Func<Exception> exceptionFactory)

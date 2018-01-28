@@ -31,7 +31,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => Guid.Empty.MustNotBeEmpty(exception: exception)))
+            testData.Add(new CustomExceptionTest(exception => Guid.Empty.MustNotBeEmpty(exception)))
                     .Add(new CustomMessageTest<EmptyGuidException>(message => Guid.Empty.MustNotBeEmpty(message: message)));
         }
     }

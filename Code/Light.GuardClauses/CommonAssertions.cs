@@ -551,21 +551,28 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        ///     The message that will be injected into the <see cref="EmptyGuidException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when the specified GUID is empty (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="EmptyGuidException">
-        ///     Thrown when the specified GUID is empty and no <paramref name="exception" /> is specified.
-        /// </exception>
-        public static Guid MustNotBeEmpty(this Guid parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        /// <param name="message">The message that will be injected into the <see cref="EmptyGuidException" /> (optional).</param>
+        /// <exception cref="EmptyGuidException">Thrown when <paramref name="parameter" /> is an empty GUID.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Guid MustNotBeEmpty(this Guid parameter, string parameterName = null, string message = null)
         {
-            if (parameter != Guid.Empty)
-                return parameter;
-            throw exception?.Invoke() ?? (message == null ? new EmptyGuidException(parameterName) : new EmptyGuidException(message, parameterName));
+            if (parameter == Guid.Empty)
+                Throw.EmptyGuid(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        ///     Ensures that the specified GUID is not empty, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is an empty GUID.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Guid MustNotBeEmpty(this Guid parameter, Func<Exception> exceptionFactory)
+        {
+            if (parameter == Guid.Empty)
+                Throw.CustomException(exceptionFactory);
+            return parameter;
         }
 
         /// <summary>
@@ -573,6 +580,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The GUID to be checked.</param>
         /// <returns>True if the GUID is empty, else false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsEmpty(this Guid parameter)
         {
             return parameter == Guid.Empty;
