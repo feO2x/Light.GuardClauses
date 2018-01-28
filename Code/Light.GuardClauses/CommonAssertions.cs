@@ -270,8 +270,9 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MustHaveValue<T>(this T? parameter, string parameterName = null, string message = null) where T : struct
         {
-            if (parameter.HasValue) return parameter;
-
+            if (parameter.HasValue)
+                return parameter;
+            
             Throw.NullableHasNoValueException(parameterName, message);
             return null;
         }
@@ -286,10 +287,10 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MustHaveValue<T>(this T? parameter, Func<Exception> exceptionFactory) where T : struct
         {
-            if (parameter.HasValue) return parameter;
+            if (parameter.HasValue == false)
+                Throw.CustomException(exceptionFactory);
 
-            Throw.CustomException(exceptionFactory);
-            return null;
+            return parameter;
         }
 
         /// <summary>

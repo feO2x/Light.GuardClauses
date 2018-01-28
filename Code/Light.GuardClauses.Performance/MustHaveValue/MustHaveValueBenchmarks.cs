@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Jobs;
 using Light.GuardClauses.Exceptions;
@@ -21,13 +19,13 @@ namespace Light.GuardClauses.Performance.MustHaveValue
         }
 
         [Benchmark]
+        public int? OldVersionWithParameterName() => Nullable.OldMustHaveValue(nameof(Nullable));
+
+        [Benchmark]
         public int? LightGuardClausesWithParameterName() => Nullable.MustHaveValue(nameof(Nullable));
 
         [Benchmark]
         public int? LightGuardClausesWithCustomException() => Nullable.MustHaveValue(() => new Exception());
-
-        [Benchmark]
-        public int? OldVersionWithParameterName() => Nullable.OldMustHaveValue(nameof(Nullable));
     }
 
     public static class MustHaveValueExtensionMethods
