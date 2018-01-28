@@ -72,6 +72,14 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
+        /// Throws the default <see cref="ArgumentException"/> indicating that a boolean is true instead of false, using the optional parameter name and message.
+        /// </summary>
+        public static void BooleanTrue(string parameterName = null, string message = null)
+        {
+            throw new ArgumentException(message ?? $"{parameterName ?? "The boolean value"} must be false, but it actually is true.", parameterName);
+        }
+
+        /// <summary>
         ///     Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException(Func<Exception> exceptionFactory)
