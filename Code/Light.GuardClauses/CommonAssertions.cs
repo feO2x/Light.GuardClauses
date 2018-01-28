@@ -260,27 +260,36 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified Nullable has a value, or otherwise throws a <see cref="NullableHasNoValueException" />.
+        ///     Ensures that the specified nullable has a value, or otherwise throws a <see cref="NullableHasNoValueException"/>.
         /// </summary>
-        /// <typeparam name="T">The type of the struct encapsulated by the Nullable.</typeparam>
+        /// <typeparam name="T">The type of the struct encapsulated by the nullable.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        ///     The message that will be injected into the <see cref="NullableHasNoValueException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when the specified Nullable has no value (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="NullableHasNoValueException">
-        ///     Thrown when the specified nullable has no value and no <paramref name="exception" /> is specified.
-        /// </exception>
-        public static T? MustHaveValue<T>(this T? parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : struct
+        /// <param name="message">The message that will be injected into the <see cref="NullableHasNoValueException" /> (optional).</param>
+        /// <exception cref="NullableHasNoValueException">Thrown when <paramref name="parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MustHaveValue<T>(this T? parameter, string parameterName = null, string message = null) where T : struct
         {
-            if (parameter.HasValue)
-                return parameter;
+            if (parameter.HasValue) return parameter;
 
-            throw exception?.Invoke() ?? (message != null ? new NullableHasNoValueException(message, parameterName) : new NullableHasNoValueException(parameterName));
+            Throw.NullableHasNoValueException(parameterName, message);
+            return null;
+        }
+
+        /// <summary>
+        ///     Ensures that the specified nullable has a value, or otherwise throws your custom exception.
+        /// </summary>
+        /// <typeparam name="T">The type of the struct encapsulated by the nullable.</typeparam>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MustHaveValue<T>(this T? parameter, Func<Exception> exceptionFactory) where T : struct
+        {
+            if (parameter.HasValue) return parameter;
+
+            Throw.CustomException(exceptionFactory);
+            return null;
         }
 
         /// <summary>

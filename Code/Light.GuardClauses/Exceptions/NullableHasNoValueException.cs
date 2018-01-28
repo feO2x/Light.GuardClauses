@@ -8,23 +8,17 @@ namespace Light.GuardClauses.Exceptions
 #if (NETSTANDARD2_0 || NET45)
     [Serializable]
 #endif
-    public class NullableHasNoValueException : ArgumentException
+    public class NullableHasNoValueException : ArgumentNullException
     {
-        /// <summary>
-        ///     Creates a new instance of <see cref="NullableHasNoValueException" /> with the default exception message.
-        /// </summary>
-        /// <param name="parameterName">The name of the parameter.</param>
-        /// <param name="innerException">The exception that led to this one (optional).</param>
-        public NullableHasNoValueException(string parameterName, Exception innerException = null)
-            : base($"{parameterName ?? "The Nullable"} must have a value, but you specified a Nullable that has none.", parameterName, innerException) { }
-
         /// <summary>
         ///     Creates a new instance of <see cref="NullableHasNoValueException" />.
         /// </summary>
-        /// <param name="message">The message of the exception.</param>
-        /// <param name="parameterName">The name of the parameter.</param>
-        /// <param name="innerException">The exception that led to this one (optional).</param>
-        public NullableHasNoValueException(string message, string parameterName, Exception innerException = null)
-            : base(message, parameterName, innerException) { }
+        /// <param name="message">The message of the exception (optional).</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        public NullableHasNoValueException(string parameterName = null, string message = null)
+            : base(parameterName, message)
+        {
+            
+        }
     }
 }

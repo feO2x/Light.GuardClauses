@@ -33,18 +33,8 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception =>
-                                                 {
-                                                     double? value = null;
-                                                     // ReSharper disable once ExpressionIsAlwaysNull
-                                                     value.MustHaveValue(exception: exception);
-                                                 }))
-                    .Add(new CustomMessageTest<NullableHasNoValueException>(message =>
-                                                                            {
-                                                                                double? value = null;
-                                                                                // ReSharper disable once ExpressionIsAlwaysNull
-                                                                                value.MustHaveValue(message: message);
-                                                                            }));
+            testData.AddExceptionTest(exception => ((double?) null).MustHaveValue(exception))
+                    .AddMessageTest<NullableHasNoValueException>(message => ((int?) null).MustHaveValue(message: message));
         }
     }
 }
