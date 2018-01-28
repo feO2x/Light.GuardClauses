@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentAssertions;
+using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 
@@ -29,7 +30,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
         {
             Action act = () => structValue.MustNotBeDefault(nameof(structValue));
 
-            act.ShouldThrow<ArgumentException>()
+            act.ShouldThrow<ArgumentDefaultException>()
                .And.Message.Should().Contain($"{nameof(structValue)} must not be the default value.");
         }
 
@@ -68,7 +69,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
             testData.AddExceptionTest(exception => 0.MustNotBeDefault(exception))
-                    .AddMessageTest<ArgumentException>(message => default(char).MustNotBeDefault(message: message));
+                    .AddMessageTest<ArgumentDefaultException>(message => default(char).MustNotBeDefault(message: message));
 
             testData.AddExceptionTest(exception => default(object).MustNotBeDefault(exception))
                     .AddMessageTest<ArgumentNullException>(message => default(string).MustNotBeDefault(message: message));

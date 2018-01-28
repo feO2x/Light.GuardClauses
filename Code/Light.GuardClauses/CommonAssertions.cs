@@ -25,7 +25,7 @@ namespace Light.GuardClauses
         public static T MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null) where T : class
         {
             if (parameter == null)
-                Throw.ArgumentNullException(parameterName, message);
+                Throw.ArgumentNull(parameterName, message);
             return parameter;
         }
 
@@ -47,26 +47,26 @@ namespace Light.GuardClauses
 
         /// <summary>
         ///     Ensures that the specified parameter is not the default value, or otherwise throws an <see cref="ArgumentNullException" />
-        ///     for reference types, or an <see cref="ArgumentException" /> for value types.
+        ///     for reference types, or an <see cref="ArgumentDefaultException" /> for value types.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be injected into the <see cref="ArgumentNullException" /> or <see cref="ArgumentException" /> (optional).</param>
+        /// <param name="message">The message that will be injected into the <see cref="ArgumentNullException" /> or <see cref="ArgumentDefaultException" /> (optional).</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is a value type and the default value.</exception>
+        /// <exception cref="ArgumentDefaultException">Thrown when <paramref name="parameter" /> is a value type and the default value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MustNotBeDefault<T>(this T parameter, string parameterName = null, string message = null)
         {
             if (default(T) == null)
             {
                 if (parameter == null)
-                    Throw.ArgumentNullException(parameterName, message);
+                    Throw.ArgumentNull(parameterName, message);
                 return parameter;
             }
 
             if (parameter.Equals(default(T)))
-                Throw.ArgumentDefaultException(parameterName, message);
+                Throw.ArgumentDefault(parameterName, message);
             return parameter;
         }
 
@@ -110,7 +110,7 @@ namespace Light.GuardClauses
                 return parameter;
 
             if (parameter == null)
-                Throw.ArgumentNullException(parameterName, message);
+                Throw.ArgumentNull(parameterName, message);
             return parameter;
         }
 
@@ -146,7 +146,7 @@ namespace Light.GuardClauses
         public static T MustBeNull<T>(this T parameter, string parameterName = null, string message = null) where T : class
         {
             if (parameter != null)
-                Throw.ArgumentNotNullException(parameter, parameterName, message);
+                Throw.ArgumentNotNull(parameter, parameterName, message);
             return null;
         }
 
@@ -195,7 +195,7 @@ namespace Light.GuardClauses
             if (parameter.MustNotBeNull(parameterName) is T castedValue)
                 return castedValue;
 
-            Throw.TypeMismatchException(parameter, typeof(T), parameterName, message);
+            Throw.TypeMismatch(parameter, typeof(T), parameterName, message);
             return null;
         }
 
@@ -249,7 +249,7 @@ namespace Light.GuardClauses
         public static T? MustHaveValue<T>(this T? parameter, string parameterName = null, string message = null) where T : struct
         {
             if (parameter.HasValue == false)
-                Throw.NullableHasNoValueException(parameterName, message);
+                Throw.NullableHasNoValue(parameterName, message);
             return parameter;
         }
 
@@ -280,7 +280,7 @@ namespace Light.GuardClauses
         public static T? MustNotHaveValue<T>(this T? parameter, string parameterName = null, string message = null) where T : struct
         {
             if (parameter.HasValue)
-                Throw.NullableHasValueException(parameter.Value, parameterName, message);
+                Throw.NullableHasValue(parameter.Value, parameterName, message);
             return null;
         }
 
@@ -369,12 +369,13 @@ namespace Light.GuardClauses
         /// <param name="parameter">The enum value to be checked.</param>
         /// <returns>True if the specified value is a valid value of an enum type, else false.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is not a value of an enum.</exception>
         public static bool IsValidEnumValue(this object parameter)
         {
             var enumType = parameter.MustNotBeNull(nameof(parameter)).GetType();
             var typeInfo = enumType.GetTypeInfo();
             if (typeInfo.IsEnum == false)
-                throw new ArgumentException($"The specified type \"{typeInfo}\" is not an enum.");
+                throw new ArgumentException($"The value \"{parameter}\" is of type \"{typeInfo}\" which is not an enum type.", nameof(parameter));
 
             var fields = typeInfo.DeclaredFields.AsReadOnlyList();
 

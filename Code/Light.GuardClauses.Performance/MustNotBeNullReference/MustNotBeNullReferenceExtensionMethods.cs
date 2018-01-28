@@ -13,7 +13,7 @@ namespace Light.GuardClauses.Performance.MustNotBeNullReference
                 if (parameter != null)
                     return parameter;
 
-                Throw.ArgumentNullException(parameterName, message);
+                Throw.ArgumentNull(parameterName, message);
                 return default(T);
             }
 
@@ -28,7 +28,7 @@ namespace Light.GuardClauses.Performance.MustNotBeNullReference
             if (parameter != null)
                 return parameter;
 
-            Throw.ArgumentNullException(parameterName, message);
+            Throw.ArgumentNull(parameterName, message);
             return default(T);
         }
     }
