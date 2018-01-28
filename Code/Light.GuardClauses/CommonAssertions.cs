@@ -315,28 +315,52 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified value is defined in its corresponding enum type, or otherwise throws a <see cref="EnumValueNotDefinedException" />.
+        ///     Ensures that the specified value is defined in its corresponding enum type, or otherwise throws an <see cref="EnumValueNotDefinedException" />.
         /// </summary>
         /// <typeparam name="T">The enum type of the parameter.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        ///     The message that will be injected into the <see cref="EnumValueNotDefinedException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when the specified Nullable has a value (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="EnumValueNotDefinedException">
-        ///     Thrown when the specified enum value is not defined and no <paramref name="exception" /> is specified.
-        /// </exception>
+        /// <param name="message">The message that will be injected into the <see cref="EnumValueNotDefinedException" /> (optional).</param>
+        /// <exception cref="EnumValueNotDefinedException">Thrown when the specified enum value is not defined.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is not a value of an enum.</exception>
-        public static T MustBeValidEnumValue<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustBeValidEnumValue<T>(this T parameter, string parameterName = null, string message = null)
         {
-            if (parameter.IsValidEnumValue())
-                return parameter;
+            if (parameter.IsValidEnumValue() == false)
+                Throw.EnumValueNotDefined(parameter, parameterName, message);
+            return parameter;
+        }
 
-            throw exception?.Invoke() ?? (message == null ? new EnumValueNotDefinedException(parameterName, parameter, typeof(T)) : new EnumValueNotDefinedException(message, parameterName));
+        /// <summary>
+        ///     Ensures that the specified value is defined in its corresponding enum type, or otherwise throws an <see cref="EnumValueNotDefinedException" />.
+        /// </summary>
+        /// <typeparam name="T">The enum type of the parameter.</typeparam>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <exception cref="Exception">Your custom exception thrown when the specified enum value is not defined.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is not a value of an enum.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustBeValidEnumValue<T>(this T parameter, Func<Exception> exceptionFactory)
+        {
+            if (parameter.IsValidEnumValue() == false)
+                Throw.CustomException(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        ///     Ensures that the specified value is defined in its corresponding enum type, or otherwise throws an <see cref="EnumValueNotDefinedException" />.
+        /// </summary>
+        /// <typeparam name="T">The enum type of the parameter.</typeparam>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <exception cref="Exception">Your custom exception thrown when the specified enum value is not defined.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is not a value of an enum.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustBeValidEnumValue<T>(this T parameter, Func<T, Exception> exceptionFactory)
+        {
+            if (parameter.IsValidEnumValue() == false)
+                Throw.CustomException(exceptionFactory, parameter);
+            return parameter;
         }
 
         /// <summary>

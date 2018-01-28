@@ -16,8 +16,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentException" /> indicating that a value is the default value of its type, using
-        ///     the optional parameter name and message.
+        ///     Throws the default <see cref="ArgumentException" /> indicating that a value is the default value of its type, using the optional parameter name and message.
         /// </summary>
         public static void ArgumentDefaultException(string parameterName = null, string message = null)
         {
@@ -25,8 +24,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentNotNullException" /> indicating that a value is not null, using the optional
-        ///     parameter name and message.
+        ///     Throws the default <see cref="ArgumentNotNullException" /> indicating that a value is not null, using the optional parameter name and message.
         /// </summary>
         public static void ArgumentNotNullException(object value, string parameterName = null, string message = null)
         {
@@ -34,8 +32,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="TypeMismatchException" /> indicating that a reference cannot be downcasted, using the
-        ///     optional parameter name and message.
+        ///     Throws the default <see cref="TypeMismatchException" /> indicating that a reference cannot be downcasted, using the optional parameter name and message.
         /// </summary>
         public static void TypeMismatchException(object parameter, Type targetType, string parameterName = null, string message = null)
         {
@@ -43,8 +40,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="NullableHasNoValueException" /> indicating that a <see cref="Nullable{T}" /> has no
-        ///     value, using the optional parameter name and message.
+        ///     Throws the default <see cref="NullableHasNoValueException" /> indicating that a <see cref="Nullable{T}" /> has no value, using the optional parameter name and message.
         /// </summary>
         public static void NullableHasNoValueException(string parameterName = null, string message = null)
         {
@@ -52,11 +48,19 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        /// Throws the default <see cref="NullableHasValueException"/> indicating that a <see cref="Nullable{T}"/> has a value, using the optional paramter name and message.
+        ///     Throws the default <see cref="NullableHasValueException" /> indicating that a <see cref="Nullable{T}" /> has a value, using the optional paramter name and message.
         /// </summary>
         public static void NullableHasValueException<T>(T value, string parameterName = null, string message = null) where T : struct
         {
             throw new NullableHasValueException(parameterName, message ?? $"{parameterName ?? "The nullable"} must have no value, but it actually is \"{value}\".");
+        }
+
+        /// <summary>
+        ///     Throws the default <see cref="EnumValueNotDefinedException" /> indicating that a value is not one of the constants defined in an enum, using the optional paramter name and message.
+        /// </summary>
+        public static void EnumValueNotDefined<T>(T parameter, string parameterName = null, string message = null)
+        {
+            throw new EnumValueNotDefinedException(parameterName, message ?? $"{parameterName ?? "The value"} \"{parameter}\" must be one of the defined constants of enum \"{parameter.GetType()}\", but it is not.");
         }
 
         /// <summary>
@@ -68,8 +72,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="value" /> is passed
-        ///     to <paramref name="exceptionFactory" />.
+        ///     Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="value" /> is passed to <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException<T>(Func<T, Exception> exceptionFactory, T value)
         {
