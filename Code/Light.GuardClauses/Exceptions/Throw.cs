@@ -52,6 +52,14 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
+        /// Throws the default <see cref="NullableHasValueException"/> indicating that a <see cref="Nullable{T}"/> has a value, using the optional paramter name and message.
+        /// </summary>
+        public static void NullableHasValueException<T>(T value, string parameterName = null, string message = null) where T : struct
+        {
+            throw new NullableHasValueException(parameterName, message ?? $"{parameterName ?? "The nullable"} must have no value, but it actually is \"{value}\".");
+        }
+
+        /// <summary>
         ///     Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException(Func<Exception> exceptionFactory)

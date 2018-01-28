@@ -13,8 +13,8 @@ namespace Light.GuardClauses.Exceptions
         /// <summary>
         ///     Creates a new instance of <see cref="NullableHasNoValueException" />.
         /// </summary>
-        /// <param name="message">The message of the exception (optional).</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message of the exception (optional).</param>
         public NullableHasNoValueException(string parameterName = null, string message = null)
             : base(parameterName, message)
         {
