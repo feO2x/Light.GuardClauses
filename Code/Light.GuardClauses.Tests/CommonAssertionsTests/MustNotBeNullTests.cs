@@ -29,7 +29,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => ((object) null).MustNotBeNull(exceptionFactory: exception)))
+            testData.Add(new CustomExceptionTest(exception => ((object) null).MustNotBeNull(exception)))
                     .Add(new CustomMessageTest<ArgumentNullException>(message => ((object) null).MustNotBeNull(message: message)));
         }
     }

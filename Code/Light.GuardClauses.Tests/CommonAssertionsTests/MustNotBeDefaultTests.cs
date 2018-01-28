@@ -34,7 +34,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
         }
 
         [Fact(DisplayName = "MustNotBeDefault must throw an ArgumentNullException when null of type Nullable<T> is passed in.")]
-        public void Nullable()
+        public static void Nullable()
         {
             int? nullable = null;
 
@@ -48,19 +48,29 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
         [InlineData(42)]
         [InlineData(82567L)]
         [InlineData("Foo")]
-        public void NotDefault<T>(T value)
+        public static void NotDefault<T>(T value)
         {
             var result = value.MustNotBeDefault();
 
             result.Should().Be(value);
         }
 
+        [Fact(DisplayName = "MustNotBeDefault must return the value if a Nullable<T> that is not null is passed in.")]
+        public static void NotDefaultForNullable()
+        {
+            var nullable = new int?(42);
+
+            var result = nullable.MustNotBeDefault();
+
+            result.Should().Be(nullable);
+        }
+
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.AddExceptionTest(exception => 0.MustNotBeDefault(exceptionFactory: exception))
+            testData.AddExceptionTest(exception => 0.MustNotBeDefault(exception))
                     .AddMessageTest<ArgumentException>(message => default(char).MustNotBeDefault(message: message));
 
-            testData.AddExceptionTest(exception => default(object).MustNotBeDefault(exceptionFactory: exception))
+            testData.AddExceptionTest(exception => default(object).MustNotBeDefault(exception))
                     .AddMessageTest<ArgumentNullException>(message => default(string).MustNotBeDefault(message: message));
         }
     }
