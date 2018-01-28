@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using Light.GuardClauses.Exceptions;
 
-namespace Light.GuardClauses.Performance
+namespace Light.GuardClauses.Performance.MustNotBeDefault
 {
     public static class MustNotBeDefaultExtensionMethods
     {
@@ -45,6 +46,17 @@ namespace Light.GuardClauses.Performance
         private static void ThrowMustNotBeNullException(string parameterName, string message)
         {
             throw new ArgumentNullException(parameterName, message ?? $"{parameterName ?? "The value"} must not be null.");
+        }
+
+        public static T OldMustNotBeDefault<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        {
+            if (parameter == null)
+                throw exception?.Invoke() ?? new ArgumentNullException(parameterName, message ?? $"{parameterName ?? "The value"} must not be null.");
+
+            if (parameter.Equals(default(T)))
+                throw exception?.Invoke() ?? new ArgumentDefaultException(parameterName, message ?? $"{parameterName ?? "The value"} must not be the default value.");
+
+            return parameter;
         }
     }
 }

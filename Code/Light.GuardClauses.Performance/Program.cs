@@ -1,5 +1,7 @@
-﻿using BenchmarkDotNet.Running;
-using Light.GuardClauses.Performance.MustNotBeNull;
+﻿using System.Linq;
+using System.Reflection;
+using BenchmarkDotNet.Attributes.Jobs;
+using BenchmarkDotNet.Running;
 
 namespace Light.GuardClauses.Performance
 {
@@ -7,8 +9,28 @@ namespace Light.GuardClauses.Performance
     {
         public static void Main()
         {
-            BenchmarkRunner.Run<MustNotBeNullWithParameterName>();
-            BenchmarkRunner.Run<MustNotBeNullWithCustomException>();
+            RunAllBenchmarks();
+        }
+
+        private static void RunAllBenchmarks()
+        {
+            var ignoredTypes = new[]
+                               {
+                                   typeof(LoopCheck),
+                                   typeof(IsSubsetOfGist),
+                                   typeof(IsSubsetOfPerformance)
+                               };
+
+            var benchmarkTypes = typeof(Program).Assembly
+                                                .ExportedTypes
+                                                .Where(t => t.GetCustomAttribute<ClrJobAttribute>() != null &&
+                                                            t.IsOneOf(ignoredTypes) == false)
+                                                .ToList();
+
+            foreach (var benchmarkType in benchmarkTypes)
+            {
+                BenchmarkRunner.Run(benchmarkType);
+            }
         }
     }
 }
