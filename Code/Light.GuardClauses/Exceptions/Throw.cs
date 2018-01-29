@@ -72,11 +72,19 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        /// Throws the default <see cref="ArgumentException"/> indicating that a boolean is true instead of false, using the optional parameter name and message.
+        ///     Throws the default <see cref="ArgumentException" /> indicating that a boolean is true instead of false, using the optional parameter name and message.
         /// </summary>
         public static void BooleanTrue(string parameterName = null, string message = null)
         {
             throw new ArgumentException(message ?? $"{parameterName ?? "The boolean value"} must be false, but it actually is true.", parameterName);
+        }
+
+        /// <summary>
+        ///     Throws the default <see cref="ArgumentException" /> indicating that a boolean is false instead of true, using the optional parameter name and message.
+        /// </summary>
+        public static void BooleanFalse(string parameterName = null, string message = null)
+        {
+            throw new ArgumentException(message ?? $"{parameterName ?? "The boolean value"} must be true, but it actually is false.", parameterName);
         }
 
         /// <summary>

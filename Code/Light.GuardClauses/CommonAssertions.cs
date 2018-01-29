@@ -587,7 +587,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that the specified Boolean value is false, or otherwise throws a <see cref="ArgumentException"/>.
+        ///     Ensures that the specified Boolean value is false, or otherwise throws a <see cref="ArgumentException" />.
         /// </summary>
         /// <param name="parameter">The paramter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
@@ -598,11 +598,11 @@ namespace Light.GuardClauses
         {
             if (parameter)
                 Throw.BooleanTrue(parameterName, message);
-            return parameter;
+            return false;
         }
 
         /// <summary>
-        /// Ensures that the specified Boolean value is false, or otherwise throws a <see cref="ArgumentException"/>.
+        ///     Ensures that the specified Boolean value is false, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The paramter to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
@@ -612,26 +612,36 @@ namespace Light.GuardClauses
         {
             if (parameter)
                 Throw.CustomException(exceptionFactory);
-            return parameter;
+            return false;
         }
 
         /// <summary>
         ///     Ensures that the specified Boolean value is true, or otherwise throws an <see cref="ArgumentException" />.
         /// </summary>
-        /// <param name="parameter">The paramter to be checked.</param>
+        /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="ArgumentException" /> (optional).</param>
-        /// <param name="exception">
-        ///     The exception that is thrown when the specified bool is false (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is false and no <paramref name="exception" /> is specified.</exception>
-        public static bool MustBeTrue(this bool parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is false.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool MustBeTrue(this bool parameter, string parameterName = null, string message = null)
         {
-            if (parameter)
-                return true;
+            if (!parameter)
+                Throw.BooleanFalse(parameterName, message);
+            return true;
+        }
 
-            throw exception?.Invoke() ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must be true, but you specified false.", parameterName);
+        /// <summary>
+        ///     Ensures that the specified Boolean value is true, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is false.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool MustBeTrue(this bool parameter, Func<Exception> exceptionFactory)
+        {
+            if (!parameter)
+                Throw.CustomException(exceptionFactory);
+            return true;
         }
 
         /// <summary>
