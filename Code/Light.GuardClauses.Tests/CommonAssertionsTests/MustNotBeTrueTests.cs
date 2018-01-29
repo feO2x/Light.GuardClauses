@@ -15,7 +15,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
             Action act = () => itsTrue.MustNotBeTrue(nameof(itsTrue));
 
             act.ShouldThrow<ArgumentException>()
-               .And.Message.Should().Contain($"{nameof(itsTrue)} must not be true, but you specified true.");
+               .And.Message.Should().Contain($"{nameof(itsTrue)} must be false, but it actually is true.");
         }
 
         [Fact(DisplayName = "MustNotBeTrue must not throw an exception when the specified boolean is false.")]
@@ -28,7 +28,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.AddExceptionTest(exception => true.MustNotBeTrue(exception: exception))
+            testData.AddExceptionTest(exception => true.MustNotBeTrue(exception))
                     .AddMessageTest<ArgumentException>(message => true.MustNotBeTrue(message: message));
         }
     }

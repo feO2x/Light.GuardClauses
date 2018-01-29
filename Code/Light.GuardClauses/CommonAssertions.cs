@@ -650,16 +650,27 @@ namespace Light.GuardClauses
         /// <param name="parameter">The paramter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="ArgumentException" /> (optional).</param>
-        /// <param name="exception">
-        ///     The exception that is thrown when the specified bool is false (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is true and no <paramref name="exception" /> is specified.</exception>
-        public static bool MustNotBeFalse(this bool parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is false.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool MustNotBeFalse(this bool parameter, string parameterName = null, string message = null)
         {
-            if (parameter) return true;
+            if (!parameter)
+                Throw.BooleanFalse(parameterName, message);
+            return true;
+        }
 
-            throw exception?.Invoke() ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be false, but you specified false.", parameterName);
+        /// <summary>
+        ///     Ensures that the specified Boolean value is not false, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The paramter to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is false.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool MustNotBeFalse(this bool parameter, Func<Exception> exceptionFactory)
+        {
+            if (!parameter)
+                Throw.CustomException(exceptionFactory);
+            return true;
         }
 
         /// <summary>
@@ -668,16 +679,27 @@ namespace Light.GuardClauses
         /// <param name="parameter">The paramter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="ArgumentException" /> (optional).</param>
-        /// <param name="exception">
-        ///     The exception that is thrown when the specified bool is true (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is false and no <paramref name="exception" /> is specified.</exception>
-        public static bool MustNotBeTrue(this bool parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is true.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool MustNotBeTrue(this bool parameter, string parameterName = null, string message = null)
         {
-            if (parameter == false) return false;
+            if (parameter)
+                Throw.BooleanTrue(parameterName, message);
+            return false;
+        }
 
-            throw exception?.Invoke() ?? new ArgumentException(message ?? $"{parameterName ?? "The value"} must not be true, but you specified true.", parameterName);
+        /// <summary>
+        ///     Ensures that the specified Boolean value is not true, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The paramter to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is true.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool MustNotBeTrue(this bool parameter, Func<Exception> exceptionFactory)
+        {
+            if (parameter)
+                Throw.CustomException(exceptionFactory);
+            return false;
         }
 
         private struct EnumInfo
