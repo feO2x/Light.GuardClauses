@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses
 {
@@ -8,7 +10,7 @@ namespace Light.GuardClauses
     public static class ComparableAssertions
     {
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is not less than the given <paramref name="boundary" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
+        /// Ensures that the specified <paramref name="parameter"/> is not less than the given <paramref name="boundary"/> value, or otherwise throws an <see cref="ArgumentOutOfRangeException"/>.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -17,19 +19,29 @@ namespace Light.GuardClauses
         /// <param name="message">
         ///     The message that should be injected into the <see cref="ArgumentOutOfRangeException" /> (optional).
         /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when the specified <paramref name="parameter" /> is less than <paramref name="boundary" /> (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     Thrown when the specified <paramref name="parameter" /> is less than <paramref name="boundary" /> and no <paramref name="exception" /> is specified.
-        /// </exception>
-        public static T MustNotBeLessThan<T>(this T parameter, T boundary, string parameterName = null, string message = null, Func<Exception> exception = null) where T : IComparable<T>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the specified <paramref name="parameter" /> is less than <paramref name="boundary" />.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustNotBeLessThan<T>(this T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
         {
-            if (parameter.CompareTo(boundary) >= 0)
-                return parameter;
+            if (parameter.CompareTo(boundary) < 0)
+                Throw.MustNotBeLessThan(parameter, boundary, parameterName, message);
+            return parameter;
+        }
 
-            throw exception != null ? exception() : new ArgumentOutOfRangeException(parameterName, parameter, message ?? $"{parameterName ?? "The value"} must not be less than {boundary}, but you specified {parameter}.");
+        /// <summary>
+        /// Ensures that the specified <paramref name="parameter"/> is not less than the given <paramref name="boundary"/> value, or otherwise throws your custom exception.
+        /// </summary>
+        /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="boundary">The boundary value that <paramref name="parameter" /> must not exceed.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> cannot be downcasted to the specified value.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MustNotBeLessThan<T>(this T parameter, T boundary, Func<Exception> exceptionFactory) where T : IComparable<T>
+        {
+            if (parameter.CompareTo(boundary) < 0)
+                Throw.CustomException(exceptionFactory);
+            return parameter;
         }
 
         /// <summary>

@@ -16,7 +16,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
             Action act = () => value.MustNotBeLessThan(boundary, nameof(value));
 
             act.ShouldThrow<ArgumentOutOfRangeException>()
-               .And.Message.Should().Contain($"{nameof(value)} must not be less than {boundary}, but you specified {value}.");
+               .And.Message.Should().Contain($"{nameof(value)} must not be less than {boundary}, but it actually is {value}.");
         }
 
         [Theory(DisplayName = "MustNotBeLessThan must not throw an exception when the specified value is equal to or greater than the given boundary.")]
@@ -32,7 +32,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => 42.MustNotBeLessThan(43, exception: exception)))
+            testData.Add(new CustomExceptionTest(exception => 42.MustNotBeLessThan(43, exception)))
                     .Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => 42.MustNotBeLessThan(43, message: message)));
         }
     }
