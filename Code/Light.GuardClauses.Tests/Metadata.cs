@@ -17,12 +17,12 @@ namespace Light.GuardClauses.Tests
         [Fact(DisplayName = "Number of methods in Light.GuardClauses.")]
         public void NumberOfStaticMethods()
         {
-            var totalNumberOfMethods = typeof(Check).GetTypeInfo()
-                                                    .Assembly
-                                                    .ExportedTypes
-                                                    .Where(t => t.Namespace == typeof(Check).Namespace)
-                                                    .SelectMany(t => t.GetMethods())
-                                                    .Count(m => m.IsStatic);
+            var totalNumberOfMethods = typeof(CommonAssertions).GetTypeInfo()
+                                                               .Assembly
+                                                               .ExportedTypes
+                                                               .Where(t => t.Namespace == typeof(CommonAssertions).Namespace)
+                                                               .SelectMany(t => t.GetMethods())
+                                                               .Count(m => m.IsStatic);
             _output.WriteLine($"Number of Light.GuardClauses methods: {totalNumberOfMethods}");
         }
     }
