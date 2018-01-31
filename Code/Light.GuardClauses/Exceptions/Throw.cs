@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Light.GuardClauses.Exceptions
 {
     /// <summary>
     ///     Provides static methods that throw default exceptions.
     /// </summary>
-    public abstract class Throw
+    public static class Throw
     {
         /// <summary>
         ///     Throws the default <see cref="ArgumentNullException" />, using the optional parameter name and message.
@@ -42,6 +43,7 @@ namespace Light.GuardClauses.Exceptions
         /// <summary>
         ///     Throws the default <see cref="NullableHasNoValueException" /> indicating that a <see cref="Nullable{T}" /> has no value, using the optional parameter name and message.
         /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void NullableHasNoValue(string parameterName = null, string message = null)
         {
             throw new NullableHasNoValueException(parameterName, message ?? $"{parameterName ?? "The nullable"} must have a value, but it actually is null.");
