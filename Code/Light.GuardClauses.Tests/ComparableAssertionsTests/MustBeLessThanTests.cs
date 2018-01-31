@@ -32,7 +32,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
             result.Should().Be(first);
         }
 
-        [Fact(DisplayName = "MustBeLessThan must throw the custom exception with single parameter when parameter is less than the boundary value.")]
+        [Fact(DisplayName = "MustBeLessThan must throw the custom exception with single parameter when parameter is not less than the boundary value.")]
         public static void ThrowCustomExceptionWithOneParameter()
         {
             var recordedValue = default(int);
@@ -56,7 +56,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
             result.Should().Be(8);
         }
 
-        [Fact(DisplayName = "MustBeLessThan must throw the custom exception with two parameters when parameter is less than the boundary value.")]
+        [Fact(DisplayName = "MustBeLessThan must throw the custom exception with two parameters when parameter is not less than the boundary value.")]
         public static void ThrowCustomExceptionWithTwoParameters()
         {
             var recordedParameter = default(int);
