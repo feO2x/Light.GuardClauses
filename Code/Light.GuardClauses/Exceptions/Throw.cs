@@ -92,7 +92,7 @@ namespace Light.GuardClauses.Exceptions
         /// <summary>
         ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must not be less than the given boundary value, using the optional parameter name and message.
         /// </summary>
-        public static void MustNotBeLessThan<T>(T parameter, T boundary, string parameterName, string message) where T : IComparable<T>
+        public static void MustNotBeLessThan<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
         {
             throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be less than {boundary}, but it actually is {parameter}.");
         }
@@ -100,9 +100,17 @@ namespace Light.GuardClauses.Exceptions
         /// <summary>
         ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must be less than the given boundary value, using the optional parameter name and message.
         /// </summary>
-        public static void MustBeLessThan<T>(T parameter, T boundary, string parameterName, string message) where T : IComparable<T>
+        public static void MustBeLessThan<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
         {
             throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be less than {boundary}, but it actually is {parameter}.");
+        }
+
+        /// <summary>
+        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must not be less than or equal to the given boundary value, using the optional parameter name and message.
+        /// </summary>
+        public static void MustNotBeLessThanOrEqualTo<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
+        {
+            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be less than or equal to {boundary}, but it actually is {parameter}.");
         }
 
         /// <summary>
