@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Jobs;
 using Light.GuardClauses.Exceptions;
@@ -26,6 +27,9 @@ namespace Light.GuardClauses.Performance.MustHaveValue
         public int? LightGuardClausesWithParameterName() => Nullable.MustHaveValue(nameof(Nullable));
 
         [Benchmark]
+        public int? NewVersionReturnFast() => Nullable.NewMustHaveValueReturnFast(nameof(Nullable));
+
+        [Benchmark]
         public int? LightGuardClausesWithCustomException() => Nullable.MustHaveValue(() => new Exception());
     }
 
@@ -38,6 +42,14 @@ namespace Light.GuardClauses.Performance.MustHaveValue
                 return parameter;
 
             throw exception?.Invoke() ?? (message != null ? new NullableHasNoValueException(message, parameterName) : new NullableHasNoValueException(parameterName));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? NewMustHaveValueReturnFast<T>(this T? parameter, string parameterName = null, string message = null) where T : struct
+        {
+            if (parameter.HasValue) return parameter;
+            Throw.NullableHasNoValue(parameterName, message);
+            return null;
         }
     }
 }
