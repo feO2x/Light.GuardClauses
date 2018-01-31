@@ -98,6 +98,14 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
+        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must be less than the given boundary value, using the optional parameter name and message.
+        /// </summary>
+        public static void MustBeLessThan<T>(T parameter, T boundary, string parameterName, string message) where T : IComparable<T>
+        {
+            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be less than {boundary}, but it actually is {parameter}.");
+        }
+
+        /// <summary>
         ///     Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException(Func<Exception> exceptionFactory)
@@ -106,11 +114,19 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="value" /> is passed to <paramref name="exceptionFactory" />.
+        ///     Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="parameter" /> is passed to <paramref name="exceptionFactory" />.
         /// </summary>
-        public static void CustomException<T>(Func<T, Exception> exceptionFactory, T value)
+        public static void CustomException<T>(Func<T, Exception> exceptionFactory, T parameter)
         {
-            throw exceptionFactory(value);
+            throw exceptionFactory(parameter);
+        }
+
+        /// <summary>
+        ///     Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="parameter" /> and <paramref name="other"/> are passed to <paramref name="exceptionFactory" />.
+        /// </summary>
+        public static void CustomException<T>(Func<T, T, Exception> exceptionFactory, T parameter, T other) where T : IComparable<T>
+        {
+            throw exceptionFactory(parameter, other);
         }
     }
 }
