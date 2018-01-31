@@ -7,6 +7,7 @@ namespace Light.GuardClauses.Performance.MustHaveValue
 {
     [ClrJob, CoreJob]
     [MemoryDiagnoser]
+    [DisassemblyDiagnoser]
     public class MustHaveValueBenchmarks
     {
         public static readonly int? Nullable = 42;
