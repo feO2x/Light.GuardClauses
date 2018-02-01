@@ -7,7 +7,8 @@ namespace Light.GuardClauses.Performance.MustNotHaveValue
 {
     [ClrJob, CoreJob]
     [MemoryDiagnoser]
-    public class MustNotHaveValueBenchmark
+    [DisassemblyDiagnoser]
+    public class MustNotHaveValueBenchmarks
     {
         public static readonly double? Nullable = null;
 
