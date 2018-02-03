@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace Light.GuardClauses.Performance.MustNotBeNull
+namespace Light.GuardClauses.Performance.CommonAssertions
 {
     public static class MustNotBeNullExtensionMethods
     {

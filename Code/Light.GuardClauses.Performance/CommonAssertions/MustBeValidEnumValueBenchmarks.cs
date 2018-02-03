@@ -4,11 +4,12 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Jobs;
 using Light.GuardClauses.Exceptions;
 
-namespace Light.GuardClauses.Performance.MustBeValidEnumValue
+namespace Light.GuardClauses.Performance.CommonAssertions
 {
     [ClrJob, CoreJob]
     [MemoryDiagnoser]
-    public class MustBeValidEnumValueBenchmark
+    [DisassemblyDiagnoser]
+    public class MustBeValidEnumValueBenchmarks
     {
         public const ConsoleColor EnumValue = ConsoleColor.Blue;
         public const BindingFlags FlagsEnumValue = BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly;

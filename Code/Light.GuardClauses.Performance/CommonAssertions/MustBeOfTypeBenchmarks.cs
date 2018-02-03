@@ -3,10 +3,11 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Jobs;
 using Light.GuardClauses.Exceptions;
 
-namespace Light.GuardClauses.Performance.MustBeOfType
+namespace Light.GuardClauses.Performance.CommonAssertions
 {
     [ClrJob, CoreJob]
     [MemoryDiagnoser]
+    [DisassemblyDiagnoser]
     public class MustBeOfTypeBenchmarks
     {
         public static readonly object Instance = new SampleEntity(Guid.NewGuid());

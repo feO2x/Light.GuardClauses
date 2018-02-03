@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Jobs;
 
-namespace Light.GuardClauses.Performance.MustBeTrue
+namespace Light.GuardClauses.Performance.CommonAssertions
 {
     [ClrJob, CoreJob]
     [MemoryDiagnoser]
+    [DisassemblyDiagnoser]
     public class MustBeTrueBenchmarks
     {
         public static readonly bool True = true;
@@ -29,7 +28,7 @@ namespace Light.GuardClauses.Performance.MustBeTrue
         public bool OldVersion() => True.OldMustBeTrue(nameof(True));
     }
 
-    public static class MustBeFalseExtensionMethods
+    public static class MustBeTrueExtensionMethods
     {
         public static bool OldMustBeTrue(this bool parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {

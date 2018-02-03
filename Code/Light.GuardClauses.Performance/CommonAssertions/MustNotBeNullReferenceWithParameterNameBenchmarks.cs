@@ -2,29 +2,30 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Jobs;
 
-namespace Light.GuardClauses.Performance.MustNotBeNullReference
+namespace Light.GuardClauses.Performance.CommonAssertions
 {
     [ClrJob, CoreJob]
     [MemoryDiagnoser]
-    public class MustNotBeNullReferenceWithParameterName
+    [DisassemblyDiagnoser]
+    public class MustNotBeNullReferenceWithParameterNameBenchmarks
     {
-        public static readonly object Instance = new SampleEntity(Guid.NewGuid());
+        public static readonly SampleEntity Instance = new SampleEntity(Guid.NewGuid());
 
         [Benchmark(Baseline = true)]
         public int BaseValueType() => 42;
 
         [Benchmark]
-        public object BaseReference()
+        public SampleEntity BaseReference()
         {
             if (Instance == null) throw new ArgumentNullException(nameof(Instance));
             return Instance;
         }
 
         [Benchmark]
-        public object ReferenceV1() => Instance.MustNotBeNullReferenceV1(nameof(Instance));
+        public SampleEntity ReferenceV1() => Instance.MustNotBeNullReferenceV1(nameof(Instance));
 
         [Benchmark]
-        public object ReferenceV2() => Instance.MustNotBeNullReferenceV2(nameof(Instance));
+        public SampleEntity ReferenceV2() => Instance.MustNotBeNullReferenceV2(nameof(Instance));
 
         [Benchmark]
         public int ValueTypeV1() => 42.MustNotBeNullReferenceV1("Fourty Two");

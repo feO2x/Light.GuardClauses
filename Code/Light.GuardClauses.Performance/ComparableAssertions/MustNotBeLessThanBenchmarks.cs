@@ -2,10 +2,11 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Jobs;
 
-namespace Light.GuardClauses.Performance.MustNotBeLessThan
+namespace Light.GuardClauses.Performance.ComparableAssertions
 {
     [ClrJob, CoreJob]
     [MemoryDiagnoser]
+    [DisassemblyDiagnoser]
     public class MustNotBeLessThanBenchmarks
     {
         private static readonly int First = 42;

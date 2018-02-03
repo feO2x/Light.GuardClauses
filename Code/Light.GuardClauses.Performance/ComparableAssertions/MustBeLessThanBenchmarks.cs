@@ -2,10 +2,11 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Jobs;
 
-namespace Light.GuardClauses.Performance.MustBeLessThan
+namespace Light.GuardClauses.Performance.ComparableAssertions
 {
     [ClrJob, CoreJob]
     [MemoryDiagnoser]
+    [DisassemblyDiagnoser]
     public class MustBeLessThanBenchmarks
     {
         private static readonly double First = 42.7;
@@ -22,7 +23,7 @@ namespace Light.GuardClauses.Performance.MustBeLessThan
         public double BaseVersionWithCompareTo()
         {
             // ReSharper disable once ImpureMethodCallOnReadonlyValueField
-            if (First.CompareTo(Second) < 0) throw new ArgumentOutOfRangeException(nameof(First));
+            if (First.CompareTo(Second) >= 0) throw new ArgumentOutOfRangeException(nameof(First));
             return First;
         }
 

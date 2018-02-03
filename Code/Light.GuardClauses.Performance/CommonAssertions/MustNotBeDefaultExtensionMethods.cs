@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using Light.GuardClauses.Exceptions;
 
-namespace Light.GuardClauses.Performance.MustNotBeDefault
+namespace Light.GuardClauses.Performance.CommonAssertions
 {
     public static class MustNotBeDefaultExtensionMethods
     {

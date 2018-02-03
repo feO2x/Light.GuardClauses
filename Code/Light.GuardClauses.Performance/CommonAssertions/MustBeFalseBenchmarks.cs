@@ -2,10 +2,11 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Attributes.Jobs;
 
-namespace Light.GuardClauses.Performance.MustBeFalse
+namespace Light.GuardClauses.Performance.CommonAssertions
 {
     [ClrJob, CoreJob]
     [MemoryDiagnoser]
+    [DisassemblyDiagnoser]
     public class MustBeFalseBenchmarks
     {
         public static readonly bool False = false;
