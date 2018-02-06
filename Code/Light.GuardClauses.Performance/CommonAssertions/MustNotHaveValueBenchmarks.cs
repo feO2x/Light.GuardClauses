@@ -8,7 +8,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
     [ClrJob, CoreJob]
     [MemoryDiagnoser]
     [DisassemblyDiagnoser]
-    public class MustNotHaveValueBenchmarks
+    public class MustNotHaveValueDoubleBenchmarks
     {
         public static readonly double? Nullable = null;
 
@@ -30,6 +30,33 @@ namespace Light.GuardClauses.Performance.CommonAssertions
 
         [Benchmark]
         public double? OldVersion() => Nullable.OldMustNotHaveValue(nameof(Nullable));
+    }
+
+    [ClrJob, CoreJob]
+    [MemoryDiagnoser]
+    [DisassemblyDiagnoser]
+    public class MustNotHaveValueIntBenchmarks
+    {
+        public static readonly int? Nullable = null;
+
+        [Benchmark(Baseline = true)]
+        public int? BaseVersion()
+        {
+            if (Nullable.HasValue) throw new NullableHasValueException(nameof(Nullable));
+            return Nullable;
+        }
+
+        [Benchmark]
+        public int? LightGuardClausesWithParameterName() => Nullable.MustNotHaveValue(nameof(Nullable));
+
+        [Benchmark]
+        public int? LightGuardClausesWithCustomException() => Nullable.MustNotHaveValue(() => new Exception());
+
+        [Benchmark]
+        public int? LightGuardClausesWithCustomParameterizedException() => Nullable.MustNotHaveValue(v => new Exception($"Nullable is not null, but {v}."));
+
+        [Benchmark]
+        public int? OldVersion() => Nullable.OldMustNotHaveValue(nameof(Nullable));
     }
 
     public static class MustNotHaveValueExtensionMethods
