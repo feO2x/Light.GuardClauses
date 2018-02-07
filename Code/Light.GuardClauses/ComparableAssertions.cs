@@ -564,7 +564,7 @@ namespace Light.GuardClauses
         /// <param name="range">The range that <paramref name="parameter" /> must be in between.</param>
         /// <returns>True if the parameter is within the specified range, else false.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsIn<T>(this T parameter, Range<T> range) where T : IComparable<T> => range.IsValueWithinRange(parameter);
+        public static bool IsIn<T>(this T parameter, in Range<T> range) where T : IComparable<T> => range.IsValueWithinRange(parameter);
 
         /// <summary>
         ///     Ensures that <paramref name="parameter" /> is not within the specified <paramref name="range" />, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
@@ -601,6 +601,6 @@ namespace Light.GuardClauses
         /// <param name="range">The range that <paramref name="parameter" /> must not be in between.</param>
         /// <returns>True if the parameter value is not in between of the specified range, else false.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsNotIn<T>(this T parameter, Range<T> range) where T : IComparable<T> => !range.IsValueWithinRange(parameter);
+        public static bool IsNotIn<T>(this T parameter, in Range<T> range) where T : IComparable<T> => !range.IsValueWithinRange(parameter);
     }
 }

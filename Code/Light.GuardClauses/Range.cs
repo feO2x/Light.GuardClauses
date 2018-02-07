@@ -7,7 +7,7 @@ namespace Light.GuardClauses
     ///     Defines a range that can be used to check if a specified <see cref="IComparable{T}" /> is in between it or not.
     /// </summary>
     /// <typeparam name="T">The type that the range should be applied to.</typeparam>
-    public struct Range<T> where T : IComparable<T>
+    public readonly struct Range<T> where T : IComparable<T>
     {
         /// <summary>
         ///     Gets the lower boundary of the range.

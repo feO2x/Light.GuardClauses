@@ -2,7 +2,6 @@
 using System.Reflection;
 using BenchmarkDotNet.Attributes.Jobs;
 using BenchmarkDotNet.Running;
-using Light.GuardClauses.Performance.ComparableAssertions;
 
 namespace Light.GuardClauses.Performance
 {
@@ -10,7 +9,7 @@ namespace Light.GuardClauses.Performance
     {
         public static void Main()
         {
-            BenchmarkRunner.Run<RangeBenchmarks>();
+            RunAllBenchmarks();
         }
 
         private static void RunAllBenchmarks()
