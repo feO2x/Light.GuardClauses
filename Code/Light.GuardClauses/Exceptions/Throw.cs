@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace Light.GuardClauses.Exceptions
 {
@@ -43,7 +42,6 @@ namespace Light.GuardClauses.Exceptions
         /// <summary>
         ///     Throws the default <see cref="NullableHasNoValueException" /> indicating that a <see cref="Nullable{T}" /> has no value, using the optional parameter name and message.
         /// </summary>
-        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void NullableHasNoValue(string parameterName = null, string message = null)
         {
             throw new NullableHasNoValueException(parameterName, message ?? $"{parameterName ?? "The nullable"} must have a value, but it actually is null.");
@@ -114,6 +112,38 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
+        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must be less than or equal to the given boundary value, using the optional parameter name and message.
+        /// </summary>
+        public static void MustBeLessThanOrEqualTo<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
+        {
+            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be less than or equal to {boundary}, but it actually is {parameter}.");
+        }
+
+        /// <summary>
+        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must not be greater than the given boundary value, using the optional parameter name and message.
+        /// </summary>
+        public static void MustNotBeGreaterThan<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
+        {
+            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be greater than {boundary}, but it actually is {parameter}.");
+        }
+
+        /// <summary>
+        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must be greater than the given boundary value, using the optional parameter name and message.
+        /// </summary>
+        public static void MustBeGreaterThan<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
+        {
+            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be greater than {boundary}, but it actually is {parameter}.");
+        }
+
+        /// <summary>
+        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must not be greater than or equal to the given boundary value, using the optional parameter name and message.
+        /// </summary>
+        public static void MustNotBeGreaterThanOrEqualTo<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
+        {
+            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be greater than or equal to {boundary}, but it actually is {parameter}.");
+        }
+
+        /// <summary>
         ///     Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException(Func<Exception> exceptionFactory)
@@ -130,7 +160,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="parameter" /> and <paramref name="other"/> are passed to <paramref name="exceptionFactory" />.
+        ///     Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="parameter" /> and <paramref name="other" /> are passed to <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException<T>(Func<T, T, Exception> exceptionFactory, T parameter, T other) where T : IComparable<T>
         {

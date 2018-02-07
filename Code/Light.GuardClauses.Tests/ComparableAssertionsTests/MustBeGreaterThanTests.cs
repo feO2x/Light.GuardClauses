@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
             Action act = () => first.MustBeGreaterThan(second, nameof(first));
 
             act.ShouldThrow<ArgumentOutOfRangeException>()
-               .And.Message.Should().Contain($"{nameof(first)} must be greater than {second}, but you specified {first}.");
+               .And.Message.Should().Contain($"{nameof(first)} must be greater than {second}, but it actually is {first}.");
         }
 
         [Theory(DisplayName = "MustBeGreaterThan must not throw an exception when the specified parameter is greater than the boundary value.")]
@@ -31,9 +31,60 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
             result.Should().Be(first);
         }
 
+        [Fact(DisplayName = "MustBeGreaterThan must throw the custom exception with single parameter when parameter is less than or equal to the boundary value.")]
+        public static void ThrowCustomExceptionWithOneParameter()
+        {
+            var recordedValue = default(int);
+            var exception = new Exception();
+
+            Action act = () => 3.MustBeGreaterThan(3, v =>
+            {
+                recordedValue = v;
+                return exception;
+            });
+
+            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            recordedValue.Should().Be(3);
+        }
+
+        [Fact(DisplayName = "MustBeGreaterThan must not throw the custom exception with single parameter when parameter is greater than the boundary value.")]
+        public static void NoCustomExceptionWithOneParameter()
+        {
+            var result = 19.MustBeGreaterThan(15, v => null);
+
+            result.Should().Be(19);
+        }
+
+        [Fact(DisplayName = "MustBeGreaterThan must throw the custom exception with two parameters when parameter is less than or equal to the boundary value.")]
+        public static void ThrowCustomExceptionWithTwoParameters()
+        {
+            var recordedParameter = default(int);
+            var recordedBoundary = default(int);
+            var exception = new Exception();
+
+            Action act = () => 131.MustBeGreaterThan(4200, (v, b) =>
+            {
+                recordedParameter = v;
+                recordedBoundary = b;
+                return exception;
+            });
+
+            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            recordedParameter.Should().Be(131);
+            recordedBoundary.Should().Be(4200);
+        }
+
+        [Fact(DisplayName = "MustBeGreaterThan must not throw the custom exception with two parameters when parameter is greater than the boundary value.")]
+        public static void NoCustomExceptionWithTwoParameters()
+        {
+            var result = 5.6m.MustBeGreaterThan(5.1m, (v, b) => null);
+
+            result.Should().Be(5.6m);
+        }
+
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => 1.MustBeGreaterThan(2, exception: exception)))
+            testData.Add(new CustomExceptionTest(exception => 1.MustBeGreaterThan(2, exception)))
                     .Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => 42.MustBeGreaterThan(87, message: message)));
         }
     }
