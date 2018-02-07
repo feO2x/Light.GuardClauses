@@ -43,7 +43,6 @@ namespace Light.GuardClauses.Exceptions
         /// <summary>
         ///     Throws the default <see cref="NullableHasNoValueException" /> indicating that a <see cref="Nullable{T}" /> has no value, using the optional parameter name and message.
         /// </summary>
-        [MethodImpl(MethodImplOptions.NoInlining)]
         public static void NullableHasNoValue(string parameterName = null, string message = null)
         {
             throw new NullableHasNoValueException(parameterName, message ?? $"{parameterName ?? "The nullable"} must have a value, but it actually is null.");
@@ -111,6 +110,14 @@ namespace Light.GuardClauses.Exceptions
         public static void MustNotBeLessThanOrEqualTo<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
         {
             throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be less than or equal to {boundary}, but it actually is {parameter}.");
+        }
+
+        /// <summary>
+        ///     Throws the default <see cref="ArgumentOutOfRangeException"/> indicating that a comparable value must be less than or equal to the given boundary value, using the optional parameter name and message.
+        /// </summary>
+        public static void MustBeLessThanOrEqualTo<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
+        {
+            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be less than or equal to {boundary}, but it actually is {parameter}.");
         }
 
         /// <summary>
