@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace Light.GuardClauses
 {
@@ -28,6 +29,9 @@ namespace Light.GuardClauses
         /// </summary>
         public readonly bool IsToInclusive;
 
+        private readonly int _expectedLowerBoundaryResult;
+        private readonly int _expectedUpperBoundaryResult;
+
         /// <summary>
         ///     Creates a new instance of <see cref="Range{T}" />.
         /// </summary>
@@ -35,9 +39,8 @@ namespace Light.GuardClauses
         /// <param name="to">The upper boundary of the range.</param>
         /// <param name="isFromInclusive">The value indicating whether <paramref name="from" /> is part of the range.</param>
         /// <param name="isToInclusive">The value indicating whether <paramref name="to" /> is part of the range.</param>
-        /// <exception cref="ArgumentOutOfRangeException">
-        ///     Thrown when <paramref name="to" /> is less than <paramref name="from" />.
-        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="to" /> is less than <paramref name="from" />.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Range(T from, T to, bool isFromInclusive, bool isToInclusive)
         {
             to.MustNotBeLessThan(from, nameof(to));
@@ -46,6 +49,9 @@ namespace Light.GuardClauses
             To = to;
             IsFromInclusive = isFromInclusive;
             IsToInclusive = isToInclusive;
+
+            _expectedLowerBoundaryResult = isFromInclusive ? 0 : 1;
+            _expectedUpperBoundaryResult = isToInclusive ? 0 : -1;
         }
 
         /// <summary>
@@ -53,21 +59,8 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="value">The value to be checked.</param>
         /// <returns>True if value is within range, otherwise false.</returns>
-        public bool IsValueWithinRange(T value)
-        {
-            var expectedLowerBoundaryResult = IsFromInclusive ? 0 : 1;
-            var expectedUpperBoundaryResult = IsToInclusive ? 0 : -1;
-
-            var lowerBoundaryCompareResult = value.CompareTo(From);
-            if (lowerBoundaryCompareResult < expectedLowerBoundaryResult)
-                return false;
-
-            var upperBoundaryCompareResult = value.CompareTo(To);
-            if (upperBoundaryCompareResult > expectedUpperBoundaryResult)
-                return false;
-
-            return true;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool IsValueWithinRange(T value) => value.CompareTo(From) >= _expectedLowerBoundaryResult && value.CompareTo(To) <= _expectedUpperBoundaryResult;
 
         /// <summary>
         ///     Use this method to create a range in a fluent style using method chaining.
@@ -75,6 +68,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="value">The value that indicates the inclusive lower boundary of the resulting Range.</param>
         /// <returns>A value you can use to fluently define the upper boundary of a new Range.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static RangeFromInfo FromInclusive(T value)
         {
             return new RangeFromInfo(value, true);
@@ -86,6 +80,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="value">The value that indicates the exclusive lower boundary of the resulting Range.</param>
         /// <returns>A value you can use to fluently define the upper boundary of a new Range.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static RangeFromInfo FromExclusive(T value)
         {
             return new RangeFromInfo(value, false);
@@ -104,6 +99,7 @@ namespace Light.GuardClauses
             /// </summary>
             /// <param name="from">The lower boundary of the range.</param>
             /// <param name="isFromInclusive">The value indicating whether <paramref name="from" /> is part of the range.</param>
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public RangeFromInfo(T from, bool isFromInclusive)
             {
                 _from = from;
@@ -119,6 +115,7 @@ namespace Light.GuardClauses
             /// <exception cref="ArgumentOutOfRangeException">
             ///     Thrown when <paramref name="value" /> is less than the lower boundary value.
             /// </exception>
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public Range<T> ToExclusive(T value)
             {
                 return new Range<T>(_from, value, _isFromInclusive, false);
@@ -133,6 +130,7 @@ namespace Light.GuardClauses
             /// <exception cref="ArgumentOutOfRangeException">
             ///     Thrown when <paramref name="value" /> is less than the lower boundary value.
             /// </exception>
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public Range<T> ToInclusive(T value)
             {
                 return new Range<T>(_from, value, _isFromInclusive, true);
