@@ -9,8 +9,8 @@ namespace Light.GuardClauses.Performance.ComparableAssertions
     [DisassemblyDiagnoser]
     public class MustNotBeLessThanOrEqualToBenchmarks
     {
-        private static readonly short First = 13;
-        private static readonly short Second = 12;
+        public readonly short First = 13;
+        public readonly short Second = 12;
 
         [Benchmark(Baseline = true)]
         public short BaseVersion()

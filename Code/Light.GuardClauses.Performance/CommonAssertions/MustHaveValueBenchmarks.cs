@@ -11,7 +11,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
     [DisassemblyDiagnoser]
     public class MustHaveValueIntBenchmarks
     {
-        public static readonly int? Nullable = 42;
+        public readonly int? Nullable = 42;
 
         [Benchmark(Baseline = true)]
         public int? BaseVersion()
@@ -38,7 +38,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
     [DisassemblyDiagnoser]
     public class MustHaveValueDoubleBenchmarks
     {
-        public static readonly double? Nullable = 42.74;
+        public readonly double? Nullable = 42.74;
 
         [Benchmark(Baseline = true)]
         public double? BaseVersion()

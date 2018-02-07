@@ -10,7 +10,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
     [DisassemblyDiagnoser]
     public class MustNotHaveValueDoubleBenchmarks
     {
-        public static readonly double? Nullable = null;
+        public readonly double? Nullable = null;
 
         [Benchmark(Baseline = true)]
         public double? BaseVersion()
@@ -37,7 +37,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
     [DisassemblyDiagnoser]
     public class MustNotHaveValueIntBenchmarks
     {
-        public static readonly int? Nullable = null;
+        public readonly int? Nullable = null;
 
         [Benchmark(Baseline = true)]
         public int? BaseVersion()

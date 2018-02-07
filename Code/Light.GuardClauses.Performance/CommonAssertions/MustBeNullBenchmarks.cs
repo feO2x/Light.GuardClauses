@@ -10,7 +10,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
     [DisassemblyDiagnoser]
     public class MustBeNullBenchmarks
     {
-        public static readonly SampleEntity NullReference = null;
+        public readonly SampleEntity NullReference = null;
 
         [Benchmark(Baseline = true)]
         public SampleEntity BaseVersionWithParameterName()

@@ -9,7 +9,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
     [DisassemblyDiagnoser]
     public class MustBeFalseBenchmarks
     {
-        public static readonly bool False = false;
+        public readonly bool False = false;
 
         [Benchmark(Baseline = true)]
         public bool BaseVersion()

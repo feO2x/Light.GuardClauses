@@ -13,8 +13,4 @@
     <ProjectReference Include="..\Light.GuardClauses\Light.GuardClauses.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="BenchmarkDotNet.Artifacts\" />
-  </ItemGroup>
-
 </Project>

@@ -9,7 +9,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
     [DisassemblyDiagnoser]
     public class MustNotBeNullReferenceWithParameterNameBenchmarks
     {
-        public static readonly SampleEntity Instance = new SampleEntity(Guid.NewGuid());
+        public readonly SampleEntity Instance = new SampleEntity(Guid.NewGuid());
 
         [Benchmark(Baseline = true)]
         public int BaseValueType() => 42;

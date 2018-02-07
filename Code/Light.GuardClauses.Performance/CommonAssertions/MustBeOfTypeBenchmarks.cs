@@ -10,7 +10,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
     [DisassemblyDiagnoser]
     public class MustBeOfTypeBenchmarks
     {
-        public static readonly object Instance = new SampleEntity(Guid.NewGuid());
+        public readonly object Instance = new SampleEntity(Guid.NewGuid());
 
         [Benchmark(Baseline = true)]
         public SampleEntity BaseVersion()

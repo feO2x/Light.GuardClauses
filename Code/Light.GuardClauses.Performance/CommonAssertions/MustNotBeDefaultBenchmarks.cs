@@ -10,8 +10,8 @@ namespace Light.GuardClauses.Performance.CommonAssertions
     [DisassemblyDiagnoser]
     public class MustNotBeDefaultBenchmarks
     {
-        public static readonly SampleEntity Reference = new SampleEntity(Guid.NewGuid());
-        public static readonly int Value = 42;
+        public readonly SampleEntity Reference = new SampleEntity(Guid.NewGuid());
+        public readonly int Value = 42;
 
         [Benchmark(Baseline = true)]
         public int BaseVersionForValueType()

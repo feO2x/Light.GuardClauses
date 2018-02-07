@@ -10,7 +10,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
     [DisassemblyDiagnoser]
     public class MustNotBeEmptyBenchmarks
     {
-        public static readonly Guid Guid = Guid.NewGuid();
+        public readonly Guid Guid = Guid.NewGuid();
 
         [Benchmark(Baseline = true)]
         public Guid BaseVersion()

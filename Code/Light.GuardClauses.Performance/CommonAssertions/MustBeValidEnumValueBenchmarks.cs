@@ -11,8 +11,8 @@ namespace Light.GuardClauses.Performance.CommonAssertions
     [DisassemblyDiagnoser]
     public class MustBeValidEnumValueBenchmarks
     {
-        public const ConsoleColor EnumValue = ConsoleColor.Blue;
-        public const BindingFlags FlagsEnumValue = BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly;
+        public readonly ConsoleColor EnumValue = ConsoleColor.Blue;
+        public readonly BindingFlags FlagsEnumValue = BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly;
 
         [Benchmark(Baseline = true)]
         public ConsoleColor NoFlagsBaseVersion()
