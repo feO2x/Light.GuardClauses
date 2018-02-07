@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace Light.GuardClauses.Exceptions
 {
@@ -113,7 +112,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentOutOfRangeException"/> indicating that a comparable value must be less than or equal to the given boundary value, using the optional parameter name and message.
+        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must be less than or equal to the given boundary value, using the optional parameter name and message.
         /// </summary>
         public static void MustBeLessThanOrEqualTo<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
         {
@@ -121,11 +120,19 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentOutOfRangeException"/> indicating that a comparable value must not be greater than the given boundary value, using the optional parameter name and message.
+        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must not be greater than the given boundary value, using the optional parameter name and message.
         /// </summary>
         public static void MustNotBeGreaterThan<T>(T parameter, T boundary, string parameterName, string message) where T : IComparable<T>
         {
             throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be greater than {boundary}, but it actually is {parameter}.");
+        }
+
+        /// <summary>
+        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must be greater than the given boundary value, using the optional parameter name and message.
+        /// </summary>
+        public static void MustBeGreaterThan<T>(T parameter, T boundary, string parameterName, string message) where T : IComparable<T>
+        {
+            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be greater than {boundary}, but it actually is {parameter}.");
         }
 
         /// <summary>
@@ -145,7 +152,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="parameter" /> and <paramref name="other"/> are passed to <paramref name="exceptionFactory" />.
+        ///     Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="parameter" /> and <paramref name="other" /> are passed to <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException<T>(Func<T, T, Exception> exceptionFactory, T parameter, T other) where T : IComparable<T>
         {
