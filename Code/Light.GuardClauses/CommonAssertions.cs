@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Light.GuardClauses.Exceptions;
@@ -85,7 +84,7 @@ namespace Light.GuardClauses
             {
                 if (parameter == null)
                     Throw.CustomException(exceptionFactory);
-                return default(T);
+                return default;
             }
 
             if (parameter.Equals(default(T)))
@@ -367,55 +366,68 @@ namespace Light.GuardClauses
         ///     Checks if the specified value is a valid enum value of its type.
         /// </summary>
         /// <param name="parameter">The enum value to be checked.</param>
+        /// <param name="enumType">The type of the enum (optional). If this value is null, the enum type is obtained by calling parameter.GetType(). You must use this parameter when specifying a numeric value instead of one of the constants of the enum type.</param>
         /// <returns>True if the specified value is a valid value of an enum type, else false.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is not a value of an enum.</exception>
-        public static bool IsValidEnumValue(this object parameter)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsValidEnumValue(this object parameter, Type enumType = null)
         {
-            var enumType = parameter.MustNotBeNull(nameof(parameter)).GetType();
-            var typeInfo = enumType.GetTypeInfo();
-            if (typeInfo.IsEnum == false)
-                throw new ArgumentException($"The value \"{parameter}\" is of type \"{typeInfo}\" which is not an enum type.", nameof(parameter));
+            if (enumType == null)
+                enumType = parameter.MustNotBeNull(nameof(parameter)).GetType();
+            return Enum.IsDefined(enumType, parameter) || IsValidFlagsEnumValue(parameter, enumType);
+        }
 
-            var fields = typeInfo.DeclaredFields.AsReadOnlyList();
+        private static bool IsValidFlagsEnumValue(object parameter, Type enumType)
+        {
+#if NETSTANDARD1_0
+            var typeInfo = enumType.GetTypeInfo();
 
             // If enum does not have the flags attribute, then just get all fields via reflection and check if one is equal to the given value
             if (typeInfo.GetCustomAttribute(Types.FlagsAttributeType) == null)
-            {
-                for (var i = 0; i < fields.Count; i++)
-                {
-                    var field = fields[i];
-                    if (field.IsStatic &&
-                        field.IsLiteral &&
-                        field.GetValue(null).Equals(parameter))
-                        return true;
-                }
-
                 return false;
-            }
+#else
+            if (enumType.GetCustomAttribute(Types.FlagsAttributeType) == null)
+                return false;
+#endif
 
             // Else check if the value is a valid flags combination
-            var enumInfo = EnumInfo.FromEnumFields(fields);
-            if (enumInfo.NumberOfConstants == 0)
+#if NETSTANDARD1_0
+            var fields = typeInfo.DeclaredFields.AsArray();
+#else
+            var fields = enumType.GetFields();
+#endif
+            if (fields.Length == 0)
                 return false;
 
-            return enumInfo.UnderlyingType == Types.UInt64Type ? CheckEnumFlagsUsingUInt64Conversion(Convert.ToUInt64(parameter), fields, enumInfo.NumberOfConstants) : CheckEnumFlagsUsingInt64Conversion(Convert.ToInt64(parameter), fields, enumInfo.NumberOfConstants);
+            var numberOfConstants = default(int);
+            var underlyingType = default(Type);
+            for (var i = 0; i < fields.Length; ++i)
+            {
+                var field = fields[i];
+
+                if (underlyingType == null && field.IsSpecialName && field.IsPublic)
+                    underlyingType = field.FieldType;
+
+                if (field.IsStatic && field.IsLiteral)
+                    ++numberOfConstants;
+            }
+
+            if (numberOfConstants == 0)
+                return false;
+
+            return underlyingType == Types.UInt64Type ? CheckEnumFlagsUsingUInt64Conversion(Convert.ToUInt64(parameter), fields, numberOfConstants) : CheckEnumFlagsUsingInt64Conversion(Convert.ToInt64(parameter), fields, numberOfConstants);
         }
 
-        private static bool CheckEnumFlagsUsingInt64Conversion(long parameterValue, IReadOnlyList<FieldInfo> enumFields, int numberOfEnumConstants)
+        private static bool CheckEnumFlagsUsingInt64Conversion(long parameterValue, FieldInfo[] enumFields, int numberOfEnumConstants)
         {
             var enumValues = new long[numberOfEnumConstants];
             var currentIndex = 0;
-            for (var i = 0; i < enumFields.Count; i++)
+            for (var i = 0; i < enumFields.Length; ++i)
             {
                 var field = enumFields[i];
-                if (!field.IsStatic || !field.IsLiteral)
-                    continue;
-                var enumValue = Convert.ToInt64(field.GetValue(null));
-                if (enumValue == parameterValue)
-                    return true;
-
-                enumValues[currentIndex++] = enumValue;
+                if (field.IsStatic && field.IsLiteral)
+                    enumValues[currentIndex++] = Convert.ToInt64(field.GetValue(null));
             }
 
             Array.Sort(enumValues);
@@ -474,20 +486,15 @@ namespace Light.GuardClauses
             }
         }
 
-        private static bool CheckEnumFlagsUsingUInt64Conversion(ulong parameterValue, IReadOnlyList<FieldInfo> enumFields, int numberOfEnumConstants)
+        private static bool CheckEnumFlagsUsingUInt64Conversion(ulong parameterValue, FieldInfo[] enumFields, int numberOfEnumConstants)
         {
             var enumValues = new ulong[numberOfEnumConstants];
             var currentIndex = 0;
-            for (var i = 0; i < enumFields.Count; i++)
+            for (var i = 0; i < enumFields.Length; ++i)
             {
                 var field = enumFields[i];
-                if (!field.IsStatic || !field.IsLiteral)
-                    continue;
-                var enumValue = Convert.ToUInt64(field.GetValue(null));
-                if (enumValue == parameterValue)
-                    return true;
-
-                enumValues[currentIndex++] = enumValue;
+                if (field.IsStatic && field.IsLiteral)
+                    enumValues[currentIndex++] = Convert.ToUInt64(field.GetValue(null));
             }
 
             Array.Sort(enumValues);
@@ -700,41 +707,6 @@ namespace Light.GuardClauses
             if (parameter)
                 Throw.CustomException(exceptionFactory);
             return false;
-        }
-
-        private struct EnumInfo
-        {
-            public readonly int NumberOfConstants;
-            public readonly Type UnderlyingType;
-
-            private EnumInfo(int numberOfConstants, Type underlyingType)
-            {
-                NumberOfConstants = numberOfConstants.MustBeGreaterThanOrEqualTo(0, nameof(numberOfConstants));
-                if (numberOfConstants > 0)
-                    underlyingType.MustNotBeNull(nameof(underlyingType));
-                UnderlyingType = underlyingType;
-            }
-
-            public static EnumInfo FromEnumFields(IReadOnlyList<FieldInfo> enumFields)
-            {
-                var numberOfConstants = default(int);
-                var underlyingType = default(Type);
-
-                for (var i = 0; i < enumFields.Count; i++)
-                {
-                    var field = enumFields[i];
-
-                    if (underlyingType == null && field.IsSpecialName && field.IsPublic)
-                        underlyingType = field.FieldType;
-
-                    if (field.IsStatic == false || field.IsLiteral == false)
-                        continue;
-
-                    numberOfConstants++;
-                }
-
-                return new EnumInfo(numberOfConstants, underlyingType);
-            }
         }
     }
 }
