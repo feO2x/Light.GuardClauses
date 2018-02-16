@@ -152,6 +152,17 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
+        /// Throws the default <see cref="ArgumentException"/> indicating that a value is no enum value (i.e. its type is no enum type), using the optional parameter name and message.
+        /// </summary>
+        public static void NoEnumValue<T>(T parameter, string parameterName = null, string message = null) where T : struct
+#if !NETSTANDARD1_0
+        , IConvertible
+#endif
+        {
+            throw new ArgumentException(message ?? $"The value \"{parameter}\" is no enum value.", parameterName);
+        }
+
+        /// <summary>
         ///     Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException(Func<Exception> exceptionFactory)

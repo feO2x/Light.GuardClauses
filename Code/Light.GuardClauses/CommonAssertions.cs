@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Light.GuardClauses.Exceptions;
@@ -323,7 +324,10 @@ namespace Light.GuardClauses
         /// <exception cref="EnumValueNotDefinedException">Thrown when the specified enum value is not defined.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is not a value of an enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustBeValidEnumValue<T>(this T parameter, string parameterName = null, string message = null)
+        public static T MustBeValidEnumValue<T>(this T parameter, string parameterName = null, string message = null) where T : struct
+#if !NETSTANDARD1_0
+        , IConvertible
+#endif
         {
             if (parameter.IsValidEnumValue() == false)
                 Throw.EnumValueNotDefined(parameter, parameterName, message);
@@ -339,7 +343,10 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when the specified enum value is not defined.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is not a value of an enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustBeValidEnumValue<T>(this T parameter, Func<Exception> exceptionFactory)
+        public static T MustBeValidEnumValue<T>(this T parameter, Func<Exception> exceptionFactory) where T : struct
+#if !NETSTANDARD1_0
+            , IConvertible
+#endif
         {
             if (parameter.IsValidEnumValue() == false)
                 Throw.CustomException(exceptionFactory);
@@ -355,7 +362,10 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when the specified enum value is not defined.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is not a value of an enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustBeValidEnumValue<T>(this T parameter, Func<T, Exception> exceptionFactory)
+        public static T MustBeValidEnumValue<T>(this T parameter, Func<T, Exception> exceptionFactory) where T : struct
+#if !NETSTANDARD1_0
+            , IConvertible
+#endif
         {
             if (parameter.IsValidEnumValue() == false)
                 Throw.CustomException(exceptionFactory, parameter);
@@ -366,192 +376,26 @@ namespace Light.GuardClauses
         ///     Checks if the specified value is a valid enum value of its type.
         /// </summary>
         /// <param name="parameter">The enum value to be checked.</param>
-        /// <param name="enumType">The type of the enum (optional). If this value is null, the enum type is obtained by calling parameter.GetType(). You must use this parameter when specifying a numeric value instead of one of the constants of the enum type.</param>
         /// <returns>True if the specified value is a valid value of an enum type, else false.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is not a value of an enum.</exception>
+#if !NETSTANDARD1_0
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsValidEnumValue(this object parameter, Type enumType = null)
+        public static bool IsValidEnumValue<T>(this T parameter) where T : struct, IConvertible
         {
-            if (enumType == null)
-                enumType = parameter.MustNotBeNull(nameof(parameter)).GetType();
-            return Enum.IsDefined(enumType, parameter) || IsValidFlagsEnumValue(parameter, enumType);
+            if (!typeof(T).IsEnum)
+                Throw.NoEnumValue(parameter);
+            return EnumInfo<T>.IsFlagsEnum ? EnumInfo<T>.ValidateFlag(parameter) : EnumInfo<T>.ValidateConstant(parameter);
         }
-
-        private static bool IsValidFlagsEnumValue(object parameter, Type enumType)
-        {
-#if NETSTANDARD1_0
-            var typeInfo = enumType.GetTypeInfo();
-
-            // If enum does not have the flags attribute, then just get all fields via reflection and check if one is equal to the given value
-            if (typeInfo.GetCustomAttribute(Types.FlagsAttributeType) == null)
-                return false;
 #else
-            if (enumType.GetCustomAttribute(Types.FlagsAttributeType) == null)
-                return false;
-#endif
-
-            // Else check if the value is a valid flags combination
-#if NETSTANDARD1_0
-            var fields = typeInfo.DeclaredFields.AsArray();
-#else
-            var fields = enumType.GetFields();
-#endif
-            if (fields.Length == 0)
-                return false;
-
-            var numberOfConstants = default(int);
-            var underlyingType = default(Type);
-            for (var i = 0; i < fields.Length; ++i)
-            {
-                var field = fields[i];
-
-                if (underlyingType == null && field.IsSpecialName && field.IsPublic)
-                    underlyingType = field.FieldType;
-
-                if (field.IsStatic && field.IsLiteral)
-                    ++numberOfConstants;
-            }
-
-            if (numberOfConstants == 0)
-                return false;
-
-            return underlyingType == Types.UInt64Type ? CheckEnumFlagsUsingUInt64Conversion(Convert.ToUInt64(parameter), fields, numberOfConstants) : CheckEnumFlagsUsingInt64Conversion(Convert.ToInt64(parameter), fields, numberOfConstants);
-        }
-
-        private static bool CheckEnumFlagsUsingInt64Conversion(long parameterValue, FieldInfo[] enumFields, int numberOfEnumConstants)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsValidEnumValue<T>(this T parameter) where T : struct
         {
-            var enumValues = new long[numberOfEnumConstants];
-            var currentIndex = 0;
-            for (var i = 0; i < enumFields.Length; ++i)
-            {
-                var field = enumFields[i];
-                if (field.IsStatic && field.IsLiteral)
-                    enumValues[currentIndex++] = Convert.ToInt64(field.GetValue(null));
-            }
-
-            Array.Sort(enumValues);
-
-            var bit = 1L;
-            if (parameterValue < bit)
-                return false;
-
-            var currentStartIndex = 0;
-
-            while (true)
-            {
-                if ((bit & parameterValue) != 0)
-                {
-                    currentStartIndex = UpdateIndexIfNecessary(bit, currentStartIndex, enumValues);
-                    if (currentStartIndex == -1)
-                        return false;
-
-                    if (FindEnumFlag(bit, currentStartIndex, enumValues) == false)
-                        return false;
-                }
-
-                var newBit = bit << 1;
-                if (newBit > parameterValue || newBit < bit)
-                    break;
-
-                bit = newBit;
-            }
-
-            return true;
-
-            int UpdateIndexIfNecessary(long currentBit, int index, long[] sortedEnumValues)
-            {
-                var value = sortedEnumValues[index];
-                while (value < currentBit)
-                {
-                    if (++index >= sortedEnumValues.Length)
-                        return -1;
-
-                    value = sortedEnumValues[index];
-                }
-
-                return index;
-            }
-
-            bool FindEnumFlag(long currentBit, int startingIndex, long[] sortedEnumValues)
-            {
-                for (var i = startingIndex; i < sortedEnumValues.Length; i++)
-                {
-                    var enumValue = sortedEnumValues[i];
-                    if ((enumValue & currentBit) != 0)
-                        return true;
-                }
-
-                return false;
-            }
+            if (!typeof(T).GetTypeInfo().IsEnum)
+                Throw.NoEnumValue(parameter);
+            return EnumInfo<T>.IsFlagsEnum ? EnumInfo<T>.ValidateFlag(parameter) : EnumInfo<T>.ValidateConstant(parameter);
         }
-
-        private static bool CheckEnumFlagsUsingUInt64Conversion(ulong parameterValue, FieldInfo[] enumFields, int numberOfEnumConstants)
-        {
-            var enumValues = new ulong[numberOfEnumConstants];
-            var currentIndex = 0;
-            for (var i = 0; i < enumFields.Length; ++i)
-            {
-                var field = enumFields[i];
-                if (field.IsStatic && field.IsLiteral)
-                    enumValues[currentIndex++] = Convert.ToUInt64(field.GetValue(null));
-            }
-
-            Array.Sort(enumValues);
-
-            var bit = 1UL;
-            if (parameterValue < bit)
-                return false;
-
-            var currentStartIndex = 0;
-
-            while (true)
-            {
-                if ((bit & parameterValue) != 0)
-                {
-                    currentStartIndex = UpdateIndexIfNecessary(bit, currentStartIndex, enumValues);
-                    if (currentStartIndex == -1)
-                        return false;
-
-                    if (FindEnumFlag(bit, currentStartIndex, enumValues) == false)
-                        return false;
-                }
-
-                var newBit = bit << 1;
-                if (newBit > parameterValue || newBit < bit)
-                    break;
-
-                bit = newBit;
-            }
-
-            return true;
-
-            int UpdateIndexIfNecessary(ulong currentBit, int index, ulong[] sortedEnumValues)
-            {
-                var value = sortedEnumValues[index];
-                while (value < currentBit)
-                {
-                    if (++index >= sortedEnumValues.Length)
-                        return -1;
-
-                    value = sortedEnumValues[index];
-                }
-
-                return index;
-            }
-
-            bool FindEnumFlag(ulong currentBit, int startingIndex, ulong[] sortedEnumValues)
-            {
-                for (var i = startingIndex; i < sortedEnumValues.Length; i++)
-                {
-                    var enumValue = sortedEnumValues[i];
-                    if ((enumValue & currentBit) != 0)
-                        return true;
-                }
-
-                return false;
-            }
-        }
+#endif
 
         /// <summary>
         ///     Ensures that the specified GUID is not empty, or otherwise throws an <see cref="EmptyGuidException" />.
@@ -708,5 +552,94 @@ namespace Light.GuardClauses
                 Throw.CustomException(exceptionFactory);
             return false;
         }
+
+        private readonly struct EnumInfo<T> where T : struct
+#if !NETSTANDARD1_0
+            , IConvertible
+#endif
+        {
+#if !NETSTANDARD1_0
+            public static readonly bool IsFlagsEnum = typeof(T).GetCustomAttribute(Types.FlagsAttributeType) != null;
+#else
+            public static readonly bool IsFlagsEnum = typeof(T).GetTypeInfo().GetCustomAttribute(Types.FlagsAttributeType) != null;
+#endif
+
+            // ReSharper disable StaticMemberInGenericType
+            private static readonly long Int64FlagsPattern;
+            private static readonly ulong UInt64FlagsPattern;
+            private static readonly bool IsUInt64FlagsPattern;
+            // ReSharper restore StaticMemberInGenericType
+
+            private static readonly T[] EnumConstants;
+
+            static EnumInfo()
+            {
+                if (IsFlagsEnum)
+                {
+#if !NETSTANDARD1_0
+                    var fields = typeof(T).GetFields();
+#else
+                    var fields = typeof(T).GetTypeInfo().DeclaredFields.AsArray();
+#endif
+
+                    var underlyingType = fields[0].FieldType;
+                    IsUInt64FlagsPattern = underlyingType == Types.UInt64Type;
+                    var values = (T[]) Enum.GetValues(typeof(T));
+                    for (var i = 0; i < values.Length; ++i)
+                    {
+                        if (IsUInt64FlagsPattern)
+#if !NETSTANDARD1_0
+                            UInt64FlagsPattern |= values[i].ToUInt64(null);
+#else
+                            UInt64FlagsPattern |= Convert.ToUInt64(values[i]);
+#endif
+                        else
+#if !NETSTANDARD1_0
+                            Int64FlagsPattern |= values[i].ToInt64(null);
+#else
+                            Int64FlagsPattern |= Convert.ToInt64(values[i]);
+#endif
+                    }
+                }
+                else
+                    EnumConstants = (T[]) Enum.GetValues(typeof(T));
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static bool ValidateFlag(T enumValue) 
+            {
+                if (IsUInt64FlagsPattern)
+                {
+#if !NETSTANDARD1_0
+                    var convertedUInt64Value = enumValue.ToUInt64(null);
+#else
+                    var convertedUInt64Value = Convert.ToUInt64(enumValue);
+#endif
+                    return (UInt64FlagsPattern & convertedUInt64Value) == convertedUInt64Value;
+                }
+
+#if !NETSTANDARD1_0
+                var convertedInt64Value = enumValue.ToInt64(null);
+#else
+                var convertedInt64Value = Convert.ToInt64(enumValue);
+#endif
+                return (Int64FlagsPattern & convertedInt64Value) == convertedInt64Value;
+            }
+
+            public static bool ValidateConstant(T parameter)
+            {
+                var comparer = EqualityComparer<T>.Default;
+                for (var i = 0; i < EnumConstants.Length; ++i)
+                {
+                    if (comparer.Equals(EnumConstants[i], parameter))
+                        return true;
+                }
+
+                return false;
+            }
+        }
+
     }
+
+
 }
