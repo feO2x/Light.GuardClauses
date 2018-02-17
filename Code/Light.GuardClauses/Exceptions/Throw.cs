@@ -24,14 +24,6 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentNotNullException" /> indicating that a value is not null, using the optional parameter name and message.
-        /// </summary>
-        public static void ArgumentNotNull(object value, string parameterName = null, string message = null)
-        {
-            throw new ArgumentNotNullException(parameterName, message ?? $"{parameterName ?? "The value"} must be null, but it actually is \"{value}\".");
-        }
-
-        /// <summary>
         ///     Throws the default <see cref="TypeMismatchException" /> indicating that a reference cannot be downcasted, using the optional parameter name and message.
         /// </summary>
         public static void TypeMismatch(object parameter, Type targetType, string parameterName = null, string message = null)

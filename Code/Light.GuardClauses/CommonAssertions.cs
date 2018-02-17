@@ -70,7 +70,6 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-
         /// <summary>
         ///     Ensures that the specified parameter is not the default value, or otherwise throws your custom exception.
         /// </summary>
@@ -132,52 +131,6 @@ namespace Light.GuardClauses
             if (parameter == null)
                 Throw.CustomException(exceptionFactory);
             return parameter;
-        }
-
-        /// <summary>
-        ///     Ensures that the specified parameter is null, or otherwise throws an <see cref="ArgumentNotNullException" />.
-        /// </summary>
-        /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
-        /// <param name="parameter">The parameter to be checked.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be injected into the <see cref="ArgumentNotNullException" /> (optional).</param>
-        /// <exception cref="ArgumentNotNullException">Thrown when <paramref name="parameter" /> is not null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustBeNull<T>(this T parameter, string parameterName = null, string message = null) where T : class
-        {
-            if (parameter != null)
-                Throw.ArgumentNotNull(parameter, parameterName, message);
-            return null;
-        }
-
-        /// <summary>
-        ///     Ensures that the specified parameter is null, or otherwise throws your custom exception.
-        /// </summary>
-        /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
-        /// <param name="parameter">The parameter to be checked.</param>
-        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
-        /// <exception cref="Exception">Your custom exception when <paramref name="parameter" /> is not null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustBeNull<T>(this T parameter, Func<Exception> exceptionFactory) where T : class
-        {
-            if (parameter != null)
-                Throw.CustomException(exceptionFactory);
-            return null;
-        }
-
-        /// <summary>
-        ///     Ensures that the specified parameter is null, or otherwise throws your custom exception.
-        /// </summary>
-        /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
-        /// <param name="parameter">The parameter to be checked.</param>
-        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
-        /// <exception cref="Exception">Your custom exception when <paramref name="parameter" /> is not null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustBeNull<T>(this T parameter, Func<T, Exception> exceptionFactory) where T : class
-        {
-            if (parameter != null)
-                Throw.CustomException(exceptionFactory, parameter);
-            return null;
         }
 
         /// <summary>
