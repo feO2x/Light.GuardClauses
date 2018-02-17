@@ -45,7 +45,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
 
     public static class MustBeValidEnumValueExtensionMethods
     {
-        public static T OldMustBeValidEnumValue<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : struct, IConvertible
+        public static T OldMustBeValidEnumValue<T>(this T parameter, string parameterName = null, string message = null, Func<Exception> exception = null) where T : struct, IConvertible, IComparable, IFormattable
         {
             if (parameter.IsValidEnumValue())
                 return parameter;
