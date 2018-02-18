@@ -140,6 +140,12 @@ namespace Light.GuardClauses
         }
 
         /// <inheritdoc />
+        public override string ToString()
+        {
+            return $"Range from {From} ({(IsFromInclusive ? "inclusive" : "exclusive")}) to {To} ({(IsToInclusive ? "inclusive" : "exclusive")})";
+        }
+
+        /// <inheritdoc />
         public bool Equals(Range<T> other)
         {
             if (IsFromInclusive != other.IsFromInclusive ||

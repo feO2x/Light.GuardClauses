@@ -51,9 +51,62 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
             result.Should().Be(value);
         }
 
+        [Fact(DisplayName = "MustNotBeIn must throw the custom exception with single parameter when parameter is within the specified range.")]
+        public static void ThrowCustomExceptionWithOneParameter()
+        {
+            var recordedValue = default(int);
+            var exception = new Exception();
+
+            Action act = () => 3.MustNotBeIn(Range<int>.FromInclusive(0).ToExclusive(10), v =>
+            {
+                recordedValue = v;
+                return exception;
+            });
+
+            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            recordedValue.Should().Be(3);
+        }
+
+        [Fact(DisplayName = "MustNotBeIn must not throw the custom exception with single parameter when parameter is not within the specified range.")]
+        public static void NoCustomExceptionWithOneParameter()
+        {
+            var result = 999.MustNotBeIn(Range<int>.FromInclusive(1000).ToExclusive(2000), v => null);
+
+            result.Should().Be(999);
+        }
+
+        [Fact(DisplayName = "MustNotBeIn must throw the custom exception with two parameters when parameter is within the specified range.")]
+        public static void ThrowCustomExceptionWithTwoParameters()
+        {
+            const int value = 1393;
+            var recordedParameter = default(int);
+            var actualRange = Range<int>.FromExclusive(999).ToExclusive(1500);
+            var recordedRange = default(Range<int>);
+            var exception = new Exception();
+
+            Action act = () => value.MustNotBeIn(actualRange, (v, range) =>
+            {
+                recordedParameter = v;
+                recordedRange = range;
+                return exception;
+            });
+
+            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            recordedParameter.Should().Be(value);
+            recordedRange.Should().Be(actualRange);
+        }
+
+        [Fact(DisplayName = "MustNotBeIn must not throw the custom exception with two parameters when parameter is in the specified range.")]
+        public static void NoCustomExceptionWithTwoParameters()
+        {
+            var result = -15400.8m.MustNotBeIn(Range<decimal>.FromInclusive(0m).ToExclusive(100m), (v, b) => null);
+
+            result.Should().Be(-15400.8m);
+        }
+
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => 30.MustNotBeIn(Range<int>.FromInclusive(30).ToExclusive(35), exception: exception)))
+            testData.Add(new CustomExceptionTest(exception => 30.MustNotBeIn(Range<int>.FromInclusive(30).ToExclusive(35), exception)))
                     .Add(new CustomMessageTest<ArgumentOutOfRangeException>(message => 42.MustNotBeIn(Range<int>.FromInclusive(40).ToExclusive(50), message: message)));
         }
     }
