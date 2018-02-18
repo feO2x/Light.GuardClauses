@@ -144,14 +144,24 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        /// Throws the default <see cref="ArgumentException"/> indicating that a value is no enum value (i.e. its type is no enum type), using the optional parameter name and message.
+        ///     Throws the default <see cref="ArgumentException" /> indicating that a value is no enum value (i.e. its type is no enum type), using the optional parameter name and message.
         /// </summary>
-        public static void NoEnumValue<T>(T parameter, string parameterName = null, string message = null) where T : struct
+        public static void NoEnumValue<T>(T parameter, string parameterName = null, string message = null) where T : struct, IFormattable, IComparable
 #if !NETSTANDARD1_0
         , IConvertible
 #endif
         {
             throw new ArgumentException(message ?? $"The value \"{parameter}\" is no enum value.", parameterName);
+        }
+
+        /// <summary>
+        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a value is not within a specified range, using the optional parameter name and message.
+        /// </summary>
+        public static void MustBeInRange<T>(T parameter, Range<T> range, string parameterName = null, string message = null) where T : IComparable<T>
+        {
+            var fromBoundaryKind = range.IsFromInclusive ? "inclusive" : "exclusive";
+            var toBoundaryKind = range.IsToInclusive ? "inclusive" : "exclusive";
+            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be between {range.From} ({fromBoundaryKind}) and {range.To} ({toBoundaryKind}), but you specified {parameter}.");
         }
 
         /// <summary>
@@ -173,7 +183,7 @@ namespace Light.GuardClauses.Exceptions
         /// <summary>
         ///     Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="parameter" /> and <paramref name="other" /> are passed to <paramref name="exceptionFactory" />.
         /// </summary>
-        public static void CustomException<T>(Func<T, T, Exception> exceptionFactory, T parameter, T other) where T : IComparable<T>
+        public static void CustomException<T1, T2>(Func<T1, T2, Exception> exceptionFactory, T1 parameter, T2 other)
         {
             throw exceptionFactory(parameter, other);
         }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses
 {
@@ -7,7 +9,7 @@ namespace Light.GuardClauses
     ///     Defines a range that can be used to check if a specified <see cref="IComparable{T}" /> is in between it or not.
     /// </summary>
     /// <typeparam name="T">The type that the range should be applied to.</typeparam>
-    public readonly struct Range<T> where T : IComparable<T>
+    public readonly struct Range<T> : IEquatable<Range<T>> where T : IComparable<T>
     {
         /// <summary>
         ///     Gets the lower boundary of the range.
@@ -136,5 +138,36 @@ namespace Light.GuardClauses
                 return new Range<T>(_from, value, _isFromInclusive, true);
             }
         }
+
+        /// <inheritdoc />
+        public bool Equals(Range<T> other)
+        {
+            if (IsFromInclusive != other.IsFromInclusive ||
+                IsToInclusive != other.IsToInclusive)
+                return false;
+            var comparer = EqualityComparer<T>.Default;
+            return comparer.Equals(From, other.From) &&
+                   comparer.Equals(To, other.To);
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object other)
+        {
+            if (ReferenceEquals(other, null)) return false;
+            return other is Range<T> range && Equals(range);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode() => Equality.CreateHashCode(From, To, IsFromInclusive, IsToInclusive);
+
+        /// <summary>
+        ///     Checks if two ranges are equal.
+        /// </summary>
+        public static bool operator ==(Range<T> first, Range<T> second) => first.Equals(second);
+
+        /// <summary>
+        ///     Checks if two ranges are not equal.
+        /// </summary>
+        public static bool operator !=(Range<T> first, Range<T> second) => first.Equals(second) == false;
     }
 }
