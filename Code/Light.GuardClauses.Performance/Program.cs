@@ -2,6 +2,7 @@
 using System.Reflection;
 using BenchmarkDotNet.Attributes.Jobs;
 using BenchmarkDotNet.Running;
+using Light.GuardClauses.Performance.EqualityAssertions;
 
 namespace Light.GuardClauses.Performance
 {
@@ -9,7 +10,7 @@ namespace Light.GuardClauses.Performance
     {
         public static void Main()
         {
-            RunAllBenchmarks();
+            BenchmarkRunner.Run<IsSameAsBenchmarks>();
         }
 
         private static void RunAllBenchmarks()
@@ -23,7 +24,7 @@ namespace Light.GuardClauses.Performance
 
             var benchmarkTypes = typeof(Program).Assembly
                                                 .ExportedTypes
-                                                .Where(t => t.GetCustomAttribute<ClrJobAttribute>() != null &&
+                                                .Where(t => t.GetCustomAttribute<ClrJobAttribute>(true) != null &&
                                                             t.IsOneOf(ignoredTypes) == false)
                                                 .ToList();
 

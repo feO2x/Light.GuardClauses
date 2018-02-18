@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses
@@ -117,9 +118,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="reference">The reference that parameter should be checked against.</param>
         /// <returns>True if both references point to the same object, else false.</returns>
-        public static bool IsSameAs<T>(this T parameter, T reference) where T : class
-        {
-            return ReferenceEquals(parameter, reference);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsSameAs<T>(this T parameter, T reference) where T : class => ReferenceEquals(parameter, reference);
     }
 }
