@@ -19,7 +19,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
             Action act = () => value.MustNotBeIn(Range<int>.FromInclusive(lowerBoundary).ToExclusive(upperBoundary), nameof(value));
 
             act.Should().Throw<ArgumentOutOfRangeException>()
-               .And.Message.Should().Contain($"{nameof(value)} must not be between {lowerBoundary} (inclusive) and {upperBoundary} (exclusive), but you specified {value}.");
+               .And.Message.Should().Contain($"{nameof(value)} must not be between {lowerBoundary} (inclusive) and {upperBoundary} (exclusive), but it actually is {value}.");
         }
 
         [Theory(DisplayName = "MustNotBeIn must throw an exception when the specified value is inside of range (with exclusive lower boundary and inclusive upper boundary).")]
@@ -34,7 +34,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
             Action act = () => value.MustNotBeIn(Range<short>.FromExclusive(lowerBoundary).ToInclusive(upperBoundary), nameof(value));
 
             act.Should().Throw<ArgumentOutOfRangeException>()
-               .And.Message.Should().Contain($"{nameof(value)} must not be between {lowerBoundary} (exclusive) and {upperBoundary} (inclusive), but you specified {value}.");
+               .And.Message.Should().Contain($"{nameof(value)} must not be between {lowerBoundary} (exclusive) and {upperBoundary} (inclusive), but it actually is {value}.");
         }
 
         [Theory(DisplayName = "MustNotBeIn must not throw an exception when the specified value is outside of the range.")]

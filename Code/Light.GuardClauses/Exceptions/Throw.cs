@@ -159,7 +159,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         public static void MustBeInRange<T>(T parameter, Range<T> range, string parameterName = null, string message = null) where T : IComparable<T>
         {
-            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be between {range.From} ({(range.IsFromInclusive ? "inclusive" : "exclusive")}) and {range.To} ({(range.IsToInclusive ? "inclusive" : "exclusive")}), but you specified {parameter}.");
+            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be between {range.From} ({(range.IsFromInclusive ? "inclusive" : "exclusive")}) and {range.To} ({(range.IsToInclusive ? "inclusive" : "exclusive")}), but it actually is {parameter}.");
         }
 
         /// <summary>
@@ -167,7 +167,31 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         public static void MustNotBeInRange<T>(T parameter, Range<T> range, string parameterName = null, string message = null) where T : IComparable<T>
         {
-            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be between {range.From} ({(range.IsFromInclusive ? "inclusive" : "exclusive")}) and {range.To} ({(range.IsToInclusive ? "inclusive" : "exclusive")}), but you specified {parameter}.");
+            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be between {range.From} ({(range.IsFromInclusive ? "inclusive" : "exclusive")}) and {range.To} ({(range.IsToInclusive ? "inclusive" : "exclusive")}), but it actually is {parameter}.");
+        }
+
+        /// <summary>
+        /// Throws the default <see cref="InvalidDateTimeException" /> indicating that a date time is not using <see cref="DateTimeKind.Utc"/>, using the optional parameter name and message.
+        /// </summary>
+        public static void MustBeUtcDateTime(DateTime parameter, string parameterName = null, string message = null)
+        {
+            throw new InvalidDateTimeException(parameterName, message ?? $"{parameterName ?? "The date time"} \"{parameter:O}\" must use kind {DateTimeKind.Utc}, but it actually uses {parameter.Kind}.");
+        }
+
+        /// <summary>
+        /// Throws the default <see cref="InvalidDateTimeException" /> indicating that a date time is not using <see cref="DateTimeKind.Local"/>, using the optional parameter name and message.
+        /// </summary>
+        public static void MustBeLocalDateTime(DateTime parameter, string parameterName = null, string message = null)
+        {
+            throw new InvalidDateTimeException(parameterName, message ?? $"{parameterName ?? "The date time"} \"{parameter:O}\" must use kind {DateTimeKind.Local}, but it actually uses {parameter.Kind}.");
+        }
+
+        /// <summary>
+        /// Throws the default <see cref="InvalidDateTimeException" /> indicating that a date time is not using <see cref="DateTimeKind.Unspecified"/>, using the optional parameter name and message.
+        /// </summary>
+        public static void MustBeUnspecifiedDateTime(DateTime parameter, string parameterName = null, string message = null)
+        {
+            throw new InvalidDateTimeException(parameterName, message ?? $"{parameterName ?? "The date time"} \"{parameter:O}\" must use kind {DateTimeKind.Unspecified}, but it actually uses {parameter.Kind}.");
         }
 
         /// <summary>
