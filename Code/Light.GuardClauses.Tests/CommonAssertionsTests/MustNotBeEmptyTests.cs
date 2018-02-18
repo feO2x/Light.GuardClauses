@@ -15,7 +15,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
 
             Action act = () => emptyGuid.MustNotBeEmpty(nameof(emptyGuid));
 
-            act.ShouldThrow<EmptyGuidException>()
+            act.Should().Throw<EmptyGuidException>()
                .And.ParamName.Should().Be(nameof(emptyGuid));
         }
 

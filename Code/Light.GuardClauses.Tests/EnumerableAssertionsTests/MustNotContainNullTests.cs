@@ -15,7 +15,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         {
             Action act = () => collection.MustNotContainNull(nameof(collection));
 
-            act.ShouldThrow<CollectionException>()
+            act.Should().Throw<CollectionException>()
                .And.Message.Should().Contain($"{nameof(collection)} must be a collection not containing null, but you specified null at index {erroneousIndex}.");
         }
 
@@ -37,7 +37,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
             // ReSharper disable once ExpressionIsAlwaysNull
             Action act = () => collection.MustNotContainNull(nameof(collection));
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be(nameof(collection));
         }
 

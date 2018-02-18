@@ -18,7 +18,7 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
         {
             Action act = () => dictionary.MustNotContainKeys(keys, nameof(dictionary));
 
-            act.ShouldThrow<DictionaryException>()
+            act.Should().Throw<DictionaryException>()
                .And.Message.Should().Contain($"{nameof(dictionary)} must not contain any of the following keys:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(keys)}{Environment.NewLine}but it does.");
         }
 
@@ -54,7 +54,7 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
         {
             Action act = () => dictionary.MustNotContainKeys(keys);
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         public static readonly TestData ArgumentNullData =

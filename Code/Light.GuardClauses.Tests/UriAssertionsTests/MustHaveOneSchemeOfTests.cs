@@ -14,7 +14,7 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
         {
             Action act = () => new Uri(uri, kind).MustHaveOneSchemeOf(new[] { "http", "https" }, nameof(uri));
 
-            act.ShouldThrow<ArgumentException>()
+            act.Should().Throw<ArgumentException>()
                .And.Message.Should().Contain($"{nameof(uri)} must have one of the following schemes:");
         }
 
@@ -34,7 +34,7 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
         {
             Action act = () => ((Uri) null).MustHaveOneSchemeOf(new[] { "ftp" });
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

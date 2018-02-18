@@ -18,7 +18,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
 
             Action act = () => first.MustNotImplement(second, parameterName: nameof(first));
 
-            act.ShouldThrow<TypeException>()
+            act.Should().Throw<TypeException>()
                .And.Message.Should().Contain($"{nameof(first)} \"{first}\" must not implement \"{second}\", but it does.");
         }
 
@@ -36,8 +36,8 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         [Fact(DisplayName = "MustNotImplement must throw an ArgumentNullException when either parameter or other is null.")]
         public void ParametersNull()
         {
-            new Action(() => ((Type) null).MustNotImplement(typeof(IEnumerator))).ShouldThrow<ArgumentNullException>();
-            new Action(() => typeof(double).MustNotImplement(null)).ShouldThrow<ArgumentNullException>();
+            new Action(() => ((Type) null).MustNotImplement(typeof(IEnumerator))).Should().Throw<ArgumentNullException>();
+            new Action(() => typeof(double).MustNotImplement(null)).Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

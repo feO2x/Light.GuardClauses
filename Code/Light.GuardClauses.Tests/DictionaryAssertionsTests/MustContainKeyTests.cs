@@ -15,7 +15,7 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
         {
             Action act = () => dictionary.MustContainKey(key, nameof(dictionary));
 
-            act.ShouldThrow<KeyNotFoundException>()
+            act.Should().Throw<KeyNotFoundException>()
                .And.Message.Should().Contain($"{nameof(dictionary)} must contain key \"{key}\".");
         }
 

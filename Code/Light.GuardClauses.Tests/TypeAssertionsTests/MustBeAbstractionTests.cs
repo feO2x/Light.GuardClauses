@@ -13,9 +13,11 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         [Fact(DisplayName = "MustBeAbstract must not throw an exception when the specified type is an interface.")]
         public void Interface()
         {
-            Action act = () => typeof(IProgress<>).MustBeAbstraction();
+            var interfaceType = typeof(IProgress<>);
 
-            act.ShouldNotThrow();
+            var result = typeof(IProgress<>).MustBeAbstraction();
+
+            result.Should().BeSameAs(interfaceType);
         }
 
         [Fact(DisplayName = "MustBeAbstract must not throw an exception when the specified type is an abstract class.")]
@@ -37,7 +39,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         {
             Action act = () => type.MustBeAbstraction(nameof(type));
 
-            act.ShouldThrow<TypeException>()
+            act.Should().Throw<TypeException>()
                .And.Message.Should().Contain($"{nameof(type)} \"{type}\" must be an abstract base class or interface, but it is not.");
         }
 
@@ -46,7 +48,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         {
             Action act = () => ((Type) null).MustBeAbstraction();
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

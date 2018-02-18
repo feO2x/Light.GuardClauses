@@ -51,7 +51,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             // ReSharper disable once ExpressionIsAlwaysNull
             Action act = () => type.IsDerivingFromOrImplementing(typeof(object));
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be(nameof(type));
         }
 
@@ -63,7 +63,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             // ReSharper disable once ExpressionIsAlwaysNull
             Action act = () => typeof(string).IsDerivingFromOrImplementing(baseClassOrInterfaceType);
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be(nameof(baseClassOrInterfaceType));
         }
 

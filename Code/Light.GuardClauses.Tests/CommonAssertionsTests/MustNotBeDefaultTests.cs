@@ -16,7 +16,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
             // ReSharper disable once ExpressionIsAlwaysNull
             Action act = () => reference.MustNotBeDefault(nameof(reference));
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.Message.Should().Contain($"{nameof(reference)} must not be null.");
         }
 
@@ -30,7 +30,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
         {
             Action act = () => structValue.MustNotBeDefault(nameof(structValue));
 
-            act.ShouldThrow<ArgumentDefaultException>()
+            act.Should().Throw<ArgumentDefaultException>()
                .And.Message.Should().Contain($"{nameof(structValue)} must not be the default value.");
         }
 
@@ -42,7 +42,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
             // ReSharper disable once ExpressionIsAlwaysNull
             Action act = () => nullable.MustNotBeDefault();
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [Theory(DisplayName = "MustNotBeDefault must return the value when it is not a default value.")]

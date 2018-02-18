@@ -18,7 +18,7 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
         {
             Action act = () => dictionary.MustContainValues(values, nameof(dictionary));
 
-            act.ShouldThrow<ValueNotFoundException>()
+            act.Should().Throw<ValueNotFoundException>()
                .And.Message.Should().Contain($"{nameof(dictionary)} must contain all of the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(values)}");
         }
 
@@ -52,7 +52,7 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
         {
             Action act = () => dictionary.MustContainValues(values);
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         public static readonly TestData ArgumentNullData =

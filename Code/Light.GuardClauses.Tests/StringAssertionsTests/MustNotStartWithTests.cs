@@ -16,7 +16,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => @string.MustNotStartWith(startText, nameof(@string));
 
-            act.ShouldThrow<StringException>()
+            act.Should().Throw<StringException>()
                .And.Message.Should().Contain($"{nameof(@string)} must not start with \"{startText}\", but you specified {@string}.");
         }
 
@@ -38,7 +38,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => @string.MustNotStartWith(startText);
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

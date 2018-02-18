@@ -1,5 +1,4 @@
 ﻿using System;
-using FluentAssertions;
 using Light.GuardClauses.FrameworkExtensions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
@@ -12,7 +11,7 @@ namespace Light.GuardClauses.Tests
         [MemberData(nameof(NoExceptionOnNullData))]
         public void NoExceptionOnNull(Action createHashCode)
         {
-            createHashCode.ShouldNotThrow();
+            createHashCode();
         }
 
         public static readonly TestData NoExceptionOnNullData =

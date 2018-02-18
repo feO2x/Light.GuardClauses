@@ -19,7 +19,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         {
             Action act = () => collection.MustNotEndWith(set, parameterName: nameof(collection));
 
-            act.ShouldThrow<CollectionException>()
+            act.Should().Throw<CollectionException>()
                .And.Message.Should().Contain($"{nameof(collection)} must not end with the following items:{new StringBuilder().AppendLine().AppendItemsWithNewLine(set).AppendLine()}but it does.");
         }
 

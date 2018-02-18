@@ -21,7 +21,7 @@ namespace Light.GuardClauses.Tests.CustomMessagesAndExceptions
 
             Action act = () => CallAssertionWithCustomException(CreateExceptionDelegate);
 
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            act.Should().Throw<Exception>().Which.Should().BeSameAs(exception);
         }
 
         public override string ToString()

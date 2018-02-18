@@ -46,7 +46,7 @@ namespace Light.GuardClauses.Tests
         {
             Action act = () => collection.ForEach(item => { });
 
-            act.ShouldThrow<CollectionException>();
+            act.Should().Throw<CollectionException>();
         }
 
         [Theory(DisplayName = "ForEach must not throw a CollectionException when the specified collection contains an item that is null and throwWhenItemIsNull is set to false.")]
@@ -83,7 +83,7 @@ namespace Light.GuardClauses.Tests
         {
             Action act = () => collection.ForEach(action);
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         public static readonly TestData ArgumentNullData =

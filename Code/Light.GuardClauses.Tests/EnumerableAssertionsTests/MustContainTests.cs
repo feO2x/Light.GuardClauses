@@ -19,7 +19,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 
             Action act = () => collection.MustContain(value, nameof(collection));
 
-            act.ShouldThrow<CollectionException>()
+            act.Should().Throw<CollectionException>()
                .And.Message.Should().Contain($"{nameof(collection)} must contain value \"{value}\", but does not.");
         }
 
@@ -31,7 +31,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
             // ReSharper disable once ExpressionIsAlwaysNull
             Action act = () => collection.MustContain("foo");
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [Fact(DisplayName = "MustContain must not throw an exception when the specified value is part of the collection.")]
@@ -53,7 +53,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 
             Action act = () => collection.MustContain(invalidSubset, nameof(collection));
 
-            act.ShouldThrow<CollectionException>()
+            act.Should().Throw<CollectionException>()
                .And.Message.Should().Contain($"{nameof(collection)} must contain the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(invalidSubset)}");
         }
 
@@ -75,7 +75,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         {
             Action act = () => collection.MustContain(subset);
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

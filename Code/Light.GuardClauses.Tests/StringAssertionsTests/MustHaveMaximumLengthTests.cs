@@ -15,7 +15,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => @string.MustHaveMaximumLength(maximumLength, nameof(@string));
 
-            act.ShouldThrow<StringException>()
+            act.Should().Throw<StringException>()
                .And.Message.Should().Contain($"{nameof(@string)} \"{@string}\" must have a maximum length of {maximumLength}, but it actually is {@string.Length} characters long.");
         }
 
@@ -39,7 +39,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => "Foo".MustHaveMaximumLength(maximumLength);
 
-            act.ShouldThrow<ArgumentOutOfRangeException>()
+            act.Should().Throw<ArgumentOutOfRangeException>()
                .And.ParamName.Should().Be(nameof(maximumLength));
         }
 
@@ -48,7 +48,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => ((string) null).MustHaveMaximumLength(42);
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

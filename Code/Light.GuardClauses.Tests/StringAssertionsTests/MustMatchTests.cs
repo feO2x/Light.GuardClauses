@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
 
             Action act = () => @string.MustMatch(pattern, nameof(@string));
 
-            act.ShouldThrow<StringDoesNotMatchException>()
+            act.Should().Throw<StringDoesNotMatchException>()
                .And.ParamName.Should().Be(nameof(@string));
         }
 

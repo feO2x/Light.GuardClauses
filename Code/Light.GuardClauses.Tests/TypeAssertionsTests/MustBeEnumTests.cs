@@ -20,7 +20,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
 
         private static void TestIsNotEnum(Action act, Type type)
         {
-            act.ShouldThrow<TypeException>()
+            act.Should().Throw<TypeException>()
                .And.Message.Should().Contain($"The type \"{type}\" must be an enum, but it is not.");
         }
 
@@ -34,8 +34,8 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         [Fact(DisplayName = "MustBeEnum must throw an ArgumentNullException when parameter is null.")]
         public void ParameterNull()
         {
-            new Action(() => ((Type) null).MustBeEnum()).ShouldThrow<ArgumentNullException>();
-            new Action(() => ((TypeInfo) null).MustBeEnum()).ShouldThrow<ArgumentNullException>();
+            new Action(() => ((Type) null).MustBeEnum()).Should().Throw<ArgumentNullException>();
+            new Action(() => ((TypeInfo) null).MustBeEnum()).Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

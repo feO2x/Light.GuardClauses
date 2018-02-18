@@ -46,7 +46,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         {
             Action act = () => Range<int>.FromInclusive(from).ToExclusive(to);
 
-            act.ShouldThrow<ArgumentOutOfRangeException>().And
+            act.Should().Throw<ArgumentOutOfRangeException>().And
                .Message.Should().Contain($"{nameof(to)} must not be less than {from}, but it actually is {to}.");
         }
     }

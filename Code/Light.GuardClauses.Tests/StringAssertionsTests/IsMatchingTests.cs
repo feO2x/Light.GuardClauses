@@ -34,7 +34,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => ((string) null).IsMatching(new Regex(@"\d{2}"));
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be("string");
         }
 
@@ -43,7 +43,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => "foo".IsMatching(null);
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be("pattern");
         }
     }

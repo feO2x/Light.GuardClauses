@@ -35,7 +35,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
             // ReSharper disable once ExpressionIsAlwaysNull
             Action act = () => enumerable.IsContainingDuplicates();
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be(nameof(enumerable));
         }
     }

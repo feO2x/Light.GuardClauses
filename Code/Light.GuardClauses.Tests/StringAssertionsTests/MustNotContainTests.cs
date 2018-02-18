@@ -15,7 +15,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => value.MustNotContain(containedText, parameterName: nameof(value));
 
-            act.ShouldThrow<StringException>()
+            act.Should().Throw<StringException>()
                .And.Message.Should().Contain($"\"{value}\" must not contain \"{containedText}\", but it does.");
         }
 
@@ -37,7 +37,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => @string.MustNotContain(comparedText, true);
 
-            act.ShouldThrow<StringException>();
+            act.Should().Throw<StringException>();
         }
 
         [Fact(DisplayName = "MustNotContain must throw an exception when the specified text is null.")]
@@ -45,7 +45,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => "someText".MustNotContain(null);
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be("text");
         }
 

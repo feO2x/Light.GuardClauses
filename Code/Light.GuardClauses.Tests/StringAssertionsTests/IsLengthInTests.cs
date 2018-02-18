@@ -29,7 +29,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => ((string) null).IsLengthIn(Range<int>.FromInclusive(42).ToExclusive(87));
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be("string");
         }
     }

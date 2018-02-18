@@ -16,7 +16,7 @@ namespace Light.GuardClauses.Tests.EqualityAssertionsTests
         {
             Action act = () => value.MustBe(other, parameterName: nameof(value));
 
-            act.ShouldThrow<ArgumentException>()
+            act.Should().Throw<ArgumentException>()
                .And.Message.Should().Contain($"{nameof(value)} must be {other}, but you specified {value}");
         }
 
@@ -36,7 +36,7 @@ namespace Light.GuardClauses.Tests.EqualityAssertionsTests
         {
             Action act = () => 55.0.MustBe(55.1, EqualityComparer<double>.Default);
 
-            act.ShouldThrow<ArgumentException>();
+            act.Should().Throw<ArgumentException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

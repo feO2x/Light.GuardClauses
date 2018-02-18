@@ -41,7 +41,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         {
             Action act = () => ((Type) null).IsClosedConstructedGenericType();
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be("type");
         }
     }

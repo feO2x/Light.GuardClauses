@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         {
             Action act = () => collection.MustNotContain(item, nameof(collection));
 
-            act.ShouldThrow<CollectionException>()
+            act.Should().Throw<CollectionException>()
                .And.Message.Should().Contain($"{nameof(collection)} must not contain value \"{item.ToStringOrNull()}\", but it does.");
         }
 
@@ -40,7 +40,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
             // ReSharper disable once ExpressionIsAlwaysNull
             Action act = () => collection.MustNotContain("foo");
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [Theory(DisplayName = "MustNotContain must throw a CollectionException when the collection contains any of the items of the specified set.")]
@@ -51,7 +51,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         {
             Action act = () => collection.MustNotContain(set, nameof(collection));
 
-            act.ShouldThrow<CollectionException>()
+            act.Should().Throw<CollectionException>()
                .And.Message.Should().Contain($"{nameof(collection)} must not contain any of the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(set)}");
         }
 
@@ -73,7 +73,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         {
             Action act = () => collection.MustNotContain(set);
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

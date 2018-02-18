@@ -20,7 +20,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         {
             Action act = () => collection.MustNotStartWith(subset, parameterName: nameof(collection));
 
-            act.ShouldThrow<CollectionException>()
+            act.Should().Throw<CollectionException>()
                .And.Message.Should().Contain($"{nameof(collection)} must not start with the following items:{new StringBuilder().AppendLine().AppendItemsWithNewLine(subset).AppendLine()}but it does.");
         }
 
@@ -47,7 +47,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         {
             Action act = () => first.MustNotStartWith(second);
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [Fact(DisplayName = "MustNotStartWith for collections must throw an EmptyCollectionException when specified subset has no items.")]
@@ -57,7 +57,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 
             Action act = () => collection.MustNotStartWith(new List<string>());
 
-            act.ShouldThrow<EmptyCollectionException>()
+            act.Should().Throw<EmptyCollectionException>()
                .And.ParamName.Should().Be("set");
         }
 

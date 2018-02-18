@@ -18,7 +18,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => @string.MustContainOnlyDigits(nameof(@string));
 
-            act.ShouldThrow<StringException>()
+            act.Should().Throw<StringException>()
                .And.Message.Should().Contain($"{nameof(@string)} must contain only digits, but you specified \"{@string}\".");
         }
 
@@ -39,7 +39,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => ((string) null).MustContainOnlyDigits();
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

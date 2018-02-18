@@ -18,7 +18,7 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
 
             Action act = () => key.MustNotBeKeyOf(dictionary, nameof(key));
 
-            act.ShouldThrow<ArgumentOutOfRangeException>()
+            act.Should().Throw<ArgumentOutOfRangeException>()
                .And.Message.Should().Contain($"{nameof(key)} must not be one of the dictionary keys:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(dictionary.Keys)}{Environment.NewLine}but you specified {key}");
         }
 
@@ -38,7 +38,7 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
         {
             Action act = () => "someKey".MustNotBeKeyOf<string, object>(null);
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be("dictionary");
         }
 

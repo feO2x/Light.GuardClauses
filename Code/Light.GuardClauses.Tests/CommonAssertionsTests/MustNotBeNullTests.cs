@@ -15,7 +15,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
             // ReSharper disable once ExpressionIsAlwaysNull
             Action act = () => @object.MustNotBeNull(nameof(@object));
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.Message.Should().Contain($"{nameof(@object)} must not be null.");
         }
 

@@ -16,7 +16,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => invalidString.MustBeSubstringOf(text, parameterName: nameof(invalidString));
 
-            act.ShouldThrow<StringException>()
+            act.Should().Throw<StringException>()
                .And.Message.Should().Contain($"\"{invalidString}\" must be a substring of \"{text}\", but it is not.");
         }
 
@@ -37,7 +37,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => "someText".MustBeSubstringOf(null);
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be("text");
         }
 

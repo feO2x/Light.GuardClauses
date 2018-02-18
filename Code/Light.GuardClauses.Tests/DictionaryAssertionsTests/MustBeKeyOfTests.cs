@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
         {
             Action act = () => value.MustBeKeyOf(dictionary, nameof(value));
 
-            act.ShouldThrow<ArgumentOutOfRangeException>()
+            act.Should().Throw<ArgumentOutOfRangeException>()
                .And.Message.Should().Contain($"{nameof(value)} must be one of the dictionary keys:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(dictionary.Keys)}{Environment.NewLine}but you specified {value}.");
         }
 
@@ -32,9 +32,9 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
         [MemberData(nameof(InItemsTestData))]
         public void InItems(int value, Dictionary<int, string> dictionary)
         {
-            Action act = () => value.MustBeKeyOf(dictionary, nameof(value));
+            var result = value.MustBeKeyOf(dictionary, nameof(value));
 
-            act.ShouldNotThrow();
+            result.Should().Be(value);
         }
 
         public static readonly TestData InItemsTestData =

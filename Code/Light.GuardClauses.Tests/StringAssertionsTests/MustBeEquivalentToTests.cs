@@ -15,7 +15,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => first.MustBeEquivalentTo(second, comparisonType, nameof(first));
 
-            act.ShouldThrow<StringException>()
+            act.Should().Throw<StringException>()
                .And.Message.Should().Contain($"\"{first}\" must be equivalent to \"{second}\" (using {comparisonType}), but it is not");
         }
 
@@ -37,7 +37,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => first.MustBeEquivalentTo(second);
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 
             Action act = () => value.MustBeOneOf(items, parameterName: nameof(value));
 
-            act.ShouldThrow<ArgumentOutOfRangeException>()
+            act.Should().Throw<ArgumentOutOfRangeException>()
                .And.Message.Should().Contain($"{nameof(value)} must be one of the items{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(items)}{Environment.NewLine}but you specified {value}.");
         }
 

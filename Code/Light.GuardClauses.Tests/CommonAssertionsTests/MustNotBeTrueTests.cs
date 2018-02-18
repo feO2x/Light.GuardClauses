@@ -14,7 +14,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
 
             Action act = () => itsTrue.MustNotBeTrue(nameof(itsTrue));
 
-            act.ShouldThrow<ArgumentException>()
+            act.Should().Throw<ArgumentException>()
                .And.Message.Should().Contain($"{nameof(itsTrue)} must be false, but it actually is true.");
         }
 

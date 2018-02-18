@@ -13,7 +13,7 @@ namespace Light.GuardClauses.Tests
             // ReSharper disable once ObjectCreationAsStatement
             Action act = () => new NotNull<object>(null);
 
-            act.ShouldThrow<ArgumentNullException>().And.ParamName.Should().Be("object");
+            act.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("object");
         }
 
         [Theory(DisplayName = "The referenced passed to the constructor must be retrievable if it is not null.")]

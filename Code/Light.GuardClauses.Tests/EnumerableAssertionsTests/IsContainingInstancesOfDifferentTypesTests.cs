@@ -36,7 +36,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
             // ReSharper disable once ExpressionIsAlwaysNull
             Action act = () => enumerable.IsContainingInstancesOfDifferentTypes();
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be(nameof(enumerable));
         }
 
@@ -47,7 +47,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 
             Action act = () => collection.IsContainingInstancesOfDifferentTypes();
 
-            act.ShouldThrow<CollectionException>()
+            act.Should().Throw<CollectionException>()
                .And.Message.Should().Contain($"The collection contains null at index 1");
         }
 

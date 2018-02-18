@@ -35,7 +35,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
 
             Action act = () => "foo".IsEquivalentTo("bar", comparisonType);
 
-            act.ShouldThrow<EnumValueNotDefinedException>()
+            act.Should().Throw<EnumValueNotDefinedException>()
                .And.ParamName.Should().Be(nameof(comparisonType));
         }
     }

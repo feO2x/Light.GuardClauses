@@ -14,7 +14,7 @@ namespace Light.GuardClauses.Tests.EqualityAssertionsTests
         {
             Action act = () => reference.MustNotBeSameAs(reference, nameof(reference));
 
-            act.ShouldThrow<ArgumentException>()
+            act.Should().Throw<ArgumentException>()
                .And.Message.Should().Contain($"{nameof(reference)} must not point to the object instance \"{reference}\", but it does.");
         }
 

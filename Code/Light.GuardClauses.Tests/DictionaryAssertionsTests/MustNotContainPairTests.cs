@@ -20,7 +20,7 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
 
             Action act = () => dictionary.MustNotContainPair(key, value, nameof(dictionary));
 
-            act.ShouldThrow<DictionaryException>()
+            act.Should().Throw<DictionaryException>()
                .And.Message.Should().Contain($"{nameof(dictionary)} must not contain the key-value-pair \"{new StringBuilder().AppendKeyValuePair(key, value)}\", but it does.");
         }
 
@@ -41,7 +41,7 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
         {
             Action act = () => ((IDictionary<string, string>) null).MustNotContainPair("Foo", "Bar");
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

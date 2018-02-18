@@ -14,7 +14,7 @@ namespace Light.GuardClauses.Tests.EqualityAssertionsTests
         {
             Action act = () => first.MustBeSameAs(second, nameof(first));
 
-            act.ShouldThrow<ArgumentException>()
+            act.Should().Throw<ArgumentException>()
                .And.Message.Should().Contain($"{nameof(first)} must point to the object instance \"{second}\", but it does not.");
         }
 

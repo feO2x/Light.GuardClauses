@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
             // ReSharper disable once ExpressionIsAlwaysNull
             Action act = () => value.MustNotBeNullOrWhiteSpace(nameof(value));
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be(nameof(value));
         }
 
@@ -28,7 +28,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
 
             Action act = () => value.MustNotBeNullOrWhiteSpace(nameof(value));
 
-            act.ShouldThrow<EmptyStringException>()
+            act.Should().Throw<EmptyStringException>()
                .And.ParamName.Should().Be(nameof(value));
         }
 
@@ -43,7 +43,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => value.MustNotBeNullOrWhiteSpace(nameof(value));
 
-            act.ShouldThrow<StringIsOnlyWhiteSpaceException>()
+            act.Should().Throw<StringIsOnlyWhiteSpaceException>()
                .And.ParamName.Should().Be(nameof(value));
         }
 

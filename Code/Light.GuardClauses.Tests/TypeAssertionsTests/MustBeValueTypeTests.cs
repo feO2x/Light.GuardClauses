@@ -18,7 +18,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
 
         private static void TestIsReferenceType(Action act, Type type)
         {
-            act.ShouldThrow<TypeException>()
+            act.Should().Throw<TypeException>()
                .And.Message.Should().Contain($"The type \"{type}\" must be a value type, but it is a reference type");
         }
 
@@ -32,8 +32,8 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         [Fact(DisplayName = "MustBeValueType must throw an ArgumentNullException when parameter is null.")]
         public void ParameterNull()
         {
-            new Action(() => ((Type) null).MustBeValueType()).ShouldThrow<ArgumentNullException>();
-            new Action(() => ((TypeInfo) null).MustBeValueType()).ShouldThrow<ArgumentNullException>();
+            new Action(() => ((Type) null).MustBeValueType()).Should().Throw<ArgumentNullException>();
+            new Action(() => ((TypeInfo) null).MustBeValueType()).Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

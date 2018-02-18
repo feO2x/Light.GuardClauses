@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
         {
             Action act = () => dictionary.MustContainKeys(keys, nameof(dictionary));
 
-            act.ShouldThrow<KeyNotFoundException>()
+            act.Should().Throw<KeyNotFoundException>()
                .And.Message.Should().Contain($"{nameof(dictionary)} must contain all of the following keys:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(keys)}{Environment.NewLine}but it does not.");
         }
 
@@ -32,9 +32,9 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
         [MemberData(nameof(HasKeysData))]
         public void HasKeys(IDictionary<string, object> dictionary, string[] keys)
         {
-            Action act = () => dictionary.MustContainKeys(keys);
+            var result = dictionary.MustContainKeys(keys);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(dictionary);
         }
 
         public static readonly TestData HasKeysData =
@@ -50,7 +50,7 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
         {
             Action act = () => dictionary.MustContainKeys(keys);
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         public static readonly TestData ArgumentNullData =

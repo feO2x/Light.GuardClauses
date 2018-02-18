@@ -33,7 +33,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         {
             Action act = () => first.IsStructurallyEquivalentTo(second);
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [Fact(DisplayName = "IsStructurallyEquivalentTo must return true when both collections are null.")]

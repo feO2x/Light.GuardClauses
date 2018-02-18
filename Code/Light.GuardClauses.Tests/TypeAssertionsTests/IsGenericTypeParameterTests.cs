@@ -41,7 +41,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         {
             Action act = () => ((Type) null).IsGenericTypeParameter();
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be("type");
         }
     }

@@ -15,7 +15,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         {
             Action act = () => value.MustBeIn(Range<int>.FromInclusive(lowerBoundary).ToExclusive(upperBoundary), nameof(value));
 
-            act.ShouldThrow<ArgumentOutOfRangeException>()
+            act.Should().Throw<ArgumentOutOfRangeException>()
                .And.Message.Should().Contain($"{nameof(value)} must be between {lowerBoundary} (inclusive) and {upperBoundary} (exclusive), but you specified {value}.");
         }
 
@@ -30,7 +30,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         {
             Action act = () => value.MustBeIn(Range<char>.FromExclusive(lowerBoundary).ToInclusive(upperBoundary), nameof(value));
 
-            act.ShouldThrow<ArgumentOutOfRangeException>()
+            act.Should().Throw<ArgumentOutOfRangeException>()
                .And.Message.Should().Contain($"{nameof(value)} must be between {lowerBoundary} (exclusive) and {upperBoundary} (inclusive), but you specified {value}.");
         }
 
@@ -60,7 +60,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
                 return exception;
             });
 
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            act.Should().Throw<Exception>().Which.Should().BeSameAs(exception);
             recordedValue.Should().Be(3);
         }
 
@@ -88,7 +88,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
                 return exception;
             });
 
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            act.Should().Throw<Exception>().Which.Should().BeSameAs(exception);
             recordedParameter.Should().Be(value);
             recordedRange.Should().Be(actualRange);
         }

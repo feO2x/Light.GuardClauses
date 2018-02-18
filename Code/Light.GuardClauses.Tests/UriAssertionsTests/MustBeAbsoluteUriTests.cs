@@ -30,7 +30,7 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
         {
             Action act = () => relativeUri.MustBeAbsoluteUri(nameof(relativeUri));
 
-            act.ShouldThrow<ArgumentException>()
+            act.Should().Throw<ArgumentException>()
                .And.Message.Should().Contain($"{nameof(relativeUri)} must be an absolute URI, but you specified \"{relativeUri}\".");
         }
 
@@ -46,7 +46,7 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
         {
             Action act = () => ((Uri) null).MustBeAbsoluteUri();
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

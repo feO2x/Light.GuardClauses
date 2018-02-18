@@ -19,7 +19,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
 
         private static void TestIsNotDelegate(Action act, Type type)
         {
-            act.ShouldThrow<TypeException>()
+            act.Should().Throw<TypeException>()
                .And.Message.Should().Contain($"The type \"{type}\" must be a delegate, but it is not.");
         }
 
@@ -33,8 +33,8 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         [Fact(DisplayName = "MustBeDelegate must throw an ArgumentNullException when parameter is null.")]
         public void ParameterNull()
         {
-            new Action(() => ((Type) null).MustBeDelegate()).ShouldThrow<ArgumentNullException>();
-            new Action(() => ((TypeInfo) null).MustBeDelegate()).ShouldThrow<ArgumentNullException>();
+            new Action(() => ((Type) null).MustBeDelegate()).Should().Throw<ArgumentNullException>();
+            new Action(() => ((TypeInfo) null).MustBeDelegate()).Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

@@ -15,7 +15,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
         {
             Action act = () => value.MustNotBeGreaterThan(boundary, nameof(value));
 
-            act.ShouldThrow<ArgumentOutOfRangeException>()
+            act.Should().Throw<ArgumentOutOfRangeException>()
                .And.Message.Should().Contain($"{nameof(value)} must not be greater than {boundary}, but it actually is {value}.");
         }
 
@@ -43,7 +43,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
                 return exception;
             });
 
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            act.Should().Throw<Exception>().Which.Should().BeSameAs(exception);
             recordedValue.Should().Be(value);
         }
 
@@ -69,7 +69,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertionsTests
                 return exception;
             });
 
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            act.Should().Throw<Exception>().Which.Should().BeSameAs(exception);
             recordedParameter.Should().Be(1656);
             recordedBoundary.Should().Be(421);
         }

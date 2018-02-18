@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
 
             Action act = () => @object.MustBeOfType<Array>(nameof(@object));
 
-            act.ShouldThrow<TypeMismatchException>()
+            act.Should().Throw<TypeMismatchException>()
                .And.Message.Should().Contain($"{nameof(@object)} \"{@object}\" cannot be downcasted to \"{typeof(Array)}\".");
         }
 
@@ -36,7 +36,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
         {
             Action act = () => ((object) null).MustBeOfType<string>("parameter");
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be("parameter");
         }
 
@@ -45,7 +45,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
         {
             Action act = () => ((object) null).MustBeOfType<StreamReader>(() => new Exception(), "Foo");
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be("Foo");
         }
 
@@ -62,7 +62,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
                                                                  return exception;
                                                              });
 
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            act.Should().Throw<Exception>().Which.Should().BeSameAs(exception);
             observerdReference.Should().BeSameAs(reference);
         }
 
@@ -71,7 +71,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
         {
             Action act = () => ((object)null).MustBeOfType<StreamWriter>(parameter => new Exception(), "Bar");
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be("Bar");
         }
 

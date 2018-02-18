@@ -16,7 +16,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
 
             Action act = () => classType.MustBeStaticClass(nameof(classType));
 
-            act.ShouldThrow<TypeException>()
+            act.Should().Throw<TypeException>()
                .And.Message.Should().Contain($"{nameof(classType)} \"{classType}\" must be a static class, but it is not.");
         }
 
@@ -27,7 +27,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
 
             Action act = () => structType.GetTypeInfo().MustBeStaticClass(nameof(structType));
 
-            act.ShouldThrow<TypeException>()
+            act.Should().Throw<TypeException>()
                .And.Message.Should().Contain($"{nameof(structType)} \"{structType}\" must be a static class, but it is not.");
         }
 
@@ -56,7 +56,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         {
             Action act = () => ((Type) null).MustBeStaticClass();
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [Fact(DisplayName = "MustBeStaticClass must throw an ArgumentNullException when the specified TypeInfo is null.")]
@@ -64,7 +64,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         {
             Action act = () => ((TypeInfo) null).MustBeStaticClass();
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

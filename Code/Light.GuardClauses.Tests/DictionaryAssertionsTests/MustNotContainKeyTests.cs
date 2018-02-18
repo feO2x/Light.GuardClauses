@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
 
             Action act = () => dictionary.MustNotContainKey(key, nameof(dictionary));
 
-            act.ShouldThrow<DictionaryException>()
+            act.Should().Throw<DictionaryException>()
                .And.Message.Should().Contain($"{nameof(dictionary)} must not contain key \"{key}\".");
         }
 
@@ -40,7 +40,7 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
             // ReSharper disable once ExpressionIsAlwaysNull
             Action act = () => dictionary.MustNotContainKey("foo", nameof(dictionary));
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be(nameof(dictionary));
         }
 

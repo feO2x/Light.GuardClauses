@@ -27,7 +27,7 @@ namespace Light.GuardClauses.Tests.EqualityAssertionsTests
         {
             Action act = () => value.MustNotBe(value, parameterName: nameof(value));
 
-            act.ShouldThrow<ArgumentException>()
+            act.Should().Throw<ArgumentException>()
                .And.Message.Should().Contain($"{nameof(value)} must not be {value}, but you specified this very value.");
         }
 
@@ -36,7 +36,7 @@ namespace Light.GuardClauses.Tests.EqualityAssertionsTests
         {
             Action act = () => 55.MustNotBe(55, EqualityComparer<int>.Default);
 
-            act.ShouldThrow<ArgumentException>();
+            act.Should().Throw<ArgumentException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

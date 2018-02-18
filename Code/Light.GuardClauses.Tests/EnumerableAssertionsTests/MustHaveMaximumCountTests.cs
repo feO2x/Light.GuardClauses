@@ -19,7 +19,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 
             // ReSharper disable PossibleMultipleEnumeration
             var collectionCount = invalidCollection.Count();
-            act.ShouldThrow<CollectionException>()
+            act.Should().Throw<CollectionException>()
                .And.Message.Should().Contain($"{nameof(invalidCollection)} must have no more than {count} {Items(count)}, but it actually has {collectionCount} {Items(collectionCount)}.");
             // ReSharper restore PossibleMultipleEnumeration
         }

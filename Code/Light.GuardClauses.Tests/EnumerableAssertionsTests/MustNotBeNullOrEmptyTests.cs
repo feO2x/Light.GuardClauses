@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
             // ReSharper disable once ExpressionIsAlwaysNull
             Action act = () => list.MustNotBeNullOrEmpty(nameof(list));
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be(nameof(list));
         }
 
@@ -29,7 +29,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 
             Action act = () => list.MustNotBeNullOrEmpty(nameof(list));
 
-            act.ShouldThrow<EmptyCollectionException>()
+            act.Should().Throw<EmptyCollectionException>()
                .And.ParamName.Should().Be(nameof(list));
         }
 

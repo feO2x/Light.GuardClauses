@@ -16,7 +16,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
             // ReSharper disable once ExpressionIsAlwaysNull
             Action act = () => value.MustHaveValue(nameof(value));
 
-            act.ShouldThrow<NullableHasNoValueException>()
+            act.Should().Throw<NullableHasNoValueException>()
                .And.ParamName.Should().Be(nameof(value));
         }
 

@@ -15,7 +15,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
 
             Action act = () => invalidValue.MustBeValidEnumValue(nameof(invalidValue));
 
-            act.ShouldThrow<EnumValueNotDefinedException>()
+            act.Should().Throw<EnumValueNotDefinedException>()
                .And.ParamName.Should().Be(nameof(invalidValue));
         }
 
@@ -42,7 +42,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
                                                                      return exception;
                                                                  });
 
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            act.Should().Throw<Exception>().Which.Should().BeSameAs(exception);
             observedValue.Should().Be(invalidValue);
         }
 
@@ -61,7 +61,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
         {
             Action act = () => 42.MustBeValidEnumValue();
 
-            act.ShouldThrow<ArgumentException>();
+            act.Should().Throw<ArgumentException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

@@ -15,7 +15,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
 
             Action act = () => value.MustNotHaveValue(nameof(value));
 
-            act.ShouldThrow<NullableHasValueException>()
+            act.Should().Throw<NullableHasValueException>()
                .And.ParamName.Should().Be(nameof(value));
         }
 
@@ -43,7 +43,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
                                                              return exception;
                                                          });
 
-            act.ShouldThrow<Exception>().Which.Should().BeSameAs(exception);
+            act.Should().Throw<Exception>().Which.Should().BeSameAs(exception);
             observedValue.Should().Be(nullable.Value);
         }
 

@@ -18,7 +18,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
             Action act = () => invalidCollection.MustHaveMinimumCount(count, nameof(invalidCollection));
 
             var collectionCount = invalidCollection.Count();
-            act.ShouldThrow<CollectionException>()
+            act.Should().Throw<CollectionException>()
                .And.Message.Should().Contain($"{nameof(invalidCollection)} must have at least {count} {Items(count)}, but it actually has {collectionCount} {Items(collectionCount)}.");
         }
 

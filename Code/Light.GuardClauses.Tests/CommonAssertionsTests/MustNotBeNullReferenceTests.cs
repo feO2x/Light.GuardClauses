@@ -29,7 +29,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
         {
             Action act = () => nullReference.MustNotBeNullReference(nameof(nullReference));
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.Message.Should().Contain($"{nameof(nullReference)} must not be null.");
         }
 

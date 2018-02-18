@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
 
             Action act = () => first.MustBeEquivalentTo(second, nameof(first));
 
-            act.ShouldThrow<TypeException>()
+            act.Should().Throw<TypeException>()
                .And.Message.Should().Contain($"first \"{first}\" must be equivalent to \"{second}\", but it is not.");
         }
 
@@ -27,9 +27,9 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
             var first = typeof(IList<string>);
             var second = typeof(IList<>);
 
-            Action act = () => first.MustBeEquivalentTo(second);
+            var result = first.MustBeEquivalentTo(second);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(first);
         }
 
         [Fact(DisplayName = "MustBeEquivalentTo must throw an ArgumentNullException when parameter is null.")]
@@ -37,7 +37,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         {
             Action act = () => ((Type) null).MustBeEquivalentTo(typeof(string), "foo");
 
-            act.ShouldThrow<ArgumentNullException>().And.ParamName.Should().Be("foo");
+            act.Should().Throw<ArgumentNullException>().And.ParamName.Should().Be("foo");
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

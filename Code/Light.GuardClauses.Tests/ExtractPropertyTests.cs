@@ -26,7 +26,7 @@ namespace Light.GuardClauses.Tests
 
             Action act = () => expression.ExtractProperty();
 
-            act.ShouldThrow<ArgumentException>()
+            act.Should().Throw<ArgumentException>()
                .And.Message.Should().Contain("The specified expression is not valid. Please use an expression like the following one: o => o.Property");
         }
 
@@ -36,7 +36,7 @@ namespace Light.GuardClauses.Tests
         {
             Action act = () => ((Expression<Func<object, object>>) null).ExtractProperty();
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be("expression");
         }
     }

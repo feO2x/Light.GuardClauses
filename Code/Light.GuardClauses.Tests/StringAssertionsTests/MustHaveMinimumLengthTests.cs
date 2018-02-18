@@ -15,7 +15,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => @string.MustHaveMinimumLength(minimumLength, nameof(@string));
 
-            act.ShouldThrow<StringException>()
+            act.Should().Throw<StringException>()
                .And.Message.Should().Contain($"{nameof(@string)} \"{@string}\" must have a minimum length of {minimumLength}, but it actually is only {@string.Length} characters long.");
         }
 
@@ -38,7 +38,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => "Foo".MustHaveMinimumLength(minimumLength);
 
-            act.ShouldThrow<ArgumentOutOfRangeException>()
+            act.Should().Throw<ArgumentOutOfRangeException>()
                .And.ParamName.Should().Be(nameof(minimumLength));
         }
 
@@ -47,7 +47,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => ((string) null).MustHaveMinimumLength(42);
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

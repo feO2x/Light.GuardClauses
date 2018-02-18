@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         {
             Action act = () => collection.MustBeSubsetOf(superset, nameof(collection));
 
-            act.ShouldThrow<CollectionException>()
+            act.Should().Throw<CollectionException>()
                .And.Message.Should().Contain($"{nameof(collection)} must be a subset of:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(superset)}");
         }
 
@@ -34,9 +34,9 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         [MemberData(nameof(IsSubsetData))]
         public void IsSubset(char[] collection, char[] superset)
         {
-            Action act = () => collection.MustBeSubsetOf(superset);
+            var result = collection.MustBeSubsetOf(superset);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(collection);
         }
 
         public static readonly TestData IsSubsetData =
@@ -54,7 +54,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         {
             Action act = () => new[] { 'a' }.MustBeSubsetOf(null);
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be("superset");
         }
 

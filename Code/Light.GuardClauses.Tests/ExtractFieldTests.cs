@@ -26,7 +26,7 @@ namespace Light.GuardClauses.Tests
 
             Action act = () => expression.ExtractField();
 
-            act.ShouldThrow<ArgumentException>()
+            act.Should().Throw<ArgumentException>()
                .And.Message.Should().Contain("The specified expression is not valid. Please use an expression like the following one: o => o.Field");
         }
 
@@ -35,7 +35,7 @@ namespace Light.GuardClauses.Tests
         {
             Action act = () => ((Expression<Func<object, object>>) null).ExtractField();
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be("expression");
         }
     }

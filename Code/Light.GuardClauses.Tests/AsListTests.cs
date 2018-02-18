@@ -60,7 +60,7 @@ namespace Light.GuardClauses.Tests
         {
             Action act = () => ((IEnumerable<string>) null).AsList();
 
-            act.ShouldThrow<ArgumentNullException>()
+            act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be("enumerable");
         }
 

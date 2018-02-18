@@ -22,7 +22,7 @@ namespace Light.GuardClauses.Tests.CustomMessagesAndExceptions
 
             Action act = () => CallAssertionWithCustomMessage(message);
 
-            act.ShouldThrow<Exception>().Where(ex => ex.GetType() == ExpectedExceptionType).And.Message.Should().Contain(message);
+            act.Should().Throw<Exception>().Where(ex => ex.GetType() == ExpectedExceptionType).And.Message.Should().Contain(message);
         }
 
         public override string ToString()

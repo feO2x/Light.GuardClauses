@@ -12,7 +12,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
         {
             Action act = () => true.MustBeFalse("This boolean");
 
-            act.ShouldThrow<ArgumentException>()
+            act.Should().Throw<ArgumentException>()
                .And.Message.Should().Contain("This boolean must be false, but it actually is true.");
         }
 

@@ -14,7 +14,7 @@ namespace Light.GuardClauses.Tests.CommonAssertionsTests
 
             Action act = () => myValue.MustNotBeFalse(nameof(myValue));
 
-            act.ShouldThrow<ArgumentException>()
+            act.Should().Throw<ArgumentException>()
                .And.Message.Should().Contain($"{nameof(myValue)} must be true, but it actually is false.");
         }
 

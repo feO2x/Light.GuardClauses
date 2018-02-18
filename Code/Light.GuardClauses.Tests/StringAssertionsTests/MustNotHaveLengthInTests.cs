@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
 
             var fromBoundaryKind = range.IsFromInclusive ? "inclusive" : "exclusive";
             var toBoundaryKind = range.IsToInclusive ? "inclusive" : "exclusive";
-            act.ShouldThrow<StringException>()
+            act.Should().Throw<StringException>()
                .And.Message.Should().Contain($"{nameof(@string)} \"{@string}\" must not have a length between {range.From} ({fromBoundaryKind}) and {range.To} ({toBoundaryKind}), but it actually has a length of {@string.Length}.");
         }
 
@@ -51,7 +51,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => ((string) null).MustMotHaveLengthIn(Range<int>.FromInclusive(42).ToExclusive(87));
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

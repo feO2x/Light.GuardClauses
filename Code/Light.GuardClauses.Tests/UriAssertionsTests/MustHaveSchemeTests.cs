@@ -14,7 +14,7 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
         {
             Action act = () => uri.MustHaveScheme(scheme, nameof(uri));
 
-            act.ShouldThrow<ArgumentException>()
+            act.Should().Throw<ArgumentException>()
                .And.Message.Should().Contain($"{nameof(uri)} must have scheme \"{scheme}\"");
         }
 
@@ -47,7 +47,7 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
         {
             Action act = () => ((Uri) null).MustHaveScheme("foo");
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

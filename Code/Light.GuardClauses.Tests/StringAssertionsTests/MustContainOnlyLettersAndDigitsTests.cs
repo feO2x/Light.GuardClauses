@@ -42,7 +42,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => invalidString.MustContainOnlyLettersAndDigits(nameof(invalidString));
 
-            act.ShouldThrow<StringException>()
+            act.Should().Throw<StringException>()
                .And.Message.Should().Contain($"{nameof(invalidString)} must contain only letters or digits, but you specified \"{invalidString}\".");
         }
 
@@ -62,7 +62,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => ((string) null).MustContainOnlyLettersAndDigits();
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [Fact(DisplayName = "MustContainOnlyLettersAndDigits must throw an EmptyStringException when the specified string is empty.")]
@@ -70,7 +70,7 @@ namespace Light.GuardClauses.Tests.StringAssertionsTests
         {
             Action act = () => string.Empty.MustContainOnlyLettersAndDigits();
 
-            act.ShouldThrow<EmptyStringException>();
+            act.Should().Throw<EmptyStringException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

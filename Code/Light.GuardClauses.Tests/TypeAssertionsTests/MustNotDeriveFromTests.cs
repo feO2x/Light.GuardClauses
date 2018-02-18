@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
 
             Action act = () => first.MustNotDeriveFrom(second, parameterName: nameof(first));
 
-            act.ShouldThrow<TypeException>()
+            act.Should().Throw<TypeException>()
                .And.Message.Should().Contain($"{nameof(first)} \"{first}\" must not derive from \"{second}\", but it does.");
         }
 
@@ -34,8 +34,8 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         [Fact(DisplayName = "MustNotDeriveFrom must throw an ArgumentNullException when either parameter or other is null.")]
         public void ParameterNull()
         {
-            new Action(() => ((Type) null).MustNotDeriveFrom(typeof(object))).ShouldThrow<ArgumentNullException>();
-            new Action(() => typeof(string).MustNotDeriveFrom(null)).ShouldThrow<ArgumentNullException>();
+            new Action(() => ((Type) null).MustNotDeriveFrom(typeof(object))).Should().Throw<ArgumentNullException>();
+            new Action(() => typeof(string).MustNotDeriveFrom(null)).Should().Throw<ArgumentNullException>();
         }
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)

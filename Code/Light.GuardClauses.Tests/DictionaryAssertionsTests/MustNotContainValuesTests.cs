@@ -18,7 +18,7 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
         {
             Action act = () => dictionary.MustNotContainValues(values, nameof(dictionary));
 
-            act.ShouldThrow<DictionaryException>()
+            act.Should().Throw<DictionaryException>()
                .And.Message.Should().Contain($"{nameof(dictionary)} must not contain any of the following values:{Environment.NewLine}{new StringBuilder().AppendItemsWithNewLine(values)}");
         }
 
@@ -33,9 +33,9 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
         [MemberData(nameof(ValuesNotContainedData))]
         public void ValuesNotContained(IDictionary<string, object> dictionary, object[] values)
         {
-            Action act = () => dictionary.MustNotContainValues(values);
+            var result = dictionary.MustNotContainValues(values);
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(dictionary);
         }
 
         public static readonly TestData ValuesNotContainedData =
@@ -51,7 +51,7 @@ namespace Light.GuardClauses.Tests.DictionaryAssertionsTests
         {
             Action act = () => dictionary.MustNotContainValues(values);
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         public static readonly TestData ArgumentNullData =

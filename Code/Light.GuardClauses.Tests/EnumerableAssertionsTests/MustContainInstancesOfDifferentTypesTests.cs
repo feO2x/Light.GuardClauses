@@ -29,16 +29,16 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         {
             Action act = () => InvalidTestData.MustContainInstancesOfDifferentTypes(nameof(InvalidTestData));
 
-            act.ShouldThrow<CollectionException>()
+            act.Should().Throw<CollectionException>()
                .And.Message.Should().Contain($"{nameof(InvalidTestData)} must contain instances of different subtypes, but \"{typeof(A)}\" occurs a second time at index \"{2}\".");
         }
 
         [Fact(DisplayName = "MustContainInstancesOfDifferentTypes must not throw an exception when the specified collection contains instances of different subtypes.")]
         public void ListWithDifferentInstances()
         {
-            Action act = () => ValidTestData.MustContainInstancesOfDifferentTypes();
+            var result =  ValidTestData.MustContainInstancesOfDifferentTypes();
 
-            act.ShouldNotThrow();
+            result.Should().BeSameAs(ValidTestData);
         }
 
         [Fact(DisplayName = "MustContainInstancesOfDifferentTypes must throw an ArgumentNullException when the specified collection is null.")]
@@ -46,7 +46,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
         {
             Action act = () => ((IEnumerable<object>) null).MustContainInstancesOfDifferentTypes();
 
-            act.ShouldThrow<ArgumentNullException>();
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [Fact(DisplayName = "MustContainInstancesOfDifferentTypes must throw a CollectionException when the specified collection contains null.")]
@@ -56,7 +56,7 @@ namespace Light.GuardClauses.Tests.EnumerableAssertionsTests
 
             Action act = () => collectionWithNull.MustContainInstancesOfDifferentTypes();
 
-            act.ShouldThrow<CollectionException>()
+            act.Should().Throw<CollectionException>()
                .And.Message.Should().Contain("The collection contains null at index 1.");
         }
 
