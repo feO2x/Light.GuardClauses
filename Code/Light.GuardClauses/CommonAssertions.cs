@@ -181,13 +181,13 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> cannot be downcasted to the specified value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustBeOfType<T>(this object parameter, Func<object, Exception> exceptionFactory, string parameterName = null) where T : class
+        public static T MustBeOfType<T>(this object parameter, Func<object, Exception> exceptionFactory, string parameterName = null)
         {
             if (parameter.MustNotBeNull(parameterName) is T castedValue)
                 return castedValue;
 
             Throw.CustomException(exceptionFactory, parameter);
-            return null;
+            return default;
         }
 
         /// <summary>
