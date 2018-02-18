@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Jobs;
 using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
-    [ClrJob, CoreJob]
-    [MemoryDiagnoser]
-    [DisassemblyDiagnoser]
-    public class MustHaveValueIntBenchmarks
+    public class MustHaveValueIntBenchmarks : DefaultBenchmark
     {
         public readonly int? Nullable = 42;
 
@@ -33,10 +29,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
         public int? LightGuardClausesWithCustomException() => Nullable.MustHaveValue(() => new Exception());
     }
 
-    [ClrJob, CoreJob]
-    [MemoryDiagnoser]
-    [DisassemblyDiagnoser]
-    public class MustHaveValueDoubleBenchmarks
+    public class MustHaveValueDoubleBenchmarks : DefaultBenchmark
     {
         public readonly double? Nullable = 42.74;
 

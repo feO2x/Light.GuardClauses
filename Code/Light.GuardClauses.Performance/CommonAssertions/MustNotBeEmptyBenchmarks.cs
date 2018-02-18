@@ -1,14 +1,10 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Jobs;
 using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
-    [ClrJob, CoreJob]
-    [MemoryDiagnoser]
-    [DisassemblyDiagnoser]
-    public class MustNotBeEmptyBenchmarks
+    public class MustNotBeEmptyBenchmarks : DefaultBenchmark
     {
         public readonly Guid Guid = Guid.NewGuid();
 

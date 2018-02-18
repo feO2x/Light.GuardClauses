@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Reflection;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Jobs;
 using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
-    [ClrJob, CoreJob]
-    [MemoryDiagnoser]
-    [DisassemblyDiagnoser]
-    public class MustBeValidEnumValueBenchmarks
+    public class MustBeValidEnumValueBenchmarks : DefaultBenchmark
     {
         public readonly ConsoleColor EnumValue = ConsoleColor.Blue;
         public readonly BindingFlags FlagsEnumValue = BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly;

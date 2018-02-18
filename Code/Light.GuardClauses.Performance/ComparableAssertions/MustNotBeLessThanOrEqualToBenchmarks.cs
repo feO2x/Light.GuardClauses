@@ -1,13 +1,9 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Jobs;
 
 namespace Light.GuardClauses.Performance.ComparableAssertions
 {
-    [ClrJob, CoreJob]
-    [MemoryDiagnoser]
-    [DisassemblyDiagnoser]
-    public class MustNotBeLessThanOrEqualToBenchmarks
+    public class MustNotBeLessThanOrEqualToBenchmarks : DefaultBenchmark
     {
         public readonly short First = 13;
         public readonly short Second = 12;

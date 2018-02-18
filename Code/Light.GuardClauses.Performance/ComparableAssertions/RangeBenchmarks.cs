@@ -1,13 +1,9 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Jobs;
 
 namespace Light.GuardClauses.Performance.ComparableAssertions
 {
-    [ClrJob, CoreJob]
-    [MemoryDiagnoser]
-    [DisassemblyDiagnoser]
-    public class RangeBenchmarks
+    public class RangeBenchmarks : DefaultBenchmark
     {
         public Range<int> Range = Range<int>.FromInclusive(30).ToInclusive(50);
         public int Value = 42;

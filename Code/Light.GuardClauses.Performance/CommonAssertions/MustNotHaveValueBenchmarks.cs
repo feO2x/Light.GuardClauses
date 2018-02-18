@@ -1,14 +1,10 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Jobs;
 using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
-    [ClrJob, CoreJob]
-    [MemoryDiagnoser]
-    [DisassemblyDiagnoser]
-    public class MustNotHaveValueDoubleBenchmarks
+    public class MustNotHaveValueDoubleBenchmarks : DefaultBenchmark
     {
         public readonly double? Nullable = null;
 
@@ -32,10 +28,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
         public double? OldVersion() => Nullable.OldMustNotHaveValue(nameof(Nullable));
     }
 
-    [ClrJob, CoreJob]
-    [MemoryDiagnoser]
-    [DisassemblyDiagnoser]
-    public class MustNotHaveValueIntBenchmarks
+    public class MustNotHaveValueIntBenchmarks : DefaultBenchmark
     {
         public readonly int? Nullable = null;
 

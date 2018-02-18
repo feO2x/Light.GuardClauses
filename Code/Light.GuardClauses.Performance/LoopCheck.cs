@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Jobs;
 
 // ReSharper disable UnusedVariable
 
 namespace Light.GuardClauses.Performance
 {
-    [CoreJob, ClrJob]
-    [MemoryDiagnoser]
-    public class LoopCheck
+    public class LoopCheck : DefaultBenchmark
     {
         public int[] Array;
         public List<int> List;
@@ -35,7 +32,7 @@ namespace Light.GuardClauses.Performance
         }
 
         [Benchmark(Baseline = true)]
-        public object ArrayForLoop()
+        public int[] ArrayForLoop()
         {
             for (var i = 0; i < Array.Length; i++)
             {
@@ -46,7 +43,7 @@ namespace Light.GuardClauses.Performance
         }
 
         [Benchmark]
-        public object ArrayForEachLoop()
+        public int[] ArrayForEachLoop()
         {
             foreach (var element in Array) { }
 
@@ -54,7 +51,7 @@ namespace Light.GuardClauses.Performance
         }
 
         [Benchmark]
-        public object ListForLoop()
+        public List<int> ListForLoop()
         {
             for (var i = 0; i < List.Count; i++)
             {
@@ -65,7 +62,7 @@ namespace Light.GuardClauses.Performance
         }
 
         [Benchmark]
-        public object ListForEachLoop()
+        public List<int> ListForEachLoop()
         {
             foreach (var element in List) { }
 
@@ -73,7 +70,7 @@ namespace Light.GuardClauses.Performance
         }
 
         [Benchmark]
-        public object ReadOnlyListForLoop()
+        public IReadOnlyList<int> ReadOnlyListForLoop()
         {
             var list = ReadOnlyList;
 
@@ -86,11 +83,11 @@ namespace Light.GuardClauses.Performance
         }
 
         [Benchmark]
-        public object EnumerableForEachLoop()
+        public IEnumerable<int> EnumerableForEachLoop()
         {
             var enumerable = Enumerable;
 
-            foreach (var element in enumerable) { }
+            foreach (var element in Enumerable) { }
 
             return enumerable;
         }

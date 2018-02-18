@@ -1,14 +1,10 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Attributes.Jobs;
 using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
-    [ClrJob, CoreJob]
-    [MemoryDiagnoser]
-    [DisassemblyDiagnoser]
-    public class MustBeOfTypeBenchmarks
+    public class MustBeOfTypeBenchmarks : DefaultBenchmark
     {
         public readonly object Instance = new SampleEntity(Guid.NewGuid());
 
