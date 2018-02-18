@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses
@@ -7,7 +8,7 @@ namespace Light.GuardClauses
     /// <summary>
     /// Represents information indicating if substrings are searched case-sensitive or not.
     /// </summary>
-    public struct IgnoreCaseInfo
+    public readonly struct IgnoreCaseInfo
     {
         /// <summary>
         /// Gets the culture info whose <see cref="CompareInfo" /> is used for searching.
@@ -26,6 +27,7 @@ namespace Light.GuardClauses
         /// <param name="compareOptions">The value indicating how strings are compared.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="cultureInfo" /> is null.</exception>
         /// <exception cref="EnumValueNotDefinedException">Thrown when <paramref name="compareOptions" /> is no valid enum value.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IgnoreCaseInfo(CultureInfo cultureInfo, CompareOptions compareOptions)
         {
             CultureInfo = cultureInfo.MustNotBeNull(nameof(cultureInfo));
@@ -36,6 +38,7 @@ namespace Light.GuardClauses
         /// Creates an <see cref="IgnoreCaseInfo" /> with the invariant culture and CompareOptions.OrdinalIgnoreCase when the
         /// specified boolean is true.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator IgnoreCaseInfo(bool ignoreCase)
         {
             return ignoreCase ? new IgnoreCaseInfo(CultureInfo.InvariantCulture, CompareOptions.OrdinalIgnoreCase) : new IgnoreCaseInfo();
@@ -45,6 +48,7 @@ namespace Light.GuardClauses
         /// Creates an <see cref="IgnoreCaseInfo" /> with the specified culture info and CompareOptions.OrdinalIgnoreCase.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="cultureInfo" /> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator IgnoreCaseInfo(CultureInfo cultureInfo)
         {
             return new IgnoreCaseInfo(cultureInfo, CompareOptions.OrdinalIgnoreCase);
@@ -56,13 +60,11 @@ namespace Light.GuardClauses
         /// <param name="string">The string to be checked.</param>
         /// <param name="substring">The string to seek.</param>
         /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool StringContains(string @string, string substring)
         {
-            @string.MustNotBeNull();
-            substring.MustNotBeNull();
-
             if (CultureInfo == null)
-                return @string.Contains(substring);
+                return @string.MustNotBeNull(nameof(@string)).Contains(substring);
 
             return CultureInfo.CompareInfo.IndexOf(@string, substring, CompareOptions) != -1;
         }
