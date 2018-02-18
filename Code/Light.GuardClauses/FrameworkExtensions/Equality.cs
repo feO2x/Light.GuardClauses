@@ -4,24 +4,24 @@ using System.Collections.Generic;
 namespace Light.GuardClauses.FrameworkExtensions
 {
     /// <summary>
-    ///     The Equality class contains static methods that help create hash codes and check the equality of values with calls to GetHashCode and Equals.
+    /// The Equality class contains static methods that help create hash codes and check the equality of values with calls to GetHashCode and Equals.
     /// </summary>
     public static class Equality
     {
         /// <summary>
-        ///     This prime number is used as an initial hash code value when calculating hash codes. Its value is 1322837333.
+        /// This prime number is used as an initial hash code value when calculating hash codes. Its value is 1322837333.
         /// </summary>
         public const int FirstPrime = 1322837333;
 
         /// <summary>
-        ///     The second prime number (397) used for hash code generation. It is applied using the following calculation:
-        ///     <c>hash = hash * SecondPrime + value.GetHashCode();</c> when the corresponding value is not null.
-        ///     It is the same value that ReSharper (2017.2.1) uses for hash code generation.
+        /// The second prime number (397) used for hash code generation. It is applied using the following calculation:
+        /// <c>hash = hash * SecondPrime + value.GetHashCode();</c> when the corresponding value is not null.
+        /// It is the same value that ReSharper (2017.2.1) uses for hash code generation.
         /// </summary>
         public const int SecondPrime = 397;
 
         /// <summary>
-        ///     Creates a hash code from the two specified values. It is implemented according to the guidelines of this Stack Overflow answer: http://stackoverflow.com/a/263416/1560623.
+        /// Creates a hash code from the two specified values. It is implemented according to the guidelines of this Stack Overflow answer: http://stackoverflow.com/a/263416/1560623.
         /// </summary>
         /// <typeparam name="T1">The type of <paramref name="value1" />.</typeparam>
         /// <typeparam name="T2">The type of <paramref name="value2" />.</typeparam>
@@ -40,7 +40,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
-        ///     Creates a hash code from the three specified values. It is implemented according to the guidelines of this Stack Overflow answer: http://stackoverflow.com/a/263416/1560623.
+        /// Creates a hash code from the three specified values. It is implemented according to the guidelines of this Stack Overflow answer: http://stackoverflow.com/a/263416/1560623.
         /// </summary>
         /// <typeparam name="T1">The type of <paramref name="value1" />.</typeparam>
         /// <typeparam name="T2">The type of <paramref name="value2" />.</typeparam>
@@ -62,7 +62,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
-        ///     Creates a hash code from the four specified values. It is implemented according to the guidelines of this Stack Overflow answer: http://stackoverflow.com/a/263416/1560623.
+        /// Creates a hash code from the four specified values. It is implemented according to the guidelines of this Stack Overflow answer: http://stackoverflow.com/a/263416/1560623.
         /// </summary>
         /// <typeparam name="T1">The type of <paramref name="value1" />.</typeparam>
         /// <typeparam name="T2">The type of <paramref name="value2" />.</typeparam>
@@ -87,7 +87,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
-        ///     Creates a hash code from the specified values. It is implemented according to the guidelines of this Stack Overflow answer: http://stackoverflow.com/a/263416/1560623.
+        /// Creates a hash code from the specified values. It is implemented according to the guidelines of this Stack Overflow answer: http://stackoverflow.com/a/263416/1560623.
         /// </summary>
         /// <typeparam name="T">The type of values used to create the hash code.</typeparam>
         /// <param name="values">The values used to create the hash code.</param>
@@ -104,12 +104,13 @@ namespace Light.GuardClauses.FrameworkExtensions
                     if (currentValue != null)
                         hash = hash * SecondPrime + currentValue.GetHashCode();
                 }
+
                 return hash;
             }
         }
 
         /// <summary>
-        ///     Creates a hash code from the specified values. It is implemented according to the guidelines of this Stack Overflow answer: http://stackoverflow.com/a/263416/1560623.
+        /// Creates a hash code from the specified values. It is implemented according to the guidelines of this Stack Overflow answer: http://stackoverflow.com/a/263416/1560623.
         /// </summary>
         /// <typeparam name="T">The type of values used to create the hash code.</typeparam>
         /// <param name="values">The values used to create the hash code.</param>
@@ -128,21 +129,20 @@ namespace Light.GuardClauses.FrameworkExtensions
                         if (currentValue != null)
                             hash = hash * SecondPrime + currentValue.GetHashCode();
                     }
+
                     return hash;
                 }
 
                 // ReSharper disable once LoopCanBeConvertedToQuery
                 foreach (var @object in values)
-                {
                     if (@object != null)
                         hash = hash * SecondPrime + @object.GetHashCode();
-                }
                 return hash;
             }
         }
 
         /// <summary>
-        ///     Checks that the specified values are equal. Uses the specified equality comparer calling GetHashCode and Equals.
+        /// Checks that the specified values are equal. Uses the specified equality comparer calling GetHashCode and Equals.
         /// </summary>
         /// <typeparam name="T">The type of the values to be compared.</typeparam>
         /// <param name="equalityComparer">The equality comparer used for comparison.</param>
@@ -159,9 +159,9 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
-        ///     Checks if the specified object is equal to the other object. Performs null reference checking and afterwards calls
-        ///     GetHashCode and Equals to determine equality. If you are dealing with value types, please use <see cref="EqualsValueWithHashCode{T}" />
-        ///     instead as no null checks are performed in that method.
+        /// Checks if the specified object is equal to the other object. Performs null reference checking and afterwards calls
+        /// GetHashCode and Equals to determine equality. If you are dealing with value types, please use <see cref="EqualsValueWithHashCode{T}" />
+        /// instead as no null checks are performed in that method.
         /// </summary>
         /// <typeparam name="T">The reference type of the items to be compared.</typeparam>
         /// <param name="value">The first value to be compared.</param>
@@ -176,7 +176,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
-        ///     Checks if the specified value is equal to the other value. Calls GetHashCode and Equals to determine equality.
+        /// Checks if the specified value is equal to the other value. Calls GetHashCode and Equals to determine equality.
         /// </summary>
         /// <typeparam name="T">The value type of the items to be compared.</typeparam>
         /// <param name="value">The first value to be compared.</param>

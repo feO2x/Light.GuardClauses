@@ -5,12 +5,12 @@ using Light.GuardClauses.Exceptions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     The <see cref="ComparableAssertions" /> class contains extension methods that check assertions for the <see cref="IComparable{T}" /> interface.
+    /// The <see cref="ComparableAssertions" /> class contains extension methods that check assertions for the <see cref="IComparable{T}" /> interface.
     /// </summary>
     public static class ComparableAssertions
     {
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is not less than the given <paramref name="boundary" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
+        /// Ensures that the specified <paramref name="parameter" /> is not less than the given <paramref name="boundary" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -27,7 +27,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is not less than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is not less than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -43,7 +43,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is not less than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is not less than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -59,7 +59,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is not less than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is not less than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -75,7 +75,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is less than the given <paramref name="boundary" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
+        /// Ensures that the specified <paramref name="parameter" /> is less than the given <paramref name="boundary" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -92,7 +92,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is less than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is less than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -108,7 +108,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is less than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is less than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -124,7 +124,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is less than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is less than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -140,7 +140,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is not less than or equal to the given <paramref name="boundary" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
+        /// Ensures that the specified <paramref name="parameter" /> is not less than or equal to the given <paramref name="boundary" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -157,7 +157,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is not less than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is not less than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -173,7 +173,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is not less than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is not less than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -189,7 +189,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is not less than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is not less than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -205,7 +205,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is less than or equal to the given <paramref name="boundary" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
+        /// Ensures that the specified <paramref name="parameter" /> is less than or equal to the given <paramref name="boundary" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -222,7 +222,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is less than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is less than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -238,7 +238,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is less than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is less than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -254,7 +254,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is less than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is less than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -270,7 +270,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is not greater than the given <paramref name="boundary" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
+        /// Ensures that the specified <paramref name="parameter" /> is not greater than the given <paramref name="boundary" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -287,7 +287,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is not greater than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is not greater than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -303,7 +303,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is not greater than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is not greater than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -319,7 +319,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is not greater than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is not greater than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -335,7 +335,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is greater than the given <paramref name="boundary" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
+        /// Ensures that the specified <paramref name="parameter" /> is greater than the given <paramref name="boundary" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -352,7 +352,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is greater than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is greater than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -368,7 +368,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is greater than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is greater than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -384,7 +384,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is greater than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is greater than the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -400,7 +400,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is not greater than or equal to the given <paramref name="boundary" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
+        /// Ensures that the specified <paramref name="parameter" /> is not greater than or equal to the given <paramref name="boundary" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -417,7 +417,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is not greater than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is not greater than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -433,7 +433,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is not greater than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is not greater than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -449,7 +449,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is not greater than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is not greater than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -465,7 +465,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is greater than or equal to the given <paramref name="boundary" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
+        /// Ensures that the specified <paramref name="parameter" /> is greater than or equal to the given <paramref name="boundary" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -482,7 +482,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is greater than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is greater than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -498,7 +498,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is greater than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is greater than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -514,7 +514,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified <paramref name="parameter" /> is greater than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
+        /// Ensures that the specified <paramref name="parameter" /> is greater than or equal to the given <paramref name="boundary" /> value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -530,7 +530,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> is within the specified <paramref name="range" />, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
+        /// Ensures that <paramref name="parameter" /> is within the specified <paramref name="range" />, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -547,7 +547,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> is within the specified <paramref name="range" />, or otherwise throws your custom exception.
+        /// Ensures that <paramref name="parameter" /> is within the specified <paramref name="range" />, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -563,7 +563,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> is within the specified <paramref name="range" />, or otherwise throws your custom exception.
+        /// Ensures that <paramref name="parameter" /> is within the specified <paramref name="range" />, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -579,7 +579,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> is within the specified <paramref name="range" />, or otherwise throws your custom exception.
+        /// Ensures that <paramref name="parameter" /> is within the specified <paramref name="range" />, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -595,17 +595,20 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the parameter value is within the specified range.
+        /// Checks if the parameter value is within the specified range.
         /// </summary>
         /// <typeparam name="T">The type of the parameter.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="range">The range that <paramref name="parameter" /> must be in between.</param>
         /// <returns>True if the parameter is within the specified range, else false.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsIn<T>(this T parameter, Range<T> range) where T : IComparable<T> => range.IsValueWithinRange(parameter);
+        public static bool IsIn<T>(this T parameter, Range<T> range) where T : IComparable<T>
+        {
+            return range.IsValueWithinRange(parameter);
+        }
 
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> is not within the specified range, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
+        /// Ensures that <paramref name="parameter" /> is not within the specified range, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -622,7 +625,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> is not within the specified range, or otherwise throws your custom exception.
+        /// Ensures that <paramref name="parameter" /> is not within the specified range, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -638,7 +641,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> is not within the specified range, or otherwise throws your custom exception.
+        /// Ensures that <paramref name="parameter" /> is not within the specified range, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -654,7 +657,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> is not within the specified range, or otherwise throws your custom exception.
+        /// Ensures that <paramref name="parameter" /> is not within the specified range, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -670,13 +673,16 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the parameter is not within the specified range.
+        /// Checks if the parameter is not within the specified range.
         /// </summary>
         /// <typeparam name="T">The type of the parameter.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="range">The range that <paramref name="parameter" /> must not be in between.</param>
         /// <returns>True if the parameter value is not in between of the specified range, else false.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsNotIn<T>(this T parameter, Range<T> range) where T : IComparable<T> => !range.IsValueWithinRange(parameter);
+        public static bool IsNotIn<T>(this T parameter, Range<T> range) where T : IComparable<T>
+        {
+            return !range.IsValueWithinRange(parameter);
+        }
     }
 }

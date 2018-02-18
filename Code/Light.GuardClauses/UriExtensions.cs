@@ -6,19 +6,19 @@ using Light.GuardClauses.FrameworkExtensions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     Provides assertion methods for the <see cref="Uri" /> class.
+    /// Provides assertion methods for the <see cref="Uri" /> class.
     /// </summary>
     public static class UriExtensions
     {
         /// <summary>
-        ///     Ensures that the specified URI is an absolute one, or otherwise throws an <see cref="ArgumentException" />.
+        /// Ensures that the specified URI is an absolute one, or otherwise throws an <see cref="ArgumentException" />.
         /// </summary>
         /// <param name="uri">The URI to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI.
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that will be thrown when <paramref name="uri" /> is not an absolute URI.
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
@@ -33,15 +33,15 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified URI has the given scheme, or otherwise throws an <see cref="ArgumentException" />.
+        /// Ensures that the specified URI has the given scheme, or otherwise throws an <see cref="ArgumentException" />.
         /// </summary>
         /// <param name="uri">The URI to be checked.</param>
         /// <param name="scheme">The scheme that the URI should have.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have the specified scheme.
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have the specified scheme.
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI or does not have the specified scheme.</exception>
@@ -57,15 +57,15 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified URI has one of the given schemes, or otherwise throws an <see cref="ArgumentException" />.
+        /// Ensures that the specified URI has one of the given schemes, or otherwise throws an <see cref="ArgumentException" />.
         /// </summary>
         /// <param name="uri">The URI to be checked.</param>
         /// <param name="schemes"></param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have one of the specified schemes.
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have one of the specified schemes.
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI or does not have one of the specified schemes.</exception>
@@ -78,10 +78,8 @@ namespace Light.GuardClauses
                 goto ThrowException;
 
             for (var i = 0; i < schemesCollection.Count; i++)
-            {
                 if (string.Equals(schemesCollection[i], uri.Scheme, StringComparison.OrdinalIgnoreCase))
                     return uri;
-            }
 
             ThrowException:
             var subclause = uri.IsAbsoluteUri ? $"but actually has scheme \"{uri.Scheme}\" (\"{uri}\")." : $"but it has none because it is a relative URI (\"{uri}\").";
@@ -94,14 +92,14 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified URI has the "https" scheme, or otherwise throws an <see cref="ArgumentException" />.
+        /// Ensures that the specified URI has the "https" scheme, or otherwise throws an <see cref="ArgumentException" />.
         /// </summary>
         /// <param name="uri">The URI to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have the "https" scheme.
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have the "https" scheme.
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI or does not have the "https" scheme.</exception>
@@ -111,14 +109,14 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified URI has the "http" scheme, or otherwise throws an <see cref="ArgumentException" />.
+        /// Ensures that the specified URI has the "http" scheme, or otherwise throws an <see cref="ArgumentException" />.
         /// </summary>
         /// <param name="uri">The URI to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have the "http" scheme.
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have the "http" scheme.
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI or does not have the "http" scheme.</exception>
@@ -128,14 +126,14 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified URI has the "http" or "https" scheme, or otherwise throws an <see cref="ArgumentException" />.
+        /// Ensures that the specified URI has the "http" or "https" scheme, or otherwise throws an <see cref="ArgumentException" />.
         /// </summary>
         /// <param name="uri">The URI to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have the "http" or "https" scheme.
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have the "http" or "https" scheme.
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI or does not have the "http" or "https" scheme.</exception>

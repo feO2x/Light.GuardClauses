@@ -7,19 +7,19 @@ using Light.GuardClauses.FrameworkExtensions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     Provides assertion extension methods for the <see cref="Type" /> and <see cref="TypeInfo" /> types.
+    /// Provides assertion extension methods for the <see cref="Type" /> and <see cref="TypeInfo" /> types.
     /// </summary>
     public static class TypeAssertions
     {
         /// <summary>
-        ///     Checks if the two specified types are equivalent. This is true when 1) both types are equal or
-        ///     when 2) one type is a constructed generic type and the other type is the corresponding generic type definition.
+        /// Checks if the two specified types are equivalent. This is true when 1) both types are equal or
+        /// when 2) one type is a constructed generic type and the other type is the corresponding generic type definition.
         /// </summary>
         /// <param name="type">The first type to be checked.</param>
         /// <param name="other">The other type to be checked.</param>
         /// <returns>
-        ///     True if both types are null, or if both are equal, or if one type
-        ///     is a constructed generic type and the other one is the corresponding generic type definition, else false.
+        /// True if both types are null, or if both are equal, or if one type
+        /// is a constructed generic type and the other one is the corresponding generic type definition, else false.
         /// </returns>
         public static bool IsEquivalentTypeTo(this Type type, Type other)
         {
@@ -37,18 +37,18 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the parameter type is equivalent to the specified other type. This is true when 1) both types are equal or
-        ///     when 2) one type is a constructed generic type and the other type is the corresponding generic type definition.
+        /// Ensures that the parameter type is equivalent to the specified other type. This is true when 1) both types are equal or
+        /// when 2) one type is a constructed generic type and the other type is the corresponding generic type definition.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="other">The other type that <paramref name="parameter" /> should be equivalent to.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is not equivalent to <paramref name="other" /> (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> is not equivalent to <paramref name="other" /> (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is not equivalent to <paramref name="other" />.</exception>
@@ -63,18 +63,18 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the parameter type is not equivalent to the specified other type. This is true when 1) both types are not equal and
-        ///     when 2) one type is a constructed generic type and the other type is not the corresponding generic type definition.
+        /// Ensures that the parameter type is not equivalent to the specified other type. This is true when 1) both types are not equal and
+        /// when 2) one type is a constructed generic type and the other type is not the corresponding generic type definition.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="other">The other type that <paramref name="parameter" /> should be equivalent to.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is equivalent to <paramref name="other" /> (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> is equivalent to <paramref name="other" /> (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is equivalent to <paramref name="other" />.</exception>
@@ -89,18 +89,18 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Checks if the specified type is a class. This is true when <see cref="TypeInfo.IsClass" />
-        ///     returns true and the type is no delegate (i.e. its <see cref="TypeInfo.BaseType" /> is no
-        ///     <see cref="MulticastDelegate" />).
-        /// </summary>
-        /// /// <param name="type">The type to check.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
+/// <summary>
+///     Checks if the specified type is a class. This is true when <see cref="TypeInfo.IsClass" />
+///     returns true and the type is no delegate (i.e. its <see cref="TypeInfo.BaseType" /> is no
+///     <see cref="MulticastDelegate" />).
+/// </summary>
+/// /// <param name="type">The type to check.</param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
 #else
         /// <summary>
-        ///     Checks if the specified type is a class. This is true when <see cref="Type.IsClass" />
-        ///     returns true and the type is no delegate (i.e. its <see cref="Type.BaseType" /> is no
-        ///     <see cref="MulticastDelegate" />).
+        /// Checks if the specified type is a class. This is true when <see cref="Type.IsClass" />
+        /// returns true and the type is no delegate (i.e. its <see cref="Type.BaseType" /> is no
+        /// <see cref="MulticastDelegate" />).
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
@@ -114,13 +114,13 @@ namespace Light.GuardClauses
 #endif
         }
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Checks if the specified type info describes a class. This is true when <see cref="TypeInfo.IsClass" />
-        ///     returns true and the type is no delegate (i.e. its <see cref="TypeInfo.BaseType" /> is no
-        ///     <see cref="MulticastDelegate" />).
-        /// </summary>
-        /// <param name="typeInfo">The type to check.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
+/// <summary>
+///     Checks if the specified type info describes a class. This is true when <see cref="TypeInfo.IsClass" />
+///     returns true and the type is no delegate (i.e. its <see cref="TypeInfo.BaseType" /> is no
+///     <see cref="MulticastDelegate" />).
+/// </summary>
+/// <param name="typeInfo">The type to check.</param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
         public static bool IsClass(this TypeInfo typeInfo)
         {
             return typeInfo.MustNotBeNull(nameof(typeInfo)).IsClass && typeInfo.BaseType != Types.MulticastDelegateType;
@@ -128,16 +128,16 @@ namespace Light.GuardClauses
 #endif
 
         /// <summary>
-        ///     Ensures that the specified type is a class (no delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// Ensures that the specified type is a class (no delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is no class (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> is no class (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no class.</exception>
@@ -152,20 +152,20 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Ensures that the specified type info describes a class (no delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
-        /// </summary>
-        /// <param name="parameter">The type info to be checked.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is no class (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no class.</exception>
+/// <summary>
+///     Ensures that the specified type info describes a class (no delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+/// </summary>
+/// <param name="parameter">The type info to be checked.</param>
+/// <param name="parameterName">The name of the parameter (optional).</param>
+/// <param name="message">
+///     The message that will be injected into the <see cref="TypeException" /> (optional).
+/// </param>
+/// <param name="exception">
+///     The exception that is thrown when <paramref name="parameter" /> is no class (optional).
+///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+/// </param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+/// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no class.</exception>
         public static TypeInfo MustBeClass(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -178,16 +178,16 @@ namespace Light.GuardClauses
 #endif
 
         /// <summary>
-        ///     Ensures that the specified type is no class (but a delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// Ensures that the specified type is no class (but a delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is a class (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> is a class (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is a class.</exception>
@@ -202,20 +202,20 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Ensures that the specified type info does not describe a class (but a delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
-        /// </summary>
-        /// <param name="parameter">The type info to be checked.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is a class (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is a class.</exception>
+/// <summary>
+///     Ensures that the specified type info does not describe a class (but a delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+/// </summary>
+/// <param name="parameter">The type info to be checked.</param>
+/// <param name="parameterName">The name of the parameter (optional).</param>
+/// <param name="message">
+///     The message that will be injected into the <see cref="TypeException" /> (optional).
+/// </param>
+/// <param name="exception">
+///     The exception that is thrown when <paramref name="parameter" /> is a class (optional).
+///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+/// </param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+/// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is a class.</exception>
         public static TypeInfo MustNotBeClass(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -239,16 +239,16 @@ namespace Light.GuardClauses
 #endif
 
         /// <summary>
-        ///     Ensures that the specified type is an interface (no class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// Ensures that the specified type is an interface (no class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is no interface (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> is no interface (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no interface.</exception>
@@ -266,20 +266,20 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Ensures that the specified type info describes an interface (no class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
-        /// </summary>
-        /// <param name="parameter">The type info to be checked.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is no interface (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no interface.</exception>
+/// <summary>
+///     Ensures that the specified type info describes an interface (no class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
+/// </summary>
+/// <param name="parameter">The type info to be checked.</param>
+/// <param name="parameterName">The name of the parameter (optional).</param>
+/// <param name="message">
+///     The message that will be injected into the <see cref="TypeException" /> (optional).
+/// </param>
+/// <param name="exception">
+///     The exception that is thrown when <paramref name="parameter" /> is no interface (optional).
+///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+/// </param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+/// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no interface.</exception>
         public static TypeInfo MustBeInterface(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -291,16 +291,16 @@ namespace Light.GuardClauses
 #endif
 
         /// <summary>
-        ///     Ensures that the specified type is no interface (but a class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// Ensures that the specified type is no interface (but a class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is an interface (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> is an interface (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is an interface.</exception>
@@ -319,20 +319,20 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Ensures that the specified type info does not describe an interface (but a class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
-        /// </summary>
-        /// <param name="parameter">The type info to be checked.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is an interface (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is an interface.</exception>
+/// <summary>
+///     Ensures that the specified type info does not describe an interface (but a class, delegate, struct or enum), or otherwise throws a <see cref="TypeException" />.
+/// </summary>
+/// <param name="parameter">The type info to be checked.</param>
+/// <param name="parameterName">The name of the parameter (optional).</param>
+/// <param name="message">
+///     The message that will be injected into the <see cref="TypeException" /> (optional).
+/// </param>
+/// <param name="exception">
+///     The exception that is thrown when <paramref name="parameter" /> is an interface (optional).
+///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+/// </param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+/// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is an interface.</exception>
         public static TypeInfo MustNotBeInterface(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -350,8 +350,8 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
 #else
         /// <summary>
-        ///     Checks if the specified type is a delegate. This is true when <see cref="Type.IsClass" />
-        ///     returns true and <see cref="Type.BaseType" /> is the <see cref="MulticastDelegate" /> type.
+        /// Checks if the specified type is a delegate. This is true when <see cref="Type.IsClass" />
+        /// returns true and <see cref="Type.BaseType" /> is the <see cref="MulticastDelegate" /> type.
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
@@ -366,12 +366,12 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Checks if the specified type info describes a delegate. This is true when <see cref="TypeInfo.IsClass" />
-        ///     returns true and <see cref="TypeInfo.BaseType" /> is the <see cref="MulticastDelegate" />) type.
-        /// </summary>
-        /// <param name="typeInfo">The type to check.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
+/// <summary>
+///     Checks if the specified type info describes a delegate. This is true when <see cref="TypeInfo.IsClass" />
+///     returns true and <see cref="TypeInfo.BaseType" /> is the <see cref="MulticastDelegate" />) type.
+/// </summary>
+/// <param name="typeInfo">The type to check.</param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
         public static bool IsDelegate(this TypeInfo typeInfo)
         {
             return typeInfo.MustNotBeNull(nameof(typeInfo)).IsClass && typeInfo.BaseType == Types.MulticastDelegateType;
@@ -379,16 +379,16 @@ namespace Light.GuardClauses
 #endif
 
         /// <summary>
-        ///     Ensures that the specified type is a delegate (no class, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// Ensures that the specified type is a delegate (no class, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is no delegate (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> is no delegate (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no delegate.</exception>
@@ -402,20 +402,20 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Ensures that the specified type info describes a delegate (no class, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
-        /// </summary>
-        /// <param name="parameter">The type info to be checked.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is no delegate (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no delegate.</exception>
+/// <summary>
+///     Ensures that the specified type info describes a delegate (no class, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+/// </summary>
+/// <param name="parameter">The type info to be checked.</param>
+/// <param name="parameterName">The name of the parameter (optional).</param>
+/// <param name="message">
+///     The message that will be injected into the <see cref="TypeException" /> (optional).
+/// </param>
+/// <param name="exception">
+///     The exception that is thrown when <paramref name="parameter" /> is no delegate (optional).
+///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+/// </param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+/// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no delegate.</exception>
         public static TypeInfo MustBeDelegate(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -427,16 +427,16 @@ namespace Light.GuardClauses
 #endif
 
         /// <summary>
-        ///     Ensures that the specified type is not a delegate (but a class, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// Ensures that the specified type is not a delegate (but a class, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is a delegate (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> is a delegate (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is a delegate.</exception>
@@ -450,20 +450,20 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Ensures that the specified type info does not describe a delegate (but a class, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
-        /// </summary>
-        /// <param name="parameter">The type info to be checked.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is a delegate (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is a delegate.</exception>
+/// <summary>
+///     Ensures that the specified type info does not describe a delegate (but a class, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+/// </summary>
+/// <param name="parameter">The type info to be checked.</param>
+/// <param name="parameterName">The name of the parameter (optional).</param>
+/// <param name="message">
+///     The message that will be injected into the <see cref="TypeException" /> (optional).
+/// </param>
+/// <param name="exception">
+///     The exception that is thrown when <paramref name="parameter" /> is a delegate (optional).
+///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+/// </param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+/// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is a delegate.</exception>
         public static TypeInfo MustNotBeDelegate(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -481,8 +481,8 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
 #else
         /// <summary>
-        ///     Checks if the specified type is a struct. This is true when <see cref="Type.IsValueType" />
-        ///     returns true and <see cref="Type.IsEnum" /> returns false.
+        /// Checks if the specified type is a struct. This is true when <see cref="Type.IsValueType" />
+        /// returns true and <see cref="Type.IsEnum" /> returns false.
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
@@ -497,12 +497,12 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Checks if the specified type info describes a struct. This is true when <see cref="TypeInfo.IsValueType" />
-        ///     returns true and <see cref="TypeInfo.IsEnum" /> returns false.
-        /// </summary>
-        /// <param name="typeInfo">The type to check.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
+/// <summary>
+///     Checks if the specified type info describes a struct. This is true when <see cref="TypeInfo.IsValueType" />
+///     returns true and <see cref="TypeInfo.IsEnum" /> returns false.
+/// </summary>
+/// <param name="typeInfo">The type to check.</param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
         public static bool IsStruct(this TypeInfo typeInfo)
         {
             return typeInfo.MustNotBeNull(nameof(typeInfo)).IsValueType && typeInfo.IsEnum == false;
@@ -510,16 +510,16 @@ namespace Light.GuardClauses
 #endif
 
         /// <summary>
-        ///     Ensures that the specified type is a struct (no class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
+        /// Ensures that the specified type is a struct (no class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is no struct (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> is no struct (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no struct.</exception>
@@ -533,20 +533,20 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Ensures that the specified type info describes a struct (no class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
-        /// </summary>
-        /// <param name="parameter">The type info to be checked.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is no struct (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no struct.</exception>
+/// <summary>
+///     Ensures that the specified type info describes a struct (no class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
+/// </summary>
+/// <param name="parameter">The type info to be checked.</param>
+/// <param name="parameterName">The name of the parameter (optional).</param>
+/// <param name="message">
+///     The message that will be injected into the <see cref="TypeException" /> (optional).
+/// </param>
+/// <param name="exception">
+///     The exception that is thrown when <paramref name="parameter" /> is no struct (optional).
+///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+/// </param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+/// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no struct.</exception>
         public static TypeInfo MustBeStruct(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -558,16 +558,16 @@ namespace Light.GuardClauses
 #endif
 
         /// <summary>
-        ///     Ensures that the specified type is no struct (but a class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
+        /// Ensures that the specified type is no struct (but a class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is a struct (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> is a struct (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is a struct.</exception>
@@ -581,20 +581,20 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Ensures that the specified type info does not describe a struct (but a class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
-        /// </summary>
-        /// <param name="parameter">The type info to be checked.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is a struct (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is a struct.</exception>
+/// <summary>
+///     Ensures that the specified type info does not describe a struct (but a class, interface, delegate, or enum), or otherwise throws a <see cref="TypeException" />.
+/// </summary>
+/// <param name="parameter">The type info to be checked.</param>
+/// <param name="parameterName">The name of the parameter (optional).</param>
+/// <param name="message">
+///     The message that will be injected into the <see cref="TypeException" /> (optional).
+/// </param>
+/// <param name="exception">
+///     The exception that is thrown when <paramref name="parameter" /> is a struct (optional).
+///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+/// </param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+/// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is a struct.</exception>
         public static TypeInfo MustNotBeStruct(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -617,16 +617,16 @@ namespace Light.GuardClauses
 #endif
 
         /// <summary>
-        ///     Ensures that the specified type is an enum (no class, interface, delegate, or struct), or otherwise throws a <see cref="TypeException" />.
+        /// Ensures that the specified type is an enum (no class, interface, delegate, or struct), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is no enum (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> is no enum (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no enum.</exception>
@@ -645,20 +645,20 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Ensures that the specified type info describes an enum (no class, interface, delegate, or struct), or otherwise throws a <see cref="TypeException" />.
-        /// </summary>
-        /// <param name="parameter">The type info to be checked.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is no enum (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no enum.</exception>
+/// <summary>
+///     Ensures that the specified type info describes an enum (no class, interface, delegate, or struct), or otherwise throws a <see cref="TypeException" />.
+/// </summary>
+/// <param name="parameter">The type info to be checked.</param>
+/// <param name="parameterName">The name of the parameter (optional).</param>
+/// <param name="message">
+///     The message that will be injected into the <see cref="TypeException" /> (optional).
+/// </param>
+/// <param name="exception">
+///     The exception that is thrown when <paramref name="parameter" /> is no enum (optional).
+///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+/// </param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+/// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no enum.</exception>
         public static TypeInfo MustBeEnum(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -670,16 +670,16 @@ namespace Light.GuardClauses
 #endif
 
         /// <summary>
-        ///     Ensures that the specified type is no enum (but a class, interface, delegate, or struct), or otherwise throws a <see cref="TypeException" />.
+        /// Ensures that the specified type is no enum (but a class, interface, delegate, or struct), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is an enum (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> is an enum (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is an enum.</exception>
@@ -698,20 +698,20 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Ensures that the specified type info does not describe an enum (but a class, interface, delegate, or struct), or otherwise throws a <see cref="TypeException" />.
-        /// </summary>
-        /// <param name="parameter">The type info to be checked.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is an enum (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is an enum.</exception>
+/// <summary>
+///     Ensures that the specified type info does not describe an enum (but a class, interface, delegate, or struct), or otherwise throws a <see cref="TypeException" />.
+/// </summary>
+/// <param name="parameter">The type info to be checked.</param>
+/// <param name="parameterName">The name of the parameter (optional).</param>
+/// <param name="message">
+///     The message that will be injected into the <see cref="TypeException" /> (optional).
+/// </param>
+/// <param name="exception">
+///     The exception that is thrown when <paramref name="parameter" /> is an enum (optional).
+///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+/// </param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+/// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is an enum.</exception>
         public static TypeInfo MustNotBeEnum(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -730,8 +730,8 @@ namespace Light.GuardClauses
         /// <returns>True if the specified type is a class, delegate, or interface, else false.</returns>
 #else
         /// <summary>
-        ///     Checks if the specified type is a reference type. This is true when <see cref="Type.IsValueType" />
-        ///     returns false.
+        /// Checks if the specified type is a reference type. This is true when <see cref="Type.IsValueType" />
+        /// returns false.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
@@ -747,13 +747,13 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Checks if the specified type info describes a reference type. This is true when <see cref="TypeInfo.IsValueType" />
-        ///     return false.
-        /// </summary>
-        /// <param name="typeInfo">The type to be checked.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
-        /// <returns>True if the specified type is a class, delegate, or interface, else false.</returns>
+/// <summary>
+///     Checks if the specified type info describes a reference type. This is true when <see cref="TypeInfo.IsValueType" />
+///     return false.
+/// </summary>
+/// <param name="typeInfo">The type to be checked.</param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
+/// <returns>True if the specified type is a class, delegate, or interface, else false.</returns>
         public static bool IsReferenceType(this TypeInfo typeInfo)
         {
             return typeInfo.MustNotBeNull(nameof(typeInfo)).IsValueType == false;
@@ -761,16 +761,16 @@ namespace Light.GuardClauses
 #endif
 
         /// <summary>
-        ///     Ensures that the specified type is a reference type (i.e. a class, interface, or delegate), or otherwise throws a <see cref="TypeException" />.
+        /// Ensures that the specified type is a reference type (i.e. a class, interface, or delegate), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is no reference type (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> is no reference type (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no reference type.</exception>
@@ -784,20 +784,20 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Ensures that the specified type info describes a reference type (i.e. a class, interface, or delegate), or otherwise throws a <see cref="TypeException" />.
-        /// </summary>
-        /// <param name="parameter">The type info to be checked.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is no reference type (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no reference type.</exception>
+/// <summary>
+///     Ensures that the specified type info describes a reference type (i.e. a class, interface, or delegate), or otherwise throws a <see cref="TypeException" />.
+/// </summary>
+/// <param name="parameter">The type info to be checked.</param>
+/// <param name="parameterName">The name of the parameter (optional).</param>
+/// <param name="message">
+///     The message that will be injected into the <see cref="TypeException" /> (optional).
+/// </param>
+/// <param name="exception">
+///     The exception that is thrown when <paramref name="parameter" /> is no reference type (optional).
+///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+/// </param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+/// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no reference type.</exception>
         public static TypeInfo MustBeReferenceType(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -821,16 +821,16 @@ namespace Light.GuardClauses
 
 
         /// <summary>
-        ///     Ensures that the specified type is a value type (i.e. a struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// Ensures that the specified type is a value type (i.e. a struct or enum), or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is no value type (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> is no value type (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no value type.</exception>
@@ -849,20 +849,20 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Ensures that the specified type info describes a value type (i.e. a struct or enum), or otherwise throws a <see cref="TypeException" />.
-        /// </summary>
-        /// <param name="parameter">The type info to be checked.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is no value type (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no value type.</exception>
+/// <summary>
+///     Ensures that the specified type info describes a value type (i.e. a struct or enum), or otherwise throws a <see cref="TypeException" />.
+/// </summary>
+/// <param name="parameter">The type info to be checked.</param>
+/// <param name="parameterName">The name of the parameter (optional).</param>
+/// <param name="message">
+///     The message that will be injected into the <see cref="TypeException" /> (optional).
+/// </param>
+/// <param name="exception">
+///     The exception that is thrown when <paramref name="parameter" /> is no value type (optional).
+///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+/// </param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+/// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no value type.</exception>
         public static TypeInfo MustBeValueType(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -874,9 +874,9 @@ namespace Light.GuardClauses
 #endif
 
         /// <summary>
-        ///     Checks if the specified type derives from the other type. Internally, this method uses <see cref="IsEquivalentTypeTo" />
-        ///     by default so that constructed generic types and their corresponding generic type definitions are regarded as equal.
-        ///     If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
+        /// Checks if the specified type derives from the other type. Internally, this method uses <see cref="IsEquivalentTypeTo" />
+        /// by default so that constructed generic types and their corresponding generic type definitions are regarded as equal.
+        /// If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="type">The type info to be checked.</param>
         /// <param name="baseClass">The base class that <paramref name="type" /> should derive from.</param>
@@ -906,25 +906,26 @@ namespace Light.GuardClauses
                 currentBaseType = currentBaseType.BaseType;
 #endif
             }
+
             return false;
         }
 
         /// <summary>
-        ///     Ensures that the type derives from the specified <paramref name="baseClass" />, or otherwise throws a <see cref="TypeException" />.
-        ///     By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
-        ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
-        ///     <paramref name="typeComparer" />.
+        /// Ensures that the type derives from the specified <paramref name="baseClass" />, or otherwise throws a <see cref="TypeException" />.
+        /// By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
+        /// generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
+        /// <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="baseClass">The type describing the base class that <paramref name="parameter" /> should derive from.</param>
         /// <param name="typeComparer">The equality comparer that is used to check if two types are equal (optional). By default, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> does not derive from <paramref name="baseClass" /> (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> does not derive from <paramref name="baseClass" /> (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="baseClass" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> does not derive from <paramref name="baseClass" />.</exception>
@@ -939,21 +940,21 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the type does not derive from the specified <paramref name="other" /> type, or otherwise throws a <see cref="TypeException" />.
-        ///     By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
-        ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
-        ///     <paramref name="typeComparer" />.
+        /// Ensures that the type does not derive from the specified <paramref name="other" /> type, or otherwise throws a <see cref="TypeException" />.
+        /// By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
+        /// generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
+        /// <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="other">The type that <paramref name="parameter" /> must not derive from.</param>
         /// <param name="typeComparer">The equality comparer that is used to check if two types are equal (optional). By default, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> does derive from <paramref name="other" /> (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> does derive from <paramref name="other" /> (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="other" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> does derive from <paramref name="other" />.</exception>
@@ -968,9 +969,9 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the specified type implements the given interface type. Internally, this method uses <see cref="IsEquivalentTypeTo" />
-        ///     so that constructed generic types and their corresponding generic type defintions are regarded as equal.
-        ///     If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
+        /// Checks if the specified type implements the given interface type. Internally, this method uses <see cref="IsEquivalentTypeTo" />
+        /// so that constructed generic types and their corresponding generic type defintions are regarded as equal.
+        /// If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <param name="interfaceType">The interface type that <paramref name="type" /> should implement.</param>
@@ -994,30 +995,28 @@ namespace Light.GuardClauses
             var implementedInterfaces = type.MustNotBeNull(nameof(type)).GetInterfaces();
 #endif
             for (var i = 0; i < implementedInterfaces.Length; i++)
-            {
                 if (typeComparer.Equals(implementedInterfaces[i], interfaceType))
                     return true;
-            }
 
             return false;
         }
 
         /// <summary>
-        ///     Ensures that the type implements the specified <paramref name="interfaceType" />, or otherwise throws a <see cref="TypeException" />.
-        ///     By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
-        ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
-        ///     <paramref name="typeComparer" />.
+        /// Ensures that the type implements the specified <paramref name="interfaceType" />, or otherwise throws a <see cref="TypeException" />.
+        /// By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
+        /// generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
+        /// <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="interfaceType">The type describing the interface that <paramref name="parameter" /> should implement.</param>
         /// <param name="typeComparer">The equality comparer that is used to check if two types are equal (optional). By default, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> does not implement <paramref name="interfaceType" /> (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> does not implement <paramref name="interfaceType" /> (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="interfaceType" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> does not implement <paramref name="interfaceType" />.</exception>
@@ -1032,21 +1031,21 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the type does not implement the specified <paramref name="other" /> type, or otherwise throws a <see cref="TypeException" />.
-        ///     By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
-        ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
-        ///     <paramref name="typeComparer" />.
+        /// Ensures that the type does not implement the specified <paramref name="other" /> type, or otherwise throws a <see cref="TypeException" />.
+        /// By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
+        /// generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
+        /// <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="other">The type that <paramref name="parameter" /> must not implement.</param>
         /// <param name="typeComparer">The equality comparer that is used to check if two types are equal (optional). By default, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> does implement <paramref name="other" /> (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> does implement <paramref name="other" /> (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="other" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> does implement <paramref name="other" />.</exception>
@@ -1061,9 +1060,9 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the given type derives from the specified base class or interface type. Internally, this method uses <see cref="IsEquivalentTypeTo" />
-        ///     so that constructed generic types and their corresponding generic type defintions are regarded as equal.
-        ///     If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
+        /// Checks if the given type derives from the specified base class or interface type. Internally, this method uses <see cref="IsEquivalentTypeTo" />
+        /// so that constructed generic types and their corresponding generic type defintions are regarded as equal.
+        /// If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <param name="baseClassOrInterfaceType">The type describing an interface or base class that <paramref name="type" /> should derive from or implement.</param>
@@ -1082,21 +1081,21 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the type derives from or implements the specified <paramref name="baseClassOrInterfaceType" />, or otherwise throws a <see cref="TypeException" />.
-        ///     By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
-        ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
-        ///     <paramref name="typeComparer" />.
+        /// Ensures that the type derives from or implements the specified <paramref name="baseClassOrInterfaceType" />, or otherwise throws a <see cref="TypeException" />.
+        /// By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
+        /// generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
+        /// <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="baseClassOrInterfaceType">The type that <paramref name="parameter" /> should derive from or implement.</param>
         /// <param name="typeComparer">The equality comparer that is used to check if two types are equal (optional). By default, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> does not derive from or implement <paramref name="baseClassOrInterfaceType" /> (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> does not derive from or implement <paramref name="baseClassOrInterfaceType" /> (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="baseClassOrInterfaceType" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> does not derive from or implement <paramref name="baseClassOrInterfaceType" />.</exception>
@@ -1111,21 +1110,21 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the type does not derive from or implement the specified <paramref name="other" /> type, or otherwise throws a <see cref="TypeException" />.
-        ///     By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
-        ///     generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
-        ///     <paramref name="typeComparer" />.
+        /// Ensures that the type does not derive from or implement the specified <paramref name="other" /> type, or otherwise throws a <see cref="TypeException" />.
+        /// By default, this method uses <see cref="IsEquivalentTypeTo" /> internally so that constructed generic types and their corrsponding
+        /// generic type definitions are regarded as equal. If you do not want this default behavior, then please provide a fitting
+        /// <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="other">The type that <paramref name="parameter" /> should not derive from or implement.</param>
         /// <param name="typeComparer">The equality comparer that is used to check if two types are equal (optional). By default, an instance of <see cref="EqualivalentTypeComparer" /> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> derives from or implements <paramref name="other" /> (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> derives from or implements <paramref name="other" /> (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="other" /> is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> derives from or implements <paramref name="other" />.</exception>
@@ -1140,9 +1139,9 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the given <paramref name="type" /> is equal to the specified <paramref name="otherType" /> or if it implements it. Internally, this
-        ///     method uses <see cref="IsEquivalentTypeTo" /> so that constructed generic types and their corresponding generic type defintions are regarded as equal.
-        ///     If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
+        /// Checks if the given <paramref name="type" /> is equal to the specified <paramref name="otherType" /> or if it implements it. Internally, this
+        /// method uses <see cref="IsEquivalentTypeTo" /> so that constructed generic types and their corresponding generic type defintions are regarded as equal.
+        /// If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the interface type that <paramref name="type" /> implements.</param>
@@ -1158,9 +1157,9 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the given <paramref name="type" /> is equal to the specified <paramref name="otherType" /> or if it derives from it. Internally, this
-        ///     method uses <see cref="IsEquivalentTypeTo" /> so that constructed generic types and their corresponding generic type defintions are regarded as equal.
-        ///     If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
+        /// Checks if the given <paramref name="type" /> is equal to the specified <paramref name="otherType" /> or if it derives from it. Internally, this
+        /// method uses <see cref="IsEquivalentTypeTo" /> so that constructed generic types and their corresponding generic type defintions are regarded as equal.
+        /// If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the base class type where <paramref name="type" /> derives from.</param>
@@ -1176,9 +1175,9 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the given <paramref name="type" /> is equal to the specified <paramref name="otherType" /> or if it derives from it or implements it.
-        ///     Internally, this method uses <see cref="IsEquivalentTypeTo" /> so that constructed generic types and their corresponding generic type defintions
-        ///     are regarded as equal. If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
+        /// Checks if the given <paramref name="type" /> is equal to the specified <paramref name="otherType" /> or if it derives from it or implements it.
+        /// Internally, this method uses <see cref="IsEquivalentTypeTo" /> so that constructed generic types and their corresponding generic type defintions
+        /// are regarded as equal. If you don't want this default behavior, then provide a fitting instance as <paramref name="typeComparer" />.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the base class type where <paramref name="type" /> derives from.</param>
@@ -1194,7 +1193,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the given <paramref name="type" /> is a generic type that has no open generic parameters (e.g. typeof(List&lt;string&gt;)).
+        /// Checks if the given <paramref name="type" /> is a generic type that has no open generic parameters (e.g. typeof(List&lt;string&gt;)).
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
@@ -1208,11 +1207,11 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Checks if the given <paramref name="typeInfo" /> describes a generic type that has no open generic parameters (e.g. typeof(List&lt;string&gt;)).
-        /// </summary>
-        /// <param name="typeInfo">The type info to be checked.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
+/// <summary>
+///     Checks if the given <paramref name="typeInfo" /> describes a generic type that has no open generic parameters (e.g. typeof(List&lt;string&gt;)).
+/// </summary>
+/// <param name="typeInfo">The type info to be checked.</param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
         public static bool IsClosedConstructedGenericType(this TypeInfo typeInfo)
         {
             return typeInfo.MustNotBeNull(nameof(typeInfo)).IsGenericType && typeInfo.ContainsGenericParameters == false;
@@ -1220,7 +1219,7 @@ namespace Light.GuardClauses
 #endif
 
         /// <summary>
-        ///     Checks if the given <paramref name="type" /> is a generic type definition (e.g. typeof(List&lt;&gt;)).
+        /// Checks if the given <paramref name="type" /> is a generic type definition (e.g. typeof(List&lt;&gt;)).
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
@@ -1230,8 +1229,8 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the given <paramref name="type" /> is a generic type that has open generic parameters,
-        ///     but is no generic type definition (e.g. if you derive from Dictionary&lt;string, T&gt;).
+        /// Checks if the given <paramref name="type" /> is a generic type that has open generic parameters,
+        /// but is no generic type definition (e.g. if you derive from Dictionary&lt;string, T&gt;).
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
@@ -1248,12 +1247,12 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Checks if the given <paramref name="typeInfo" /> describes a generic type that has open generic parameters,
-        ///     but is no generic type definition (e.g. if you derive from Dictionary&lt;string, T&gt;).
-        /// </summary>
-        /// <param name="typeInfo">The type info to be checked.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
+/// <summary>
+///     Checks if the given <paramref name="typeInfo" /> describes a generic type that has open generic parameters,
+///     but is no generic type definition (e.g. if you derive from Dictionary&lt;string, T&gt;).
+/// </summary>
+/// <param name="typeInfo">The type info to be checked.</param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
         public static bool IsOpenConstructedGenericType(this TypeInfo typeInfo)
         {
             return typeInfo.MustNotBeNull(nameof(typeInfo)).IsGenericType &&
@@ -1263,7 +1262,7 @@ namespace Light.GuardClauses
 #endif
 
         /// <summary>
-        ///     Checks if the given <paramref name="type" /> is a generic type parameter (e.g the T in List&lt;T&gt;)
+        /// Checks if the given <paramref name="type" /> is a generic type parameter (e.g the T in List&lt;T&gt;)
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
@@ -1273,7 +1272,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the specified type is an abstract base class or interface.
+        /// Checks if the specified type is an abstract base class or interface.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
@@ -1285,16 +1284,16 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified type is an abstract base class or interface, or otherwise throws a <see cref="TypeException" />.
+        /// Ensures that the specified type is an abstract base class or interface, or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="TypeException" /> (optional).
+        /// The message that will be injected into the <see cref="TypeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is not an abstract base class or interface (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> is not an abstract base class or interface (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or is null.</exception>
         /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is not an abstract base class or interface.</exception>
@@ -1306,7 +1305,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the given type is a static class.
+        /// Checks if the given type is a static class.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
         public static bool IsStaticClass(this Type type)
@@ -1319,10 +1318,10 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Checks if the given type info describes a static class.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
+/// <summary>
+///     Checks if the given type info describes a static class.
+/// </summary>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
         public static bool IsStaticClass(this TypeInfo typeInfo)
         {
             typeInfo.MustNotBeNull(nameof(typeInfo));
@@ -1332,14 +1331,14 @@ namespace Light.GuardClauses
 #endif
 
         /// <summary>
-        ///     Ensures that the specified type is a static class, or otherwise throws a <see cref="TypeException" />.
+        /// Ensures that the specified type is a static class, or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="TypeException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is not a static class (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> is not a static class (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         public static Type MustBeStaticClass(this Type parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
@@ -1352,17 +1351,17 @@ namespace Light.GuardClauses
         }
 
 #if NETSTANDARD1_0
-        /// <summary>
-        ///     Ensures that the specified type info describes a static class, or otherwise throws a <see cref="TypeException" />.
-        /// </summary>
-        /// <param name="parameter">The type info to be checked.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be injected into the <see cref="TypeException" /> (optional).</param>
-        /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is not a static class (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+/// <summary>
+///     Ensures that the specified type info describes a static class, or otherwise throws a <see cref="TypeException" />.
+/// </summary>
+/// <param name="parameter">The type info to be checked.</param>
+/// <param name="parameterName">The name of the parameter (optional).</param>
+/// <param name="message">The message that will be injected into the <see cref="TypeException" /> (optional).</param>
+/// <param name="exception">
+///     The exception that is thrown when <paramref name="parameter" /> is not a static class (optional).
+///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+/// </param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         public static TypeInfo MustBeStaticClass(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);
@@ -1374,14 +1373,14 @@ namespace Light.GuardClauses
 #endif
 
         /// <summary>
-        ///     Ensures that the specified type is not a static class, or otherwise throws a <see cref="TypeException" />.
+        /// Ensures that the specified type is not a static class, or otherwise throws a <see cref="TypeException" />.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="TypeException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is a static class (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when <paramref name="parameter" /> is a static class (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         public static Type MustNotBeStaticClass(this Type parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
@@ -1394,17 +1393,17 @@ namespace Light.GuardClauses
         }
 
 #if (NETSTANDARD1_0)
-        /// <summary>
-        ///     Ensures that the specified type info does not describe a static class, or otherwise throws a <see cref="TypeException" />.
-        /// </summary>
-        /// <param name="parameter">The type info to be checked.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be injected into the <see cref="TypeException" /> (optional).</param>
-        /// <param name="exception">
-        ///     The exception that is thrown when <paramref name="parameter" /> is a static class (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+/// <summary>
+///     Ensures that the specified type info does not describe a static class, or otherwise throws a <see cref="TypeException" />.
+/// </summary>
+/// <param name="parameter">The type info to be checked.</param>
+/// <param name="parameterName">The name of the parameter (optional).</param>
+/// <param name="message">The message that will be injected into the <see cref="TypeException" /> (optional).</param>
+/// <param name="exception">
+///     The exception that is thrown when <paramref name="parameter" /> is a static class (optional).
+///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+/// </param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         public static TypeInfo MustNotBeStaticClass(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
             parameter.MustNotBeNull(parameterName);

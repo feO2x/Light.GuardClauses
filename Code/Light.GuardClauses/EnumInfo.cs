@@ -7,8 +7,8 @@ using Light.GuardClauses.FrameworkExtensions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     Provides metainformation about enum values and the flag bitmask if the enum is marked with the <see cref="FlagsAttribute" />.
-    ///     Can be used to validate that an enum value is valid.
+    /// Provides metainformation about enum values and the flag bitmask if the enum is marked with the <see cref="FlagsAttribute" />.
+    /// Can be used to validate that an enum value is valid.
     /// </summary>
     /// <typeparam name="T">The type of the enum.</typeparam>
     public static class EnumInfo<T> where T : struct, IComparable, IFormattable
@@ -17,7 +17,7 @@ namespace Light.GuardClauses
 #endif
     {
         /// <summary>
-        ///     Gets the value indicating whether the enum type is marked with the flags attribute.
+        /// Gets the value indicating whether the enum type is marked with the flags attribute.
         /// </summary>
         public static readonly bool IsFlagsEnum =
 #if !NETSTANDARD1_0
@@ -34,13 +34,13 @@ namespace Light.GuardClauses
         private static readonly T[] EnumConstantsArray;
 
         /// <summary>
-        ///     Gets the underlying type that is used for the enum (<see cref="int" /> for default enums).
+        /// Gets the underlying type that is used for the enum (<see cref="int" /> for default enums).
         /// </summary>
         public static readonly Type UnderlyingType;
         // ReSharper restore StaticMemberInGenericType
 
         /// <summary>
-        ///     Gets the values of the enum as an read-only list.
+        /// Gets the values of the enum as an read-only list.
         /// </summary>
         public static IReadOnlyList<T> EnumConstants => EnumConstantsArray;
 
@@ -100,22 +100,23 @@ namespace Light.GuardClauses
         {
             var comparer = EqualityComparer<T>.Default;
             for (var i = 0; i < EnumConstantsArray.Length; ++i)
-            {
                 if (comparer.Equals(EnumConstantsArray[i], parameter))
                     return true;
-            }
 
             return false;
         }
 
         /// <summary>
-        ///     Checks if the specified enum value is valid. This is true if either the enum is a standard enum and the enum value corresponds
-        ///     to one of the enum constant values or if the enum type is marked with the <see cref="FlagsAttribute" /> and the given value
-        ///     is a valid combination of bits for this type.
+        /// Checks if the specified enum value is valid. This is true if either the enum is a standard enum and the enum value corresponds
+        /// to one of the enum constant values or if the enum type is marked with the <see cref="FlagsAttribute" /> and the given value
+        /// is a valid combination of bits for this type.
         /// </summary>
         /// <param name="enumValue">The enum value to be checked.</param>
         /// <returns>True if either the enum value is </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsValidEnumValue(T enumValue) => IsFlagsEnum ? IsValidFlagsValue(enumValue) : IsValidValue(enumValue);
+        public static bool IsValidEnumValue(T enumValue)
+        {
+            return IsFlagsEnum ? IsValidFlagsValue(enumValue) : IsValidValue(enumValue);
+        }
     }
 }

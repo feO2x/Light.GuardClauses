@@ -3,7 +3,7 @@
 namespace Light.GuardClauses.Exceptions
 {
     /// <summary>
-    ///     This exception indicates an error with a collection.
+    /// This exception indicates an error with a collection.
     /// </summary>
 #if (NETSTANDARD2_0 || NET45)
     [Serializable]
@@ -11,7 +11,7 @@ namespace Light.GuardClauses.Exceptions
     public class CollectionException : ArgumentException
     {
         /// <summary>
-        ///     Creates a new instance of <see cref="CollectionException" />.
+        /// Creates a new instance of <see cref="CollectionException" />.
         /// </summary>
         /// <param name="message">The message of the exception.</param>
         /// <param name="parameterName">The name of the parameter.</param>

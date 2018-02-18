@@ -4,8 +4,7 @@ using System.Reflection;
 namespace Light.GuardClauses.Exceptions
 {
     /// <summary>
-    ///     This exception indicated that a <see cref="Type" /> or <see cref="TypeInfo" />
-    ///     object is not in a valid state.
+    /// This exception indicated that a <see cref="Type" /> or <see cref="TypeInfo" /> object is not in a valid state.
     /// </summary>
 #if (NETSTANDARD2_0 || NET45)
     [Serializable]
@@ -13,7 +12,7 @@ namespace Light.GuardClauses.Exceptions
     public class TypeException : ArgumentException
     {
         /// <summary>
-        ///     Initializes a new instance of <see cref="TypeException" />.
+        /// Initializes a new instance of <see cref="TypeException" />.
         /// </summary>
         /// <param name="message">The message of the exception.</param>
         /// <param name="parameterName">The name of the parameter.</param>

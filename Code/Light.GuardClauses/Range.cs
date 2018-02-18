@@ -6,28 +6,28 @@ using Light.GuardClauses.FrameworkExtensions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     Defines a range that can be used to check if a specified <see cref="IComparable{T}" /> is in between it or not.
+    /// Defines a range that can be used to check if a specified <see cref="IComparable{T}" /> is in between it or not.
     /// </summary>
     /// <typeparam name="T">The type that the range should be applied to.</typeparam>
     public readonly struct Range<T> : IEquatable<Range<T>> where T : IComparable<T>
     {
         /// <summary>
-        ///     Gets the lower boundary of the range.
+        /// Gets the lower boundary of the range.
         /// </summary>
         public readonly T From;
 
         /// <summary>
-        ///     Gets the upper boundary of the range.
+        /// Gets the upper boundary of the range.
         /// </summary>
         public readonly T To;
 
         /// <summary>
-        ///     Gets the value indicating whether the From value is included in the range.
+        /// Gets the value indicating whether the From value is included in the range.
         /// </summary>
         public readonly bool IsFromInclusive;
 
         /// <summary>
-        ///     Gets the value indicating whether the To value is included in the range.
+        /// Gets the value indicating whether the To value is included in the range.
         /// </summary>
         public readonly bool IsToInclusive;
 
@@ -35,7 +35,7 @@ namespace Light.GuardClauses
         private readonly int _expectedUpperBoundaryResult;
 
         /// <summary>
-        ///     Creates a new instance of <see cref="Range{T}" />.
+        /// Creates a new instance of <see cref="Range{T}" />.
         /// </summary>
         /// <param name="from">The lower boundary of the range.</param>
         /// <param name="to">The upper boundary of the range.</param>
@@ -57,16 +57,19 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the specified <paramref name="value" /> is within range.
+        /// Checks if the specified <paramref name="value" /> is within range.
         /// </summary>
         /// <param name="value">The value to be checked.</param>
         /// <returns>True if value is within range, otherwise false.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsValueWithinRange(T value) => value.CompareTo(From) >= _expectedLowerBoundaryResult && value.CompareTo(To) <= _expectedUpperBoundaryResult;
+        public bool IsValueWithinRange(T value)
+        {
+            return value.CompareTo(From) >= _expectedLowerBoundaryResult && value.CompareTo(To) <= _expectedUpperBoundaryResult;
+        }
 
         /// <summary>
-        ///     Use this method to create a range in a fluent style using method chaining.
-        ///     Defines the lower boundary as an inclusive value.
+        /// Use this method to create a range in a fluent style using method chaining.
+        /// Defines the lower boundary as an inclusive value.
         /// </summary>
         /// <param name="value">The value that indicates the inclusive lower boundary of the resulting Range.</param>
         /// <returns>A value you can use to fluently define the upper boundary of a new Range.</returns>
@@ -77,8 +80,8 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Use this method to create a range in a fluent style using method chaining.
-        ///     Defines the lower boundary as an exclusive value.
+        /// Use this method to create a range in a fluent style using method chaining.
+        /// Defines the lower boundary as an exclusive value.
         /// </summary>
         /// <param name="value">The value that indicates the exclusive lower boundary of the resulting Range.</param>
         /// <returns>A value you can use to fluently define the upper boundary of a new Range.</returns>
@@ -89,7 +92,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     The nested <see cref="RangeFromInfo" /> can be used to fluently create a <see cref="Range{T}" />.
+        /// The nested <see cref="RangeFromInfo" /> can be used to fluently create a <see cref="Range{T}" />.
         /// </summary>
         public struct RangeFromInfo
         {
@@ -97,7 +100,7 @@ namespace Light.GuardClauses
             private readonly bool _isFromInclusive;
 
             /// <summary>
-            ///     Creates a new RangeFromInfo.
+            /// Creates a new RangeFromInfo.
             /// </summary>
             /// <param name="from">The lower boundary of the range.</param>
             /// <param name="isFromInclusive">The value indicating whether <paramref name="from" /> is part of the range.</param>
@@ -109,13 +112,13 @@ namespace Light.GuardClauses
             }
 
             /// <summary>
-            ///     Use this method to create a Range in a fluent style using method chaining.
-            ///     Defines the upper boundary as an exclusive value.
+            /// Use this method to create a Range in a fluent style using method chaining.
+            /// Defines the upper boundary as an exclusive value.
             /// </summary>
             /// <param name="value">The value that indicates the exclusive upper boundary of the resulting Range.</param>
             /// <returns>A new range with the specified upper and lower boundaries.</returns>
             /// <exception cref="ArgumentOutOfRangeException">
-            ///     Thrown when <paramref name="value" /> is less than the lower boundary value.
+            /// Thrown when <paramref name="value" /> is less than the lower boundary value.
             /// </exception>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public Range<T> ToExclusive(T value)
@@ -124,13 +127,13 @@ namespace Light.GuardClauses
             }
 
             /// <summary>
-            ///     Use this method to create a Range in a fluent style using method chaining.
-            ///     Defines the upper boundary as an inclusive value.
+            /// Use this method to create a Range in a fluent style using method chaining.
+            /// Defines the upper boundary as an inclusive value.
             /// </summary>
             /// <param name="value">The value that indicates the inclusive upper boundary of the resulting Range.</param>
             /// <returns>A new range with the specified upper and lower boundaries.</returns>
             /// <exception cref="ArgumentOutOfRangeException">
-            ///     Thrown when <paramref name="value" /> is less than the lower boundary value.
+            /// Thrown when <paramref name="value" /> is less than the lower boundary value.
             /// </exception>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public Range<T> ToInclusive(T value)
@@ -164,16 +167,25 @@ namespace Light.GuardClauses
         }
 
         /// <inheritdoc />
-        public override int GetHashCode() => Equality.CreateHashCode(From, To, IsFromInclusive, IsToInclusive);
+        public override int GetHashCode()
+        {
+            return Equality.CreateHashCode(From, To, IsFromInclusive, IsToInclusive);
+        }
 
         /// <summary>
-        ///     Checks if two ranges are equal.
+        /// Checks if two ranges are equal.
         /// </summary>
-        public static bool operator ==(Range<T> first, Range<T> second) => first.Equals(second);
+        public static bool operator ==(Range<T> first, Range<T> second)
+        {
+            return first.Equals(second);
+        }
 
         /// <summary>
-        ///     Checks if two ranges are not equal.
+        /// Checks if two ranges are not equal.
         /// </summary>
-        public static bool operator !=(Range<T> first, Range<T> second) => first.Equals(second) == false;
+        public static bool operator !=(Range<T> first, Range<T> second)
+        {
+            return first.Equals(second) == false;
+        }
     }
 }

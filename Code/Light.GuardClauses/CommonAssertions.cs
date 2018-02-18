@@ -1,20 +1,21 @@
 using System;
+using System.Runtime.CompilerServices;
+using Light.GuardClauses.Exceptions;
+
 #if NETSTANDARD1_0
 using System.Reflection;
 #endif
-using System.Runtime.CompilerServices;
-using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     The <see cref="CommonAssertions" /> class contains the most common assertions like MustNotBeNull and assertions that are not directly related to
-    ///     any categories like collection assertions or string assertions.
+    /// The <see cref="CommonAssertions" /> class contains the most common assertions like MustNotBeNull and assertions that are not directly related to
+    /// any categories like collection assertions or string assertions.
     /// </summary>
     public static class CommonAssertions
     {
         /// <summary>
-        ///     Ensures that the specified parameter is not null, or otherwise throws an <see cref="ArgumentNullException" />.
+        /// Ensures that the specified parameter is not null, or otherwise throws an <see cref="ArgumentNullException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The value to be checked  for null.</param>
@@ -30,7 +31,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified parameter is not null, or otherwise throws your custom exception.
+        /// Ensures that the specified parameter is not null, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The value to be checked for null.</param>
@@ -46,8 +47,8 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified parameter is not the default value, or otherwise throws an <see cref="ArgumentNullException" />
-        ///     for reference types, or an <see cref="ArgumentDefaultException" /> for value types.
+        /// Ensures that the specified parameter is not the default value, or otherwise throws an <see cref="ArgumentNullException" />
+        /// for reference types, or an <see cref="ArgumentDefaultException" /> for value types.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -71,7 +72,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified parameter is not the default value, or otherwise throws your custom exception.
+        /// Ensures that the specified parameter is not the default value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -93,9 +94,9 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified parameter is not null when <typeparamref name="T" /> is a reference type, or otherwise
-        ///     throws an <see cref="ArgumentNullException" />. NOTICE: you should only use this assertion in generic contexts,
-        ///     use <see cref="MustNotBeNull{T}(T,string,string)" /> by default.
+        /// Ensures that the specified parameter is not null when <typeparamref name="T" /> is a reference type, or otherwise
+        /// throws an <see cref="ArgumentNullException" />. NOTICE: you should only use this assertion in generic contexts,
+        /// use <see cref="MustNotBeNull{T}(T,string,string)" /> by default.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -114,9 +115,9 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified parameter is not null when <typeparamref name="T" /> is a reference type, or otherwise
-        ///     throws your custom exception. NOTICE: you should only use this assertion in generic contexts,
-        ///     use <see cref="MustNotBeNull{T}(T,Func{Exception})" /> by default.
+        /// Ensures that the specified parameter is not null when <typeparamref name="T" /> is a reference type, or otherwise
+        /// throws your custom exception. NOTICE: you should only use this assertion in generic contexts,
+        /// use <see cref="MustNotBeNull{T}(T,Func{Exception})" /> by default.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -134,7 +135,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that parameter is of the specified type and returns the downcasted value, or otherwise throws a <see cref="TypeMismatchException" />.
+        /// Ensures that parameter is of the specified type and returns the downcasted value, or otherwise throws a <see cref="TypeMismatchException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -153,7 +154,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that parameter is of the specified type and returns the downcasted value, or otherwise throws your custom exception.
+        /// Ensures that parameter is of the specified type and returns the downcasted value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -172,7 +173,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that parameter is of the specified type and returns the downcasted value, or otherwise throws your custom exception.
+        /// Ensures that parameter is of the specified type and returns the downcasted value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -191,7 +192,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified nullable has a value, or otherwise throws a <see cref="NullableHasNoValueException" />.
+        /// Ensures that the specified nullable has a value, or otherwise throws a <see cref="NullableHasNoValueException" />.
         /// </summary>
         /// <typeparam name="T">The type of the struct encapsulated by the nullable.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -207,7 +208,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified nullable has a value, or otherwise throws your custom exception.
+        /// Ensures that the specified nullable has a value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the struct encapsulated by the nullable.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -222,7 +223,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified nullable has no value, or otherwise throws a <see cref="NullableHasValueException" />.
+        /// Ensures that the specified nullable has no value, or otherwise throws a <see cref="NullableHasValueException" />.
         /// </summary>
         /// <typeparam name="T">The type of the struct encapsulated by the nullable.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -238,7 +239,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified nullable has no value, or otherwise throws your custom exception.
+        /// Ensures that the specified nullable has no value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the struct encapsulated by the nullable.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -253,7 +254,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified nullable has no value, or otherwise throws your custom exception.
+        /// Ensures that the specified nullable has no value, or otherwise throws your custom exception.
         /// </summary>
         /// <typeparam name="T">The type of the struct encapsulated by the nullable.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -268,7 +269,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified value is defined in its corresponding enum type, or otherwise throws an <see cref="EnumValueNotDefinedException" />.
+        /// Ensures that the specified value is defined in its corresponding enum type, or otherwise throws an <see cref="EnumValueNotDefinedException" />.
         /// </summary>
         /// <typeparam name="T">The enum type of the parameter.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -279,7 +280,7 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MustBeValidEnumValue<T>(this T parameter, string parameterName = null, string message = null) where T : struct, IComparable, IFormattable
 #if !NETSTANDARD1_0
-        , IConvertible
+            , IConvertible
 #endif
         {
             if (parameter.IsValidEnumValue() == false)
@@ -288,7 +289,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified value is defined in its corresponding enum type, or otherwise throws an <see cref="EnumValueNotDefinedException" />.
+        /// Ensures that the specified value is defined in its corresponding enum type, or otherwise throws an <see cref="EnumValueNotDefinedException" />.
         /// </summary>
         /// <typeparam name="T">The enum type of the parameter.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -307,7 +308,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified value is defined in its corresponding enum type, or otherwise throws an <see cref="EnumValueNotDefinedException" />.
+        /// Ensures that the specified value is defined in its corresponding enum type, or otherwise throws an <see cref="EnumValueNotDefinedException" />.
         /// </summary>
         /// <typeparam name="T">The enum type of the parameter.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -326,7 +327,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the specified value is a valid enum value of its type.
+        /// Checks if the specified value is a valid enum value of its type.
         /// </summary>
         /// <param name="parameter">The enum value to be checked.</param>
         /// <returns>True if the specified value is a valid value of an enum type, else false.</returns>
@@ -351,7 +352,7 @@ namespace Light.GuardClauses
 #endif
 
         /// <summary>
-        ///     Ensures that the specified GUID is not empty, or otherwise throws an <see cref="EmptyGuidException" />.
+        /// Ensures that the specified GUID is not empty, or otherwise throws an <see cref="EmptyGuidException" />.
         /// </summary>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
@@ -366,7 +367,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified GUID is not empty, or otherwise throws your custom exception.
+        /// Ensures that the specified GUID is not empty, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
@@ -380,7 +381,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the specified GUID is an empty one.
+        /// Checks if the specified GUID is an empty one.
         /// </summary>
         /// <param name="parameter">The GUID to be checked.</param>
         /// <returns>True if the GUID is empty, else false.</returns>
@@ -391,7 +392,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified Boolean value is false, or otherwise throws a <see cref="ArgumentException" />.
+        /// Ensures that the specified Boolean value is false, or otherwise throws a <see cref="ArgumentException" />.
         /// </summary>
         /// <param name="parameter">The paramter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
@@ -406,7 +407,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified Boolean value is false, or otherwise throws your custom exception.
+        /// Ensures that the specified Boolean value is false, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The paramter to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
@@ -420,7 +421,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified Boolean value is true, or otherwise throws an <see cref="ArgumentException" />.
+        /// Ensures that the specified Boolean value is true, or otherwise throws an <see cref="ArgumentException" />.
         /// </summary>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
@@ -435,7 +436,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified Boolean value is true, or otherwise throws your custom exception.
+        /// Ensures that the specified Boolean value is true, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
@@ -449,7 +450,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified Boolean value is not false, or otherwise throws an <see cref="ArgumentException" />.
+        /// Ensures that the specified Boolean value is not false, or otherwise throws an <see cref="ArgumentException" />.
         /// </summary>
         /// <param name="parameter">The paramter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
@@ -464,7 +465,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified Boolean value is not false, or otherwise throws your custom exception.
+        /// Ensures that the specified Boolean value is not false, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The paramter to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
@@ -478,7 +479,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified Boolean value is not true, or otherwise throws an <see cref="ArgumentException" />.
+        /// Ensures that the specified Boolean value is not true, or otherwise throws an <see cref="ArgumentException" />.
         /// </summary>
         /// <param name="parameter">The paramter to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
@@ -493,7 +494,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified Boolean value is not true, or otherwise throws your custom exception.
+        /// Ensures that the specified Boolean value is not true, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The paramter to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>

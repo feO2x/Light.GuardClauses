@@ -3,7 +3,7 @@
 namespace Light.GuardClauses.Exceptions
 {
     /// <summary>
-    ///     This exception indicates that a value of a value type is the default value.
+    /// This exception indicates that a value of a value type is the default value.
     /// </summary>
 #if (NETSTANDARD2_0 || NET45)
     [Serializable]
@@ -11,7 +11,7 @@ namespace Light.GuardClauses.Exceptions
     public class ArgumentDefaultException : ArgumentException
     {
         /// <summary>
-        ///     Creates a new instance of <see cref="ArgumentDefaultException" />.
+        /// Creates a new instance of <see cref="ArgumentDefaultException" />.
         /// </summary>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>

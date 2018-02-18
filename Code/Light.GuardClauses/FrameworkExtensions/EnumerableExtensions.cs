@@ -6,13 +6,13 @@ using Light.GuardClauses.Exceptions;
 namespace Light.GuardClauses.FrameworkExtensions
 {
     /// <summary>
-    ///     Provides extension methods for the <see cref="IEnumerable{T}" /> interface.
+    /// Provides extension methods for the <see cref="IEnumerable{T}" /> interface.
     /// </summary>
     public static class EnumerableExtensions
     {
         /// <summary>
-        ///     Tries to cast the specified enumerable as an <see cref="IList{T}" />, or
-        ///     creates a new <see cref="List{T}" /> containing the enumerable's items.
+        /// Tries to cast the specified enumerable as an <see cref="IList{T}" />, or
+        /// creates a new <see cref="List{T}" /> containing the enumerable's items.
         /// </summary>
         /// <typeparam name="T">The item type of the enumerable.</typeparam>
         /// <param name="enumerable">The enumerable to be transformed.</param>
@@ -24,8 +24,8 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
-        ///     Tries to cast the specified enumerable as an <see cref="IList{T}" />, or
-        ///     creates a new collection containing the enumerable's items by calling the specified delegate.
+        /// Tries to cast the specified enumerable as an <see cref="IList{T}" />, or
+        /// creates a new collection containing the enumerable's items by calling the specified delegate.
         /// </summary>
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="enumerable">The enumerable that will be converted to <see cref="IList{T}" />.</param>
@@ -38,8 +38,8 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
-        ///     Tries to cast the specified enumerable as an <see cref="IReadOnlyList{T}" />, or
-        ///     creates a new <see cref="List{T}" /> containing the enumerable's items.
+        /// Tries to cast the specified enumerable as an <see cref="IReadOnlyList{T}" />, or
+        /// creates a new <see cref="List{T}" /> containing the enumerable's items.
         /// </summary>
         /// <typeparam name="T">The item type of the enumerable.</typeparam>
         /// <param name="enumerable">The enumerable to be transformed.</param>
@@ -51,8 +51,8 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
-        ///     Tries to cast the specified enumerable as an <see cref="IReadOnlyList{T}" />, or
-        ///     creates a new collection containing the enumerable's items by calling the specified delegate.
+        /// Tries to cast the specified enumerable as an <see cref="IReadOnlyList{T}" />, or
+        /// creates a new collection containing the enumerable's items by calling the specified delegate.
         /// </summary>
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="enumerable">The enumerable that will be converted to <see cref="IReadOnlyList{T}" />.</param>
@@ -65,7 +65,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
-        ///     Tries to downcast the specified enumerable as an array, or creates a new collection
+        /// Tries to downcast the specified enumerable as an array, or creates a new collection
         /// </summary>
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="enumerable">The enumerable that will be converted to an array.</param>
@@ -83,24 +83,18 @@ namespace Light.GuardClauses.FrameworkExtensions
             if (enumerable is IReadOnlyList<T> list)
             {
                 array = new T[list.Count];
-                for (; i < list.Count; i++)
-                {
-                    array[i] = list[i];
-                }
+                for (; i < list.Count; i++) array[i] = list[i];
                 return array;
             }
 
             array = new T[enumerable.Count()];
-            foreach (var item in enumerable)
-            {
-                array[i++] = item;
-            }
+            foreach (var item in enumerable) array[i++] = item;
             return array;
             // ReSharper restore PossibleMultipleEnumeration
         }
 
         /// <summary>
-        ///     Performs the action on each item of the specified enumerable.
+        /// Performs the action on each item of the specified enumerable.
         /// </summary>
         /// <typeparam name="T">The item type of the enumerable.</typeparam>
         /// <param name="enumerable">The collection containing the items that will be passed to the action.</param>
@@ -116,7 +110,6 @@ namespace Light.GuardClauses.FrameworkExtensions
 
             var i = 0;
             if (enumerable is IReadOnlyList<T> readonlyList)
-            {
                 for (; i < readonlyList.Count; i++)
                 {
                     var item = readonlyList[i];
@@ -128,9 +121,7 @@ namespace Light.GuardClauses.FrameworkExtensions
 
                     action(item);
                 }
-            }
             else
-            {
                 foreach (var item in enumerable)
                 {
                     if (item == null)
@@ -143,7 +134,6 @@ namespace Light.GuardClauses.FrameworkExtensions
                     action(item);
                     ++i;
                 }
-            }
 
             return enumerable;
             // ReSharper restore PossibleMultipleEnumeration

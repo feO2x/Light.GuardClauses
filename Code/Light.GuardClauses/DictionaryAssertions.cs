@@ -8,12 +8,12 @@ using Light.GuardClauses.FrameworkExtensions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     The <see cref="DictionaryAssertions" /> class contains extension methods providing assertions for <see cref="IDictionary{TKey,TValue}" /> instances.
+    /// The <see cref="DictionaryAssertions" /> class contains extension methods providing assertions for <see cref="IDictionary{TKey,TValue}" /> instances.
     /// </summary>
     public static class DictionaryAssertions
     {
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> is a key of the specified <paramref name="dictionary" />, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
+        /// Ensures that <paramref name="parameter" /> is a key of the specified <paramref name="dictionary" />, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
         /// </summary>
         /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
         /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
@@ -21,14 +21,14 @@ namespace Light.GuardClauses
         /// <param name="dictionary">The dictionary whose keys are used for checking.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="ArgumentOutOfRangeException" /> (optional).
+        /// The message that will be injected into the <see cref="ArgumentOutOfRangeException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when the specified <paramref name="parameter" /> is no key of <paramref name="dictionary" /> (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when the specified <paramref name="parameter" /> is no key of <paramref name="dictionary" /> (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///     Thrown when <paramref name="parameter" /> is no key of <paramref name="dictionary" /> and no <paramref name="exception" /> is specified.
+        /// Thrown when <paramref name="parameter" /> is no key of <paramref name="dictionary" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="dictionary" /> is null.</exception>
         public static TKey MustBeKeyOf<TKey, TValue>(this TKey parameter, IDictionary<TKey, TValue> dictionary, string parameterName = null, string message = null, Func<Exception> exception = null)
@@ -50,7 +50,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that <paramref name="parameter" /> is not a key of the specified <paramref name="dictionary" />, or otherwise throws a <see cref="ArgumentOutOfRangeException" />.
+        /// Ensures that <paramref name="parameter" /> is not a key of the specified <paramref name="dictionary" />, or otherwise throws a <see cref="ArgumentOutOfRangeException" />.
         /// </summary>
         /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
         /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
@@ -59,11 +59,11 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that is thrown when the specified <paramref name="parameter" /> is a key of <paramref name="dictionary" /> (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when the specified <paramref name="parameter" /> is a key of <paramref name="dictionary" /> (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///     Thrown when <paramref name="parameter" /> is a key of <paramref name="dictionary" /> and no <paramref name="exception" /> is specified.
+        /// Thrown when <paramref name="parameter" /> is a key of <paramref name="dictionary" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="dictionary" /> is null.</exception>
         public static TKey MustNotBeKeyOf<TKey, TValue>(this TKey parameter, IDictionary<TKey, TValue> dictionary, string parameterName = null, string message = null, Func<Exception> exception = null)
@@ -85,7 +85,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the dictionary contains the specified <paramref name="key" />, or otherwise throws a <see cref="KeyNotFoundException" />.
+        /// Ensures that the dictionary contains the specified <paramref name="key" />, or otherwise throws a <see cref="KeyNotFoundException" />.
         /// </summary>
         /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
         /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
@@ -93,17 +93,17 @@ namespace Light.GuardClauses
         /// <param name="key">The key that should be part of the Keys collection of <paramref name="parameter" />.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="KeyNotFoundException" /> (optional).
+        /// The message that will be injected into the <see cref="KeyNotFoundException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when the specified <paramref name="parameter" /> has does not have the specified key (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when the specified <paramref name="parameter" /> has does not have the specified key (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="KeyNotFoundException">
-        ///     Thrown when <paramref name="parameter" /> does not contain the specified <paramref name="key" /> and no <paramref name="exception" /> is specified.
+        /// Thrown when <paramref name="parameter" /> does not contain the specified <paramref name="key" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null.
+        /// Thrown when <paramref name="parameter" /> is null.
         /// </exception>
         public static IDictionary<TKey, TValue> MustContainKey<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TKey key, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
@@ -121,7 +121,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the dictionary does not contain the specified <paramref name="key" />, or otherwise throws a <see cref="DictionaryException" />.
+        /// Ensures that the dictionary does not contain the specified <paramref name="key" />, or otherwise throws a <see cref="DictionaryException" />.
         /// </summary>
         /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
         /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
@@ -129,17 +129,17 @@ namespace Light.GuardClauses
         /// <param name="key">The key that must not be part of the dictionary.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that will be injected into the <see cref="DictionaryException" /> (optional).
+        /// The message that will be injected into the <see cref="DictionaryException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that is thrown when the specified <paramref name="parameter" /> has contains the specified key (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when the specified <paramref name="parameter" /> has contains the specified key (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="DictionaryException">
-        ///     Thrown when <paramref name="parameter" /> contains <paramref name="key" /> and no <paramref name="exception" /> is specified.
+        /// Thrown when <paramref name="parameter" /> contains <paramref name="key" /> and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="parameter" /> is null.
+        /// Thrown when <paramref name="parameter" /> is null.
         /// </exception>
         public static IDictionary<TKey, TValue> MustNotContainKey<TKey, TValue>(this IDictionary<TKey, TValue> parameter, TKey key, string parameterName = null, string message = null, Func<Exception> exception = null)
         {
@@ -158,7 +158,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the dictionary contains all the specified keys, or otherwise throws a <see cref="KeyNotFoundException" />.
+        /// Ensures that the dictionary contains all the specified keys, or otherwise throws a <see cref="KeyNotFoundException" />.
         /// </summary>
         /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
         /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
@@ -167,8 +167,8 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="KeyNotFoundException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that is thrown when the specified <paramref name="parameter" /> does not contain any of the specified keys (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when the specified <paramref name="parameter" /> does not contain any of the specified keys (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="KeyNotFoundException">Thrown when <paramref name="parameter" /> does not contain any of the specified <paramref name="keys" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="keys" /> is null.</exception>
@@ -193,7 +193,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the dictionary contains all the specified keys, or otherwise throws a <see cref="KeyNotFoundException" />. This method uses the default exception.
+        /// Ensures that the dictionary contains all the specified keys, or otherwise throws a <see cref="KeyNotFoundException" />. This method uses the default exception.
         /// </summary>
         /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
         /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
@@ -207,7 +207,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the dictionary does not contain the specified keys, or otherwise throws a <see cref="DictionaryException" />.
+        /// Ensures that the dictionary does not contain the specified keys, or otherwise throws a <see cref="DictionaryException" />.
         /// </summary>
         /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
         /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
@@ -216,8 +216,8 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="DictionaryException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that is thrown when the specified <paramref name="parameter" /> does not contain any of the specified keys (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that is thrown when the specified <paramref name="parameter" /> does not contain any of the specified keys (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="DictionaryException">Thrown when <paramref name="parameter" /> does contain any of the specified <paramref name="keys" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="keys" /> is null.</exception>
@@ -243,7 +243,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the dictionary does not contain the specified keys, or otherwise throws a <see cref="DictionaryException" />. This method uses the default exception.
+        /// Ensures that the dictionary does not contain the specified keys, or otherwise throws a <see cref="DictionaryException" />. This method uses the default exception.
         /// </summary>
         /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
         /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
@@ -257,7 +257,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the dictionary contains the specified value, or otherwise throws a <see cref="ValueNotFoundException" />.
+        /// Ensures that the dictionary contains the specified value, or otherwise throws a <see cref="ValueNotFoundException" />.
         /// </summary>
         /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
         /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
@@ -266,8 +266,8 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="ValueNotFoundException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="parameter" /> does not contain the specified <paramref name="value" /> (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that will be thrown when <paramref name="parameter" /> does not contain the specified <paramref name="value" /> (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ValueNotFoundException">Thrown when <paramref name="parameter" /> does not contain the specified <paramref name="value" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
@@ -288,7 +288,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the dictionary contains the specified values, or otherwise throws a <see cref="ValueNotFoundException" />. This method is not aware of duplicates.
+        /// Ensures that the dictionary contains the specified values, or otherwise throws a <see cref="ValueNotFoundException" />. This method is not aware of duplicates.
         /// </summary>
         /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
         /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
@@ -297,8 +297,8 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="ValueNotFoundException" />.</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="parameter" /> does not contain all of the specified <paramref name="values" /> (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that will be thrown when <paramref name="parameter" /> does not contain all of the specified <paramref name="values" /> (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ValueNotFoundException">Thrown when <paramref name="parameter" /> does not contain the specified <paramref name="values" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="values" /> has no entries.</exception>
@@ -325,7 +325,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the dictionary contains the specified values, or otherwise throws a <see cref="ValueNotFoundException" />. This method is not aware of duplicates and throws the default exception.
+        /// Ensures that the dictionary contains the specified values, or otherwise throws a <see cref="ValueNotFoundException" />. This method is not aware of duplicates and throws the default exception.
         /// </summary>
         /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
         /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
@@ -340,7 +340,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the dictionary does not contain the specified value, or otherwise throws a <see cref="DictionaryException" />.
+        /// Ensures that the dictionary does not contain the specified value, or otherwise throws a <see cref="DictionaryException" />.
         /// </summary>
         /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
         /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
@@ -349,8 +349,8 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="ValueNotFoundException" />.</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="parameter" /> does contain the specified <paramref name="value" />.
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that will be thrown when <paramref name="parameter" /> does contain the specified <paramref name="value" />.
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="DictionaryException">Thrown when <paramref name="parameter" /> contains the specified <paramref name="value" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
@@ -371,7 +371,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the dictionary does not contain the specified values, or otherwise throws a <see cref="DictionaryException" />. This method is not aware of duplicates.
+        /// Ensures that the dictionary does not contain the specified values, or otherwise throws a <see cref="DictionaryException" />. This method is not aware of duplicates.
         /// </summary>
         /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
         /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
@@ -380,8 +380,8 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="DictionaryException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="parameter" /> contains any of the specified <paramref name="values" /> (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that will be thrown when <paramref name="parameter" /> contains any of the specified <paramref name="values" /> (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="DictionaryException">Thrown when <paramref name="parameter" /> contains any of the specified <paramref name="values" /> and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="values" /> has no entries.</exception>
@@ -408,7 +408,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the dictionary does not contain the specified values, or otherwise throws a <see cref="DictionaryException" />. This method is not aware of duplicates and throws the default exception.
+        /// Ensures that the dictionary does not contain the specified values, or otherwise throws a <see cref="DictionaryException" />. This method is not aware of duplicates and throws the default exception.
         /// </summary>
         /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
         /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
@@ -423,7 +423,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the dictionary contains the specified key-value-pair, or otherwise throws a <see cref="DictionaryException" />.
+        /// Ensures that the dictionary contains the specified key-value-pair, or otherwise throws a <see cref="DictionaryException" />.
         /// </summary>
         /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
         /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
@@ -433,8 +433,8 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="DictionaryException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="parameter" /> does not contain the specified key-value-pair (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that will be thrown when <paramref name="parameter" /> does not contain the specified key-value-pair (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="DictionaryException">Thrown when <paramref name="parameter" /> does not contain the specified key-value-pair and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
@@ -457,7 +457,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the dictionary does not contain the specified key-value-pair, or otherwise throws a <see cref="DictionaryException" />.
+        /// Ensures that the dictionary does not contain the specified key-value-pair, or otherwise throws a <see cref="DictionaryException" />.
         /// </summary>
         /// <typeparam name="TKey">The type of the keys of the dictionary.</typeparam>
         /// <typeparam name="TValue">The type of the values of the dictionary.</typeparam>
@@ -467,8 +467,8 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="DictionaryException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="parameter" /> does contain the specified key-value-pair (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that will be thrown when <paramref name="parameter" /> does contain the specified key-value-pair (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="DictionaryException">Thrown when <paramref name="parameter" /> does contain the specified key-value-pair and no <paramref name="exception" /> is specified.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>

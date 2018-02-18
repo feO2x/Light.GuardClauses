@@ -3,7 +3,7 @@
 namespace Light.GuardClauses.Exceptions
 {
     /// <summary>
-    ///     This exception indicates that a string only consists of whitespace.
+    /// This exception indicates that a string only consists of whitespace.
     /// </summary>
 #if (NETSTANDARD2_0 || NET45)
     [Serializable]
@@ -11,7 +11,7 @@ namespace Light.GuardClauses.Exceptions
     public class StringIsOnlyWhiteSpaceException : StringException
     {
         /// <summary>
-        ///     Creates a new instance of <see cref="StringIsOnlyWhiteSpaceException" />.
+        /// Creates a new instance of <see cref="StringIsOnlyWhiteSpaceException" />.
         /// </summary>
         /// <param name="message">The message of the exception.</param>
         /// <param name="parameterName">The name of the parameter.</param>
@@ -20,7 +20,7 @@ namespace Light.GuardClauses.Exceptions
             : base(message, parameterName, innerException) { }
 
         /// <summary>
-        ///     Creates a new instance of <see cref="StringDoesNotMatchException" /> with the default exception message.
+        /// Creates a new instance of <see cref="StringDoesNotMatchException" /> with the default exception message.
         /// </summary>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="actualValue">The actual value of the string.</param>

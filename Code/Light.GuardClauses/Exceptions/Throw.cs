@@ -3,12 +3,12 @@
 namespace Light.GuardClauses.Exceptions
 {
     /// <summary>
-    ///     Provides static methods that throw default exceptions.
+    /// Provides static methods that throw default exceptions.
     /// </summary>
     public static class Throw
     {
         /// <summary>
-        ///     Throws the default <see cref="ArgumentNullException" />, using the optional parameter name and message.
+        /// Throws the default <see cref="ArgumentNullException" />, using the optional parameter name and message.
         /// </summary>
         public static void ArgumentNull(string parameterName = null, string message = null)
         {
@@ -16,7 +16,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentDefaultException" /> indicating that a value is the default value of its type, using the optional parameter name and message.
+        /// Throws the default <see cref="ArgumentDefaultException" /> indicating that a value is the default value of its type, using the optional parameter name and message.
         /// </summary>
         public static void ArgumentDefault(string parameterName = null, string message = null)
         {
@@ -24,7 +24,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="TypeMismatchException" /> indicating that a reference cannot be downcasted, using the optional parameter name and message.
+        /// Throws the default <see cref="TypeMismatchException" /> indicating that a reference cannot be downcasted, using the optional parameter name and message.
         /// </summary>
         public static void TypeMismatch(object parameter, Type targetType, string parameterName = null, string message = null)
         {
@@ -32,7 +32,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="NullableHasNoValueException" /> indicating that a <see cref="Nullable{T}" /> has no value, using the optional parameter name and message.
+        /// Throws the default <see cref="NullableHasNoValueException" /> indicating that a <see cref="Nullable{T}" /> has no value, using the optional parameter name and message.
         /// </summary>
         public static void NullableHasNoValue(string parameterName = null, string message = null)
         {
@@ -40,7 +40,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="NullableHasValueException" /> indicating that a <see cref="Nullable{T}" /> has a value, using the optional paramter name and message.
+        /// Throws the default <see cref="NullableHasValueException" /> indicating that a <see cref="Nullable{T}" /> has a value, using the optional paramter name and message.
         /// </summary>
         public static void NullableHasValue<T>(T value, string parameterName = null, string message = null) where T : struct
         {
@@ -48,7 +48,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="EnumValueNotDefinedException" /> indicating that a value is not one of the constants defined in an enum, using the optional paramter name and message.
+        /// Throws the default <see cref="EnumValueNotDefinedException" /> indicating that a value is not one of the constants defined in an enum, using the optional paramter name and message.
         /// </summary>
         public static void EnumValueNotDefined<T>(T parameter, string parameterName = null, string message = null)
         {
@@ -56,7 +56,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="EmptyGuidException" /> indicating that a GUID is empty, using the optional parameter name and message.
+        /// Throws the default <see cref="EmptyGuidException" /> indicating that a GUID is empty, using the optional parameter name and message.
         /// </summary>
         public static void EmptyGuid(string parameterName = null, string message = null)
         {
@@ -64,7 +64,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentException" /> indicating that a boolean is true instead of false, using the optional parameter name and message.
+        /// Throws the default <see cref="ArgumentException" /> indicating that a boolean is true instead of false, using the optional parameter name and message.
         /// </summary>
         public static void BooleanTrue(string parameterName = null, string message = null)
         {
@@ -72,7 +72,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentException" /> indicating that a boolean is false instead of true, using the optional parameter name and message.
+        /// Throws the default <see cref="ArgumentException" /> indicating that a boolean is false instead of true, using the optional parameter name and message.
         /// </summary>
         public static void BooleanFalse(string parameterName = null, string message = null)
         {
@@ -80,7 +80,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must not be less than the given boundary value, using the optional parameter name and message.
+        /// Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must not be less than the given boundary value, using the optional parameter name and message.
         /// </summary>
         public static void MustNotBeLessThan<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
         {
@@ -88,7 +88,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must be less than the given boundary value, using the optional parameter name and message.
+        /// Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must be less than the given boundary value, using the optional parameter name and message.
         /// </summary>
         public static void MustBeLessThan<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
         {
@@ -96,7 +96,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must not be less than or equal to the given boundary value, using the optional parameter name and message.
+        /// Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must not be less than or equal to the given boundary value, using the optional parameter name and message.
         /// </summary>
         public static void MustNotBeLessThanOrEqualTo<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
         {
@@ -104,7 +104,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must be less than or equal to the given boundary value, using the optional parameter name and message.
+        /// Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must be less than or equal to the given boundary value, using the optional parameter name and message.
         /// </summary>
         public static void MustBeLessThanOrEqualTo<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
         {
@@ -112,7 +112,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must not be greater than the given boundary value, using the optional parameter name and message.
+        /// Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must not be greater than the given boundary value, using the optional parameter name and message.
         /// </summary>
         public static void MustNotBeGreaterThan<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
         {
@@ -120,7 +120,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must be greater than the given boundary value, using the optional parameter name and message.
+        /// Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must be greater than the given boundary value, using the optional parameter name and message.
         /// </summary>
         public static void MustBeGreaterThan<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
         {
@@ -128,7 +128,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must not be greater than or equal to the given boundary value, using the optional parameter name and message.
+        /// Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must not be greater than or equal to the given boundary value, using the optional parameter name and message.
         /// </summary>
         public static void MustNotBeGreaterThanOrEqualTo<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
         {
@@ -136,7 +136,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must be greater than or equal to the given boundary value, using the optional parameter name and message.
+        /// Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must be greater than or equal to the given boundary value, using the optional parameter name and message.
         /// </summary>
         public static void MustBeGreaterThanOrEqualTo<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T>
         {
@@ -144,18 +144,18 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentException" /> indicating that a value is no enum value (i.e. its type is no enum type), using the optional parameter name and message.
+        /// Throws the default <see cref="ArgumentException" /> indicating that a value is no enum value (i.e. its type is no enum type), using the optional parameter name and message.
         /// </summary>
         public static void NoEnumValue<T>(T parameter, string parameterName = null, string message = null) where T : struct, IFormattable, IComparable
 #if !NETSTANDARD1_0
-        , IConvertible
+            , IConvertible
 #endif
         {
             throw new ArgumentException(message ?? $"The value \"{parameter}\" is no enum value.", parameterName);
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a value is not within a specified range, using the optional parameter name and message.
+        /// Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a value is not within a specified range, using the optional parameter name and message.
         /// </summary>
         public static void MustBeInRange<T>(T parameter, Range<T> range, string parameterName = null, string message = null) where T : IComparable<T>
         {
@@ -163,7 +163,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a value is within a specified range, using the optional parameter name and message.
+        /// Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a value is within a specified range, using the optional parameter name and message.
         /// </summary>
         public static void MustNotBeInRange<T>(T parameter, Range<T> range, string parameterName = null, string message = null) where T : IComparable<T>
         {
@@ -171,7 +171,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the exception that is returned by <paramref name="exceptionFactory" />.
+        /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException(Func<Exception> exceptionFactory)
         {
@@ -179,7 +179,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="parameter" /> is passed to <paramref name="exceptionFactory" />.
+        /// Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="parameter" /> is passed to <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException<T>(Func<T, Exception> exceptionFactory, T parameter)
         {
@@ -187,7 +187,7 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
-        ///     Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="parameter" /> and <paramref name="other" /> are passed to <paramref name="exceptionFactory" />.
+        /// Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="parameter" /> and <paramref name="other" /> are passed to <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException<T1, T2>(Func<T1, T2, Exception> exceptionFactory, T1 parameter, T2 other)
         {

@@ -5,19 +5,19 @@ using System.Reflection;
 namespace Light.GuardClauses.FrameworkExtensions
 {
     /// <summary>
-    ///     Provides extension methods for <see cref="Expression" /> instances.
+    /// Provides extension methods for <see cref="Expression" /> instances.
     /// </summary>
     public static class ExpressionExtensions
     {
         /// <summary>
-        ///     Extracts the <see cref="PropertyInfo" /> from a expression of the shape "object => object.Property".
+        /// Extracts the <see cref="PropertyInfo" /> from a expression of the shape "object => object.Property".
         /// </summary>
         /// <typeparam name="T">The object type.</typeparam>
         /// <typeparam name="TProperty">The type of the property.</typeparam>
         /// <param name="expression">The expression where the property info will be extracted from.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="expression" /> is null.</exception>
         /// <exception cref="ArgumentException">
-        ///     Throw when the <paramref name="expression" /> is not of the shape "object => object.Property".
+        /// Throw when the <paramref name="expression" /> is not of the shape "object => object.Property".
         /// </exception>
         public static PropertyInfo ExtractProperty<T, TProperty>(this Expression<Func<T, TProperty>> expression)
         {
@@ -31,14 +31,14 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
-        /// Extracts the <see cref="FieldInfo"/> from a expression of the shape "object => object.Field".
+        /// Extracts the <see cref="FieldInfo" /> from a expression of the shape "object => object.Field".
         /// </summary>
         /// <typeparam name="T">The object type.</typeparam>
         /// <typeparam name="TField">The type of the field.</typeparam>
         /// <param name="expression">The expression where the field info will be extracted from.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="expression" /> is null.</exception>
         /// <exception cref="ArgumentException">
-        ///     Throw when the <paramref name="expression" /> is not of the shape "object => object.Field".
+        /// Throw when the <paramref name="expression" /> is not of the shape "object => object.Field".
         /// </exception>
         public static FieldInfo ExtractField<T, TField>(this Expression<Func<T, TField>> expression)
         {

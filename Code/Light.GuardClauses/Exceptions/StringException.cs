@@ -3,7 +3,7 @@
 namespace Light.GuardClauses.Exceptions
 {
     /// <summary>
-    ///     This exception indicates that there is something wrong with a string.
+    /// This exception indicates that there is something wrong with a string.
     /// </summary>
 #if (NETSTANDARD2_0 || NET45)
     [Serializable]
@@ -11,7 +11,7 @@ namespace Light.GuardClauses.Exceptions
     public class StringException : ArgumentException
     {
         /// <summary>
-        ///     Creates a new instance of <see cref="StringException" />.
+        /// Creates a new instance of <see cref="StringException" />.
         /// </summary>
         /// <param name="message">The message of the exception.</param>
         /// <param name="parameterName">The name of the parameter.</param>

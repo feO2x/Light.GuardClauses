@@ -5,27 +5,27 @@ using Light.GuardClauses.FrameworkExtensions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    ///     The <see cref="EqualityAssertions" /> class contains assertions that can be used to ensure that two values are equal or different.
+    /// The <see cref="EqualityAssertions" /> class contains assertions that can be used to ensure that two values are equal or different.
     /// </summary>
     public static class EqualityAssertions
     {
         /// <summary>
-        ///     Ensures that the specified parameter is equal to the other specified value, or otherwise throws an <see cref="ArgumentException" />.
+        /// Ensures that the specified parameter is equal to the other specified value, or otherwise throws an <see cref="ArgumentException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="other">The value that <paramref name="parameter" /> is checked against.</param>
-        /// <param name="equalityComparer">The equality comparer that is used for comparing (optional). If null is specified, then <see cref="EqualityComparer{T}.Default"/> is used.</param>
+        /// <param name="equalityComparer">The equality comparer that is used for comparing (optional). If null is specified, then <see cref="EqualityComparer{T}.Default" /> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that should be injected into the <see cref="ArgumentException" /> (optional).
+        /// The message that should be injected into the <see cref="ArgumentException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that will be thrown when the comparison fails (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that will be thrown when the comparison fails (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentException">
-        ///     Thrown when the specified parameter is different from the other value and no <paramref name="exception" /> is specified.
+        /// Thrown when the specified parameter is different from the other value and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="equalityComparer" /> is null.</exception>
         public static T MustBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
@@ -39,23 +39,23 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified parameter is not equal to the other specified value, or otherwise throws an <see cref="ArgumentException" />.
-        ///     The specified <paramref name="equalityComparer" /> is used for comparison (both GetHashCode and Equals).
+        /// Ensures that the specified parameter is not equal to the other specified value, or otherwise throws an <see cref="ArgumentException" />.
+        /// The specified <paramref name="equalityComparer" /> is used for comparison (both GetHashCode and Equals).
         /// </summary>
         /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="other">The value that <paramref name="parameter" /> is checked against.</param>
-        /// <param name="equalityComparer">The equality comparer that is used for comparing (optional). If null is specified, then <see cref="EqualityComparer{T}.Default"/> is used.</param>
+        /// <param name="equalityComparer">The equality comparer that is used for comparing (optional). If null is specified, then <see cref="EqualityComparer{T}.Default" /> is used.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">
-        ///     The message that should be injected into the <see cref="ArgumentException" /> (optional).
+        /// The message that should be injected into the <see cref="ArgumentException" /> (optional).
         /// </param>
         /// <param name="exception">
-        ///     The exception that will be thrown when the comparison fails (optional).
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that will be thrown when the comparison fails (optional).
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentException">
-        ///     Thrown when the specified parameter is different from the other value and no <paramref name="exception" /> is specified.
+        /// Thrown when the specified parameter is different from the other value and no <paramref name="exception" /> is specified.
         /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="equalityComparer" /> is null.</exception>
         public static T MustNotBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer = null, string parameterName = null, string message = null, Func<Exception> exception = null)
@@ -69,7 +69,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified reference points to the same object instance as <paramref name="other" />, or otherwise throws an <see cref="ArgumentException" />.
+        /// Ensures that the specified reference points to the same object instance as <paramref name="other" />, or otherwise throws an <see cref="ArgumentException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter. This must be a reference type.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -77,8 +77,8 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="ArgumentException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="parameter" /> and <paramref name="other" /> do not point to the same instance.
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that will be thrown when <paramref name="parameter" /> and <paramref name="other" /> do not point to the same instance.
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> and <paramref name="other" /> do not point to the same instance and no <paramref name="exception" /> is specified.</exception>
         public static T MustBeSameAs<T>(this T parameter, T other, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
@@ -90,7 +90,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Ensures that the specified reference does not point to the same object instance as <paramref name="other" />, or otherwise throws an <see cref="ArgumentException" />.
+        /// Ensures that the specified reference does not point to the same object instance as <paramref name="other" />, or otherwise throws an <see cref="ArgumentException" />.
         /// </summary>
         /// <typeparam name="T">The type of the parameter. This must be a reference type.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
@@ -98,8 +98,8 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be injected into the <see cref="ArgumentException" /> (optional).</param>
         /// <param name="exception">
-        ///     The exception that will be thrown when <paramref name="parameter" /> and <paramref name="other" /> point to the same instance.
-        ///     Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
+        /// The exception that will be thrown when <paramref name="parameter" /> and <paramref name="other" /> point to the same instance.
+        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
         /// </param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> and <paramref name="other" /> point to the same instance and no <paramref name="exception" /> is specified.</exception>
         public static T MustNotBeSameAs<T>(this T parameter, T other, string parameterName = null, string message = null, Func<Exception> exception = null) where T : class
@@ -111,7 +111,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        ///     Checks if the specified parameter points to the same object as the specified reference.
+        /// Checks if the specified parameter points to the same object as the specified reference.
         /// </summary>
         /// <typeparam name="T">The type of the objects.</typeparam>
         /// <param name="parameter">The parameter to be checked.</param>
