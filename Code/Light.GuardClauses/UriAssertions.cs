@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
+using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses
@@ -8,28 +10,54 @@ namespace Light.GuardClauses
     /// <summary>
     /// Provides assertion methods for the <see cref="Uri" /> class.
     /// </summary>
-    public static class UriExtensions
+    public static class UriAssertions
     {
         /// <summary>
-        /// Ensures that the specified URI is an absolute one, or otherwise throws an <see cref="ArgumentException" />.
+        /// Ensures that the specified URI is an absolute one, or otherwise throws an <see cref="RelativeUriException" />.
         /// </summary>
-        /// <param name="uri">The URI to be checked.</param>
+        /// <param name="parameter">The URI to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message of the exception (optional).</param>
-        /// <param name="exception">
-        /// The exception that will be thrown when <paramref name="uri" /> is not an absolute URI.
-        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
-        public static Uri MustBeAbsoluteUri(this Uri uri, string parameterName = null, string message = null, Func<Exception> exception = null)
+        /// <param name="message">The message that will be injected into the <see cref="RelativeUriException" /> (optional).</param>
+        /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter" /> is not an absolute URI.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustBeAbsoluteUri(this Uri parameter, string parameterName = null, string message = null)
         {
-            uri.MustNotBeNull(parameterName);
+            if (parameter.MustNotBeNull(parameterName).IsAbsoluteUri == false)
+                Throw.MustBeAbsoluteUri(parameter, parameterName, message);
+            return parameter;
+        }
 
-            if (uri.IsAbsoluteUri)
-                return uri;
+        /// <summary>
+        /// Ensures that the specified URI is an absolute one, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The URI to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="parameterName">The parameter name (used for the <see cref="ArgumentNullException" />.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is not an absolute URI.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustBeAbsoluteUri(this Uri parameter, Func<Exception> exceptionFactory, string parameterName = null)
+        {
+            if (parameter.MustNotBeNull(parameterName).IsAbsoluteUri == false)
+                Throw.CustomException(exceptionFactory);
+            return parameter;
+        }
 
-            throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The URI"} must be an absolute URI, but you specified \"{uri}\".", parameterName);
+        /// <summary>
+        /// Ensures that the specified URI is an absolute one, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The URI to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="parameterName">The parameter name (used for the <see cref="ArgumentNullException" />.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is not an absolute URI.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustBeAbsoluteUri(this Uri parameter, Func<Uri, Exception> exceptionFactory, string parameterName = null)
+        {
+            if (parameter.MustNotBeNull(parameterName).IsAbsoluteUri == false)
+                Throw.CustomException(exceptionFactory, parameter);
+            return parameter;
         }
 
         /// <summary>

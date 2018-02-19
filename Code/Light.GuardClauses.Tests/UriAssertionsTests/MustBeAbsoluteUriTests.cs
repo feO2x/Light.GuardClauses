@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentAssertions;
+using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 using TestData = System.Collections.Generic.IEnumerable<object[]>;
@@ -10,7 +11,7 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
     {
         [Theory(DisplayName = "MustBeAbsoluteUri must not throw an exception when the specified uri is an absolute one.")]
         [MemberData(nameof(AbsoluteUriData))]
-        public void AbsoluteUri(Uri absoluteUri)
+        public static void AbsoluteUri(Uri absoluteUri)
         {
             var result = absoluteUri.MustBeAbsoluteUri();
 
@@ -26,12 +27,12 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
 
         [Theory(DisplayName = "MustBeAbsoluteUri must throw an ArgumentException when the specified uri is a relative one.")]
         [MemberData(nameof(RelativeUriData))]
-        public void RelativeUri(Uri relativeUri)
+        public static void RelativeUri(Uri relativeUri)
         {
             Action act = () => relativeUri.MustBeAbsoluteUri(nameof(relativeUri));
 
             act.Should().Throw<ArgumentException>()
-               .And.Message.Should().Contain($"{nameof(relativeUri)} must be an absolute URI, but you specified \"{relativeUri}\".");
+               .And.Message.Should().Contain($"{nameof(relativeUri)} \"{relativeUri}\" must be an absolute URI, but it actually is relative.");
         }
 
         public static readonly TestData RelativeUriData =
@@ -42,17 +43,44 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
             };
 
         [Fact]
-        public void UriNull()
+        public static void UriNull()
         {
             Action act = () => ((Uri) null).MustBeAbsoluteUri();
 
             act.Should().Throw<ArgumentNullException>();
         }
 
+        [Fact(DisplayName = "MustBeAbsoluteUri must throw the custom exception with URI parameter when the specified URI is not absolute.")]
+        public static void CustomExceptionWithParameter()
+        {
+            var relativeUri = new Uri("api/callMe", UriKind.Relative);
+            var recordedUri = default(Uri);
+            var exception = new Exception();
+
+            Action act = () => relativeUri.MustBeAbsoluteUri(uri =>
+            {
+                recordedUri = uri;
+                return exception;
+            });
+
+            act.Should().Throw<Exception>().Which.Should().BeSameAs(exception);
+            recordedUri.Should().BeSameAs(relativeUri);
+        }
+
+        [Fact(DisplayName = "MustBeAbsoluteUri must not throw the custom exception with URI parameter when the specified URI is absolute.")]
+        public static void NoCustomExceptionWithParameter()
+        {
+            var absoluteUri = new Uri("https://ravendb.net/");
+
+            var result = absoluteUri.MustBeAbsoluteUri(uri => null);
+
+            result.Should().BeSameAs(absoluteUri);
+        }
+
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => new Uri("/api/buildings", UriKind.Relative).MustBeAbsoluteUri(exception: exception)))
-                    .Add(new CustomMessageTest<ArgumentException>(message => new Uri("/api/buildings", UriKind.Relative).MustBeAbsoluteUri(message: message)));
+            testData.Add(new CustomExceptionTest(exception => new Uri("/api/buildings", UriKind.Relative).MustBeAbsoluteUri(exception)))
+                    .Add(new CustomMessageTest<RelativeUriException>(message => new Uri("/api/buildings", UriKind.Relative).MustBeAbsoluteUri(message: message)));
         }
     }
 }
