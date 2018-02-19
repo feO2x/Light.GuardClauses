@@ -32,7 +32,7 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
             Action act = () => relativeUri.MustBeAbsoluteUri(nameof(relativeUri));
 
             act.Should().Throw<ArgumentException>()
-               .And.Message.Should().Contain($"{nameof(relativeUri)} \"{relativeUri}\" must be an absolute URI, but it actually is relative.");
+               .And.Message.Should().Contain($"{nameof(relativeUri)} must be an absolute URI, but it actually is \"{relativeUri}\".");
         }
 
         public static readonly TestData RelativeUriData =

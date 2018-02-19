@@ -33,7 +33,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The URI to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
-        /// <param name="parameterName">The parameter name (used for the <see cref="ArgumentNullException" />.</param>
+        /// <param name="parameterName">The parameter name (used for the <see cref="ArgumentNullException" />, optional).</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is not an absolute URI.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -49,7 +49,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The URI to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
-        /// <param name="parameterName">The parameter name (used for the <see cref="ArgumentNullException" />.</param>
+        /// <param name="parameterName">The parameter name (used for the <see cref="ArgumentNullException" />, optional).</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is not an absolute URI.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -61,27 +61,75 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that the specified URI has the given scheme, or otherwise throws an <see cref="ArgumentException" />.
+        /// Ensures that the <paramref name="parameter"/> has the specified scheme, or otherwise throws an <see cref="InvalidUriSchemeException"/>.
         /// </summary>
-        /// <param name="uri">The URI to be checked.</param>
+        /// <param name="parameter">The URI to be checked.</param>
         /// <param name="scheme">The scheme that the URI should have.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>
-        /// <param name="exception">
-        /// The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have the specified scheme.
-        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI or does not have the specified scheme.</exception>
-        public static Uri MustHaveScheme(this Uri uri, string scheme, string parameterName = null, string message = null, Func<Exception> exception = null)
+        /// <exception cref="InvalidUriSchemeException">Thrown when <paramref name="parameter"/> uses a different scheme than the specified one.</exception>
+        /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter"/> is relative and thus has no scheme.</exception>
+        /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustHaveScheme(this Uri parameter, string scheme, string parameterName = null, string message = null)
         {
-            uri.MustNotBeNull(parameterName);
+            if (string.Equals(parameter.MustBeAbsoluteUri(parameterName).Scheme, scheme, StringComparison.OrdinalIgnoreCase) == false)
+                Throw.UriMustHaveScheme(parameter, scheme, parameterName, message);
+            return parameter;
+        }
 
-            if (uri.IsAbsoluteUri && string.Equals(uri.Scheme, scheme, StringComparison.OrdinalIgnoreCase))
-                return uri;
+        /// <summary>
+        /// Ensures that the <paramref name="parameter"/> has the specified scheme, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The URI to be checked.</param>
+        /// <param name="scheme">The scheme that the URI should have.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="parameterName">The name of the parameter (used for the <see cref="ArgumentNullException"/> and <see cref="RelativeUriException"/>, optional).</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> uses a different scheme than the specified one.</exception>
+        /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter"/> is relative and thus has no scheme.</exception>
+        /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustHaveScheme(this Uri parameter, string scheme, Func<Exception> exceptionFactory, string parameterName = null)
+        {
+            if (string.Equals(parameter.MustBeAbsoluteUri(parameterName).Scheme, scheme, StringComparison.OrdinalIgnoreCase) == false)
+                Throw.CustomException(exceptionFactory);
+            return parameter;
+        }
 
-            var subclause = uri.IsAbsoluteUri ? $"but actually has scheme \"{uri.Scheme}\" (\"{uri}\")." : $"but it has none because it is a relative URI (\"{uri}\").";
-            throw exception != null ? exception() : new ArgumentException(message ?? $"{parameterName ?? "The URI"} must have scheme \"{scheme}\", {subclause}");
+        /// <summary>
+        /// Ensures that the <paramref name="parameter"/> has the specified scheme, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The URI to be checked.</param>
+        /// <param name="scheme">The scheme that the URI should have.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="parameterName">The name of the parameter (used for the <see cref="ArgumentNullException"/> and <see cref="RelativeUriException"/>, optional).</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> uses a different scheme than the specified one.</exception>
+        /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter"/> is relative and thus has no scheme.</exception>
+        /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustHaveScheme(this Uri parameter, string scheme, Func<Uri, Exception> exceptionFactory, string parameterName = null)
+        {
+            if (string.Equals(parameter.MustBeAbsoluteUri(parameterName).Scheme, scheme, StringComparison.OrdinalIgnoreCase) == false)
+                Throw.CustomException(exceptionFactory, parameter);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the <paramref name="parameter"/> has the specified scheme, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The URI to be checked.</param>
+        /// <param name="scheme">The scheme that the URI should have.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="parameterName">The name of the parameter (used for the <see cref="ArgumentNullException"/> and <see cref="RelativeUriException"/>, optional).</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> uses a different scheme than the specified one.</exception>
+        /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter"/> is relative and thus has no scheme.</exception>
+        /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustHaveScheme(this Uri parameter, string scheme, Func<Uri, string, Exception> exceptionFactory, string parameterName = null)
+        {
+            if (string.Equals(parameter.MustBeAbsoluteUri(parameterName).Scheme, scheme, StringComparison.OrdinalIgnoreCase) == false)
+                Throw.CustomException(exceptionFactory, parameter, scheme);
+            return parameter;
         }
 
         /// <summary>
@@ -125,16 +173,10 @@ namespace Light.GuardClauses
         /// <param name="uri">The URI to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>
-        /// <param name="exception">
-        /// The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have the "https" scheme.
-        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI or does not have the "https" scheme.</exception>
-        public static Uri MustBeHttpsUrl(this Uri uri, string parameterName = null, string message = null, Func<Exception> exception = null)
-        {
-            return uri.MustHaveScheme("https", parameterName, message, exception);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustBeHttpsUrl(this Uri uri, string parameterName = null, string message = null) => uri.MustHaveScheme("https", parameterName, message);
 
         /// <summary>
         /// Ensures that the specified URI has the "http" scheme, or otherwise throws an <see cref="ArgumentException" />.
@@ -142,15 +184,12 @@ namespace Light.GuardClauses
         /// <param name="uri">The URI to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>
-        /// <param name="exception">
-        /// The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have the "http" scheme.
-        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI or does not have the "http" scheme.</exception>
-        public static Uri MustBeHttpUrl(this Uri uri, string parameterName = null, string message = null, Func<Exception> exception = null)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustBeHttpUrl(this Uri uri, string parameterName = null, string message = null)
         {
-            return uri.MustHaveScheme("http", parameterName, message, exception);
+            return uri.MustHaveScheme("http", parameterName, message);
         }
 
         /// <summary>

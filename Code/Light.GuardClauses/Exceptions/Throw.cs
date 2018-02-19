@@ -199,7 +199,15 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         public static void MustBeAbsoluteUri(Uri uri, string parameterName = null, string message = null)
         {
-            throw new RelativeUriException(parameterName, message ?? $"{parameterName ?? "The URI"} \"{uri}\" must be an absolute URI, but it actually is relative.");
+            throw new RelativeUriException(parameterName, message ?? $"{parameterName ?? "The URI"} must be an absolute URI, but it actually is \"{uri}\".");
+        }
+
+        /// <summary>
+        /// Throws the default <see cref="InvalidUriSchemeException"/> indicating that a URI has an unexpected scheme, using the optional parameter name and message.
+        /// </summary>
+        public static void UriMustHaveScheme(Uri uri, string scheme, string parameterName = null, string message = null)
+        {
+            throw new InvalidUriSchemeException(parameterName, message ?? $"{parameterName ?? "The URI"} must use the scheme \"{scheme}\", but it actually is \"{uri}\".");
         }
 
         /// <summary>
