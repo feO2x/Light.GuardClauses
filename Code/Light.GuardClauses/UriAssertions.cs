@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Light.GuardClauses.Exceptions;
@@ -132,39 +133,200 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>
-        /// Ensures that the specified URI has one of the given schemes, or otherwise throws an <see cref="ArgumentException" />.
-        /// </summary>
-        /// <param name="uri">The URI to be checked.</param>
-        /// <param name="schemes"></param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message of the exception (optional).</param>
-        /// <param name="exception">
-        /// The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have one of the specified schemes.
-        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI or does not have one of the specified schemes.</exception>
-        public static Uri MustHaveOneSchemeOf(this Uri uri, IEnumerable<string> schemes, string parameterName = null, string message = null, Func<Exception> exception = null)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustHaveOneSchemeOf<TCollection>(this Uri parameter, TCollection schemes, string parameterName = null, string message = null)
+            where TCollection : IEnumerable<string>
         {
-            uri.MustNotBeNull(parameterName);
-            var schemesCollection = schemes.MustNotBeNullOrEmpty(nameof(schemes), "Your precondition is set up wrongly: schemes is null or an empty collection.").AsReadOnlyList();
+            if (typeof(TCollection) == typeof(string[]))
+            {
+                parameter.MustBeAbsoluteUri(parameterName);
+                var castedSchemes = schemes as string[];
+                for (var i = 0; i < castedSchemes.Length; ++i)
+                {
+                    if (string.Equals(parameter.Scheme, castedSchemes[i], StringComparison.OrdinalIgnoreCase))
+                        return parameter;
+                }
 
-            if (uri.IsAbsoluteUri == false)
-                goto ThrowException;
+                Throw.UriMustHaveOneSchemeOf(parameter, castedSchemes, parameterName, message);
+                return null;
+            }
 
-            for (var i = 0; i < schemesCollection.Count; i++)
-                if (string.Equals(schemesCollection[i], uri.Scheme, StringComparison.OrdinalIgnoreCase))
-                    return uri;
+            if (typeof(TCollection) == typeof(List<string>))
+            {
+                parameter.MustBeAbsoluteUri(parameterName);
+                var castedSchemes = schemes as List<string>;
+                for (var i = 0; i < castedSchemes.Count; ++i)
+                {
+                    if (string.Equals(parameter.Scheme, castedSchemes[i], StringComparison.OrdinalIgnoreCase))
+                        return parameter;
+                }
 
-            ThrowException:
-            var subclause = uri.IsAbsoluteUri ? $"but actually has scheme \"{uri.Scheme}\" (\"{uri}\")." : $"but it has none because it is a relative URI (\"{uri}\").";
-            throw exception != null
-                      ? exception()
-                      : new ArgumentException(message ?? new StringBuilder().Append($"{parameterName ?? "The URI"} must have one of the following schemes:")
-                                                                            .AppendItemsWithNewLine(schemesCollection)
-                                                                            .Append(subclause)
-                                                                            .ToString());
+                Throw.UriMustHaveOneSchemeOf(parameter, castedSchemes, parameterName, message);
+                return null;
+            }
+
+            if (typeof(TCollection) == typeof(ObservableCollection<string>))
+            {
+                parameter.MustBeAbsoluteUri(parameterName);
+                var castedSchemes = schemes as ObservableCollection<string>;
+                for (var i = 0; i < castedSchemes.Count; ++i)
+                {
+                    if (string.Equals(parameter.Scheme, castedSchemes[i], StringComparison.OrdinalIgnoreCase))
+                        return parameter;
+                }
+
+                Throw.UriMustHaveOneSchemeOf(parameter, castedSchemes, parameterName, message);
+                return null;
+            }
+
+            if (typeof(TCollection) == typeof(ReadOnlyCollection<string>))
+            {
+                parameter.MustBeAbsoluteUri(parameterName);
+                var castedSchemes = schemes as ReadOnlyCollection<string>;
+                for (var i = 0; i < castedSchemes.Count; ++i)
+                {
+                    if (string.Equals(parameter.Scheme, castedSchemes[i], StringComparison.OrdinalIgnoreCase))
+                        return parameter;
+                }
+
+                Throw.UriMustHaveOneSchemeOf(parameter, castedSchemes, parameterName, message);
+                return null;
+            }
+
+            if (typeof(TCollection) == typeof(IList<string>))
+            {
+                parameter.MustBeAbsoluteUri(parameterName);
+                var castedSchemes = schemes as IList<string>;
+                for (var i = 0; i < castedSchemes.Count; ++i)
+                {
+                    if (string.Equals(parameter.Scheme, castedSchemes[i], StringComparison.OrdinalIgnoreCase))
+                        return parameter;
+                }
+
+                Throw.UriMustHaveOneSchemeOf(parameter, castedSchemes, parameterName, message);
+                return null;
+            }
+
+            if (typeof(TCollection) == typeof(IReadOnlyList<string>))
+            {
+                parameter.MustBeAbsoluteUri(parameterName);
+                var castedSchemes = schemes as IReadOnlyList<string>;
+                for (var i = 0; i < castedSchemes.Count; ++i)
+                {
+                    if (string.Equals(parameter.Scheme, castedSchemes[i], StringComparison.OrdinalIgnoreCase))
+                        return parameter;
+                }
+
+                Throw.UriMustHaveOneSchemeOf(parameter, castedSchemes, parameterName, message);
+                return null;
+            }
+
+            foreach (var scheme in schemes)
+            {
+                if (string.Equals(parameter.Scheme, scheme, StringComparison.OrdinalIgnoreCase))
+                    return parameter;
+            }
+
+            Throw.UriMustHaveOneSchemeOf(parameter, schemes, parameterName, message);
+            return null;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustHaveOneSchemeOf<TCollection>(this Uri parameter, TCollection schemes, Func<Exception> exceptionFactory, string parameterName = null)
+            where TCollection : IEnumerable<string>
+        {
+            if (typeof(TCollection) == typeof(string[]))
+            {
+                parameter.MustBeAbsoluteUri(parameterName);
+                var castedSchemes = schemes as string[];
+                for (var i = 0; i < castedSchemes.Length; ++i)
+                {
+                    if (string.Equals(parameter.Scheme, castedSchemes[i], StringComparison.OrdinalIgnoreCase))
+                        return parameter;
+                }
+
+                Throw.CustomException(exceptionFactory);
+                return null;
+            }
+
+            if (typeof(TCollection) == typeof(List<string>))
+            {
+                parameter.MustBeAbsoluteUri(parameterName);
+                var castedSchemes = schemes as List<string>;
+                for (var i = 0; i < castedSchemes.Count; ++i)
+                {
+                    if (string.Equals(parameter.Scheme, castedSchemes[i], StringComparison.OrdinalIgnoreCase))
+                        return parameter;
+                }
+
+                Throw.CustomException(exceptionFactory);
+                return null;
+            }
+
+            if (typeof(TCollection) == typeof(ObservableCollection<string>))
+            {
+                parameter.MustBeAbsoluteUri(parameterName);
+                var castedSchemes = schemes as ObservableCollection<string>;
+                for (var i = 0; i < castedSchemes.Count; ++i)
+                {
+                    if (string.Equals(parameter.Scheme, castedSchemes[i], StringComparison.OrdinalIgnoreCase))
+                        return parameter;
+                }
+
+                Throw.CustomException(exceptionFactory);
+                return null;
+            }
+
+            if (typeof(TCollection) == typeof(ReadOnlyCollection<string>))
+            {
+                parameter.MustBeAbsoluteUri(parameterName);
+                var castedSchemes = schemes as ReadOnlyCollection<string>;
+                for (var i = 0; i < castedSchemes.Count; ++i)
+                {
+                    if (string.Equals(parameter.Scheme, castedSchemes[i], StringComparison.OrdinalIgnoreCase))
+                        return parameter;
+                }
+
+                Throw.CustomException(exceptionFactory);
+                return null;
+            }
+
+            if (typeof(TCollection) == typeof(IList<string>))
+            {
+                parameter.MustBeAbsoluteUri(parameterName);
+                var castedSchemes = schemes as IList<string>;
+                for (var i = 0; i < castedSchemes.Count; ++i)
+                {
+                    if (string.Equals(parameter.Scheme, castedSchemes[i], StringComparison.OrdinalIgnoreCase))
+                        return parameter;
+                }
+
+                Throw.CustomException(exceptionFactory);
+                return null;
+            }
+
+            if (typeof(TCollection) == typeof(IReadOnlyList<string>))
+            {
+                parameter.MustBeAbsoluteUri(parameterName);
+                var castedSchemes = schemes as IReadOnlyList<string>;
+                for (var i = 0; i < castedSchemes.Count; ++i)
+                {
+                    if (string.Equals(parameter.Scheme, castedSchemes[i], StringComparison.OrdinalIgnoreCase))
+                        return parameter;
+                }
+
+                Throw.CustomException(exceptionFactory);
+                return null;
+            }
+
+            foreach (var scheme in schemes)
+            {
+                if (string.Equals(parameter.Scheme, scheme, StringComparison.OrdinalIgnoreCase))
+                    return parameter;
+            }
+
+            Throw.CustomException(exceptionFactory);
+            return null;
         }
 
         /// <summary>

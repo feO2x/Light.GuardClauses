@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentAssertions;
+using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.Tests.CustomMessagesAndExceptions;
 using Xunit;
 
@@ -8,14 +9,14 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
     public sealed class MustHaveOneSchemeOfTests : ICustomMessageAndExceptionTestDataProvider
     {
         [Theory(DisplayName = "MustHaveOneSchemeOf must throw an ArgumentException when the specified URI is not an absolute one or does not have one of the specified schemes.")]
-        [InlineData("/foo", UriKind.Relative)]
+        [InlineData("file:///C:/foo.txt", UriKind.Absolute)]
         [InlineData("ftp://localhost:8080", UriKind.Absolute)]
         public void InvalidScheme(string uri, UriKind kind)
         {
             Action act = () => new Uri(uri, kind).MustHaveOneSchemeOf(new[] { "http", "https" }, nameof(uri));
 
             act.Should().Throw<ArgumentException>()
-               .And.Message.Should().Contain($"{nameof(uri)} must have one of the following schemes:");
+               .And.Message.Should().Contain($"{nameof(uri)} must use one of the following schemes:");
         }
 
         [Theory(DisplayName = "MustHaveOneSchemeOf must not throw an exception when the specified URI is an absolute one having one of the specified schemes.")]
@@ -39,8 +40,8 @@ namespace Light.GuardClauses.Tests.UriAssertionsTests
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.Add(new CustomExceptionTest(exception => new Uri("http://foo.com").MustHaveOneSchemeOf(new[] { "https" }, exception: exception)))
-                    .Add(new CustomMessageTest<ArgumentException>(message => new Uri("http://foo.com").MustHaveOneSchemeOf(new[] { "ftp" }, message: message)));
+            testData.Add(new CustomExceptionTest(exception => new Uri("http://foo.com").MustHaveOneSchemeOf(new[] { "https" }, exception)))
+                    .Add(new CustomMessageTest<InvalidUriSchemeException>(message => new Uri("http://foo.com").MustHaveOneSchemeOf(new[] { "ftp" }, message: message)));
         }
     }
 }
