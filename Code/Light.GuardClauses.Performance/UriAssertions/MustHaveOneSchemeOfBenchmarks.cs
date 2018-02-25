@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using BenchmarkDotNet.Attributes;
+using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses.Performance.UriAssertions
@@ -31,6 +32,51 @@ namespace Light.GuardClauses.Performance.UriAssertions
         }
 
         [Benchmark(Baseline = true)]
+        public Uri ImperativeArrayVersion()
+        {
+            if (Uri == null) throw new ArgumentNullException(nameof(Uri));
+            if (Uri.IsAbsoluteUri == false) throw new RelativeUriException(nameof(Uri));
+
+            for (var i = 0; i < Array.Length; i++)
+            {
+                if (Uri.Scheme.Equals(Array[i], StringComparison.OrdinalIgnoreCase))
+                    return Uri;
+            }
+
+            throw new InvalidUriSchemeException(nameof(Uri));
+        }
+
+        [Benchmark]
+        public Uri ImperativeListVersion()
+        {
+            if (Uri == null) throw new ArgumentNullException(nameof(Uri));
+            if (Uri.IsAbsoluteUri == false) throw new RelativeUriException(nameof(Uri));
+
+            for (var i = 0; i < List.Count; i++)
+            {
+                if (Uri.Scheme.Equals(List[i], StringComparison.OrdinalIgnoreCase))
+                    return Uri;
+            }
+
+            throw new InvalidUriSchemeException(nameof(Uri));
+        }
+
+        [Benchmark]
+        public Uri ImperativeAbstractReadOnlyListVersion()
+        {
+            if (Uri == null) throw new ArgumentNullException(nameof(Uri));
+            if (Uri.IsAbsoluteUri == false) throw new RelativeUriException(nameof(Uri));
+
+            for (var i = 0; i < ReadOnlyListAbstraction.Count; i++)
+            {
+                if (Uri.Scheme.Equals(ReadOnlyListAbstraction[i], StringComparison.OrdinalIgnoreCase))
+                    return Uri;
+            }
+
+            throw new InvalidUriSchemeException(nameof(Uri));
+        }
+
+        [Benchmark]
         public Uri LightGuardClausesArray() => Uri.MustHaveOneSchemeOf(Array, nameof(Uri));
 
         [Benchmark]
@@ -46,7 +92,7 @@ namespace Light.GuardClauses.Performance.UriAssertions
         public Uri LightGuardClausesReadOnlyCollection() => Uri.MustHaveOneSchemeOf(ReadOnlyCollection, nameof(Uri));
 
         [Benchmark]
-        public Uri LightGuardClausesObservableCollection() => Uri.MustHaveOneSchemeOf(ReadOnlyCollection, nameof(Uri));
+        public Uri LightGuardClausesObservableCollection() => Uri.MustHaveOneSchemeOf(ObservableCollection, nameof(Uri));
 
         [Benchmark]
         public Uri LightGuardClausesEnumerable() => Uri.MustHaveOneSchemeOf(Enumerable, nameof(Uri));
