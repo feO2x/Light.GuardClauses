@@ -1,10 +1,11 @@
 #! "netcoreapp2.0"
 #load "CSharpCodeFileWriter.csx"
-#load "COllectionTypes.csx"
+#load "CollectionTypes.csx"
+#load "Namespaces.csx"
 
+var targetFile = Path.Combine("..", "Light.GuardClauses", "UriAssertions.MustHaveOneSchemeOf.cs");
 var stringBuilder = new StringBuilder();
 var writer = new CSharpCodeFileWriter(new StringWriter(stringBuilder));
-
 const string itemType = "string";
 var supportedCollectionTypes = new CollectionTypeInfo[]
 {
@@ -14,14 +15,16 @@ var supportedCollectionTypes = new CollectionTypeInfo[]
       new AbstractListInfo(itemType),
       new ObservableCollectionInfo(itemType),
       new CollectionInfo(itemType),
+      new ReadOnlyCollectionInfo(itemType),
       new EnumerableInfo(itemType)
 };
 
-
-writer.IncludeNamespace(Namespaces.System)
+writer.WriteCodeGenerationNotice("UriAssertions.MustHaveOneSchemeOf.csx")
+      .IncludeNamespace(Namespaces.System)
       .IncludeNamespace(Namespaces.SystemCollectionsGeneric)
       .IncludeNamespace(Namespaces.SystemRuntimeCompilerServices)
       .IncludeNamespace(Namespaces.SystemCollectionsObjectModel)
+      .IncludeNamespace(Namespaces.LightGuardClausesExceptions)
       .WriteEmptyLine()
       .OpenNamespace(Namespaces.LightGuardClauses)
       .OpenPublicStaticPartialClass("UriAssertions");
@@ -39,12 +42,15 @@ foreach (var info in supportedCollectionTypes)
         .DecreaseIndentation()
         .CloseScope()
         .WriteEmptyLine()
-        .WriteLine("Throw.UriMustHaveOneSchemeOf(parameter, schemes, paramterName, message);")
+        .WriteLine("Throw.UriMustHaveOneSchemeOf(parameter, schemes, parameterName, message);")
         .WriteLine("return null;")
         .CloseScope()
         .WriteEmptyLine();
 }
       
-writer.CloseRemainingScopes(); 
+writer.CloseRemainingScopes();
 
-Console.WriteLine(stringBuilder.ToString())
+var fileContent = stringBuilder.ToString();
+File.WriteAllText(targetFile, fileContent);
+Console.WriteLine($"The following was written to \"{targetFile}\":");
+Console.WriteLine(fileContent);

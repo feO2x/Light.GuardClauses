@@ -39,7 +39,7 @@ public abstract class ForTypeCollection : CollectionTypeInfo
 
     public override CSharpCodeFileWriter OpenLoop(CSharpCodeFileWriter writer, string variableName, string collectionVariableName, string counterName = "i")
     {
-        return writer.WriteLine($"for (var {counterName} = 0; {counterName} < {collectionVariableName}; ++{counterName})")
+        return writer.WriteLine($"for (var {counterName} = 0; {counterName} < {collectionVariableName}.{CountProperty}; ++{counterName})")
                      .OpenScopeAndIndent()
                      .WriteLine($"var {variableName} = {collectionVariableName}[{counterName}];");
     }
@@ -74,6 +74,11 @@ public sealed class ObservableCollectionInfo : ForTypeCollection
 public sealed class CollectionInfo : ForTypeCollection
 {
     public CollectionInfo(string itemTypeName) : base($"Collection<{itemTypeName}>", itemTypeName) { }
+}
+
+public sealed class ReadOnlyCollectionInfo : ForTypeCollection
+{
+    public ReadOnlyCollectionInfo(string itemTypeName) : base($"ReadOnlyCollection<{itemTypeName}>", itemTypeName) { }
 }
 
 public sealed class EnumerableInfo : ForEachTypeCollection

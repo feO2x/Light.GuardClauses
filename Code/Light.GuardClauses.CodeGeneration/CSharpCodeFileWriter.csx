@@ -81,6 +81,12 @@ public sealed class CSharpCodeFileWriter
         return this;
     }
 
+    public CSharpCodeFileWriter WriteCodeGenerationNotice(string generatorName) =>
+        WriteLine($@"
+// PLEASE NOTICE: this code is auto-generated. Any changes you make to this file are going to be overwritten when this file is recreated by the code generator.
+// Check ""{generatorName}"" for details.")
+       .WriteEmptyLine();
+
     private void WriteIndentationIfNecessary()
     {
         if (!_isCurrentLineEmpty)
@@ -93,13 +99,4 @@ public sealed class CSharpCodeFileWriter
             _writer.Write(_indentationCharacters);
         }
     }
-}
-
-public static class Namespaces
-{
-    public const string System = "System";
-    public const string SystemCollectionsGeneric = "System.Collections.Generic";
-    public const string SystemRuntimeCompilerServices = "System.Runtime.CompilerServices";
-    public const string LightGuardClauses = "Light.GuardClauses";
-    public const string SystemCollectionsObjectModel = "System.Collections.ObjectModel";
 }
