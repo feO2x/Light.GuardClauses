@@ -2,6 +2,7 @@
 #load "CSharpCodeWriter.csx"
 #load "CollectionTypes.csx"
 #load "Namespaces.csx"
+#load "AssertionOverload.csx"
 
 var targetFile = Path.Combine("..", "Light.GuardClauses", "UriAssertions.MustHaveOneSchemeOf.cs");
 var stringBuilder = new StringBuilder();
@@ -19,6 +20,16 @@ var supportedCollectionTypes = new CollectionTypeInfo[]
       new EnumerableInfo(itemType)
 };
 
+var reason = $"when {XmlComment.ToParamRef("parameter")} uses none of the specified schemes";
+const string additionalParameter = "string parameterName = null";
+Action<CSharpCodeWriter> additionalParamterComment = w => w.WriteXmlCommentParam("parameterName", $"The name of the parameter used for the {XmlComment.ToSee("ArgumentNullException")} and {XmlComment.ToSee("RelativeUriException")} (optional).");
+var overloads = new AssertionOverload[]
+{
+      new DefaultOverload("Throw.UriMustHaveOneSchemeOf(parameter, schemes, parameterName, message);", "InvalidUriSchemeException", reason, "an"),
+      new CustomExceptionOverload(reason, additionalParameter, additionalParamterComment),
+      new CustomExceptionOverloadWithOneParameter("Uri", reason, additionalParameter, additionalParamterComment)
+};
+
 writer.WriteCodeGenerationNotice("UriAssertions.MustHaveOneSchemeOf.csx")
       .IncludeNamespace(Namespaces.System)
       .IncludeNamespace(Namespaces.SystemCollectionsGeneric)
@@ -33,31 +44,33 @@ writer.WriteCodeGenerationNotice("UriAssertions.MustHaveOneSchemeOf.csx")
 
 foreach (var info in supportedCollectionTypes)
 {
-    writer.WriteXmlCommentSummary($"Ensures that the parameter has one of the specified schemes, or otherwise throws an {XmlComment.ToSee("InvalidUriSchemeException")}.")
-          .WriteXmlCommentParam("parameter", "The URI to be checked.")
-          .WriteXmlCommentParam("schemes", "One of these schemes should apply to the URI.")
-          .WriteDefaultXmlCommentForParameterName()
-          .WriteDefaultXmlCommentForMessage("InvalidUriSchemeException")
-          .WriteXmlCommentException("InvalidUriSchemeException", $"Thrown when {XmlComment.ToParamRef("parameter")} uses none of the specified schemes.")
-          .WriteXmlCommentException("RelativeUriException", $"Thrown when {XmlComment.ToParamRef("parameter")} is relative and thus has no scheme.")
-          .WriteDefaultArgumentNullException()
-          .WriteAggressiveInliningAttribute()
-          .OpenMember($"public static Uri MustHaveOneSchemeOf(this Uri parameter, {info.CollectionType} schemes, string parameterName = null, string message = null)")
-          .WriteLine("parameter.MustBeAbsoluteUri(parameterName);");
+      foreach (var overload in overloads)
+      {
+          writer.WriteXmlCommentSummary($"Ensures that the parameter has one of the specified schemes, or otherwise throws {overload.ExceptionTextForSummary}.")
+                .WriteXmlCommentParam("parameter", "The URI to be checked.")
+                .WriteXmlCommentParam("schemes", "One of these schemes should apply to the URI.");
 
-    info.OpenLoop(writer, "scheme", "schemes")
-        .WriteLine("if (string.Equals(parameter.Scheme, scheme, StringComparison.OrdinalIgnoreCase))")
-        .IncreaseIndentation()
-        .WriteLine("return parameter;")
-        .DecreaseIndentation()
-        .CloseScope()
-        .WriteEmptyLine()
-        .WriteLine("Throw.UriMustHaveOneSchemeOf(parameter, schemes, parameterName, message);")
-        .WriteLine("return null;")
-        .CloseScope()
-        .WriteEmptyLine();
+          overload.WriteXmlCommentForParameters(writer)
+                  .WriteXmlCommentForException(writer)
+                  .WriteXmlCommentException("RelativeUriException", $"Thrown when {XmlComment.ToParamRef("parameter")} is relative and thus has no scheme.")
+                  .WriteDefaultArgumentNullException()
+                  .WriteAggressiveInliningAttribute()
+                  .OpenMember($"public static Uri MustHaveOneSchemeOf(this Uri parameter, {info.CollectionType} schemes, {overload.Parameters})")
+                  .WriteLine("parameter.MustBeAbsoluteUri(parameterName);");
+
+          info.OpenLoop(writer, "scheme", "schemes")
+              .WriteLine("if (parameter.Scheme.Equals(scheme, StringComparison.OrdinalIgnoreCase))")
+              .IncreaseIndentation()
+              .WriteLine("return parameter;")
+              .DecreaseIndentation()
+              .CloseScope()
+              .WriteEmptyLine()
+              .WriteLine(overload.ThrowStatement)
+              .WriteLine("return null;")
+              .CloseScope()
+              .WriteEmptyLine();
+      }
 }
-      
 writer.CloseRemainingScopes();
 
 var fileContent = stringBuilder.ToString();
