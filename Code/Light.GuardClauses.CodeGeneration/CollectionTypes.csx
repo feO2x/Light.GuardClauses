@@ -1,6 +1,6 @@
 #! "netcoreapp2.0"
 #r "nuget: Light.GuardClauses 3.5.0"
-#load "CSharpCodeFileWriter.csx"
+#load "CSharpCodeWriter.csx"
 
 using Light.GuardClauses;
 
@@ -17,7 +17,7 @@ public abstract class CollectionTypeInfo
     public string ItemTypeName { get; }
     public string CountProperty { get; }
 
-    public abstract CSharpCodeFileWriter OpenLoop(CSharpCodeFileWriter writer, string variableName, string collectionVariableName, string counterName = "i");
+    public abstract CSharpCodeWriter OpenLoop(CSharpCodeWriter writer, string variableName, string collectionVariableName, string counterName = "i");
 }
 
 public abstract class ForEachTypeCollection : CollectionTypeInfo
@@ -25,7 +25,7 @@ public abstract class ForEachTypeCollection : CollectionTypeInfo
     protected ForEachTypeCollection(string collectionType, string itemTypeName, string countProperty = "Count")
         : base(collectionType, itemTypeName, countProperty) { }
 
-    public override CSharpCodeFileWriter OpenLoop(CSharpCodeFileWriter writer, string variableName, string collectionVariableName, string counterName = "i")
+    public override CSharpCodeWriter OpenLoop(CSharpCodeWriter writer, string variableName, string collectionVariableName, string counterName = "i")
     {
         return writer.WriteLine($"foreach (var {variableName} in {collectionVariableName})")
                      .OpenScopeAndIndent();
@@ -37,7 +37,7 @@ public abstract class ForTypeCollection : CollectionTypeInfo
     protected ForTypeCollection(string collectionType, string itemTypeName, string countProperty = "Count")
         : base(collectionType, itemTypeName, countProperty) { }
 
-    public override CSharpCodeFileWriter OpenLoop(CSharpCodeFileWriter writer, string variableName, string collectionVariableName, string counterName = "i")
+    public override CSharpCodeWriter OpenLoop(CSharpCodeWriter writer, string variableName, string collectionVariableName, string counterName = "i")
     {
         return writer.WriteLine($"for (var {counterName} = 0; {counterName} < {collectionVariableName}.{CountProperty}; ++{counterName})")
                      .OpenScopeAndIndent()
