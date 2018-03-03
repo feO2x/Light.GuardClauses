@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
 
@@ -21,13 +22,17 @@ namespace Light.GuardClauses
         /// True if both types are null, or if both are equal, or if one type
         /// is a constructed generic type and the other one is the corresponding generic type definition, else false.
         /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsEquivalentTypeTo(this Type type, Type other)
         {
             if (ReferenceEquals(type, other)) return true;
             if (type is null || other is null) return false;
 
-            if (type == other) return true;
+            return type == other || CheckTypeEquivalency(type, other);
+        }
 
+        private static bool CheckTypeEquivalency(Type type, Type other)
+        {
             if (type.IsConstructedGenericType == other.IsConstructedGenericType)
                 return false;
 

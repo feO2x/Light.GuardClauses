@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Light.GuardClauses
 {
@@ -24,19 +25,15 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="x">The first type.</param>
         /// <param name="y">The second type.</param>
-        public bool Equals(Type x, Type y)
-        {
-            return x.IsEquivalentTypeTo(y);
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool Equals(Type x, Type y) => x.IsEquivalentTypeTo(y);
 
         /// <summary>
         /// Returns the hash code of the given type. When the specified type is a constructed generic type,
         /// the hash code of the generic type definition is returned instead.
         /// </summary>
         /// <param name="type">The type whose hash code is requested.</param>
-        public int GetHashCode(Type type)
-        {
-            return type == null ? 0 : type.IsConstructedGenericType ? type.GetGenericTypeDefinition().GetHashCode() : type.GetHashCode();
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public int GetHashCode(Type type) => type == null ? 0 : type.IsConstructedGenericType ? type.GetGenericTypeDefinition().GetHashCode() : type.GetHashCode();
     }
 }
