@@ -185,6 +185,13 @@ namespace Light.GuardClauses.Exceptions
         public static void InvalidState(string message = null) => throw new InvalidStateException(message);
 
         /// <summary>
+        /// Throws the default <see cref="TypeException"/> indicating that two types are not equivalent, using the optional parameter name and message.
+        /// </summary>
+        public static void TypeNotEquivalent(Type parameter, Type other, string parameterName = null, string message = null) =>
+            throw new TypeException(parameterName, message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be equivalent to \"{other.ToStringOrNull()}\", but it actually is not.");
+        
+
+        /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException(Func<Exception> exceptionFactory) => throw exceptionFactory();

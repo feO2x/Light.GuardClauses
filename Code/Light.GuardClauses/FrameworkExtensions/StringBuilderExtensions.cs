@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Light.GuardClauses.FrameworkExtensions
@@ -176,10 +177,8 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <param name="item">The item whose string representation should be returned.</param>
         /// <param name="nullText">The text that is returned when item is null (defaults to "null").</param>
         /// <returns>The string representation of item, or nullText.</returns>
-        public static string ToStringOrNull<T>(this T item, string nullText = "null")
-        {
-            return item == null ? nullText : item.ToString();
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string ToStringOrNull<T>(this T item, string nullText = "null")=> item == null ? nullText : item.ToString();
 
         /// <summary>
         /// This method returns quotation marks for all types that are not primitive numerics (like e.g. int, long, short, uint, etc.) or types regarding dates and times (DateTime, DateTimeOffset, TimeSpan).

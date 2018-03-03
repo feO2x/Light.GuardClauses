@@ -8,22 +8,22 @@ namespace Light.GuardClauses.Performance.TypeAssertions
 {
     public class IsEquivalentTypeToBenchmarks : DefaultBenchmark
     {
-        public Type NormalType = typeof(ArgumentDefaultException);
+        public Type NonGenericType = typeof(ArgumentDefaultException);
         public Type ClosedConstructedGenericType = typeof(IList<SampleEntity>);
         public Type GenericTypeDefinition = typeof(IList<>);
         
 
         [Benchmark(Baseline = true)]
-        public bool OldVersionSameReference() => NormalType.OldIsEquivalentTypeTo(NormalType);
+        public bool OldVersionSameReference() => NonGenericType.OldIsEquivalentTypeTo(NonGenericType);
 
         [Benchmark]
-        public bool LightGuardClausesSameReference() => NormalType.IsEquivalentTypeTo(NormalType);
+        public bool LightGuardClausesSameReference() => NonGenericType.IsEquivalentTypeTo(NonGenericType);
 
         [Benchmark]
-        public bool OldVersionEqualType() => NormalType.OldIsEquivalentTypeTo(typeof(ArgumentDefaultException));
+        public bool OldVersionEqualType() => NonGenericType.OldIsEquivalentTypeTo(typeof(ArgumentDefaultException));
 
         [Benchmark]
-        public bool LightGuardClausesEqualType() => NormalType.IsEquivalentTypeTo(typeof(ArgumentDefaultException));
+        public bool LightGuardClausesEqualType() => NonGenericType.IsEquivalentTypeTo(typeof(ArgumentDefaultException));
 
         [Benchmark]
         public bool OldVersionEquivalentType() => ClosedConstructedGenericType.OldIsEquivalentTypeTo(GenericTypeDefinition);
@@ -32,10 +32,10 @@ namespace Light.GuardClauses.Performance.TypeAssertions
         public bool LightGuardClausesEquivalentType() => ClosedConstructedGenericType.IsEquivalentTypeTo(GenericTypeDefinition);
 
         [Benchmark]
-        public bool OldVersionDifferentType() => NormalType.OldIsEquivalentTypeTo(ClosedConstructedGenericType);
+        public bool OldVersionDifferentType() => NonGenericType.OldIsEquivalentTypeTo(ClosedConstructedGenericType);
 
         [Benchmark]
-        public bool LightGuardDifferentType() => NormalType.IsEquivalentTypeTo(ClosedConstructedGenericType);
+        public bool LightGuardDifferentType() => NonGenericType.IsEquivalentTypeTo(ClosedConstructedGenericType);
     }
 
     public static class IsEquivalentTypeToExtensions
