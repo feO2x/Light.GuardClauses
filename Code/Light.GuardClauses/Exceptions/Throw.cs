@@ -227,6 +227,14 @@ namespace Light.GuardClauses.Exceptions
         }
 
         /// <summary>
+        /// Throws a <see cref="InvalidOperationException"/>, using the optional message.
+        /// </summary>
+        public static void InvalidOperation(string message = null)
+        {
+            throw new InvalidOperationException(message);
+        }
+
+        /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException(Func<Exception> exceptionFactory)
