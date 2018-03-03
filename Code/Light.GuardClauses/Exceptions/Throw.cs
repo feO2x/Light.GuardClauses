@@ -187,8 +187,15 @@ namespace Light.GuardClauses.Exceptions
         /// <summary>
         /// Throws the default <see cref="TypeException"/> indicating that two types are not equivalent, using the optional parameter name and message.
         /// </summary>
-        public static void TypeNotEquivalent(Type parameter, Type other, string parameterName = null, string message = null) =>
+        public static void TypesNotEquivalent(Type parameter, Type other, string parameterName = null, string message = null) =>
             throw new TypeException(parameterName, message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be equivalent to \"{other.ToStringOrNull()}\", but it actually is not.");
+
+
+        /// <summary>
+        /// Throws the default <see cref="TypeException"/> indicating that two types are equivalent, using the optional parameter name and message.
+        /// </summary>
+        public static void TypesEquivalent(Type parameter, Type other, string parameterName = null, string message = null) =>
+            throw new TypeException(parameterName, message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be equivalent to \"{other?.ToString() ?? "null"}\", but it actually is.");
         
 
         /// <summary>
