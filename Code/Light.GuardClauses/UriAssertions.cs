@@ -130,45 +130,132 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that the specified URI has the "https" scheme, or otherwise throws an <see cref="ArgumentException" />.
+        /// Ensures that the specified URI has the "https" scheme, or otherwise throws an <see cref="InvalidUriSchemeException" />.
         /// </summary>
-        /// <param name="uri">The URI to be checked.</param>
+        /// <param name="parameter">The URI to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI or does not have the "https" scheme.</exception>
+        /// <exception cref="InvalidUriSchemeException">Thrown when <paramref name="parameter" /> uses a different scheme than "https".</exception>
+        /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter" /> is relative and thus has no scheme.</exception>
+        /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Uri MustBeHttpsUrl(this Uri uri, string parameterName = null, string message = null) => uri.MustHaveScheme("https", parameterName, message);
+        public static Uri MustBeHttpsUrl(this Uri parameter, string parameterName = null, string message = null) => parameter.MustHaveScheme("https", parameterName, message);
 
         /// <summary>
-        /// Ensures that the specified URI has the "http" scheme, or otherwise throws an <see cref="ArgumentException" />.
+        /// Ensures that the specified URI has the "https" scheme, or otherwise throws your custom exception.
         /// </summary>
-        /// <param name="uri">The URI to be checked.</param>
+        /// <param name="parameter">The URI to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> uses a different scheme than "https".</exception>
+        /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter" /> is relative and thus has no scheme.</exception>
+        /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustBeHttpsUrl(this Uri parameter, Func<Exception> exceptionFactory, string parameterName = null) => parameter.MustHaveScheme("https", exceptionFactory, parameterName);
+
+        /// <summary>
+        /// Ensures that the specified URI has the "https" scheme, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The URI to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> uses a different scheme than "https".</exception>
+        /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter" /> is relative and thus has no scheme.</exception>
+        /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustBeHttpsUrl(this Uri parameter, Func<Uri, Exception> exceptionFactory, string parameterName = null) => parameter.MustHaveScheme("https", exceptionFactory, parameterName);
+
+        /// <summary>
+        /// Ensures that the specified URI has the "http" scheme, or otherwise throws an <see cref="InvalidUriSchemeException" />.
+        /// </summary>
+        /// <param name="parameter">The URI to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI or does not have the "http" scheme.</exception>
+        /// <exception cref="InvalidUriSchemeException">Thrown when <paramref name="parameter" /> uses a different scheme than "http".</exception>
+        /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter" /> is relative and thus has no scheme.</exception>
+        /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Uri MustBeHttpUrl(this Uri uri, string parameterName = null, string message = null)
+        public static Uri MustBeHttpUrl(this Uri parameter, string parameterName = null, string message = null) => parameter.MustHaveScheme("http", parameterName, message);
+
+        /// <summary>
+        /// Ensures that the specified URI has the "http" scheme, or otherwise throws your custom exception />.
+        /// </summary>
+        /// <param name="parameter">The URI to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <exception cref="InvalidUriSchemeException">Your custom exception thrown when <paramref name="parameter" /> uses a different scheme than "http".</exception>
+        /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter" /> is relative and thus has no scheme.</exception>
+        /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustBeHttpUrl(this Uri parameter, Func<Exception> exceptionFactory, string parameterName = null) => parameter.MustHaveScheme("http", exceptionFactory, parameterName);
+
+        /// <summary>
+        /// Ensures that the specified URI has the "http" scheme, or otherwise throws your custom exception />.
+        /// </summary>
+        /// <param name="parameter">The URI to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <exception cref="InvalidUriSchemeException">Your custom exception thrown when <paramref name="parameter" /> uses a different scheme than "http".</exception>
+        /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter" /> is relative and thus has no scheme.</exception>
+        /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustBeHttpUrl(this Uri parameter, Func<Uri, Exception> exceptionFactory, string parameterName = null) => parameter.MustHaveScheme("http", exceptionFactory, parameterName);
+
+        /// <summary>
+        /// Ensures that the specified URI has the "http" or "https" scheme, or otherwise throws an <see cref="InvalidUriSchemeException" />.
+        /// </summary>
+        /// <param name="parameter">The URI to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message of the exception (optional).</param>
+        /// <exception cref="InvalidUriSchemeException">Thrown when <paramref name="parameter" /> uses a different scheme than "http" or "https".</exception>
+        /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter" /> is relative and thus has no scheme.</exception>
+        /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustBeHttpOrHttpsUrl(this Uri parameter, string parameterName = null, string message = null)
         {
-            return uri.MustHaveScheme("http", parameterName, message);
+            parameter.MustBeAbsoluteUri(parameterName);
+
+            if (parameter.Scheme.Equals("https") == false && parameter.Scheme.Equals("http") == false)
+                Throw.UriMustHaveOneSchemeOf(parameter, new []{"https", "http"}, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
-        /// Ensures that the specified URI has the "http" or "https" scheme, or otherwise throws an <see cref="ArgumentException" />.
+        /// Ensures that the specified URI has the "http" or "https" scheme, or otherwise throws your custom exception />.
         /// </summary>
-        /// <param name="uri">The URI to be checked.</param>
+        /// <param name="parameter">The URI to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message of the exception (optional).</param>
-        /// <param name="exception">
-        /// The exception that will be thrown when <paramref name="uri" /> is not an absolute URI or does not have the "http" or "https" scheme.
-        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="uri" /> is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="uri" /> is not an absolute URI or does not have the "http" or "https" scheme.</exception>
-        public static Uri MustBeHttpOrHttpsUrl(this Uri uri, string parameterName = null, string message = null, Func<Exception> exception = null)
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> uses a different scheme than "http" or "https".</exception>
+        /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter" /> is relative and thus has no scheme.</exception>
+        /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustBeHttpOrHttpsUrl(this Uri parameter, Func<Exception> exceptionFactory, string parameterName = null)
         {
-            return uri.MustHaveOneSchemeOf(new[] { "http", "https" });
+            parameter.MustBeAbsoluteUri(parameterName);
+
+            if (parameter.Scheme.Equals("https") == false && parameter.Scheme.Equals("http") == false)
+                Throw.CustomException(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified URI has the "http" or "https" scheme, or otherwise throws your custom exception />.
+        /// </summary>
+        /// <param name="parameter">The URI to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> uses a different scheme than "http" or "https".</exception>
+        /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter" /> is relative and thus has no scheme.</exception>
+        /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Uri MustBeHttpOrHttpsUrl(this Uri parameter, Func<Uri, Exception> exceptionFactory, string parameterName = null)
+        {
+            parameter.MustBeAbsoluteUri(parameterName);
+
+            if (parameter.Scheme.Equals("https") == false && parameter.Scheme.Equals("http") == false)
+                Throw.CustomException(exceptionFactory, parameter);
+            return parameter;
         }
     }
 }
