@@ -16,7 +16,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name="message">The message of the exception (optional).</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        public TypeException(string parameterName, string message)
+        public TypeException(string parameterName = null, string message = null)
             : base(message, parameterName) { }
     }
 }

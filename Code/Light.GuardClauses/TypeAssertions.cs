@@ -241,57 +241,86 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="typeInfo">The type to check.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="typeInfo" /> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsClass(this TypeInfo typeInfo) =>
             typeInfo.MustNotBeNull(nameof(typeInfo)).IsClass && typeInfo.BaseType != Types.MulticastDelegateType;
 #endif
 
         /// <summary>
-        /// Ensures that the specified type is a class (no delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// Ensures that the specified type is a class (no delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException"/>.
         /// </summary>
         /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        /// The message that will be injected into the <see cref="TypeException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        /// The exception that is thrown when <paramref name="parameter" /> is no class (optional).
-        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no class.</exception>
-        public static Type MustBeClass(this Type parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        /// <param name="message">The message that will be injected into the <see cref="TypeException" /> (optional).</param>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter"/> is no class.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type MustBeClass(this Type parameter, string parameterName = null, string message = null)
         {
             parameter.MustNotBeNull(parameterName);
 
-            if (parameter.IsClass())
-                return parameter;
+            if (parameter.IsClass() == false)
+                Throw.TypeIsNoClass(parameter, parameterName, message);
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a class, but it is not.", parameterName);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified type is a class (no delegate, interface, struct or enum), or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the custom exception.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is no class.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+        [MethodImpl((MethodImplOptions.AggressiveInlining))]
+        public static Type MustBeClass(this Type parameter, Func<Exception> exceptionFactory, string parameterName = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsClass() == false)
+                Throw.CustomException(exceptionFactory);
+
+            return parameter;
         }
 
 #if NETSTANDARD1_0
         /// <summary>
-        /// Ensures that the specified type info describes a class (no delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException" />.
+        /// Ensures that the specified type is a class (no delegate, interface, struct or enum), or otherwise throws a <see cref="TypeException"/>.
         /// </summary>
-        /// <param name="parameter">The type info to be checked.</param>
+        /// <param name="parameter">The type to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">
-        /// The message that will be injected into the <see cref="TypeException" /> (optional).
-        /// </param>
-        /// <param name="exception">
-        /// The exception that is thrown when <paramref name="parameter" /> is no class (optional).
-        /// Please note that <paramref name="message" /> and <paramref name="parameterName" /> are both ignored when you specify exception.
-        /// </param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-        /// <exception cref="TypeException">Thrown when <paramref name="parameter" /> is no class.</exception>
-        public static TypeInfo MustBeClass(this TypeInfo parameter, string parameterName = null, string message = null, Func<Exception> exception = null)
+        /// <param name="message">The message that will be injected into the <see cref="TypeException" /> (optional).</param>
+        /// <exception cref="TypeException">Thrown when <paramref name="parameter"/> is no class.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TypeInfo MustBeClass(this TypeInfo parameter, string parameterName = null, string message = null)
         {
             parameter.MustNotBeNull(parameterName);
 
-            if (parameter.IsClass())
-                return parameter;
+            if (parameter.IsClass() == false)
+                Throw.TypeIsNoClass(parameter, parameterName, message);
 
-            throw exception?.Invoke() ?? new TypeException(message ?? $"{parameterName ?? "The type"} \"{parameter.AsType()}\" must be a class, but it is not.", parameterName);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified type is a class (no delegate, interface, struct or enum), or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The type to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates the custom exception.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is no class.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+        [MethodImpl((MethodImplOptions.AggressiveInlining))]
+        public static TypeInfo MustBeClass(this TypeInfo parameter, Func<Exception> exceptionFactory, string parameterName = null)
+        {
+            parameter.MustNotBeNull(parameterName);
+
+            if (parameter.IsClass() == false)
+                Throw.CustomException(exceptionFactory);
+
+            return parameter;
         }
 #endif
 

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+#if NETSTANDARD1_0
+using System.Reflection;
+#endif
 using System.Text;
 using Light.GuardClauses.FrameworkExtensions;
 
@@ -196,7 +199,20 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         public static void TypesEquivalent(Type parameter, Type other, string parameterName = null, string message = null) =>
             throw new TypeException(parameterName, message ?? $"{parameterName ?? "The type"} \"{parameter}\" must not be equivalent to \"{other?.ToString() ?? "null"}\", but it actually is.");
-        
+
+        /// <summary>
+        /// Throws the default <see cref="TypeException"/> indicating that a type is no class, using the optional parameter name and message.
+        /// </summary>
+        public static void TypeIsNoClass(Type parameter, string parameterName = null, string message = null) =>
+            throw new TypeException(parameterName, message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a class, but it actually is not.");
+
+#if NETSTANDARD1_0
+        /// <summary>
+        /// Throws the default <see cref="TypeException"/> indicating that a type is no class, using the optional parameter name and message.
+        /// </summary>
+        public static void TypeIsNoClass(TypeInfo parameter, string parameterName = null, string message = null) =>
+            throw new TypeException(parameterName, message ?? $"{parameterName ?? "The type"} \"{parameter}\" must be a class, but it actually is not.");
+#endif
 
         /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.

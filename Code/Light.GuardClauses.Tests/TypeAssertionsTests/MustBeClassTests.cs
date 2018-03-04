@@ -20,7 +20,7 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
         private static void TestIsNotClass(Action act, Type type)
         {
             act.Should().Throw<TypeException>()
-               .And.Message.Should().Contain($"The type \"{type}\" must be a class, but it is not.");
+               .And.Message.Should().Contain($"The type \"{type}\" must be a class, but it actually is not.");
         }
 
         [Fact(DisplayName = "MustBeClass must not throw an exception when the specified type is a class.")]
@@ -39,10 +39,10 @@ namespace Light.GuardClauses.Tests.TypeAssertionsTests
 
         void ICustomMessageAndExceptionTestDataProvider.PopulateTestDataForCustomExceptionAndCustomMessageTests(CustomMessageAndExceptionTestData testData)
         {
-            testData.AddExceptionTest(exception => typeof(IComparable).MustBeClass(exception: exception))
+            testData.AddExceptionTest(exception => typeof(IComparable).MustBeClass(exception))
                     .AddMessageTest<TypeException>(message => typeof(Func<object>).MustBeClass(message: message));
 
-            testData.AddExceptionTest(exception => typeof(double).GetTypeInfo().MustBeClass(exception: exception))
+            testData.AddExceptionTest(exception => typeof(double).GetTypeInfo().MustBeClass(exception))
                     .AddMessageTest<TypeException>(message => typeof(Action).GetTypeInfo().MustBeClass(message: message));
         }
     }
