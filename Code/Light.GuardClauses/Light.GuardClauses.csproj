@@ -1,27 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.0;netstandard2.0;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard1.0;net46;net45;net40;net35;net35-cf</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Description>A lightweight .NET library for expressive Guard Clauses.</Description>
     <Version>3.5.0</Version>
     <Authors>Kenny Pflug</Authors>
     <Company>Kenny Pflug</Company>
-    <Copyright>Copyright © Kenny Pflug</Copyright>
+    <Copyright>Copyright © Kenny Pflug 2016 - 2018</Copyright>
     <PackageIconUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/Images/light_logo.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/feO2x/Light.GuardClauses</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>Assertions Preconditions GuardClauses DesignByContract DbC</PackageTags>
-    <PackageReleaseNotes>New Features in version 3.5.0
---------------------------------------
-- added structural equality testing for collections: IsStructurallyEquivalentTo and IsStructurallyEqualTo
-- added overloads for AsList and AsReadOnlyList that allow you to specify a create-collection delegate
-- added IndexOf and IsContaining for IReadOnlyList&lt;T&gt;</PackageReleaseNotes>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netstandard1.0\Light.GuardClauses.xml</DocumentationFile>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net35-cf'">
+    <!-- inference fails for this TFM, so specify it by hand -->
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>CompactFramework</TargetFrameworkProfile>
+    <!-- define compilation constants by hand too -->
+    <DefineConstants>NET35_CF;WindowsCE</DefineConstants>
+    <!-- disable implicit references, these are specified by hand, below -->
+    <DisableImplicitFrameworkReferences>True</DisableImplicitFrameworkReferences>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net35-cf' ">
+    <NoStdLib>True</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <FileAlignment>512</FileAlignment>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net35-cf' ">
+    <Reference Include="mscorlib, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+    <Reference Include="System, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+    <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+  </ItemGroup>
 
 </Project>
