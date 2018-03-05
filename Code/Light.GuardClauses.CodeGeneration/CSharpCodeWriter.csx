@@ -50,6 +50,12 @@ public sealed class CSharpCodeWriter
         return this;
     }
 
+    public CSharpCodeWriter WriteLineWithoutIndentation(string code)
+    {
+        _writer.WriteLine(code);
+        return this;
+    }
+
     public CSharpCodeWriter OpenScopeAndIndent() => WriteLine("{").IncreaseIndentation();
 
     public CSharpCodeWriter CloseScope() => DecreaseIndentation().WriteLine("}");
@@ -62,7 +68,9 @@ public sealed class CSharpCodeWriter
 
     public CSharpCodeWriter OpenPublicStaticPartialClass(string className) => WriteLine($"public static partial class {className}").OpenScopeAndIndent();
 
-    public CSharpCodeWriter WriteAggressiveInliningAttribute() => WriteLine("[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+    public CSharpCodeWriter WriteAggressiveInliningAttribute() => WriteLineWithoutIndentation("#if !(NET40 || NET35 || NET35_CF)")
+                                                                 .WriteLine("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
+                                                                 .WriteLineWithoutIndentation("#endif");
 
     public CSharpCodeWriter OpenMember(string memberHeader) => WriteLine(memberHeader).OpenScopeAndIndent();
 

@@ -38,7 +38,7 @@ public sealed class DefaultOverload : AssertionOverload
     public override AssertionOverload WriteXmlCommentForParameters(CSharpCodeWriter writer)
     {
         writer.WriteDefaultXmlCommentForParameterName()
-              .WriteDefaultXmlCommentForMessage("InvalidUriSchemeException");
+              .WriteDefaultXmlCommentForMessage(_exceptionType);
         return this;
     }
 }
