@@ -109,6 +109,10 @@ public sealed class CSharpCodeWriter
     public CSharpCodeWriter WriteDefaultArgumentNullException(string parameterName = "parameter") => WriteXmlCommentException("ArgumentNullException", $"Thrown when {XmlComment.ToParamRef(parameterName)} is null.");
 
     public CSharpCodeWriter WriteReSharperDisablePossibleMultipleEnumeration() => WriteLine("// ReSharper disable PossibleMultipleEnumeration");
+    
+    public CSharpCodeWriter WriteTheoryAttribute() => WriteLine("[Theory]");
+
+    public CSharpCodeWriter WriteMetasyntacticVariablesDataAttribute(int? numberOfConstants = null) => numberOfConstants.HasValue ? WriteLine($"[MetasyntacticVariablesData({numberOfConstants.Value})]") : WriteLine("[MetasyntacticVariablesData]");
 
     private void WriteIndentationIfNecessary()
     {

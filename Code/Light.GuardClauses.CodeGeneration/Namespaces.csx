@@ -8,4 +8,6 @@ public static class Namespaces
     public const string LightGuardClauses = "Light.GuardClauses";
     public const string LightGuardClausesExceptions = "Light.GuardClauses.Exceptions";
     public const string SystemCollectionsObjectModel = "System.Collections.ObjectModel";
+    public const string FluentAssertions = "FluentAssertions";
+    public const string Xunit = "Xunit";
 }
