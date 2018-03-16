@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="MSBuild.Sdk.Extras/1.2.2">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard1.0;net46;net45;net40;net35;net35-cf</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard1.0;net46;net45;net40;net35;net35-cf;sl5</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Description>A lightweight .NET library for expressive Guard Clauses.</Description>
     <Version>3.5.0</Version>
