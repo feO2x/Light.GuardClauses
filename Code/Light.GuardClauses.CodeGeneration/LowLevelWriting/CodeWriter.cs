@@ -48,6 +48,14 @@ namespace Light.GuardClauses.CodeGeneration.LowLevelWriting
             return this;
         }
 
+        public CodeWriter WriteEmptyLine()
+        {
+            if (_isCurrentLineEmpty == false)
+                WriteLine(string.Empty);
+            WriteLine(string.Empty);
+            return this;
+        }
+
         private void WriteIndentationLevelIfNecessary()
         {
             if (!_isCurrentLineEmpty)
