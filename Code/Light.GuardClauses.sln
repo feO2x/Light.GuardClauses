@@ -8,8 +8,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.Tests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.Performance", "Light.GuardClauses.Performance\Light.GuardClauses.Performance.csproj", "{F4EE1A0F-60E0-4077-BFC4-82387535352A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.CodeGeneration", "Light.GuardClauses.CodeGeneration\Light.GuardClauses.CodeGeneration.csproj", "{4750E518-01E1-4495-B39D-4D1177991E04}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,18 +54,6 @@ Global
 		{F4EE1A0F-60E0-4077-BFC4-82387535352A}.Release|x64.Build.0 = Release|Any CPU
 		{F4EE1A0F-60E0-4077-BFC4-82387535352A}.Release|x86.ActiveCfg = Release|Any CPU
 		{F4EE1A0F-60E0-4077-BFC4-82387535352A}.Release|x86.Build.0 = Release|Any CPU
-		{4750E518-01E1-4495-B39D-4D1177991E04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4750E518-01E1-4495-B39D-4D1177991E04}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4750E518-01E1-4495-B39D-4D1177991E04}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{4750E518-01E1-4495-B39D-4D1177991E04}.Debug|x64.Build.0 = Debug|Any CPU
-		{4750E518-01E1-4495-B39D-4D1177991E04}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4750E518-01E1-4495-B39D-4D1177991E04}.Debug|x86.Build.0 = Debug|Any CPU
-		{4750E518-01E1-4495-B39D-4D1177991E04}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4750E518-01E1-4495-B39D-4D1177991E04}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4750E518-01E1-4495-B39D-4D1177991E04}.Release|x64.ActiveCfg = Release|Any CPU
-		{4750E518-01E1-4495-B39D-4D1177991E04}.Release|x64.Build.0 = Release|Any CPU
-		{4750E518-01E1-4495-B39D-4D1177991E04}.Release|x86.ActiveCfg = Release|Any CPU
-		{4750E518-01E1-4495-B39D-4D1177991E04}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
