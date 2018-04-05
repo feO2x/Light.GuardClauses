@@ -14,7 +14,7 @@ namespace Light.GuardClauses
         /// Ensures that the specified reference is not null, or otherwise an <see cref="ArgumentNullException"/>.
         /// </summary>
         /// <param name="parameter">The reference to be checked.</param>
-        /// <param name="parameterName"></param>
+        /// <param name="parameterName">Foo</param>
         /// <param name="message">The message that will be injected into the <see cref="ArgumentNullException"/> (optional).</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null..</exception>
 #if !(NET40 || NET35 || NET35_CF)

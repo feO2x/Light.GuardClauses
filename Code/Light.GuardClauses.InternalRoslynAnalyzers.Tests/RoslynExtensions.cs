@@ -2,8 +2,11 @@
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeActions;
+using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
@@ -28,19 +31,50 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers.Tests
 
         public static async Task<ImmutableArray<Diagnostic>> AnalyzeAsync(this DiagnosticAnalyzer analyzer, string code, [CallerMemberName] string projectName = null)
         {
-            var projectId = ProjectId.CreateNewId(projectName);
-            var workspace = new AdhocWorkspace();
-            var fileName = $"{projectName}Source.cs";
-            var compilation = await workspace.CurrentSolution
-                                             .AddProject(projectId, projectName, projectName, LanguageNames.CSharp)
-                                             .AddMetadataReferences(projectId, AllReferences)
-                                             .AddDocument(DocumentId.CreateNewId(projectId, fileName), fileName, SourceText.From(code))
-                                             .GetProject(projectId)
-                                             .WithCompilationOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
-                                             .GetCompilationAsync();
+            var (_, compilation) = await CreateSingleDocumentDllInMemory(projectName, code);
 
             return await compilation.WithAnalyzers(ImmutableArray.Create(analyzer))
                                     .GetAllDiagnosticsAsync();
+        }
+
+        public static async Task<string> ApplyFixAsync(this CodeFixProvider codeFixProvider,
+                                                       string code,
+                                                       DiagnosticAnalyzer analyzer,
+                                                       [CallerMemberName] string projectName = null)
+        {
+            var (document, compilation) = await CreateSingleDocumentDllInMemory(projectName, code);
+
+            var diagnostics = await compilation.WithAnalyzers(ImmutableArray.Create(analyzer))
+                                               .GetAllDiagnosticsAsync();
+            var codeActions = new List<CodeAction>();
+            var context = new CodeFixContext(document,
+                                             diagnostics[0],
+                                             (action, diagnostic) => codeActions.Add(action),
+                                             CancellationToken.None);
+            await codeFixProvider.RegisterCodeFixesAsync(context);
+            document = (await codeActions[0].GetOperationsAsync(CancellationToken.None)).OfType<ApplyChangesOperation>()
+                                                                                        .Single()
+                                                                                        .ChangedSolution
+                                                                                        .GetDocument(document.Id);
+
+            return (await document.GetSyntaxRootAsync()).GetText().ToString();
+        }
+
+        private static async Task<(Document, Compilation)> CreateSingleDocumentDllInMemory(string projectName, string code)
+        {
+            var projectId = ProjectId.CreateNewId(projectName);
+            var fileName = $"{projectName}Source.cs";
+            var documentId = DocumentId.CreateNewId(projectId, fileName);
+            var project = new AdhocWorkspace().CurrentSolution
+                                              .AddProject(projectId, projectName, projectName, LanguageNames.CSharp)
+                                              .AddMetadataReferences(projectId, AllReferences)
+                                              .AddDocument(documentId, fileName, SourceText.From(code))
+                                              .GetProject(projectId)
+                                              .WithCompilationOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+            var document = project.GetDocument(documentId);
+            var compilation = await project.GetCompilationAsync();
+
+            return (document, compilation);
         }
     }
 }
