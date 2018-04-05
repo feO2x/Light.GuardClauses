@@ -3,6 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses", "Light.GuardClauses\Light.GuardClauses.csproj", "{E850D655-B8C8-49B5-8336-D4743504B064}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DB4A3982-5312-4923-9C79-C39D18A5899C} = {DB4A3982-5312-4923-9C79-C39D18A5899C}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.Tests", "Light.GuardClauses.Tests\Light.GuardClauses.Tests.csproj", "{E804A19A-589D-49CC-A649-3092013E0133}"
 EndProject
@@ -12,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.Internal
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InternalAnalyzers", "InternalAnalyzers", "{A58A06DD-EEDC-4B1B-830F-0927739CFB9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Light.GuardClauses.InternalRoslynAnalyzers.Tests", "Light.GuardClauses.InternalRoslynAnalyzers.Tests\Light.GuardClauses.InternalRoslynAnalyzers.Tests.csproj", "{2FE2D52E-21B8-4C51-9983-9C1812BDEBA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.InternalRoslynAnalyzers.Tests", "Light.GuardClauses.InternalRoslynAnalyzers.Tests\Light.GuardClauses.InternalRoslynAnalyzers.Tests.csproj", "{2FE2D52E-21B8-4C51-9983-9C1812BDEBA0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
