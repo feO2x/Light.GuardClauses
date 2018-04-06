@@ -13,7 +13,7 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
     public sealed class FixParameterNameXmlComment : CodeFixProvider
     {
         public override ImmutableArray<string> FixableDiagnosticIds { get; } =
-            ImmutableArray.Create(DiagnosticDescriptors.NonDefaultXmlCommentForParameterName.Id);
+            ImmutableArray.Create(Descriptors.ParameterNameComment.Id);
 
         public override async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
@@ -21,17 +21,15 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
             var diagnostic = context.Diagnostics[0];
             var xmlElementSyntax = (XmlElementSyntax) syntaxRoot.FindNode(diagnostic.Location.SourceSpan, true);
 
-            context.RegisterCodeFix(CodeAction.Create("Set default comment for parameterName",
+            context.RegisterCodeFix(CodeAction.Create(diagnostic.Descriptor.Title.ToString(),
                                                       cancellationToken => SetDefaultXmlCommentForParameterName(context.Document,
                                                                                                                 syntaxRoot,
                                                                                                                 xmlElementSyntax)),
                                     diagnostic);
         }
 
-        private static Task<Document> SetDefaultXmlCommentForParameterName(Document contextDocument,
-                                                                           SyntaxNode syntaxRoot,
-                                                                           XmlElementSyntax xmlElementSyntax) =>
-            Task.FromResult(contextDocument.WithSyntaxRoot(syntaxRoot.ReplaceNode(xmlElementSyntax,
-                                                                                  xmlElementSyntax.WithContent(new SyntaxList<XmlNodeSyntax>(SyntaxFactory.XmlText("The name of the parameter (optional)."))))));
+        private static Task<Document> SetDefaultXmlCommentForParameterName(Document document, SyntaxNode syntaxRoot, XmlElementSyntax xmlElementSyntax) =>
+            Task.FromResult(document.WithSyntaxRoot(syntaxRoot.ReplaceNode(xmlElementSyntax,
+                                                                           xmlElementSyntax.WithContent(new SyntaxList<XmlNodeSyntax>(SyntaxFactory.XmlText(ParameterNameDefaults.DefaultComment))))));
     }
 }

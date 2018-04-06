@@ -8,13 +8,13 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Light.GuardClauses.InternalRoslynAnalyzers
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public sealed class DefaultParameterNameAndMessageXmlComments : DiagnosticAnalyzer
+    public sealed class XmlCommentAnalyzer : DiagnosticAnalyzer
     {
         private static readonly ImmutableArray<DiagnosticDescriptor> InternalSupportedDiagnostics =
             ImmutableArray.CreateRange(new[]
             {
-                DiagnosticDescriptors.NonDefaultXmlCommentForParameterName,
-                DiagnosticDescriptors.NonDefaultXmlCommentForMessage
+                Descriptors.ParameterNameComment,
+                Descriptors.MessageComment
             });
 
 
@@ -37,27 +37,19 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
                 methodSymbol.Parameters.ContainsParameterNameAndMessage() == false)
                 return;
 
-            // Get the syntax tree of the method
+            // Get the documentation trvia syntax of the method
             if (methodSymbol.DeclaringSyntaxReferences.Length != 1 ||
-                !(methodSymbol.DeclaringSyntaxReferences[0].GetSyntax() is MethodDeclarationSyntax methodDeclarationSyntax))
-                return;
-
-            // Get XML comment trivia
-            if (!(methodDeclarationSyntax.DescendantTrivia()
+                !(methodSymbol.DeclaringSyntaxReferences[0].GetSyntax() is MethodDeclarationSyntax methodDeclarationSyntax) ||
+                !(methodDeclarationSyntax.DescendantTrivia()
                                          .SingleOrDefault(trivia => trivia.Kind() == SyntaxKind.SingleLineDocumentationCommentTrivia)
                                          .GetStructure() is DocumentationCommentTriviaSyntax documentationSyntax))
                 return;
 
             // Check parameterName
-            symbolAnalysisContext.ReportNonDefaultXmlParamComment(documentationSyntax,
-                                                                  "parameterName",
-                                                                  "The name of the parameter (optional).",
-                                                                  xmlComment => Diagnostic.Create(DiagnosticDescriptors.NonDefaultXmlCommentForParameterName, xmlComment.GetLocation()));
+            symbolAnalysisContext.ReportNonDefaultParameterNameComment(documentationSyntax);
+
             // Check message
-            symbolAnalysisContext.ReportNonDefaultXmlParamComment(documentationSyntax,
-                                                                  "message",
-                                                                  "The message that will be injected in the resulting exception (optional).",
-                                                                  xmlComment => Diagnostic.Create(DiagnosticDescriptors.NonDefaultXmlCommentForMessage, xmlComment.GetLocation()));
+            symbolAnalysisContext.ReportMessageComment(documentationSyntax);
         }
     }
 }
