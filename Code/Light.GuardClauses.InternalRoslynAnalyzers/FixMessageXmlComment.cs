@@ -42,16 +42,16 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
                 var firstExceptionCref = documentationSyntax.GetFirstXmlExceptionCref();
 
                 if (firstExceptionCref == null)
-                    newCommentSyntax = xmlElementSyntax.WithContent(new SyntaxList<XmlNodeSyntax>(SyntaxFactory.XmlText(MessageDefaults.FullDefaultComment)));
+                    newCommentSyntax = xmlElementSyntax.WithContent(new SyntaxList<XmlNodeSyntax>(SyntaxFactory.XmlText(MessageConstants.FullDefaultComment)));
                 else
                 {
                     var seeElement = SyntaxFactory.XmlSeeElement(firstExceptionCref.Cref);
                     seeElement = seeElement.WithSlashGreaterThanToken(seeElement.SlashGreaterThanToken.WithLeadingTrivia(SyntaxFactory.Whitespace(" ")));
                     newCommentSyntax = xmlElementSyntax.WithContent(new SyntaxList<XmlNodeSyntax>(new XmlNodeSyntax[]
                     {
-                        SyntaxFactory.XmlText($"{MessageDefaults.CommentStart}the "),
+                        SyntaxFactory.XmlText($"{MessageConstants.CommentStart}the "),
                         seeElement,
-                        SyntaxFactory.XmlText(MessageDefaults.CommentEnd)
+                        SyntaxFactory.XmlText(MessageConstants.CommentEnd)
                     }));
                 }
             }
@@ -70,8 +70,8 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
                     commentTextSyntax[i] = xmlElementSyntax.Content[j++];
                 }
 
-                commentTextSyntax[0] = SyntaxFactory.XmlText($"{MessageDefaults.CommentStart}the ");
-                commentTextSyntax[numberOfElements - 1] = SyntaxFactory.XmlText(MessageDefaults.CommentEnd);
+                commentTextSyntax[0] = SyntaxFactory.XmlText($"{MessageConstants.CommentStart}the ");
+                commentTextSyntax[numberOfElements - 1] = SyntaxFactory.XmlText(MessageConstants.CommentEnd);
                 newCommentSyntax = xmlElementSyntax.WithContent(new SyntaxList<XmlNodeSyntax>(commentTextSyntax));
             }
 

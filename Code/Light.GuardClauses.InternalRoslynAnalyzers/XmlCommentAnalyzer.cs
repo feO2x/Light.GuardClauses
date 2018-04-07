@@ -20,24 +20,16 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => InternalSupportedDiagnostics;
 
-        public override void Initialize(AnalysisContext context)
-        {
+        public override void Initialize(AnalysisContext context) => 
             context.RegisterSymbolAction(AnalyzeXmlCommentsForParameterNameAndMessage, SymbolKind.Method);
-        }
 
         private static void AnalyzeXmlCommentsForParameterNameAndMessage(SymbolAnalysisContext symbolAnalysisContext)
         {
             var methodSymbol = (IMethodSymbol) symbolAnalysisContext.Symbol;
 
-            // Check if the method is a static assertion method that throws an exception (these start with "Must" by convention) 
-            // and if it contains the parameters paramterName and message.
-            if (methodSymbol.MethodKind != MethodKind.Ordinary ||
-                methodSymbol.IsStatic == false ||
-                methodSymbol.Name.StartsWith("Must") == false ||
-                methodSymbol.Parameters.ContainsParameterNameAndMessage() == false)
+            if (!methodSymbol.IsStandardExceptionAssertion())
                 return;
 
-            // Get the documentation trvia syntax of the method
             if (methodSymbol.DeclaringSyntaxReferences.Length != 1 ||
                 !(methodSymbol.DeclaringSyntaxReferences[0].GetSyntax() is MethodDeclarationSyntax methodDeclarationSyntax) ||
                 !(methodDeclarationSyntax.DescendantTrivia()
@@ -45,10 +37,7 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
                                          .GetStructure() is DocumentationCommentTriviaSyntax documentationSyntax))
                 return;
 
-            // Check parameterName
             symbolAnalysisContext.ReportNonDefaultParameterNameComment(documentationSyntax);
-
-            // Check message
             symbolAnalysisContext.ReportMessageComment(documentationSyntax);
         }
     }

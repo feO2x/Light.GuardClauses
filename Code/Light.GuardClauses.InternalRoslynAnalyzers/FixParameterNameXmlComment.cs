@@ -30,6 +30,6 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
 
         private static Task<Document> SetDefaultXmlCommentForParameterName(Document document, SyntaxNode syntaxRoot, XmlElementSyntax xmlElementSyntax) =>
             Task.FromResult(document.WithSyntaxRoot(syntaxRoot.ReplaceNode(xmlElementSyntax,
-                                                                           xmlElementSyntax.WithContent(new SyntaxList<XmlNodeSyntax>(SyntaxFactory.XmlText(ParameterNameDefaults.DefaultComment))))));
+                                                                           xmlElementSyntax.WithContent(new SyntaxList<XmlNodeSyntax>(SyntaxFactory.XmlText(ParameterNameConstants.DefaultComment))))));
     }
 }

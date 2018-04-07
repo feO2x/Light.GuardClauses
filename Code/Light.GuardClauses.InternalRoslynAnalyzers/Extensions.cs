@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -6,8 +7,14 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Light.GuardClauses.InternalRoslynAnalyzers
 {
-    public static class Extensions
+    internal static class Extensions
     {
+        public static bool IsStandardExceptionAssertion(this IMethodSymbol methodSymbol) =>
+            methodSymbol.MethodKind == MethodKind.Ordinary &&
+            methodSymbol.IsStatic &&
+            methodSymbol.Name.StartsWith("Must") &&
+            methodSymbol.Parameters.ContainsParameterNameAndMessage();
+
         public static bool ContainsParameterNameAndMessage(this ImmutableArray<IParameterSymbol> parameters)
         {
             // The method must have at least 3 parameters (the assertion target, parameterName, and message)
@@ -23,9 +30,9 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
                 if (currentParameter.Type.SpecialType != SpecialType.System_String)
                     continue;
 
-                if (currentParameter.Name.Equals(Ids.ParameterName))
+                if (currentParameter.Name.Equals(ParameterNameConstants.ParameterName))
                     wasParameterNameFound = true;
-                else if (currentParameter.Name.Equals(Ids.Message))
+                else if (currentParameter.Name.Equals(MessageConstants.ParameterName))
                     wasMessageFound = true;
             }
 
@@ -35,11 +42,11 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
         public static void ReportNonDefaultParameterNameComment(this SymbolAnalysisContext context,
                                                                 DocumentationCommentTriviaSyntax documentationSyntax)
         {
-            var xmlCommentElement = documentationSyntax.GetXmlCommentParam(ParameterNameDefaults.ParameterName);
+            var xmlCommentElement = documentationSyntax.GetXmlCommentParam(ParameterNameConstants.ParameterName);
             if (xmlCommentElement == null)
                 return;
 
-            if (xmlCommentElement.GetSimpleCommentText().EqualsString(ParameterNameDefaults.DefaultComment))
+            if (xmlCommentElement.GetSimpleCommentText().EqualsString(ParameterNameConstants.DefaultComment))
                 return;
 
             context.ReportDiagnostic(Diagnostic.Create(Descriptors.ParameterNameComment, xmlCommentElement.GetLocation()));
@@ -48,7 +55,7 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
         public static void ReportMessageComment(this SymbolAnalysisContext context,
                                                 DocumentationCommentTriviaSyntax documentationSyntax)
         {
-            var xmlCommentElement = documentationSyntax.GetXmlCommentParam(MessageDefaults.ParameterName);
+            var xmlCommentElement = documentationSyntax.GetXmlCommentParam(MessageConstants.ParameterName);
             if (xmlCommentElement == null)
                 return;
 
@@ -61,17 +68,17 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
 
                 // There is only XML text but it does not equal the full default comment
                 xmlCommentElement.Content.Count == 1 &&
-                !firstTextSyntax.StartAndEndsWith(MessageDefaults.CommentStart, MessageDefaults.CommentEnd) ||
+                !firstTextSyntax.StartAndEndsWith(MessageConstants.CommentStart, MessageConstants.CommentEnd) ||
 
                 // There are two content nodes (most probably the "(optional)." is missing)
                 xmlCommentElement.Content.Count == 2 ||
 
                 // The first element is not the start of the default message comment "The message that is passed to"
-                !firstTextSyntax.StartsWith(MessageDefaults.CommentStart) ||
+                !firstTextSyntax.StartsWith(MessageConstants.CommentStart) ||
 
                 // The last element is not the end of the default message comment " (optional)."
                 !(xmlCommentElement.Content.Last() is XmlTextSyntax endTextSyntax) ||
-                !endTextSyntax.EndsWith(MessageDefaults.CommentEnd))
+                !endTextSyntax.EndsWith(MessageConstants.CommentEnd))
             {
                 context.ReportDiagnostic(Diagnostic.Create(Descriptors.MessageComment, xmlCommentElement.GetLocation()));
             }
@@ -116,5 +123,20 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
                                .Attributes
                                .OfType<XmlCrefAttributeSyntax>()
                                .FirstOrDefault();
+
+        public static bool ContainsNonParameterizedExceptionFactoryOverload(this List<IMethodSymbol> overloads)
+        {
+            foreach (var method in overloads)
+            {
+                foreach (var parameter in method.Parameters)
+                {
+                    if (parameter.Name.Equals(ExceptionFactoryConstants.ParameterName) &&
+                        parameter.Type.GetType() == ExceptionFactoryConstants.FuncOfExceptionType)
+                        return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

@@ -8,10 +8,12 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
 
         public const string XmlCommentsCategory = "XML Comments";
 
+        public const string PublicApiCategory = "Public API";
+
         public static readonly DiagnosticDescriptor ParameterNameComment =
             new DiagnosticDescriptor("ParameterNameComment".CreateDescriptorId(),
                                      "Use default XML comment for parameterName",
-                                     $"Use the default comment for parameterName: \"{ParameterNameDefaults.DefaultComment}\"",
+                                     $"Use the default comment for parameterName: \"{ParameterNameConstants.DefaultComment}\"",
                                      XmlCommentsCategory,
                                      DiagnosticSeverity.Warning,
                                      true);
@@ -19,8 +21,16 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
         public static readonly DiagnosticDescriptor MessageComment =
             new DiagnosticDescriptor("MessageComment".CreateDescriptorId(),
                                      "Use default XML comment for message",
-                                     $"Use the default comment for message: \"{MessageDefaults.FullDefaultComment}\"",
+                                     $"Use the default comment for message: \"{MessageConstants.FullDefaultComment}\"",
                                      XmlCommentsCategory,
+                                     DiagnosticSeverity.Warning,
+                                     true);
+
+        public static readonly DiagnosticDescriptor CustomExceptionOverload =
+            new DiagnosticDescriptor("SimpleCustomExceptionOverload".CreateDescriptorId(),
+                                     "Create an overload that allows customizing the exception.",
+                                     "Create an overload that allows customizing the exception.",
+                                     PublicApiCategory,
                                      DiagnosticSeverity.Warning,
                                      true);
 
