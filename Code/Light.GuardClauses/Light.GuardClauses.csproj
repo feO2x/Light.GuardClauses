@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <Analyzer Include="..\Light.GuardClauses.InternalRoslynAnalyzers\bin\Debug\netstandard2.0\Light.GuardClauses.InternalRoslynAnalyzers.dll" />
+    <Analyzer Include="..\Light.GuardClauses.InternalRoslynAnalyzers\bin\$(Configuration)\netstandard2.0\Light.GuardClauses.InternalRoslynAnalyzers.dll" />
   </ItemGroup>
 
 </Project>
