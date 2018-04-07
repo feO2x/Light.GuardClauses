@@ -10,7 +10,7 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
 
         public static readonly DiagnosticDescriptor ParameterNameComment =
             new DiagnosticDescriptor("ParameterNameComment".CreateDescriptorId(),
-                                     "Default XML comment for parameterName",
+                                     "Use default XML comment for parameterName",
                                      $"Use the default comment for parameterName: \"{ParameterNameDefaults.DefaultComment}\"",
                                      XmlCommentsCategory,
                                      DiagnosticSeverity.Warning,
@@ -18,7 +18,7 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
 
         public static readonly DiagnosticDescriptor MessageComment =
             new DiagnosticDescriptor("MessageComment".CreateDescriptorId(),
-                                     "Default XML comment for message",
+                                     "Use default XML comment for message",
                                      $"Use the default comment for message: \"{MessageDefaults.FullDefaultComment}\"",
                                      XmlCommentsCategory,
                                      DiagnosticSeverity.Warning,
