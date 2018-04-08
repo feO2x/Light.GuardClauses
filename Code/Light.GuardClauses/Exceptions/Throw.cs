@@ -5,7 +5,7 @@ namespace Light.GuardClauses.Exceptions
     /// <summary>
     /// Provides static factory methods that throw default exceptions.
     /// </summary>
-    public abstract class Throw
+    public static class Throw
     {
         /// <summary>
         /// Throws the default <see cref="ArgumentNullException" />, using the optional parameter name and message.

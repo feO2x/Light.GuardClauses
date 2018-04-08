@@ -9,10 +9,9 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers.Tests
     {
         private static readonly DiagnosticAnalyzer Analyzer = new XmlCommentAnalyzer();
 
-
         private const string MissingParameterNameComment = @"
-using System;
 using System.Runtime.CompilerServices;
+using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses
 {
@@ -23,7 +22,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name=""parameter"">The reference to be checked.</param>
         /// <param name=""parameterName""></param>
-        /// <param name=""message"">The message that will be passed to the resulting exception (optional).</param>
+        /// <param name=""message"">The message that will be passed to the <see cref=""ArgumentNullException"" /> (optional).</param>
         /// <exception cref=""ArgumentNullException"">Thrown when <paramref name=""parameter"" /> is null.</exception>
 #if !(NET40 || NET35 || NET35_CF)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -31,86 +30,15 @@ namespace Light.GuardClauses
         public static T MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null)
         {
             if (parameter == null)
-                throw new ArgumentNullException();
+                Throw.MustNotBeNull(parameterName, message);
             return parameter;
         }
     }
 }";
 
         private const string FixedParameterNameComment = @"
-using System;
 using System.Runtime.CompilerServices;
-
-namespace Light.GuardClauses
-{
-    public static class CommonAssertions
-    {
-        /// <summary>
-        /// Ensures that the specified reference is not null, or otherwise throws an <see cref=""ArgumentNullException"" />.
-        /// </summary>
-        /// <param name=""parameter"">The reference to be checked.</param>
-        /// <param name=""parameterName"">The name of the parameter (optional).</param>
-        /// <param name=""message"">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref=""ArgumentNullException"">Thrown when <paramref name=""parameter"" /> is null.</exception>
-#if !(NET40 || NET35 || NET35_CF)
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
-        public static T MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null)
-        {
-            if (parameter == null)
-                throw new ArgumentNullException();
-            return parameter;
-        }
-    }
-}";
-
-        [Fact]
-        public static async Task AnalyzeParameterName()
-        {
-            var result = await Analyzer.AnalyzeAsync(MissingParameterNameComment);
-
-            result.Should().ContainSingle(diagnostic => ReferenceEquals(diagnostic.Descriptor, Descriptors.ParameterNameComment));
-        }
-
-        [Fact]
-        public static async Task FixParameterName()
-        {
-            var codeFix = new FixParameterNameXmlComment();
-            var resultingCode = await codeFix.ApplyFixAsync(MissingParameterNameComment, Analyzer);
-
-            resultingCode.Should().Be(FixedParameterNameComment);
-        }
-
-        private const string MissingMessageWithExistingException = @"
-using System;
-using System.Runtime.CompilerServices;
-
-namespace Light.GuardClauses
-{
-    public static class CommonAssertions
-    {
-        /// <summary>
-        /// Ensures that the specified reference is not null, or otherwise throws an <see cref=""ArgumentNullException"" />.
-        /// </summary>
-        /// <param name=""parameter"">The reference to be checked.</param>
-        /// <param name=""parameterName"">The name of the parameter (optional).</param>
-        /// <param name=""message""></param>
-        /// <exception cref=""ArgumentNullException"">Thrown when <paramref name=""parameter"" /> is null.</exception>
-#if !(NET40 || NET35 || NET35_CF)
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
-        public static T MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null)
-        {
-            if (parameter == null)
-                throw new ArgumentNullException();
-            return parameter;
-        }
-    }
-}";
-
-        private const string FixedMessageCommentWithExistingException = @"
-using System;
-using System.Runtime.CompilerServices;
+using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses
 {
@@ -129,7 +57,79 @@ namespace Light.GuardClauses
         public static T MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null)
         {
             if (parameter == null)
-                throw new ArgumentNullException();
+                Throw.MustNotBeNull(parameterName, message);
+            return parameter;
+        }
+    }
+}";
+
+        [Fact]
+        public static async Task AnalyzeParameterName()
+        {
+            var diagnostics = await Analyzer.AnalyzeAsync(MissingParameterNameComment);
+
+            diagnostics.Should().HaveCount(1);
+            diagnostics[0].Descriptor.Should().BeSameAs(Descriptors.ParameterNameComment);
+        }
+
+        [Fact]
+        public static async Task FixParameterName()
+        {
+            var codeFix = new FixParameterNameXmlComment();
+            var resultingCode = await codeFix.ApplyFixAsync(MissingParameterNameComment, Analyzer);
+
+            resultingCode.Should().Be(FixedParameterNameComment);
+        }
+
+        private const string MissingMessageWithExistingException = @"
+using System.Runtime.CompilerServices;
+using Light.GuardClauses.Exceptions;
+
+namespace Light.GuardClauses
+{
+    public static class CommonAssertions
+    {
+        /// <summary>
+        /// Ensures that the specified reference is not null, or otherwise throws an <see cref=""ArgumentNullException"" />.
+        /// </summary>
+        /// <param name=""parameter"">The reference to be checked.</param>
+        /// <param name=""parameterName"">The name of the parameter (optional).</param>
+        /// <param name=""message""></param>
+        /// <exception cref=""ArgumentNullException"">Thrown when <paramref name=""parameter"" /> is null.</exception>
+#if !(NET40 || NET35 || NET35_CF)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static T MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null)
+        {
+            if (parameter == null)
+                Throw.MustNotBeNull(parameterName, message);
+            return parameter;
+        }
+    }
+}";
+
+        private const string FixedMessageCommentWithExistingException = @"
+using System.Runtime.CompilerServices;
+using Light.GuardClauses.Exceptions;
+
+namespace Light.GuardClauses
+{
+    public static class CommonAssertions
+    {
+        /// <summary>
+        /// Ensures that the specified reference is not null, or otherwise throws an <see cref=""ArgumentNullException"" />.
+        /// </summary>
+        /// <param name=""parameter"">The reference to be checked.</param>
+        /// <param name=""parameterName"">The name of the parameter (optional).</param>
+        /// <param name=""message"">The message that will be passed to the <see cref=""ArgumentNullException"" /> (optional).</param>
+        /// <exception cref=""ArgumentNullException"">Thrown when <paramref name=""parameter"" /> is null.</exception>
+#if !(NET40 || NET35 || NET35_CF)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static T MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null)
+        {
+            if (parameter == null)
+                Throw.MustNotBeNull(parameterName, message);
             return parameter;
         }
     }
@@ -138,9 +138,10 @@ namespace Light.GuardClauses
         [Fact]
         public static async Task AnalyzeMissingMessage()
         {
-            var result = await Analyzer.AnalyzeAsync(MissingMessageWithExistingException);
+            var diagnostics = await Analyzer.AnalyzeAsync(MissingMessageWithExistingException);
 
-            result.Should().ContainSingle(diagnostic => ReferenceEquals(diagnostic.Descriptor, Descriptors.MessageComment));
+            diagnostics.Should().HaveCount(1);
+            diagnostics[0].Descriptor.Should().BeSameAs(Descriptors.MessageComment);
         }
 
         [Fact]
@@ -155,9 +156,9 @@ namespace Light.GuardClauses
         [Fact]
         public static async Task AnalyzeFixedMessageCode()
         {
-            var result = await Analyzer.AnalyzeAsync(FixedMessageCommentWithExistingException);
+            var diagnostics = await Analyzer.AnalyzeAsync(FixedMessageCommentWithExistingException);
 
-            result.Should().BeEmpty();
+            diagnostics.Should().BeEmpty();
         }
     }
 }

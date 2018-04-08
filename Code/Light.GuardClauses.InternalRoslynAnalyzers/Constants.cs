@@ -18,7 +18,8 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
 
     public static class ExceptionFactoryConstants
     {
-        public static readonly Type FuncOfExceptionType = typeof(Func<Exception>);
+        public static readonly Type FuncOfTType = typeof(Func<>);
+        public static readonly Type ExceptionType = typeof(Exception);
         public const string ParameterName = "exceptionFactory";
     }
 }

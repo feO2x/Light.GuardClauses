@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -130,13 +131,22 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
             {
                 foreach (var parameter in method.Parameters)
                 {
-                    if (parameter.Name.Equals(ExceptionFactoryConstants.ParameterName) &&
-                        parameter.Type.GetType() == ExceptionFactoryConstants.FuncOfExceptionType)
+                    if (parameter.Type is INamedTypeSymbol typeSymbol &&
+                        typeSymbol.IsGenericType &&
+                        typeSymbol.IsUnboundGenericType == false &&
+                        typeSymbol.EqualsType(ExceptionFactoryConstants.FuncOfTType) &&
+                        typeSymbol.TypeArguments.Length == 1 &&
+                        typeSymbol.TypeArguments[0].EqualsType(ExceptionFactoryConstants.ExceptionType))
                         return true;
                 }
             }
 
             return false;
         }
+
+        public static bool EqualsType(this ITypeSymbol typeSymbol, Type type) =>
+            typeSymbol.MetadataName == type.Name &&
+            typeSymbol.ContainingNamespace.MetadataName == type.Namespace &&
+            typeSymbol.ContainingAssembly.Identity == AssemblyIdentity.FromAssemblyDefinition(type.Assembly);
     }
 }
