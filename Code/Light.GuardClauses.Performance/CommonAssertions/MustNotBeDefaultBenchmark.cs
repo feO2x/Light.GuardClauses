@@ -7,7 +7,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
 {
     public class MustNotBeDefaultBenchmark : DefaultBenchmark
     {
-        public readonly SampleEntity Reference = new SampleEntity(Guid.NewGuid());
+        public SampleEntity Reference = new SampleEntity(Guid.NewGuid());
         public readonly int Value = 42;
 
         [Benchmark(Baseline = true)]

@@ -21,5 +21,27 @@ namespace Light.GuardClauses.Tests
                 exception.Should().BeSameAs(Exception);
             }
         }
+
+        public static void TestCustomException<T>(T invalidValue, Action<T, Func<T, Exception>> executeAssertion)
+        {
+            T capturedParameter = default;
+
+            Exception ExceptionFactory(T parameter)
+            {
+                capturedParameter = parameter;
+                return Exception;
+            }
+
+            try
+            {
+                executeAssertion(invalidValue, ExceptionFactory);
+                throw new XunitException("The assertion should have thrown a custom exception at this point.");
+            }
+            catch (Exception exception)
+            {
+                exception.Should().BeSameAs(Exception);
+                capturedParameter.Should().Be(invalidValue);
+            }
+        }
     }
 }

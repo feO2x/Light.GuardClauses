@@ -20,8 +20,19 @@ namespace Light.GuardClauses.Exceptions
             throw new ArgumentDefaultException(parameterName, message ?? $"{parameterName ?? "The value"} must not be the default value.");
 
         /// <summary>
+        /// Throws the default <see cref="TypeCastException" /> indicating that a reference cannot be downcasted, using the optional parameter name and message.
+        /// </summary>
+        public static void MustBeOfType(object parameter, Type targetType, string parameterName = null, string message = null) =>
+            throw new TypeCastException(parameterName, message ?? $"{parameterName ?? "The value"} \"{parameter}\" cannot be casted to \"{targetType}\".");
+
+        /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException(Func<Exception> exceptionFactory) => throw exceptionFactory();
+
+        /// <summary>
+        /// Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="parameter" /> is passed to <paramref name="exceptionFactory" />.
+        /// </summary>
+        public static void CustomException<T>(Func<T, Exception> exceptionFactory, T parameter) => throw exceptionFactory(parameter);
     }
 }
