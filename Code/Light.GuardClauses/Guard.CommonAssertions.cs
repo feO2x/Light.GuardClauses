@@ -5,10 +5,9 @@ using Light.GuardClauses.Exceptions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    /// The <see cref="CommonAssertions" /> class contains the most common assertions like MustNotBeNull and assertions that are not directly related to
-    /// any categories like collection assertions or string assertions.
+    /// The <see cref="Guard"/> class provides access to all assertions of Light.GuardClauses.
     /// </summary>
-    public static class CommonAssertions
+    public static partial class Guard
     {
         /// <summary>
         /// Ensures that the specified reference is not null, or otherwise throws an <see cref="ArgumentNullException" />.
@@ -24,6 +23,22 @@ namespace Light.GuardClauses
         {
             if (parameter == null)
                 Throw.MustNotBeNull(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified reference is not null, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The reference to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null.</exception>
+#if !(NET40 || NET35 || NET35_CF)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static T MustNotBeNull<T>(this T parameter, Func<Exception> exceptionFactory) where T : class
+        {
+            if (parameter == null)
+                Throw.CustomException(exceptionFactory);
             return parameter;
         }
     }
