@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 using Light.GuardClauses.Exceptions;
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SL5)
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
 using System.Runtime.CompilerServices;
 #endif
 
@@ -19,7 +19,7 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the <see cref="ArgumentNullException" /> (optional).</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SL5)
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
@@ -36,7 +36,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The reference to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception.</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SL5)
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
@@ -56,7 +56,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is a reference type and null.</exception>
         /// <exception cref="ArgumentDefaultException">Thrown when <paramref name="parameter" /> is a value type and the default value.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SL5)
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
@@ -80,7 +80,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The value to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception.</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is the default value.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SL5)
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
@@ -107,7 +107,7 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the <see cref="ArgumentNullException" /> (optional).</param>
         /// <exception cref="ArgumentNullException">Thrown when <typeparamref name="T" /> is a reference type and <paramref name="parameter" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SL5)
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
@@ -129,7 +129,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The value to be checked for null.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception.</param>
         /// <exception cref="Exception">Your custom exception thrown when <typeparamref name="T" /> is a reference type and <paramref name="parameter" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SL5)
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
@@ -151,7 +151,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the <see cref="TypeCastException" /> (optional).</param>
         /// <exception cref="TypeCastException">Thrown when <paramref name="parameter"/> cannot be casted to <typeparamref name="T"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SL5)
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
@@ -172,7 +172,7 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional). This is used for the argument-null-check.</param>
         /// <exception cref="TypeCastException">Thrown when <paramref name="parameter"/> cannot be casted to <typeparamref name="T"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SL5)
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
@@ -193,7 +193,7 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional). This is used for the argument-null-check.</param>
         /// <exception cref="TypeCastException">Thrown when <paramref name="parameter"/> cannot be casted to <typeparamref name="T"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SL5)
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
@@ -205,5 +205,21 @@ namespace Light.GuardClauses
             Throw.CustomException(exceptionFactory, parameter);
             return default;
         }
+
+        /// <summary>
+        /// Checks if the specified value is a valid enum value of its type. This is true when the specified value
+        /// is one of the constants defined in the enum, or a valid flags combination when the enum type is marked
+        /// with the <see cref="FlagsAttribute"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the enum.</typeparam>
+        /// <param name="parameter">The enum value to be checked.</param>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static bool IsValidEnumValue<T>(this T parameter) where T : struct, IComparable, IFormattable
+#if !NETSTANDARD1_0
+          , IConvertible
+#endif
+            => EnumInfo<T>.IsValidEnumValue(parameter);
     }
 }
