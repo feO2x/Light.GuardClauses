@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses
@@ -10,15 +11,16 @@ namespace Light.GuardClauses
     public static partial class Guard
     {
         /// <summary>
-        /// Ensures that the specified reference is not null, or otherwise throws an <see cref="ArgumentNullException" />.
+        /// Ensures that the specified object reference is not null, or otherwise throws an <see cref="ArgumentNullException" />.
         /// </summary>
-        /// <param name="parameter">The reference to be checked.</param>
+        /// <param name="parameter">The object reference to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the <see cref="ArgumentNullException" /> (optional).</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
 #if !(NET40 || NET35 || NET35_CF)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static T MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null) where T : class
         {
             if (parameter == null)
@@ -27,7 +29,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that the specified reference is not null, or otherwise throws your custom exception.
+        /// Ensures that the specified object reference is not null, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The reference to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception.</param>
@@ -35,6 +37,7 @@ namespace Light.GuardClauses
 #if !(NET40 || NET35 || NET35_CF)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static T MustNotBeNull<T>(this T parameter, Func<Exception> exceptionFactory) where T : class
         {
             if (parameter == null)
