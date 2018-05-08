@@ -7,7 +7,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
     public static class MustNotBeNullTests
     {
         [Fact]
-        public static void ReferenceNull()
+        public static void ReferenceIsNull()
         {
             Action act = () => ((object) null).MustNotBeNull(MetasyntacticVariables.Foo);
 
@@ -16,7 +16,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         }
 
         [Fact]
-        public static void ReferenceNotNull() => string.Empty.MustNotBeNull().Should().BeSameAs(string.Empty);
+        public static void ReferenceIsNotNull() => string.Empty.MustNotBeNull().Should().BeSameAs(string.Empty);
 
         [Fact]
         public static void CustomException() =>
