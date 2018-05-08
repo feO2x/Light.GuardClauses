@@ -4,7 +4,7 @@ using Xunit.Sdk;
 
 namespace Light.GuardClauses.Tests
 {
-    public static class CustomExceptionOverload
+    public static class CustomExceptions
     {
         private static readonly Exception Exception = new Exception();
         private static readonly Func<Exception> ExceptionFactory = () => Exception;

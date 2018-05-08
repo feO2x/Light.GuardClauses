@@ -20,6 +20,10 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomException() =>
-            CustomExceptionOverload.TestCustomException(exceptionFactory => ((string) null).MustNotBeNull(exceptionFactory));
+            CustomExceptions.TestCustomException(exceptionFactory => ((string) null).MustNotBeNull(exceptionFactory));
+
+        [Fact]
+        public static void CustomMessage() =>
+            CustomMessages.TestCustomMessage<ArgumentNullException>(message => ((object) null).MustNotBeNull(message: message));
     }
 }
