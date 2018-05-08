@@ -1,14 +1,16 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Light.GuardClauses.Exceptions;
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SL5)
+using System.Runtime.CompilerServices;
+#endif
 
 namespace Light.GuardClauses
 {
     /// <summary>
-    /// The <see cref="Guard"/> class provides access to all assertions of Light.GuardClauses.
+    /// The <see cref="Guard" /> class provides access to all assertions of Light.GuardClauses.
     /// </summary>
-    public static partial class Guard
+    public static class Guard
     {
         /// <summary>
         /// Ensures that the specified object reference is not null, or otherwise throws an <see cref="ArgumentNullException" />.
@@ -33,7 +35,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The reference to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SL5)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -52,8 +54,8 @@ namespace Light.GuardClauses
         /// <param name="parameter">The value to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is a reference type and null.</exception>
-        /// <exception cref="ArgumentDefaultException">Thrown when <paramref name="parameter"/> is a value type and the default value.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is a reference type and null.</exception>
+        /// <exception cref="ArgumentDefaultException">Thrown when <paramref name="parameter" /> is a value type and the default value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SL5)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -77,7 +79,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The value to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is the default value.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is the default value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SL5)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -92,6 +94,51 @@ namespace Light.GuardClauses
             }
 
             if (parameter.Equals(default(T)))
+                Throw.CustomException(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified parameter is not null when <typeparamref name="T" /> is a reference type, or otherwise
+        /// throws an <see cref="ArgumentNullException" />. PLEASE NOTICE: you should only use this assertion in generic contexts,
+        /// use <see cref="MustNotBeNull{T}(T,string,string)" /> by default.
+        /// </summary>
+        /// <param name="parameter">The value to be checked for null.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the <see cref="ArgumentNullException" /> (optional).</param>
+        /// <exception cref="ArgumentNullException">Thrown when <typeparamref name="T" /> is a reference type and <paramref name="parameter" /> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SL5)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static T MustNotBeNullReference<T>(this T parameter, string parameterName = null, string message = null)
+        {
+            if (default(T) != null)
+                return parameter;
+
+            if (parameter == null)
+                Throw.MustNotBeNull(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified parameter is not null when <typeparamref name="T" /> is a reference type, or otherwise
+        /// throws your custom exception. PLEASE NOTICE: you should only use this assertion in generic contexts,
+        /// use <see cref="MustNotBeNull{T}(T,Func{Exception})" /> by default.
+        /// </summary>
+        /// <param name="parameter">The value to be checked for null.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <typeparamref name="T" /> is a reference type and <paramref name="parameter" /> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SL5)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static T MustNotBeNullReference<T>(this T parameter, Func<Exception> exceptionFactory)
+        {
+            if (default(T) != null)
+                return parameter;
+
+            if (parameter == null)
                 Throw.CustomException(exceptionFactory);
             return parameter;
         }
