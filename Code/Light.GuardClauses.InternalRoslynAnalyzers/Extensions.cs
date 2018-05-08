@@ -88,9 +88,12 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
         public static XmlElementSyntax GetXmlCommentParam(this DocumentationCommentTriviaSyntax documentationSyntax, string xmlParamName) =>
             documentationSyntax?.ChildNodes()
                                 .OfType<XmlElementSyntax>()
-                                .FirstOrDefault(xmlElementSyntax => xmlElementSyntax.StartTag.Name.LocalName.Text == "param" &&
-                                                                    xmlElementSyntax.StartTag.Attributes.Any(attribute => attribute is XmlNameAttributeSyntax nameAttribute &&
-                                                                                                                          nameAttribute.Identifier.Identifier.Text == xmlParamName));
+                                .FirstOrDefault(xmlElementSyntax => xmlElementSyntax.IsXmlCommentParam(xmlParamName));
+
+        public static bool IsXmlCommentParam(this XmlElementSyntax xmlElement, string xmlParamName) =>
+            xmlElement.StartTag.Name.LocalName.Text == "param" &&
+            xmlElement.StartTag.Attributes.Any(attribute => attribute is XmlNameAttributeSyntax nameAttribute &&
+                                                            nameAttribute.Identifier.Identifier.Text == xmlParamName);
 
         private static XmlTextSyntax GetSimpleCommentText(this XmlElementSyntax xmlCommentParam) =>
             xmlCommentParam.Content.Count != 1 ? null : xmlCommentParam.Content[0] as XmlTextSyntax;
@@ -146,7 +149,6 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
 
         public static bool EqualsType(this ITypeSymbol typeSymbol, Type type) =>
             typeSymbol.MetadataName == type.Name &&
-            typeSymbol.ContainingNamespace.MetadataName == type.Namespace &&
-            typeSymbol.ContainingAssembly.Identity == AssemblyIdentity.FromAssemblyDefinition(type.Assembly);
+            typeSymbol.ContainingNamespace.MetadataName == type.Namespace;
     }
 }

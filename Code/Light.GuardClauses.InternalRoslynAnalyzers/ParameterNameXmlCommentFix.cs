@@ -10,7 +10,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Light.GuardClauses.InternalRoslynAnalyzers
 {
     [ExportCodeFixProvider(LanguageNames.CSharp), Shared]
-    public sealed class FixParameterNameXmlComment : CodeFixProvider
+    public sealed class ParameterNameXmlCommentFix : CodeFixProvider
     {
         public override ImmutableArray<string> FixableDiagnosticIds { get; } =
             ImmutableArray.Create(Descriptors.ParameterNameComment.Id);

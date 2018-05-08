@@ -75,7 +75,7 @@ namespace Light.GuardClauses
         [Fact]
         public static async Task FixParameterName()
         {
-            var codeFix = new FixParameterNameXmlComment();
+            var codeFix = new ParameterNameXmlCommentFix();
             var resultingCode = await codeFix.ApplyFixAsync(MissingParameterNameComment, Analyzer);
 
             resultingCode.Should().Be(FixedParameterNameComment);
@@ -147,7 +147,7 @@ namespace Light.GuardClauses
         [Fact]
         public static async Task FixMissingMessageWithExistingExceptionComment()
         {
-            var codeFix = new FixMessageXmlComment();
+            var codeFix = new MessageXmlCommentFix();
             var resultingCode = await codeFix.ApplyFixAsync(MissingMessageWithExistingException, Analyzer);
 
             resultingCode.Should().Be(FixedMessageCommentWithExistingException);

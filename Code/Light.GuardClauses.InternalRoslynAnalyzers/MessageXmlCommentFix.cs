@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Light.GuardClauses.InternalRoslynAnalyzers
 {
     [ExportCodeFixProvider(LanguageNames.CSharp), Shared]
-    public sealed class FixMessageXmlComment : CodeFixProvider
+    public sealed class MessageXmlCommentFix : CodeFixProvider
     {
         public override ImmutableArray<string> FixableDiagnosticIds { get; } =
             ImmutableArray.Create(Descriptors.MessageComment.Id);
@@ -42,16 +42,16 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
                 var firstExceptionCref = documentationSyntax.GetFirstXmlExceptionCref();
 
                 if (firstExceptionCref == null)
-                    newCommentSyntax = xmlElementSyntax.WithContent(new SyntaxList<XmlNodeSyntax>(SyntaxFactory.XmlText(MessageConstants.FullDefaultComment)));
+                    newCommentSyntax = xmlElementSyntax.WithContent(new SyntaxList<XmlNodeSyntax>(XmlText(MessageConstants.FullDefaultComment)));
                 else
                 {
-                    var seeElement = SyntaxFactory.XmlSeeElement(firstExceptionCref.Cref);
-                    seeElement = seeElement.WithSlashGreaterThanToken(seeElement.SlashGreaterThanToken.WithLeadingTrivia(SyntaxFactory.Whitespace(" ")));
+                    var seeElement = XmlSeeElement(firstExceptionCref.Cref);
+                    seeElement = seeElement.WithSlashGreaterThanToken(seeElement.SlashGreaterThanToken.WithLeadingTrivia(Whitespace(" ")));
                     newCommentSyntax = xmlElementSyntax.WithContent(new SyntaxList<XmlNodeSyntax>(new XmlNodeSyntax[]
                     {
-                        SyntaxFactory.XmlText($"{MessageConstants.CommentStart}the "),
+                        XmlText($"{MessageConstants.CommentStart}the "),
                         seeElement,
-                        SyntaxFactory.XmlText(MessageConstants.CommentEnd)
+                        XmlText(MessageConstants.CommentEnd)
                     }));
                 }
             }
@@ -70,8 +70,8 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
                     commentTextSyntax[i] = xmlElementSyntax.Content[j++];
                 }
 
-                commentTextSyntax[0] = SyntaxFactory.XmlText($"{MessageConstants.CommentStart}the ");
-                commentTextSyntax[numberOfElements - 1] = SyntaxFactory.XmlText(MessageConstants.CommentEnd);
+                commentTextSyntax[0] = XmlText($"{MessageConstants.CommentStart}the ");
+                commentTextSyntax[numberOfElements - 1] = XmlText(MessageConstants.CommentEnd);
                 newCommentSyntax = xmlElementSyntax.WithContent(new SyntaxList<XmlNodeSyntax>(commentTextSyntax));
             }
 
