@@ -22,8 +22,14 @@ namespace Light.GuardClauses.Exceptions
         /// <summary>
         /// Throws the default <see cref="TypeCastException" /> indicating that a reference cannot be downcasted, using the optional parameter name and message.
         /// </summary>
-        public static void MustBeOfType(object parameter, Type targetType, string parameterName = null, string message = null) =>
+        public static void InvalidTypeCast(object parameter, Type targetType, string parameterName = null, string message = null) =>
             throw new TypeCastException(parameterName, message ?? $"{parameterName ?? "The value"} \"{parameter}\" cannot be casted to \"{targetType}\".");
+
+        /// <summary>
+        /// Throws the default <see cref="EnumValueNotDefinedException" /> indicating that a value is not one of the constants defined in an enum, using the optional paramter name and message.
+        /// </summary>
+        public static void EnumValueNotDefined<T>(T parameter, string parameterName = null, string message = null) =>
+            throw new EnumValueNotDefinedException(parameterName, message ?? $"{parameterName ?? "The value"} \"{parameter}\" must be one of the defined constants of enum \"{parameter.GetType()}\", but it is not.");
 
         /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
