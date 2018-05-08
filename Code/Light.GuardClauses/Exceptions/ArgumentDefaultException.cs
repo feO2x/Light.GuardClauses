@@ -1,5 +1,5 @@
 ﻿using System;
-#if (NETSTANDARD2_0 || NET45 || NET40)
+#if (NETSTANDARD2_0 || NET45 || NET40 || NET35_FULL)
 using System.Runtime.Serialization;
 #endif
 
@@ -20,7 +20,7 @@ namespace Light.GuardClauses.Exceptions
         /// <param name="message">The message of the exception (optional).</param>
         public ArgumentDefaultException(string parameterName = null, string message = null) : base(message, parameterName) { }
 
-#if (NETSTANDARD2_0 || NET45 || NET40)
+#if (NETSTANDARD2_0 || NET45 || NET40 || NET35_FULL)
         /// <inheritdoc />
         protected ArgumentDefaultException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 #endif
