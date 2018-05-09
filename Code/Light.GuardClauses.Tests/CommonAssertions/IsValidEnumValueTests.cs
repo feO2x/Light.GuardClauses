@@ -8,7 +8,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 {
     public static class IsValidEnumValueTests
     {
-        [Theory(DisplayName = "IsValidEnumValue must return true when the enum value is valid.")]
+        [Theory]
         [InlineData(ConsoleColor.Black)]
         [InlineData(UriKind.Absolute)]
         [InlineData(DateTimeKind.Utc)]
@@ -20,24 +20,15 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [InlineData(UInt64Enum.AllLow | UInt64Enum.High1)]
         [InlineData(UInt64Enum.AllHigh)]
         [InlineData(UInt64Enum.MaxValue)]
-        public static void EnumValueValid<T>(T enumValue) where T : struct, IConvertible, IComparable, IFormattable
-        {
-            var result = enumValue.IsValidEnumValue();
+        public static void EnumValueValid<T>(T enumValue) where T : struct, IConvertible, IComparable, IFormattable => 
+            enumValue.IsValidEnumValue().Should().BeTrue();
 
-            result.Should().BeTrue();
-        }
-
-        [Theory(DisplayName = "IsValidEnumValue must return false when the enum value is invalid.")]
+        [Theory]
         [InlineData(2000)]
         [InlineData(-5)]
-        public static void EnumValueInvalid(int invalidDateTimeKindValue)
-        {
-            var result = ((DateTimeKind) invalidDateTimeKindValue).IsValidEnumValue();
+        public static void EnumValueInvalid(int invalidDateTimeKindValue) => ((DateTimeKind) invalidDateTimeKindValue).IsValidEnumValue().Should().BeFalse();
 
-            result.Should().BeFalse();
-        }
-
-        [Theory(DisplayName = "IsValidEnumValue must return false when an invalid value is specified for the NumberStyles enum.")]
+        [Theory]
         [InlineData(-1)]
         [InlineData(-2)]
         [InlineData(-512)]
@@ -45,10 +36,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [InlineData(1024)]
         [InlineData(2048)]
         [InlineData(int.MaxValue)]
-        public static void InvalidNumberStyles(int invalidValue)
-        {
-            ((NumberStyles) invalidValue).IsValidEnumValue().Should().BeFalse();
-        }
+        public static void InvalidNumberStyles(int invalidValue) => ((NumberStyles) invalidValue).IsValidEnumValue().Should().BeFalse();
 
         [Flags]
         public enum UInt64Enum : ulong
@@ -66,19 +54,13 @@ namespace Light.GuardClauses.Tests.CommonAssertions
             MaxValue = ulong.MaxValue
         }
 
-        [Fact(DisplayName = "IsValidEnumValue must return false when an invalid value of an empty enum is passed in.")]
-        public static void EmptyEnumValue()
-        {
-            ((EmptyEnum) 42).IsValidEnumValue().Should().BeFalse();
-        }
+        [Fact]
+        public static void EmptyEnumValue() => ((EmptyEnum) 42).IsValidEnumValue().Should().BeFalse();
 
         public enum EmptyEnum { }
 
-        [Fact(DisplayName = "IsValidEnumValue must return false when an invalid value of an empty flags enum is passed in.")]
-        public static void EmptyFlagsEnumValue()
-        {
-            ((EmptyFlagsEnum) 186).IsValidEnumValue().Should().BeFalse();
-        }
+        [Fact]
+        public static void EmptyFlagsEnumValue() => ((EmptyFlagsEnum) 186).IsValidEnumValue().Should().BeFalse();
 
         [Flags]
         public enum EmptyFlagsEnum { }
