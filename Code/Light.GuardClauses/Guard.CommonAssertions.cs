@@ -56,7 +56,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The value to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+        /// <param name="message">The message that will be passed to the <see cref="ArgumentNullException"/> or <see cref="ArgumentDefaultException"/> (optional).</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is a reference type and null.</exception>
         /// <exception cref="ArgumentDefaultException">Thrown when <paramref name="parameter" /> is a value type and the default value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
