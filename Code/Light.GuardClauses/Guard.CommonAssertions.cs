@@ -395,5 +395,19 @@ namespace Light.GuardClauses
             if (condition)
                 Throw.InvalidOperation(message);
         }
+
+        /// <summary>
+        /// Checks if the specified <paramref name="condition"/> is true and throws an <see cref="InvalidStateException"/> in this case.
+        /// </summary>
+        /// <param name="condition">The condition to be checked. The exception is thrown when it is true.</param>
+        /// <param name="message"></param>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static void InvalidState(bool condition, string message = null)
+        {
+            if (condition)
+                Throw.InvalidState(message);
+        }
     }
 }
