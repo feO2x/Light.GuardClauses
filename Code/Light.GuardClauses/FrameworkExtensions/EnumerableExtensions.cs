@@ -18,10 +18,8 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <param name="enumerable">The enumerable to be transformed.</param>
         /// <returns>The list containing the items of the enumerable.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> is null.</exception>
-        public static IList<T> AsList<T>(this IEnumerable<T> enumerable)
-        {
-            return enumerable as IList<T> ?? enumerable.MustNotBeNull(nameof(enumerable)).ToList();
-        }
+        public static IList<T> AsList<T>(this IEnumerable<T> enumerable) => 
+            enumerable as IList<T> ?? enumerable.MustNotBeNull(nameof(enumerable)).ToList();
 
         /// <summary>
         /// Tries to cast the specified enumerable as an <see cref="IList{T}" />, or
@@ -32,10 +30,8 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <param name="createCollection">The delegate that creates the collection containing the specified items.</param>
         /// <returns>The casted enumerable, or a new collection containing the enumerable's items.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> or <paramref name="createCollection" /> is null.</exception>
-        public static IList<T> AsList<T>(this IEnumerable<T> enumerable, Func<IEnumerable<T>, IList<T>> createCollection)
-        {
-            return enumerable as IList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(enumerable.MustNotBeNull(nameof(enumerable)));
-        }
+        public static IList<T> AsList<T>(this IEnumerable<T> enumerable, Func<IEnumerable<T>, IList<T>> createCollection) => 
+            enumerable as IList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(enumerable.MustNotBeNull(nameof(enumerable)));
 
         /// <summary>
         /// Tries to downcast the specified enumerable as an array, or creates a new collection
@@ -82,10 +78,10 @@ namespace Light.GuardClauses.FrameworkExtensions
             action.MustNotBeNull(nameof(action));
 
             var i = 0;
-            if (enumerable is IList<T> readonlyList)
-                for (; i < readonlyList.Count; i++)
+            if (enumerable is IList<T> list)
+                for (; i < list.Count; i++)
                 {
-                    var item = readonlyList[i];
+                    var item = list[i];
                     if (item == null)
                     {
                         if (throwWhenItemIsNull) throw new CollectionException(nameof(enumerable), $"The collection contains null at index {i}.");
