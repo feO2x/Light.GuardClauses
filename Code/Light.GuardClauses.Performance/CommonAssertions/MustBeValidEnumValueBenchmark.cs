@@ -21,10 +21,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
         public ConsoleColor LightGuardClausesNoFlagsWithParameterName() => EnumValue.MustBeValidEnumValue(nameof(EnumValue));
 
         [Benchmark]
-        public ConsoleColor LightGuardCLausesNoFlagsWithCustomException() => EnumValue.MustBeValidEnumValue(() => new Exception());
-
-        [Benchmark]
-        public ConsoleColor LightGuardClausesNoFlagsWithCustomParameterizedException() => EnumValue.MustBeValidEnumValue(v => new Exception($"Value {v} is not defined in enum."));
+        public ConsoleColor LightGuardClausesNoFlagsWithCustomException() => EnumValue.MustBeValidEnumValue(v => new Exception($"Value {v} is not defined in enum."));
 
         [Benchmark]
         public ConsoleColor OldVersionNoFlags() => EnumValue.OldMustBeValidEnumValue(nameof(EnumValue));
@@ -33,10 +30,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
         public BindingFlags LightGuardClausesFlagsWithParameterName() => FlagsEnumValue.MustBeValidEnumValue(nameof(FlagsEnumValue));
 
         [Benchmark]
-        public BindingFlags LightGuardClausesFlagsWithCustomException() => FlagsEnumValue.MustBeValidEnumValue(() => new Exception());
-
-        [Benchmark]
-        public BindingFlags LightGuardClausesFlagsWithCustomParameterizedException() => FlagsEnumValue.MustBeValidEnumValue(v => new Exception($"Value {v} is not defined in enum."));
+        public BindingFlags LightGuardClausesFlagsWithCustomException() => FlagsEnumValue.MustBeValidEnumValue(v => new Exception($"Value {v} is not defined in enum."));
     }
 
     public static class MustBeValidEnumValueExtensionMethods

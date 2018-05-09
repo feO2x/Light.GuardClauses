@@ -21,10 +21,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
         public SampleEntity LightGuardClausesWithParameterName() => Instance.MustBeOfType<SampleEntity>(nameof(Instance));
 
         [Benchmark]
-        public SampleEntity LightGuardClausesWithCustomException() => Instance.MustBeOfType<SampleEntity>(() => new Exception(), nameof(Instance));
-
-        [Benchmark]
-        public SampleEntity LightGuardClausesWithCustomParameterizedException() => Instance.MustBeOfType<SampleEntity>(r => new Exception($"\"{r}\" is not the correct type."), nameof(Instance));
+        public SampleEntity LightGuardClausesWithCustomException() => Instance.MustBeOfType<SampleEntity>(r => new Exception($"\"{r}\" is not the correct type."), nameof(Instance));
 
         [Benchmark]
         public SampleEntity OldVersion() => Instance.OldMustBeOfType<SampleEntity>(nameof(Instance));

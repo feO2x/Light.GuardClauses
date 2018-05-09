@@ -13,7 +13,7 @@ namespace Light.GuardClauses
     /// <summary>
     /// The <see cref="Guard" /> class provides access to all assertions of Light.GuardClauses.
     /// </summary>
-    public static class Guard
+    public static partial class Guard
     {
         /// <summary>
         /// Ensures that the specified object reference is not null, or otherwise throws an <see cref="ArgumentNullException" />.
@@ -171,28 +171,7 @@ namespace Light.GuardClauses
         /// Ensures that <paramref name="parameter"/> can be casted to <typeparamref name="T"/> and returns the casted value, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The value to be casted.</param>
-        /// <param name="exceptionFactory">The delegate that creates your custom exception.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This is used for the argument-null-check.</param>
-        /// <exception cref="TypeCastException">Thrown when <paramref name="parameter"/> cannot be casted to <typeparamref name="T"/>.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeOfType<T>(this object parameter, Func<Exception> exceptionFactory, string parameterName = null)
-        {
-            if (parameter.MustNotBeNull(parameterName) is T castedValue)
-                return castedValue;
-
-            Throw.CustomException(exceptionFactory);
-            return default;
-        }
-
-        /// <summary>
-        /// Ensures that <paramref name="parameter"/> can be casted to <typeparamref name="T"/> and returns the casted value, or otherwise throws your custom exception.
-        /// </summary>
-        /// <param name="parameter">The value to be casted.</param>
-        /// <param name="exceptionFactory">The delegate that creates your custom exception.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. The <paramref name="parameter"/> is passed to this delegate.</param>
         /// <param name="parameterName">The name of the parameter (optional). This is used for the argument-null-check.</param>
         /// <exception cref="TypeCastException">Thrown when <paramref name="parameter"/> cannot be casted to <typeparamref name="T"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
@@ -278,41 +257,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <typeparam name="T">The type of the enum.</typeparam>
         /// <param name="parameter">The value to be checked.</param>
-        /// <param name="exceptionFactory">The delegate that creates your custom exception.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This value is used for the <see cref="TypeIsNoEnumException"/>.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is no valid enum value.</exception>
-        /// <exception cref="TypeIsNoEnumException">Thrown when <typeparamref name="T"/> is no enum type.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
-        public static T MustBeValidEnumValue<T>(this T parameter, Func<Exception> exceptionFactory, string parameterName = null) where T : struct, IComparable, IFormattable
-#if !NETSTANDARD1_0
-, IConvertible
-#endif
-        {
-#if !NETSTANDARD1_0
-            if (typeof(T).IsEnum)
-#else
-            if (typeof(T).GetTypeInfo().IsEnum)
-#endif
-            {
-                if (!EnumInfo<T>.IsValidEnumValue(parameter))
-                    Throw.CustomException(exceptionFactory);
-                return parameter;
-            }
-
-            Throw.TypeIsNoEnum(typeof(T), parameterName);
-            return default;
-        }
-
-        /// <summary>
-        /// Ensures that the specified enum value is valid, or otherwise throws your custom exception. An enum value
-        /// is valid when the specified value  is one of the constants defined in the enum, or a valid flags combination when the enum type
-        /// is marked with the <see cref="FlagsAttribute"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the enum.</typeparam>
-        /// <param name="parameter">The value to be checked.</param>
-        /// <param name="exceptionFactory">The delegate that creates your custom exception.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. The <paramref name="parameter"/> is passed to this delegate.</param>
         /// <param name="parameterName">The name of the parameter (optional). This value is used for the <see cref="TypeIsNoEnumException"/>.</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is no valid enum value.</exception>
         /// <exception cref="TypeIsNoEnumException">Thrown when <typeparamref name="T"/> is no enum type.</exception>

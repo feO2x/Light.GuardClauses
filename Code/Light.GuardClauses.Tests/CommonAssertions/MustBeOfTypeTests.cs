@@ -40,25 +40,12 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomException() =>
-            CustomExceptions.TestCustomException(exceptionFactory => 42.MustBeOfType<IDisposable>(exceptionFactory));
-
-        [Fact]
-        public static void CustomExceptionWithParameter() =>
             CustomExceptions.TestCustomException<object>(MetasyntacticVariables.Foo,
                                                          (value, exceptionFactory) => value.MustBeOfType<Encoding>(exceptionFactory));
 
 
         [Fact]
         public static void CustomExceptionReferenceIsNull()
-        {
-            Action act = () => ((object) null).MustBeOfType<StreamReader>(() => new Exception(), MetasyntacticVariables.Bar);
-
-            act.Should().Throw<ArgumentNullException>()
-               .And.ParamName.Should().Be(MetasyntacticVariables.Bar);
-        }
-
-        [Fact]
-        public static void CustomExceptionWithParameterReferenceIsNull()
         {
             Action act = () => ((object)null).MustBeOfType<StreamReader>(_ => new Exception(), MetasyntacticVariables.Baz);
 

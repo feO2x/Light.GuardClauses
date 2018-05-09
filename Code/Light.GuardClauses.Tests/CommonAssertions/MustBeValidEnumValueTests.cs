@@ -1,5 +1,7 @@
 ﻿using System;
+#if NETCOREAPP1_1
 using System.Reflection;
+#endif
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Xunit;
@@ -24,10 +26,6 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomException() =>
-            CustomExceptions.TestCustomException(exceptionFactory => ((UriKind) 10).MustBeValidEnumValue(exceptionFactory));
-
-        [Fact]
-        public static void CustomExceptionWithParameter() =>
             CustomExceptions.TestCustomException((ConsoleSpecialKey) 42,
                                                  (invalidValue, exceptionFactory) => invalidValue.MustBeValidEnumValue(exceptionFactory));
 
