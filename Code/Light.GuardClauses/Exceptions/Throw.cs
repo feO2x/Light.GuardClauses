@@ -26,10 +26,16 @@ namespace Light.GuardClauses.Exceptions
             throw new TypeCastException(parameterName, message ?? $"{parameterName ?? "The value"} \"{parameter}\" cannot be casted to \"{targetType}\".");
 
         /// <summary>
+        /// Throws the default <see cref="TypeIsNoEnumException"/> indicating that a type is no enum type, using the optional parameter name and message.
+        /// </summary>
+        public static void TypeIsNoEnum(Type type, string parameterName = null, string message = null) => 
+            throw new TypeIsNoEnumException(parameterName, message ?? $"{parameterName ?? "The type"} \"{type}\" must be an enum type, but it actually is not.");
+
+        /// <summary>
         /// Throws the default <see cref="EnumValueNotDefinedException" /> indicating that a value is not one of the constants defined in an enum, using the optional paramter name and message.
         /// </summary>
         public static void EnumValueNotDefined<T>(T parameter, string parameterName = null, string message = null) =>
-            throw new EnumValueNotDefinedException(parameterName, message ?? $"{parameterName ?? "The value"} \"{parameter}\" must be one of the defined constants of enum \"{parameter.GetType()}\", but it is not.");
+            throw new EnumValueNotDefinedException(parameterName, message ?? $"{parameterName ?? "The value"} \"{parameter}\" must be one of the defined constants of enum \"{parameter.GetType()}\", but it actually is not.");
 
         /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
