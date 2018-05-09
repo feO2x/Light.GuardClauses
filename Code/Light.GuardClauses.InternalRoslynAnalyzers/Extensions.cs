@@ -28,7 +28,7 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
             for (var i = 0; i < parameters.Length; ++i)
             {
                 var currentParameter = parameters[i];
-                if (currentParameter.Type.SpecialType != SpecialType.System_String)
+                if (currentParameter.Type.SpecialType != SpecialType.System_String || !currentParameter.IsOptional)
                     continue;
 
                 if (currentParameter.Name.Equals(ParameterNameConstants.ParameterName))
@@ -128,7 +128,7 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
                                .OfType<XmlCrefAttributeSyntax>()
                                .FirstOrDefault();
 
-        public static bool ContainsNonParameterizedExceptionFactoryOverload(this List<IMethodSymbol> overloads)
+        public static bool ContainsExceptionFactoryOverload(this List<IMethodSymbol> overloads)
         {
             foreach (var method in overloads)
             {
@@ -137,9 +137,9 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
                     if (parameter.Type is INamedTypeSymbol typeSymbol &&
                         typeSymbol.IsGenericType &&
                         typeSymbol.IsUnboundGenericType == false &&
-                        typeSymbol.EqualsType(ExceptionFactoryConstants.FuncOfTType) &&
-                        typeSymbol.TypeArguments.Length == 1 &&
-                        typeSymbol.TypeArguments[0].EqualsType(ExceptionFactoryConstants.ExceptionType))
+                        typeSymbol.MetadataName.StartsWith("Func") &&
+                        typeSymbol.TypeArguments.Length > 0 &&
+                        typeSymbol.TypeArguments[typeSymbol.TypeArguments.Length - 1].EqualsType(ExceptionFactoryConstants.ExceptionType))
                         return true;
                 }
             }

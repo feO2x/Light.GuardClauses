@@ -35,11 +35,12 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
                                                             .OfType<MethodDeclarationSyntax>()
                                                             .Select(methodDeclaration => semanticModel.GetDeclaredSymbol(methodDeclaration))
                                                             .Where(methodSymbol => methodSymbol.Name == assertionMethod.Name &&
+                                                                                   !methodSymbol.ReturnsVoid &&
                                                                                    methodSymbol.Parameters.ContainsParameterNameAndMessage() == false)
                                                             .ToList();
 
             if (assertionOverloads.Count == 0 ||
-                assertionOverloads.ContainsNonParameterizedExceptionFactoryOverload() == false)
+                assertionOverloads.ContainsExceptionFactoryOverload() == false)
                 context.ReportDiagnostic(Diagnostic.Create(Descriptors.CustomExceptionOverload, methodDeclarationSyntax.GetLocation()));
         }
     }
