@@ -44,6 +44,11 @@ namespace Light.GuardClauses.Exceptions
             throw new EmptyGuidException(parameterName, message ?? $"{parameterName ?? "The value"} must be a valid GUID, but it actually is an empty one.");
 
         /// <summary>
+        /// Throws an <see cref="InvalidOperationException" /> using the optional message.
+        /// </summary>
+        public static void InvalidOperation(string message = null) => throw new InvalidOperationException(message);
+
+        /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException(Func<Exception> exceptionFactory) => throw exceptionFactory();
