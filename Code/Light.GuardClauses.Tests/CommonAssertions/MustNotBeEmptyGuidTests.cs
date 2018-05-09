@@ -27,5 +27,14 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
             result.Should().Be(validGuid);
         }
+
+        [Fact]
+        public static void CustomException() =>
+            CustomExceptions.TestCustomException(exceptionFactory => Guid.Empty.MustNotBeEmpty(exceptionFactory));
+
+        [Fact]
+        public static void CustomMessage() =>
+            CustomMessages.TestCustomMessage<EmptyGuidException>(message => Guid.Empty.MustNotBeEmpty(message: message));
+
     }
 }
