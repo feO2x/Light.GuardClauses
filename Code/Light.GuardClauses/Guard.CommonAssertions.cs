@@ -338,5 +338,47 @@ namespace Light.GuardClauses
             Throw.TypeIsNoEnum(typeof(T), parameterName);
             return default;
         }
+
+        /// <summary>
+        /// Checks if the specified GUID is an empty one.
+        /// </summary>
+        /// <param name="parameter">The GUID to be checked.</param>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static bool IsEmpty(this Guid parameter) => parameter == Guid.Empty;
+
+        /// <summary>
+        /// Ensures that the specified GUID is not empty, or otherwise throws an <see cref="EmptyGuidException" />.
+        /// </summary>
+        /// <param name="parameter">The GUID to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the <see cref="EmptyGuidException" /> (optional).</param>
+        /// <exception cref="EmptyGuidException">Thrown when <paramref name="parameter" /> is an empty GUID.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static Guid MustNotBeEmpty(this Guid parameter, string parameterName = null, string message = null)
+        {
+            if (parameter == Guid.Empty)
+                Throw.EmptyGuid(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified GUID is not empty, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The GUID to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is an empty GUID.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static Guid MustNotBeEmpty(this Guid parameter, Func<Exception> exceptionFactory)
+        {
+            if (parameter == Guid.Empty)
+                Throw.CustomException(exceptionFactory);
+            return parameter;
+        }
     }
 }

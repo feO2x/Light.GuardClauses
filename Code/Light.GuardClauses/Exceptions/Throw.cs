@@ -38,6 +38,12 @@ namespace Light.GuardClauses.Exceptions
             throw new EnumValueNotDefinedException(parameterName, message ?? $"{parameterName ?? "The value"} \"{parameter}\" must be one of the defined constants of enum \"{parameter.GetType()}\", but it actually is not.");
 
         /// <summary>
+        /// Throws the default <see cref="EmptyGuidException" /> indicating that a GUID is empty, using the optional parameter name and message.
+        /// </summary>
+        public static void EmptyGuid(string parameterName = null, string message = null) =>
+            throw new EmptyGuidException(parameterName, message ?? $"{parameterName ?? "The value"} must be a valid GUID, but it actually is an empty one.");
+
+        /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         public static void CustomException(Func<Exception> exceptionFactory) => throw exceptionFactory();
