@@ -352,5 +352,32 @@ namespace Light.GuardClauses
                 Throw.CustomException(exceptionFactory, parameter, other);
             return parameter;
         }
+
+        /*
+         * -------------------------------------
+         * Ranges
+         * -------------------------------------
+         */
+        /// <summary>
+        /// Checks if the value is within the specified range.
+        /// </summary>
+        /// <param name="parameter">The comparable to be checked.</param>
+        /// <param name="range">The range that <paramref name="parameter" /> must be in between.</param>
+        /// <returns>True if the parameter is within the specified range, else false.</returns>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static bool IsIn<T>(this T parameter, Range<T> range) where T : IComparable<T> => range.IsValueWithinRange(parameter);
+
+        /// <summary>
+        /// Checks if the value is not within the specified range.
+        /// </summary>
+        /// <param name="parameter">The comparable to be checked.</param>
+        /// <param name="range">The range that <paramref name="parameter" /> must not be in between.</param>
+        /// <returns>True if the parameter is not within the specified range, else false.</returns>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static bool IsNotIn<T>(this T parameter, Range<T> range) where T : IComparable<T> => !range.IsValueWithinRange(parameter);
     }
 }
