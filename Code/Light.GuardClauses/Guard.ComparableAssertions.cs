@@ -362,7 +362,7 @@ namespace Light.GuardClauses
         /// Checks if the value is within the specified range.
         /// </summary>
         /// <param name="parameter">The comparable to be checked.</param>
-        /// <param name="range">The range that <paramref name="parameter" /> must be in between.</param>
+        /// <param name="range">The range where <paramref name="parameter" /> must be in-between.</param>
         /// <returns>True if the parameter is within the specified range, else false.</returns>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -373,11 +373,51 @@ namespace Light.GuardClauses
         /// Checks if the value is not within the specified range.
         /// </summary>
         /// <param name="parameter">The comparable to be checked.</param>
-        /// <param name="range">The range that <paramref name="parameter" /> must not be in between.</param>
+        /// <param name="range">The range where <paramref name="parameter" /> must not be in-between.</param>
         /// <returns>True if the parameter is not within the specified range, else false.</returns>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public static bool IsNotIn<T>(this T parameter, Range<T> range) where T : IComparable<T> => !range.IsValueWithinRange(parameter);
+
+        /// <summary>
+        /// Ensures that <paramref name="parameter" /> is within the specified range, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
+        /// </summary>
+        /// <typeparam name="T">The type of the parameter to be checked.</typeparam>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="range">The range where <paramref name="parameter" /> must be in-between.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="parameter" /> is within <paramref name="range" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static T MustBeIn<T>(this T parameter, Range<T> range, string parameterName = null, string message = null) where T : IComparable<T>
+        {
+            if (!range.IsValueWithinRange(parameter))
+                Throw.MustBeInRange(parameter, range, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that <paramref name="parameter" /> is within the specified range, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The parameter to be checked.</param>
+        /// <param name="range">The range where <paramref name="parameter" /> must be in-between.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="range"/> are passed to this delegate.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is within <paramref name="range" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static T MustBeIn<T>(this T parameter, Range<T> range, Func<T, Range<T>, Exception> exceptionFactory) where T : IComparable<T>
+        {
+            if (!range.IsValueWithinRange(parameter))
+                Throw.CustomException(exceptionFactory, parameter, range);
+            return parameter;
+        }
     }
 }

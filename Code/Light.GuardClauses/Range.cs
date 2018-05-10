@@ -47,11 +47,11 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        public Range(T from, T to, bool isFromInclusive, bool isToInclusive)
+        public Range(T from, T to, bool isFromInclusive = true, bool isToInclusive = true)
         {
             to.MustNotBeLessThan(from, nameof(to));
 
-            From = from;
+            From = from.MustNotBeNullReference(nameof(from));
             To = to;
             IsFromInclusive = isFromInclusive;
             IsToInclusive = isToInclusive;
@@ -68,10 +68,8 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        public bool IsValueWithinRange(T value)
-        {
-            return value.CompareTo(From) >= _expectedLowerBoundaryResult && value.CompareTo(To) <= _expectedUpperBoundaryResult;
-        }
+        public bool IsValueWithinRange(T value) => 
+            value.MustNotBeNullReference(nameof(value)).CompareTo(From) >= _expectedLowerBoundaryResult && value.CompareTo(To) <= _expectedUpperBoundaryResult;
 
         /// <summary>
         /// Use this method to create a range in a fluent style using method chaining.
@@ -82,10 +80,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        public static RangeFromInfo FromInclusive(T value)
-        {
-            return new RangeFromInfo(value, true);
-        }
+        public static RangeFromInfo FromInclusive(T value) => new RangeFromInfo(value, true);
 
         /// <summary>
         /// Use this method to create a range in a fluent style using method chaining.
@@ -96,10 +91,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        public static RangeFromInfo FromExclusive(T value)
-        {
-            return new RangeFromInfo(value, false);
-        }
+        public static RangeFromInfo FromExclusive(T value) => new RangeFromInfo(value, false);
 
         /// <summary>
         /// The nested <see cref="RangeFromInfo" /> can be used to fluently create a <see cref="Range{T}" />.
