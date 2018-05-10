@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
 using System.Runtime.CompilerServices;
 #endif
@@ -20,6 +21,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static T MustNotBeLessThan<T>(this T parameter, T other, string parameterName = null, string message = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName).CompareTo(other) < 0)
@@ -39,6 +41,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static T MustNotBeLessThan<T>(this T parameter, T other, Func<T, T, Exception> exceptionFactory, string parameterName = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName).CompareTo(other) < 0)
