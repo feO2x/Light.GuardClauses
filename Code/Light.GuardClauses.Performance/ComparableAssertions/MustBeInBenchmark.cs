@@ -9,7 +9,7 @@ namespace Light.GuardClauses.Performance.ComparableAssertions
         public int Value = 42;
 
         [Benchmark(Baseline = true)]
-        public int BaseVersion()
+        public int ImperativeVersion()
         {
             if (Value < 30 || Value >= 50) throw new ArgumentOutOfRangeException(nameof(Value));
             return Value;
