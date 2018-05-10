@@ -42,7 +42,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
         public static T MustNotBeNull<T>(this T parameter, Func<Exception> exceptionFactory) where T : class
         {
             if (parameter == null)
@@ -86,7 +86,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
         public static T MustNotBeDefault<T>(this T parameter, Func<Exception> exceptionFactory)
         {
             if (default(T) == null)
@@ -135,7 +135,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
         public static T MustNotBeNullReference<T>(this T parameter, Func<Exception> exceptionFactory)
         {
             if (default(T) != null)
@@ -178,7 +178,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
         public static T MustBeOfType<T>(this object parameter, Func<object, Exception> exceptionFactory, string parameterName = null)
         {
             if (parameter.MustNotBeNull(parameterName) is T castedValue)
@@ -264,6 +264,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
+        [ContractAnnotation("exceptionFactory:null => halt")]
         public static T MustBeValidEnumValue<T>(this T parameter, Func<T, Exception> exceptionFactory, string parameterName = null) where T : struct, IComparable, IFormattable
 #if !NETSTANDARD1_0
 , IConvertible
@@ -319,6 +320,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
+        [ContractAnnotation("exceptionFactory:null => halt")]
         public static Guid MustNotBeEmpty(this Guid parameter, Func<Exception> exceptionFactory)
         {
             if (parameter == Guid.Empty)
@@ -382,6 +384,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
+        [ContractAnnotation("exceptionFactory:null => halt")]
         public static T MustHaveValue<T>(this T? parameter, Func<Exception> exceptionFactory) where T : struct
         {
             if (!parameter.HasValue)

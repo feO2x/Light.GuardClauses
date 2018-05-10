@@ -41,7 +41,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
         public static T MustNotBeLessThan<T>(this T parameter, T other, Func<T, T, Exception> exceptionFactory, string parameterName = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName).CompareTo(other) < 0)
