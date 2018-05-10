@@ -112,6 +112,13 @@ namespace Light.GuardClauses.Exceptions
             throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be greater than {boundary}, but it actually is {parameter}.");
 
         /// <summary>
+        /// Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a comparable value must not be greater than the given boundary value, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void MustNotBeGreaterThan<T>(T parameter, T boundary, string parameterName = null, string message = null) where T : IComparable<T> =>
+            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be greater than {boundary}, but it actually is {parameter}.");
+
+        /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         [ContractAnnotation("=> halt")]
