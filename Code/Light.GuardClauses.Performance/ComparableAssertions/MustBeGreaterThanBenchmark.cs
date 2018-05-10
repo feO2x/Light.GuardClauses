@@ -9,14 +9,14 @@ namespace Light.GuardClauses.Performance.ComparableAssertions
         public int Second = -1939;
 
         [Benchmark(Baseline = true)]
-        public int BaseVersion()
+        public int ImperativeVersion()
         {
             if (First <= Second) throw new ArgumentOutOfRangeException(nameof(First));
             return First;
         }
 
         [Benchmark]
-        public int BaseVersionWithCompareTo()
+        public int ImperativeVersionWithCompareTo()
         {
             if (First.CompareTo(Second) <= 0) throw new ArgumentOutOfRangeException(nameof(First));
             return First;

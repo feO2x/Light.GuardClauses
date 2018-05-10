@@ -9,14 +9,14 @@ namespace Light.GuardClauses.Performance.ComparableAssertions
         public short Second = 12;
 
         [Benchmark(Baseline = true)]
-        public short BaseVersion()
+        public short ImperativeVersion()
         {
             if (First <= Second) throw new ArgumentOutOfRangeException(nameof(First));
             return First;
         }
 
         [Benchmark]
-        public double BaseVersionWithCompareTo()
+        public double ImperativeVersionWithCompareTo()
         {
             // ReSharper disable once ImpureMethodCallOnReadonlyValueField
             if (First.CompareTo(Second) <= 0) throw new ArgumentOutOfRangeException(nameof(First));
