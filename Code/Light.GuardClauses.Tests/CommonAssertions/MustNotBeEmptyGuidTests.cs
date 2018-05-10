@@ -30,11 +30,11 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomException() =>
-            CustomExceptions.TestCustomException(exceptionFactory => Guid.Empty.MustNotBeEmpty(exceptionFactory));
+            Test.CustomException(exceptionFactory => Guid.Empty.MustNotBeEmpty(exceptionFactory));
 
         [Fact]
         public static void CustomMessage() =>
-            CustomMessages.TestCustomMessage<EmptyGuidException>(message => Guid.Empty.MustNotBeEmpty(message: message));
+            Test.CustomMessage<EmptyGuidException>(message => Guid.Empty.MustNotBeEmpty(message: message));
 
     }
 }

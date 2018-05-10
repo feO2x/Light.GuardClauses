@@ -27,10 +27,10 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomException() =>
-            CustomExceptions.TestCustomException(exceptionFactory => new double?().MustHaveValue(exceptionFactory));
+            Test.CustomException(exceptionFactory => new double?().MustHaveValue(exceptionFactory));
 
         [Fact]
         public static void CustomMessage() =>
-            CustomMessages.TestCustomMessage<NullableHasNoValueException>(message => new short?().MustHaveValue(message: message));
+            Test.CustomMessage<NullableHasNoValueException>(message => new short?().MustHaveValue(message: message));
     }
 }

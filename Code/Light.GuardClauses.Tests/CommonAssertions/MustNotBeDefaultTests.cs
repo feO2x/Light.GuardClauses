@@ -64,19 +64,19 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomExceptionForReferenceType() =>
-            CustomExceptions.TestCustomException(exceptionFactory => ((object)null).MustNotBeDefault(exceptionFactory));
+            Test.CustomException(exceptionFactory => ((object)null).MustNotBeDefault(exceptionFactory));
 
         [Fact]
         public static void CustomExceptionForValueType() =>
-            CustomExceptions.TestCustomException(exceptionFactory => default(int).MustNotBeDefault(exceptionFactory));
+            Test.CustomException(exceptionFactory => default(int).MustNotBeDefault(exceptionFactory));
 
         [Fact]
         public static void CustomMessageForReferenceType() =>
-            CustomMessages.TestCustomMessage<ArgumentNullException>(message => ((string) null).MustNotBeDefault(message: message));
+            Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustNotBeDefault(message: message));
 
         [Fact]
         public static void CustomMessageForValueType() =>
-            CustomMessages.TestCustomMessage<ArgumentDefaultException>(message => default(TypeCode).MustNotBeDefault(message: message));
+            Test.CustomMessage<ArgumentDefaultException>(message => default(TypeCode).MustNotBeDefault(message: message));
 
     }
 }

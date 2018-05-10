@@ -27,7 +27,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void Cast() =>
             MetasyntacticVariables.Baz.MustBeOfType<IConvertible>().Should().BeSameAs(MetasyntacticVariables.Baz);
-        
+
 
         [Fact]
         public static void ReferenceIsNull()
@@ -40,17 +40,21 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomException() =>
-            CustomExceptions.TestCustomException<object>(MetasyntacticVariables.Foo,
-                                                         (value, exceptionFactory) => value.MustBeOfType<Encoding>(exceptionFactory));
+            Test.CustomException<object>(MetasyntacticVariables.Foo,
+                                         (value, exceptionFactory) => value.MustBeOfType<Encoding>(exceptionFactory));
 
 
         [Fact]
         public static void CustomExceptionReferenceIsNull()
         {
-            Action act = () => ((object)null).MustBeOfType<StreamReader>(_ => new Exception(), MetasyntacticVariables.Baz);
+            Action act = () => ((object) null).MustBeOfType<StreamReader>(_ => new Exception(), MetasyntacticVariables.Baz);
 
             act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be(MetasyntacticVariables.Baz);
         }
+
+        [Fact]
+        public static void CustomMessage() =>
+            Test.CustomMessage<TypeCastException>(message => "Foo".MustBeOfType<StreamReader>(message: message));
     }
 }

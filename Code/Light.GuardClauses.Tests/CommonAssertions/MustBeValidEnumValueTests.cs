@@ -1,10 +1,10 @@
 ﻿using System;
-#if NETCOREAPP1_1
-using System.Reflection;
-#endif
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Xunit;
+#if NETCOREAPP1_1
+using System.Reflection;
+#endif
 
 namespace Light.GuardClauses.Tests.CommonAssertions
 {
@@ -26,12 +26,12 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomException() =>
-            CustomExceptions.TestCustomException((ConsoleSpecialKey) 42,
-                                                 (invalidValue, exceptionFactory) => invalidValue.MustBeValidEnumValue(exceptionFactory));
+            Test.CustomException((ConsoleSpecialKey) 42,
+                                 (invalidValue, exceptionFactory) => invalidValue.MustBeValidEnumValue(exceptionFactory));
 
         [Fact]
         public static void CustomMessage() =>
-            CustomMessages.TestCustomMessage<EnumValueNotDefinedException>(
+            Test.CustomMessage<EnumValueNotDefinedException>(
                 message => ((DateTimeKind) 7).MustBeValidEnumValue(message: message));
 
         [Fact]

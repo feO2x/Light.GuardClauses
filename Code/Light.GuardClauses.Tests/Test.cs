@@ -4,12 +4,12 @@ using Xunit.Sdk;
 
 namespace Light.GuardClauses.Tests
 {
-    public static class CustomExceptions
+    public static class Test
     {
         private static readonly ExceptionDummy Exception = new ExceptionDummy();
         private static readonly Func<Exception> ExceptionFactory = () => Exception;
 
-        public static void TestCustomException(Action<Func<Exception>> executeAssertion)
+        public static void CustomException(Action<Func<Exception>> executeAssertion)
         {
             try
             {
@@ -22,7 +22,7 @@ namespace Light.GuardClauses.Tests
             }
         }
 
-        public static void TestCustomException<T>(T invalidValue, Action<T, Func<T, Exception>> executeAssertion)
+        public static void CustomException<T>(T invalidValue, Action<T, Func<T, Exception>> executeAssertion)
         {
             T capturedParameter = default;
 
@@ -44,7 +44,7 @@ namespace Light.GuardClauses.Tests
             }
         }
 
-        public static void TestCustomException<T1, T2>(T1 first, T2 second, Action<T1, T2, Func<T1, T2, Exception>> executeAssertion)
+        public static void CustomException<T1, T2>(T1 first, T2 second, Action<T1, T2, Func<T1, T2, Exception>> executeAssertion)
         {
             T1 capturedFirst = default;
             T2 capturedSecond = default;
@@ -66,6 +66,19 @@ namespace Light.GuardClauses.Tests
                 exception.Should().BeSameAs(Exception);
                 capturedFirst.Should().Be(first);
                 capturedSecond.Should().Be(second);
+            }
+        }
+
+        public static void CustomMessage<TException>(Action<string> executeAssertion) where TException : Exception
+        {
+            try
+            {
+                executeAssertion(MetasyntacticVariables.Foo);
+                throw new XunitException("The assertion should have thrown a custom exception at this point.");
+            }
+            catch (TException exception)
+            {
+                exception.Message.Should().BeSameAs(MetasyntacticVariables.Foo);
             }
         }
 

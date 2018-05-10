@@ -34,11 +34,11 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
 
         [Fact]
         public static void CustomException() =>
-            CustomExceptions.TestCustomException(99, 100, (x, y, exceptionFactory) => x.MustNotBeLessThan(y, exceptionFactory));
+            Test.CustomException(99, 100, (x, y, exceptionFactory) => x.MustNotBeLessThan(y, exceptionFactory));
 
         [Fact]
         public static void CustomMessage() =>
-            CustomMessages.TestCustomMessage<ArgumentOutOfRangeException>(message => 'a'.MustNotBeLessThan('b', message: message));
+            Test.CustomMessage<ArgumentOutOfRangeException>(message => 'a'.MustNotBeLessThan('b', message: message));
 
     }
 }
