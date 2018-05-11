@@ -167,7 +167,7 @@ namespace Light.GuardClauses
         }
 
         /// <inheritdoc />
-        public override int GetHashCode() => Equality.CreateHashCode(From, To, IsFromInclusive, IsToInclusive);
+        public override int GetHashCode() => MultiplyAddHash.CreateHashCode(From, To, IsFromInclusive, IsToInclusive);
 
         /// <summary>
         /// Checks if two ranges are equal.

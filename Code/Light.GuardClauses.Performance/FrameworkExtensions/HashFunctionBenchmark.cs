@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using BenchmarkDotNet.Attributes;
+using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses.Performance.FrameworkExtensions
 {
@@ -38,6 +39,15 @@ namespace Light.GuardClauses.Performance.FrameworkExtensions
 
         [Benchmark]
         public int XxHash4Parameters() => HashCode.Combine(Foo, Bar, Baz, Qux);
+
+        [Benchmark]
+        public int MultiplyAdd2Parameters() => MultiplyAddHash.CreateHashCode(Foo, Bar);
+
+        [Benchmark]
+        public int MultiplyAdd3Parameters() => MultiplyAddHash.CreateHashCode(Foo, Bar, Baz);
+
+        [Benchmark]
+        public int MultiplyAdd4Parameters() => MultiplyAddHash.CreateHashCode(Foo, Bar, Baz, Qux);
     }
 
     public class HashFunctionIntBenchmark : DefaultBenchmark
@@ -73,6 +83,15 @@ namespace Light.GuardClauses.Performance.FrameworkExtensions
 
         [Benchmark]
         public int XxHash4Parameters() => HashCode.Combine(First, Second, Third, Fourth);
+
+        [Benchmark]
+        public int MultiplyAdd2Parameters() => MultiplyAddHash.CreateHashCode(First, Second);
+
+        [Benchmark]
+        public int MultiplyAdd3Parameters() => MultiplyAddHash.CreateHashCode(First, Second, Third);
+
+        [Benchmark]
+        public int MultiplyAdd4Parameters() => MultiplyAddHash.CreateHashCode(First, Second, Third, Fourth);
     }
 
     public static class ReSharperHash
