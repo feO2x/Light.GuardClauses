@@ -394,12 +394,50 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Checks if <paramref name="parameter"/> and <paramref name="reference"/> point to the same object.
+        /// Checks if <paramref name="parameter"/> and <paramref name="other"/> point to the same object.
         /// </summary>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        public static bool IsSameAs<T>(this T parameter, T reference) where T : class =>
-            ReferenceEquals(parameter, reference);
+        public static bool IsSameAs<T>(this T parameter, T other) where T : class =>
+            ReferenceEquals(parameter, other);
+
+        /// <summary>
+        /// Ensures that <paramref name="parameter"/> and <paramref name="other"/> do not point to the same object instance, or otherwise
+        /// throws a <see cref="SameObjectReferenceException"/>. 
+        /// </summary>
+        /// <param name="parameter">The first reference to be checked.</param>
+        /// <param name="other">The second reference to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the <see cref="SameObjectReferenceException" /> (optional).</param>
+        /// <exception cref="SameObjectReferenceException">Thrown when both <paramref name="parameter"/> and <paramref name="other"/> point to the same object.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static T MustNotBeSameAs<T>(this T parameter, T other, string parameterName = null, string message = null) where T : class
+        {
+            if (ReferenceEquals(parameter, other))
+                Throw.SameObjectReference(parameter, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that <paramref name="parameter"/> and <paramref name="other"/> do not point to the same object instance, or otherwise
+        /// throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The first reference to be checked.</param>
+        /// <param name="other">The second reference to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> is passed to this delegate.</param>
+        /// <exception cref="SameObjectReferenceException">Thrown when both <paramref name="parameter"/> and <paramref name="other"/> point to the same object.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("exceptionFactory:null => halt")]
+        public static T MustNotBeSameAs<T>(this T parameter, T other, Func<T, Exception> exceptionFactory) where T : class
+        {
+            if (ReferenceEquals(parameter, other))
+                Throw.CustomException(exceptionFactory, parameter);
+            return parameter;
+        }
     }
 }
