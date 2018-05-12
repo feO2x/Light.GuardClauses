@@ -392,5 +392,14 @@ namespace Light.GuardClauses
 
             return parameter.Value;
         }
+
+        /// <summary>
+        /// Checks if <paramref name="parameter"/> and <paramref name="reference"/> point to the same object.
+        /// </summary>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static bool IsSameAs<T>(this T parameter, T reference) where T : class =>
+            ReferenceEquals(parameter, reference);
     }
 }
