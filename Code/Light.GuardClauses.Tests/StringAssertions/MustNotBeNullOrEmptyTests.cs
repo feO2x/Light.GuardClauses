@@ -24,7 +24,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
             Action act = () => @string.MustNotBeNullOrEmpty(nameof(@string));
 
             act.Should().Throw<EmptyStringException>()
-               .And.Message.Should().Contain($"{nameof(@string)} must not be empty, but it actually is.");
+               .And.Message.Should().Contain($"{nameof(@string)} must not be an empty string, but it actually is.");
         }
 
         [Theory]

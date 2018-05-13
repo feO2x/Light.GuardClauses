@@ -151,7 +151,14 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         public static void EmptyString(string parameterName = null, string message = null) =>
-            throw new EmptyStringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be empty, but it actually is.");
+            throw new EmptyStringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be an empty string, but it actually is.");
+
+        /// <summary>
+        /// Throws the default <see cref="WhiteSpaceStringException"/> indicating that a string contains only white space, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void WhiteSpaceString(string parameter, string parameterName, string message) =>
+            throw new WhiteSpaceStringException(parameterName, message ?? $"{parameterName ?? "The string"} must not contain only white space, but it actually is \"{parameter}\".");
 
         /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
