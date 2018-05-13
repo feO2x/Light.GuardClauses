@@ -7,7 +7,7 @@ namespace Light.GuardClauses.Performance.StringAssertions
     public class MustBeEquivalentToBenchmark : DefaultBenchmark
     {
         public string First = "Foo";
-        public string Second = "Bar";
+        public string Second = "foo";
 
         [Benchmark(Baseline = true)]
         public string ImperativeVersion()
