@@ -153,8 +153,8 @@ namespace Light.GuardClauses
             string.Equals(@string, other, comparisonType);
 
         /// <summary>
-        /// Ensures that the two specified strings are equivalent, or otherwise throws a <see cref="StringException"/>. This is done by calling <see cref="string.Equals(string, string, StringComparison)"/>
-        /// with comparison type <see cref="StringComparison.OrdinalIgnoreCase"/>. You can customize this behavior by passing in your own <paramref name="comparisonType"/>.
+        /// Ensures that the two specified strings are equivalent, or otherwise throws a <see cref="StringException"/>. By default, this equality check is
+        /// case-insensitive (using <see cref="StringComparison.OrdinalIgnoreCase"/>). You can customize this behavior by passing in your own <paramref name="comparisonType"/>.
         /// </summary>
         /// <param name="parameter">The first string to be compared.</param>
         /// <param name="other">The second string to be compared.</param>
@@ -165,6 +165,7 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the <see cref="StringException" /> (optional).</param>
         /// <exception cref="StringException">Thrown when <paramref name="parameter"/> and <paramref name="other"/> are not equivalent.</exception>
+        /// <exception cref="ArgumentException">Thrown when the value of <paramref name="comparisonType"/> is not defined in <see cref="StringComparison"/>.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -176,8 +177,8 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that the two specified strings are equivalent, or otherwise throws your custom exception. This is done by calling <see cref="string.Equals(string, string, StringComparison)"/>
-        /// with comparison type <see cref="StringComparison.OrdinalIgnoreCase"/>. You can customize this behavior by passing in your own <paramref name="comparisonType"/>.
+        /// Ensures that the two specified strings are equivalent, or otherwise throws your custom exception. By default, this equality check is
+        /// case-insensitive (using <see cref="StringComparison.OrdinalIgnoreCase"/>). You can customize this behavior by passing in your own <paramref name="comparisonType"/>.
         /// </summary>
         /// <param name="parameter">The first string to be compared.</param>
         /// <param name="other">The second string to be compared.</param>
@@ -186,13 +187,61 @@ namespace Light.GuardClauses
         /// The value indicating how strings are compared (optional). The default value is <see cref="StringComparison.OrdinalIgnoreCase" /> using the
         /// culture independent character sorting rules and ignoring case.
         /// </param>
-        /// <exception cref="StringException">Thrown when <paramref name="parameter"/> and <paramref name="other"/> are not equivalent.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> and <paramref name="other"/> are not equivalent.</exception>
+        /// <exception cref="ArgumentException">Thrown when the value of <paramref name="comparisonType"/> is not defined in <see cref="StringComparison"/>.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public static string MustBeEquivalentTo(this string parameter, string other, Func<string, string, Exception> exceptionFactory, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
         {
             if (!parameter.IsEquivalentTo(other, comparisonType))
+                Throw.CustomException(exceptionFactory, parameter, other);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the two specified strings are not equivalent, or otherwise throws a <see cref="StringException"/>. By default, this equality check is
+        /// case-insensitive (using <see cref="StringComparison.OrdinalIgnoreCase"/>). You can customize this behavior by passing in your own <paramref name="comparisonType"/>.
+        /// </summary>
+        /// <param name="parameter">The first string to be compared.</param>
+        /// <param name="other">The second string to be compared.</param>
+        /// <param name="comparisonType">
+        /// The value indicating how strings are compared (optional). The default value is <see cref="StringComparison.OrdinalIgnoreCase" /> using the
+        /// culture independent character sorting rules and ignoring case.
+        /// </param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the <see cref="StringException" /> (optional).</param>
+        /// <exception cref="StringException">Thrown when <paramref name="parameter"/> and <paramref name="other"/> are equivalent.</exception>
+        /// <exception cref="ArgumentException">Thrown when the value of <paramref name="comparisonType"/> is not defined in <see cref="StringComparison"/>.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static string MustNotBeEquivalentTo(this string parameter, string other, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase, string parameterName = null, string message = null)
+        {
+            if (parameter.IsEquivalentTo(other, comparisonType))
+                Throw.StringsEquivalent(parameter, other, comparisonType, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the two specified strings are not equivalent, or otherwise throws your custom exception. By default, this equality check is
+        /// case-insensitive (using <see cref="StringComparison.OrdinalIgnoreCase"/>). You can customize this behavior by passing in your own <paramref name="comparisonType"/>.
+        /// </summary>
+        /// <param name="parameter">The first string to be compared.</param>
+        /// <param name="other">The second string to be compared.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception.</param>
+        /// <param name="comparisonType">
+        /// The value indicating how strings are compared (optional). The default value is <see cref="StringComparison.OrdinalIgnoreCase" /> using the
+        /// culture independent character sorting rules and ignoring case.
+        /// </param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> and <paramref name="other"/> are equivalent.</exception>
+        /// <exception cref="ArgumentException">Thrown when the value of <paramref name="comparisonType"/> is not defined in <see cref="StringComparison"/>.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static string MustNotBeEquivalentTo(this string parameter, string other, Func<string, string, Exception> exceptionFactory, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
+        {
+            if (parameter.IsEquivalentTo(other, comparisonType))
                 Throw.CustomException(exceptionFactory, parameter, other);
             return parameter;
         }

@@ -167,7 +167,14 @@ namespace Light.GuardClauses.Exceptions
         [ContractAnnotation("=> halt")]
         public static void StringsNotEquivalent(string parameter, string other, StringComparison comparisonType, string parameterName, string message) =>
             throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must be equivalent to {other.ToStringOrNull()} (using {comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
-        
+
+        /// <summary>
+        /// Throws the default <see cref="StringException"/> indicating that two strings are equivalent, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void StringsEquivalent(string parameter, string other, StringComparison comparisonType, string parameterName = null, string message = null) => 
+            throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be equivalent to {other.ToStringOrNull()} (using {comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+
         /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
