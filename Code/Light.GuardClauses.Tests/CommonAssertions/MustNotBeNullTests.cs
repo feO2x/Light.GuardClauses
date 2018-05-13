@@ -9,10 +9,10 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void ReferenceIsNull()
         {
-            Action act = () => ((object) null).MustNotBeNull(MetasyntacticVariables.Foo);
+            Action act = () => ((object) null).MustNotBeNull(Metasyntactic.Foo);
 
             act.Should().Throw<ArgumentNullException>()
-               .And.Message.Should().Contain($"{MetasyntacticVariables.Foo} must not be null.");
+               .And.Message.Should().Contain($"{Metasyntactic.Foo} must not be null.");
         }
 
         [Fact]

@@ -8,8 +8,8 @@ namespace Light.GuardClauses.Tests.CommonAssertions
     public static class MustNotBeSameAsTests
     {
         [Theory]
-        [InlineData(MetasyntacticVariables.Foo)]
-        [InlineData(MetasyntacticVariables.Bar)]
+        [InlineData(Metasyntactic.Foo)]
+        [InlineData(Metasyntactic.Bar)]
         public static void ReferencesEqual(string reference)
         {
             Action act = () => reference.MustNotBeSameAs(reference, nameof(reference));
@@ -31,11 +31,11 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomException() => 
-            Test.CustomException(MetasyntacticVariables.Baz,
+            Test.CustomException(Metasyntactic.Baz,
                                  (reference, exceptionFactory) => reference.MustNotBeSameAs(reference, exceptionFactory));
 
         [Fact]
         public static void CustomMessage() =>
-            Test.CustomMessage<SameObjectReferenceException>(message => MetasyntacticVariables.Qux.MustNotBeSameAs(MetasyntacticVariables.Qux, message: message));
+            Test.CustomMessage<SameObjectReferenceException>(message => Metasyntactic.Qux.MustNotBeSameAs(Metasyntactic.Qux, message: message));
     }
 }

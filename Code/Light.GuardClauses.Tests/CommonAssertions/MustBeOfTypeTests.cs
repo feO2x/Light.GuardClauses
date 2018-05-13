@@ -12,7 +12,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void CastNotPossible()
         {
-            object reference = MetasyntacticVariables.Foo;
+            object reference = Metasyntactic.Foo;
 
             Action act = () => reference.MustBeOfType<Array>(nameof(reference));
 
@@ -22,35 +22,35 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void Downcast() =>
-            MetasyntacticVariables.Bar.MustBeOfType<string>().Should().BeSameAs(MetasyntacticVariables.Bar);
+            Metasyntactic.Bar.MustBeOfType<string>().Should().BeSameAs(Metasyntactic.Bar);
 
         [Fact]
         public static void Cast() =>
-            MetasyntacticVariables.Baz.MustBeOfType<IConvertible>().Should().BeSameAs(MetasyntacticVariables.Baz);
+            Metasyntactic.Baz.MustBeOfType<IConvertible>().Should().BeSameAs(Metasyntactic.Baz);
 
 
         [Fact]
         public static void ReferenceIsNull()
         {
-            Action act = () => ((object) null).MustBeOfType<string>(MetasyntacticVariables.Foo);
+            Action act = () => ((object) null).MustBeOfType<string>(Metasyntactic.Foo);
 
             act.Should().Throw<ArgumentNullException>()
-               .And.ParamName.Should().Be(MetasyntacticVariables.Foo);
+               .And.ParamName.Should().Be(Metasyntactic.Foo);
         }
 
         [Fact]
         public static void CustomException() =>
-            Test.CustomException<object>(MetasyntacticVariables.Foo,
+            Test.CustomException<object>(Metasyntactic.Foo,
                                          (value, exceptionFactory) => value.MustBeOfType<Encoding>(exceptionFactory));
 
 
         [Fact]
         public static void CustomExceptionReferenceIsNull()
         {
-            Action act = () => ((object) null).MustBeOfType<StreamReader>(_ => new Exception(), MetasyntacticVariables.Baz);
+            Action act = () => ((object) null).MustBeOfType<StreamReader>(_ => new Exception(), Metasyntactic.Baz);
 
             act.Should().Throw<ArgumentNullException>()
-               .And.ParamName.Should().Be(MetasyntacticVariables.Baz);
+               .And.ParamName.Should().Be(Metasyntactic.Baz);
         }
 
         [Fact]

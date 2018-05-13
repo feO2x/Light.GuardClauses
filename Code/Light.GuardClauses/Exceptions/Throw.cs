@@ -1,5 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
+using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses.Exceptions
 {
@@ -160,6 +161,13 @@ namespace Light.GuardClauses.Exceptions
         public static void WhiteSpaceString(string parameter, string parameterName, string message) =>
             throw new WhiteSpaceStringException(parameterName, message ?? $"{parameterName ?? "The string"} must not contain only white space, but it actually is \"{parameter}\".");
 
+        /// <summary>
+        /// Throws the default <see cref="StringException"/> indicating that two strings are not equivalent, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void StringsNotEquivalent(string parameter, string other, StringComparison comparisonType, string parameterName, string message) =>
+            throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must be equivalent to {other.ToStringOrNull()} (using {comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+        
         /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>

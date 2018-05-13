@@ -26,10 +26,10 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
         [Fact]
         public static void ParameterNull()
         {
-            Action act = () => ((string) null).MustNotBeLessThan(MetasyntacticVariables.Foo, MetasyntacticVariables.Bar);
+            Action act = () => ((string) null).MustNotBeLessThan(Metasyntactic.Foo, Metasyntactic.Bar);
 
             act.Should().Throw<ArgumentNullException>()
-               .And.ParamName.Should().BeSameAs(MetasyntacticVariables.Bar);
+               .And.ParamName.Should().BeSameAs(Metasyntactic.Bar);
         }
 
         [Fact]

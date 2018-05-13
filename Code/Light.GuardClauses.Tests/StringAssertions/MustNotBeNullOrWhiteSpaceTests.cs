@@ -10,10 +10,10 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void StringIsNull()
         {
-            Action act = () => ((string) null).MustNotBeNullOrWhiteSpace(MetasyntacticVariables.Foo);
+            Action act = () => ((string) null).MustNotBeNullOrWhiteSpace(Metasyntactic.Foo);
 
             act.Should().Throw<ArgumentNullException>()
-               .And.ParamName.Should().Be(MetasyntacticVariables.Foo);
+               .And.ParamName.Should().Be(Metasyntactic.Foo);
         }
 
         [Fact]

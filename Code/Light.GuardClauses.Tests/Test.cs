@@ -73,12 +73,12 @@ namespace Light.GuardClauses.Tests
         {
             try
             {
-                executeAssertion(MetasyntacticVariables.Foo);
+                executeAssertion(Metasyntactic.Foo);
                 throw new XunitException("The assertion should have thrown a custom exception at this point.");
             }
             catch (TException exception)
             {
-                exception.Message.Should().BeSameAs(MetasyntacticVariables.Foo);
+                exception.Message.Should().BeSameAs(Metasyntactic.Foo);
             }
         }
 

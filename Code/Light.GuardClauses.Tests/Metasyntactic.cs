@@ -5,7 +5,7 @@ using Xunit.Sdk;
 
 namespace Light.GuardClauses.Tests
 {
-    public static class MetasyntacticVariables
+    public static class Metasyntactic
     {
         public const string Foo = "Foo";
         public const string Bar = "Bar";
@@ -43,7 +43,7 @@ namespace Light.GuardClauses.Tests
     public sealed class MetasyntacticVariablesData : DataAttribute
     {
         private static readonly List<object[]> TransformedVariables =
-            MetasyntacticVariables.All.Select(variable => new object[] { variable }).ToList();
+            Metasyntactic.All.Select(variable => new object[] { variable }).ToList();
 
         private readonly int _numberOfConstants;
 
