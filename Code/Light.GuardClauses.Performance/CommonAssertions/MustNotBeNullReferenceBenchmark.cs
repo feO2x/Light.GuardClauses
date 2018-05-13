@@ -49,7 +49,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
                 if (parameter != null)
                     return parameter;
 
-                Throw.MustNotBeNull(parameterName, message);
+                Throw.ArgumentNull(parameterName, message);
                 return default(T);
             }
 
@@ -64,7 +64,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
             if (parameter != null)
                 return parameter;
 
-            Throw.MustNotBeNull(parameterName, message);
+            Throw.ArgumentNull(parameterName, message);
             return default(T);
         }
     }

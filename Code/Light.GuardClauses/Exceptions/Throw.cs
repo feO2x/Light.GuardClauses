@@ -12,14 +12,14 @@ namespace Light.GuardClauses.Exceptions
         /// Throws the default <see cref="ArgumentNullException" />, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void MustNotBeNull(string parameterName = null, string message = null) =>
+        public static void ArgumentNull(string parameterName = null, string message = null) =>
             throw new ArgumentNullException(parameterName, message ?? $"{parameterName ?? "The value"} must not be null.");
 
         /// <summary>
         /// Throws the default <see cref="ArgumentDefaultException" /> indicating that a value is the default value of its type, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void MustNotBeDefault(string parameterName = null, string message = null) =>
+        public static void ArgumentDefault(string parameterName = null, string message = null) =>
             throw new ArgumentDefaultException(parameterName, message ?? $"{parameterName ?? "The value"} must not be the default value.");
 
         /// <summary>
@@ -145,6 +145,13 @@ namespace Light.GuardClauses.Exceptions
         [ContractAnnotation("=> halt")]
         public static void SameObjectReference<T>(T parameter, string parameterName = null, string message = null) where T : class =>
             throw new SameObjectReferenceException(parameterName, message ?? $"{parameterName ?? "The reference"} must not point to object \"{parameter}\", but it actually does.");
+
+        /// <summary>
+        /// Throws the default <see cref="EmptyStringException"/> indicating that a string is empty, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void EmptyString(string parameterName = null, string message = null) =>
+            throw new EmptyStringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be empty, but it actually is.");
 
         /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.

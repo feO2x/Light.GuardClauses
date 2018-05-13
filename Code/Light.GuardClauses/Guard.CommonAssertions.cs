@@ -29,7 +29,7 @@ namespace Light.GuardClauses
         public static T MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null) where T : class
         {
             if (parameter == null)
-                Throw.MustNotBeNull(parameterName, message);
+                Throw.ArgumentNull(parameterName, message);
             return parameter;
         }
 
@@ -68,12 +68,12 @@ namespace Light.GuardClauses
             if (default(T) == null)
             {
                 if (parameter == null)
-                    Throw.MustNotBeNull(parameterName, message);
+                    Throw.ArgumentNull(parameterName, message);
                 return parameter;
             }
 
             if (parameter.Equals(default(T)))
-                Throw.MustNotBeDefault(parameterName, message);
+                Throw.ArgumentDefault(parameterName, message);
             return parameter;
         }
 
@@ -120,7 +120,7 @@ namespace Light.GuardClauses
                 return parameter;
 
             if (parameter == null)
-                Throw.MustNotBeNull(parameterName, message);
+                Throw.ArgumentNull(parameterName, message);
             return parameter;
         }
 
