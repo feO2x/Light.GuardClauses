@@ -176,6 +176,13 @@ namespace Light.GuardClauses.Exceptions
             throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be equivalent to {other.ToStringOrNull()} (using {comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
 
         /// <summary>
+        /// Throws the default <see cref="ValuesNotEqualException"/> indicating that two values are not equal, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void NotEqual<T>(T parameter, T other, string parameterName = null, string message = null) =>
+            throw new ValuesNotEqualException(parameterName, message ?? $"{parameterName ?? "The value"} must be equal to {other.ToStringOrNull()}, but it actually is {parameter.ToStringOrNull()}.");
+
+        /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         [ContractAnnotation("=> halt")]
