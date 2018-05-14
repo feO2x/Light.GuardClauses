@@ -45,7 +45,7 @@ namespace Light.GuardClauses
         /// Ensures that the specified string is not null or empty, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="exceptionFactory">The delegate that creates your custom exception.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> is passed to this delegate.</param>
         /// <exception cref="Exception">Thrown when <paramref name="parameter"/> is an empty string or null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -115,7 +115,7 @@ namespace Light.GuardClauses
         /// Ensures that the specified string is not null, empty, or contains only white space, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="exceptionFactory">The delegate that creates your custom exception.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> is passed to this delegate.</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null, empty, or contains only white space.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -134,5 +134,6 @@ namespace Light.GuardClauses
             Throw.CustomException(exceptionFactory, parameter);
             return null;
         }
+
     }
 }

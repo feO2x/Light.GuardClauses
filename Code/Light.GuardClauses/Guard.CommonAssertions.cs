@@ -454,7 +454,7 @@ namespace Light.GuardClauses
         public static T MustBe<T>(this T parameter, T other, string parameterName = null, string message = null)
         {
             if (!EqualityComparer<T>.Default.Equals(parameter, other))
-                Throw.NotEqual(parameter, other, parameterName, message);
+                Throw.ValuesNotEqual(parameter, other, parameterName, message);
             return parameter;
         }
 
@@ -491,7 +491,7 @@ namespace Light.GuardClauses
         public static T MustBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, string parameterName = null, string message = null)
         {
             if (!equalityComparer.MustNotBeNull(nameof(equalityComparer)).Equals(parameter, other))
-                Throw.NotEqual(parameter, other, parameterName, message);
+                Throw.ValuesNotEqual(parameter, other, parameterName, message);
             return parameter;
         }
 
