@@ -513,5 +513,79 @@ namespace Light.GuardClauses
                 Throw.CustomException(exceptionFactory, parameter, other);
             return parameter;
         }
+
+        /// <summary>
+        /// Ensures that <paramref name="parameter"/> is not equal to <paramref name="other"/> using the default equality comparer, or otherwise throws a <see cref="ValuesEqualException"/>.
+        /// </summary>
+        /// <param name="parameter">The first value to be compared.</param>
+        /// <param name="other">The other value to be compared.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the <see cref="ValuesEqualException" /> (optional).</param>
+        /// <exception cref="ValuesEqualException">Thrown when <paramref name="parameter"/> and <paramref name="other"/> are equal.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static T MustNotBe<T>(this T parameter, T other, string parameterName = null, string message = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(parameter, other))
+                Throw.ValuesEqual(parameter, other, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that <paramref name="parameter"/> is not equal to <paramref name="other"/> using the default equality comparer, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The first value to be compared.</param>
+        /// <param name="other">The other value to be compared.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="other"/> are passed to this delegate.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> and <paramref name="other"/> are equal.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static T MustNotBe<T>(this T parameter, T other, Func<T, T, Exception> exceptionFactory)
+        {
+            if (EqualityComparer<T>.Default.Equals(parameter, other))
+                Throw.CustomException(exceptionFactory, parameter, other);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that <paramref name="parameter"/> is not equal to <paramref name="other"/> using the specified equality comparer, or otherwise throws a <see cref="ValuesEqualException"/>.
+        /// </summary>
+        /// <param name="parameter">The first value to be compared.</param>
+        /// <param name="other">The other value to be compared.</param>
+        /// <param name="equalityComparer">The equality comparer used for comparing the two values.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the <see cref="ValuesEqualException" /> (optional).</param>
+        /// <exception cref="ValuesEqualException">Thrown when <paramref name="parameter"/> and <paramref name="other"/> are equal.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("equalityComparer:null => halt")]
+        public static T MustNotBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, string parameterName = null, string message = null)
+        {
+            if (equalityComparer.MustNotBeNull(nameof(equalityComparer)).Equals(parameter, other))
+                Throw.ValuesEqual(parameter, other, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that <paramref name="parameter"/> is not equal to <paramref name="other"/> using the specified equality comparer, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The first value to be compared.</param>
+        /// <param name="other">The other value to be compared.</param>
+        /// <param name="equalityComparer">The equality comparer used for comparing the two values.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="other"/> are passed to this delegate.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> and <paramref name="other"/> are equal.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("equalityComparer:null => halt")]
+        public static T MustNotBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, Func<T, T, Exception> exceptionFactory)
+        {
+            if (equalityComparer.MustNotBeNull(nameof(equalityComparer)).Equals(parameter, other))
+                Throw.CustomException(exceptionFactory, parameter, other);
+            return parameter;
+        }
     }
 }
