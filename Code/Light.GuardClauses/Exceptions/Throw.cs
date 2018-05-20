@@ -186,6 +186,13 @@ namespace Light.GuardClauses.Exceptions
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have count {count}, but it actually has count {parameter.Count()}.");
 
         /// <summary>
+        /// Throws the default <see cref="EmptyCollectionException"/> indicating that a collection has no items, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void EmptyCollection(IEnumerable parameter, string parameterName = null, string message = null) => 
+            throw new EmptyCollectionException(parameterName, message ?? $"{parameterName ?? "The collection"} must not be empty, but it actually is.");
+
+        /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         [ContractAnnotation("=> halt")]
