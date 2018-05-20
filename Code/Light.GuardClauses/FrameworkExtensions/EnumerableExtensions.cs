@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Light.GuardClauses.Exceptions;
@@ -42,22 +43,20 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> is null.</exception>
         public static T[] AsArray<T>(this IEnumerable<T> enumerable)
         {
-            // ReSharper disable PossibleMultipleEnumeration
-            enumerable.MustNotBeNull(nameof(enumerable));
-
             if (enumerable is T[] array)
                 return array;
 
             var i = 0;
-            if (enumerable is IList<T> list)
+            if (enumerable is ICollection<T> list)
             {
                 array = new T[list.Count];
-                for (; i < list.Count; i++) array[i] = list[i];
+                list.CopyTo(array, 0);
                 return array;
             }
 
-            array = new T[enumerable.Count()];
-            foreach (var item in enumerable) array[i++] = item;
+            // ReSharper disable PossibleMultipleEnumeration
+            array = new T[enumerable.MustNotBeNull(nameof(enumerable)).Count()];
+            foreach (var item in enumerable) array[++i] = item;
             return array;
             // ReSharper restore PossibleMultipleEnumeration
         }
@@ -74,7 +73,6 @@ namespace Light.GuardClauses.FrameworkExtensions
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> enumerable, Action<T> action, bool throwWhenItemIsNull = true)
         {
             // ReSharper disable PossibleMultipleEnumeration
-            enumerable.MustNotBeNull(nameof(enumerable));
             action.MustNotBeNull(nameof(action));
 
             var i = 0;
@@ -91,7 +89,7 @@ namespace Light.GuardClauses.FrameworkExtensions
                     action(item);
                 }
             else
-                foreach (var item in enumerable)
+                foreach (var item in enumerable.MustNotBeNull(nameof(enumerable)))
                 {
                     if (item == null)
                     {
@@ -132,5 +130,14 @@ namespace Light.GuardClauses.FrameworkExtensions
         public static IReadOnlyList<T> AsReadOnlyList<T>(this IEnumerable<T> enumerable, Func<IEnumerable<T>, IReadOnlyList<T>> createCollection) =>
             enumerable as IReadOnlyList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(enumerable.MustNotBeNull(nameof(enumerable)));
 #endif
+
+        internal static int Count(this IEnumerable enumerable)
+        {
+            var count = 0;
+            var enumerator = enumerable.GetEnumerator();
+            while (enumerator.MoveNext())
+                ++count;
+            return count;
+        }
     }
 }

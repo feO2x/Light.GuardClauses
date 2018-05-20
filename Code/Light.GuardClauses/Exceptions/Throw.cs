@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using Light.GuardClauses.FrameworkExtensions;
 
@@ -174,6 +177,13 @@ namespace Light.GuardClauses.Exceptions
         [ContractAnnotation("=> halt")]
         public static void ValuesEqual<T>(T parameter, T other, string parameterName = null, string message = null) =>
             throw new ValuesEqualException(parameterName, message ?? $"{parameterName ?? "The value"} must not be equal to {other.ToStringOrNull()}, but it actually is {parameter.ToStringOrNull()}.");
+
+        /// <summary>
+        /// Throws the default <see cref="InvalidCollectionCountException"/> indicating that a collection has an invalid number of items, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void InvalidCollectionCount(IEnumerable parameter, int count, string parameterName = null, string message = null) => 
+            throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have count {count}, but it actually has count {parameter.Count()}.");
 
         /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
