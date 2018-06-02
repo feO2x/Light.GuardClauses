@@ -200,7 +200,7 @@ namespace Light.GuardClauses.Exceptions
         public static void MissingItem<TItem>(IEnumerable<TItem> parameter, TItem item, string parameterName = null, string message = null) => 
             throw new MissingItemException(parameterName, 
                                            message ?? 
-                                           new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain item {item.ToStringOrNull()}, but it is actually missing.")
+                                           new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain {item.ToStringOrNull()}, but it actually does not.")
                                                               .AppendCollectionContent(parameter)
                                                               .ToString());
 
