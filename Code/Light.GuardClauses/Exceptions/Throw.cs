@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using JetBrains.Annotations;
 using Light.GuardClauses.FrameworkExtensions;
 
@@ -190,7 +191,18 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         public static void EmptyCollection(IEnumerable parameter, string parameterName = null, string message = null) => 
-            throw new EmptyCollectionException(parameterName, message ?? $"{parameterName ?? "The collection"} must not be empty, but it actually is.");
+            throw new EmptyCollectionException(parameterName, message ?? $"{parameterName ?? "The collection"} must not be an empty collection, but it actually is.");
+
+        /// <summary>
+        /// Throws the default <see cref="MissingItemException"/> indicating that a collection is not containing the specified item, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void MissingItem<TItem>(IEnumerable<TItem> parameter, TItem item, string parameterName = null, string message = null) => 
+            throw new MissingItemException(parameterName, 
+                                           message ?? 
+                                           new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain item {item.ToStringOrNull()}, but it is actually missing.")
+                                                              .AppendCollectionContent(parameter)
+                                                              .ToString());
 
         /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
