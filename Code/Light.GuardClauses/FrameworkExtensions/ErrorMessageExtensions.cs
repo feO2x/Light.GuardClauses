@@ -12,7 +12,7 @@ namespace Light.GuardClauses.FrameworkExtensions
     public static class ErrorMessageExtensions
     {
         /// <summary>
-        /// Gets the default NewLineSeparator. This value is ",{Environment.NewLine}".
+        /// Gets the default NewLineSeparator. This value is $",{Environment.NewLine}".
         /// </summary>
         public static readonly string DefaultNewLineSeparator = ',' + Environment.NewLine;
 

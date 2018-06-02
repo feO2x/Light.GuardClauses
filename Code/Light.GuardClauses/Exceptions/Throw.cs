@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
 using Light.GuardClauses.FrameworkExtensions;
@@ -35,10 +34,10 @@ namespace Light.GuardClauses.Exceptions
             throw new TypeCastException(parameterName, message ?? $"{parameterName ?? "The value"} \"{parameter}\" cannot be casted to \"{targetType}\".");
 
         /// <summary>
-        /// Throws the default <see cref="TypeIsNoEnumException"/> indicating that a type is no enum type, using the optional parameter name and message.
+        /// Throws the default <see cref="TypeIsNoEnumException" /> indicating that a type is no enum type, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void TypeIsNoEnum(Type type, string parameterName = null, string message = null) => 
+        public static void TypeIsNoEnum(Type type, string parameterName = null, string message = null) =>
             throw new TypeIsNoEnumException(parameterName, message ?? $"{parameterName ?? "The type"} \"{type}\" must be an enum type, but it actually is not.");
 
         /// <summary>
@@ -145,64 +144,75 @@ namespace Light.GuardClauses.Exceptions
             throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be between {range.From} ({(range.IsFromInclusive ? "inclusive" : "exclusive")}) and {range.To} ({(range.IsToInclusive ? "inclusive" : "exclusive")}), but it actually is {parameter}.");
 
         /// <summary>
-        /// Throws the default <see cref="SameObjectReferenceException"/> indicating that two references point to the same object, using the optional parameter name and message.
+        /// Throws the default <see cref="SameObjectReferenceException" /> indicating that two references point to the same object, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         public static void SameObjectReference<T>(T parameter, string parameterName = null, string message = null) where T : class =>
             throw new SameObjectReferenceException(parameterName, message ?? $"{parameterName ?? "The reference"} must not point to object \"{parameter}\", but it actually does.");
 
         /// <summary>
-        /// Throws the default <see cref="EmptyStringException"/> indicating that a string is empty, using the optional parameter name and message.
+        /// Throws the default <see cref="EmptyStringException" /> indicating that a string is empty, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         public static void EmptyString(string parameterName = null, string message = null) =>
             throw new EmptyStringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be an empty string, but it actually is.");
 
         /// <summary>
-        /// Throws the default <see cref="WhiteSpaceStringException"/> indicating that a string contains only white space, using the optional parameter name and message.
+        /// Throws the default <see cref="WhiteSpaceStringException" /> indicating that a string contains only white space, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         public static void WhiteSpaceString(string parameter, string parameterName, string message) =>
             throw new WhiteSpaceStringException(parameterName, message ?? $"{parameterName ?? "The string"} must not contain only white space, but it actually is \"{parameter}\".");
 
         /// <summary>
-        /// Throws the default <see cref="ValuesNotEqualException"/> indicating that two values are not equal, using the optional parameter name and message.
+        /// Throws the default <see cref="ValuesNotEqualException" /> indicating that two values are not equal, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         public static void ValuesNotEqual<T>(T parameter, T other, string parameterName = null, string message = null) =>
             throw new ValuesNotEqualException(parameterName, message ?? $"{parameterName ?? "The value"} must be equal to {other.ToStringOrNull()}, but it actually is {parameter.ToStringOrNull()}.");
 
         /// <summary>
-        /// Throws the default <see cref="ValuesEqualException"/> indicating that two values are equal, using the optional parameter name and message.
+        /// Throws the default <see cref="ValuesEqualException" /> indicating that two values are equal, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         public static void ValuesEqual<T>(T parameter, T other, string parameterName = null, string message = null) =>
             throw new ValuesEqualException(parameterName, message ?? $"{parameterName ?? "The value"} must not be equal to {other.ToStringOrNull()}, but it actually is {parameter.ToStringOrNull()}.");
 
         /// <summary>
-        /// Throws the default <see cref="InvalidCollectionCountException"/> indicating that a collection has an invalid number of items, using the optional parameter name and message.
+        /// Throws the default <see cref="InvalidCollectionCountException" /> indicating that a collection has an invalid number of items, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void InvalidCollectionCount(IEnumerable parameter, int count, string parameterName = null, string message = null) => 
+        public static void InvalidCollectionCount(IEnumerable parameter, int count, string parameterName = null, string message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have count {count}, but it actually has count {parameter.Count()}.");
 
         /// <summary>
-        /// Throws the default <see cref="EmptyCollectionException"/> indicating that a collection has no items, using the optional parameter name and message.
+        /// Throws the default <see cref="EmptyCollectionException" /> indicating that a collection has no items, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void EmptyCollection(IEnumerable parameter, string parameterName = null, string message = null) => 
+        public static void EmptyCollection(IEnumerable parameter, string parameterName = null, string message = null) =>
             throw new EmptyCollectionException(parameterName, message ?? $"{parameterName ?? "The collection"} must not be an empty collection, but it actually is.");
 
         /// <summary>
-        /// Throws the default <see cref="MissingItemException"/> indicating that a collection is not containing the specified item, using the optional parameter name and message.
+        /// Throws the default <see cref="MissingItemException" /> indicating that a collection is not containing the specified item, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void MissingItem<TItem>(IEnumerable<TItem> parameter, TItem item, string parameterName = null, string message = null) => 
-            throw new MissingItemException(parameterName, 
-                                           message ?? 
+        public static void MissingItem<TItem>(IEnumerable<TItem> parameter, TItem item, string parameterName = null, string message = null) =>
+            throw new MissingItemException(parameterName,
+                                           message ??
                                            new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain {item.ToStringOrNull()}, but it actually does not.")
                                                               .AppendCollectionContent(parameter)
                                                               .ToString());
+
+        /// <summary>
+        /// Throws the default <see cref="ValueNotOneOfException" /> indicating that a value is not one of a specified collection of items, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void ValueNotOneOf<TItem>(TItem parameter, IEnumerable<TItem> collection, string parameterName, string message) =>
+            throw new ValueNotOneOfException(parameterName,
+                                             message ??
+                                             new StringBuilder().AppendLine($"{parameterName ?? "The value"} {parameter.ToStringOrNull()} must be one of the following items, but it actually is not.")
+                                                                .AppendItems(collection, ErrorMessageExtensions.DefaultNewLineSeparator)
+                                                                .ToString());
 
         /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
@@ -217,7 +227,7 @@ namespace Light.GuardClauses.Exceptions
         public static void CustomException<T>(Func<T, Exception> exceptionFactory, T parameter) => throw exceptionFactory.MustNotBeNull(nameof(exceptionFactory))(parameter);
 
         /// <summary>
-        /// Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="first" /> and <paramref name="second"/> are passed to <paramref name="exceptionFactory" />.
+        /// Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="first" /> and <paramref name="second" /> are passed to <paramref name="exceptionFactory" />.
         /// </summary>
         [ContractAnnotation("=> halt")]
         public static void CustomException<T1, T2>(Func<T1, T2, Exception> exceptionFactory, T1 first, T2 second) => throw exceptionFactory.MustNotBeNull(nameof(exceptionFactory))(first, second);

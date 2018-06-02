@@ -123,7 +123,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="item">The item that must be part of the collection.</param>
-        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/></param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="item"/> is passed to this delegate.</param>
         /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="item"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
@@ -142,6 +142,59 @@ namespace Light.GuardClauses
 
             if (!parameter.MustNotBeNull(parameterName).Contains(item))
                 Throw.CustomException(exceptionFactory, parameter, item);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the value is one of the specified items, or otherwise throws a <see cref="ValueNotOneOfException"/>.
+        /// </summary>
+        /// <param name="parameter">The value to be checked.</param>
+        /// <param name="items">The items that should contain the value.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the <see cref="ValueNotOneOfException" /> (optional).</param>
+        /// <exception cref="ValueNotOneOfException">Thrown when <paramref name="parameter"/> is not equal to one of the specified <paramref name="items"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="items"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("items:null => halt")]
+        public static TItem MustBeOneOf<TItem, TCollection>(this TItem parameter, TCollection items, string parameterName = null, string message = null) where TCollection : class, IEnumerable<TItem>
+        {
+            if (items is ICollection<TItem> collection)
+            {
+                if (!collection.Contains(parameter))
+                    Throw.ValueNotOneOf(parameter, items, parameterName, message);
+                return parameter;
+            }
+
+            if (!items.MustNotBeNull(nameof(items)).Contains(parameter))
+                Throw.ValueNotOneOf(parameter, items, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the value is one of the specified items, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The value to be checked.</param>
+        /// <param name="items">The items that should contain the value.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="items"/> are passed to this delegate.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is not equal to one of the specified <paramref name="items"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="items"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("items:null => halt")]
+        public static TItem MustBeOneOf<TItem, TCollection>(this TItem parameter, TCollection items, Func<TItem, TCollection, Exception> exceptionFactory) where TCollection : class, IEnumerable<TItem>
+        {
+            if (items is ICollection<TItem> collection)
+            {
+                if (!collection.Contains(parameter))
+                    Throw.CustomException(exceptionFactory, parameter, items);
+                return parameter;
+            }
+
+            if (!items.MustNotBeNull(nameof(items)).Contains(parameter))
+                Throw.CustomException(exceptionFactory, parameter, items);
             return parameter;
         }
     }
