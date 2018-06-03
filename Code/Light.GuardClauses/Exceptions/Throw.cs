@@ -218,11 +218,22 @@ namespace Light.GuardClauses.Exceptions
         /// Throws the default <see cref="ValueNotOneOfException" /> indicating that a value is not one of a specified collection of items, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void ValueNotOneOf<TItem>(TItem parameter, IEnumerable<TItem> collection, string parameterName = null, string message = null) =>
+        public static void ValueNotOneOf<TItem>(TItem parameter, IEnumerable<TItem> items, string parameterName = null, string message = null) =>
             throw new ValueNotOneOfException(parameterName,
                                              message ??
                                              new StringBuilder().AppendLine($"{parameterName ?? "The value"} {parameter.ToStringOrNull()} must be one of the following items, but it actually is not.")
-                                                                .AppendItems(collection, ErrorMessageExtensions.DefaultNewLineSeparator)
+                                                                .AppendItems(items, ErrorMessageExtensions.DefaultNewLineSeparator)
+                                                                .ToString());
+
+        /// <summary>
+        /// Throws the default <see cref="ValueIsOneOfException" /> indicating that a value is one of a specified collection of items, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void ValueIsOneOf<TItem>(TItem parameter, IEnumerable<TItem> items, string parameterName = null, string message = null) => 
+            throw new ValueIsOneOfException(parameterName,
+                                            message ??
+                                            new StringBuilder().AppendLine($"{parameterName ?? "The value"} {parameter.ToStringOrNull()} must not be one of the following items, but it actually is.")
+                                                                .AppendItems(items, ErrorMessageExtensions.DefaultNewLineSeparator)
                                                                 .ToString());
 
         /// <summary>
