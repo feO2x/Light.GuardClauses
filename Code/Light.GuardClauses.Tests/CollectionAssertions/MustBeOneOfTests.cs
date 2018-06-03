@@ -16,7 +16,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         {
             Action act = () => item.MustBeOneOf(items, nameof(item));
 
-            act.Should().Throw<ValueNotOneOfException>()
+            act.Should().Throw<ValueIsNotOneOfException>()
                .And.Message.Should().Contain($"{nameof(item)} {item} must be one of the following items, but it actually is not.");
         }
 
@@ -43,6 +43,6 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
 
         [Fact]
         public static void CustomMessage() =>
-            Test.CustomMessage<ValueNotOneOfException>(message => 42.MustBeOneOf(new [] { 1, 2 }, message: message));
+            Test.CustomMessage<ValueIsNotOneOfException>(message => 42.MustBeOneOf(new [] { 1, 2 }, message: message));
     }
 }

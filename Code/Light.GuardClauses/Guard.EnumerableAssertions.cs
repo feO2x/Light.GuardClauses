@@ -200,13 +200,13 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that the value is one of the specified items, or otherwise throws a <see cref="ValueNotOneOfException"/>.
+        /// Ensures that the value is one of the specified items, or otherwise throws a <see cref="ValueIsNotOneOfException"/>.
         /// </summary>
         /// <param name="parameter">The value to be checked.</param>
         /// <param name="items">The items that should contain the value.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ValueNotOneOfException" /> (optional).</param>
-        /// <exception cref="ValueNotOneOfException">Thrown when <paramref name="parameter"/> is not equal to one of the specified <paramref name="items"/>.</exception>
+        /// <param name="message">The message that will be passed to the <see cref="ValueIsNotOneOfException" /> (optional).</param>
+        /// <exception cref="ValueIsNotOneOfException">Thrown when <paramref name="parameter"/> is not equal to one of the specified <paramref name="items"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="items"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

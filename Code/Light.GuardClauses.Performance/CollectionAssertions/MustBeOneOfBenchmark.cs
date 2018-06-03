@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Performance.CollectionAssertions
         [Benchmark(Baseline = true)]
         public int ImperativeVersion()
         {
-            if (!Items.Contains(Value)) throw new ValueNotOneOfException(nameof(Value));
+            if (!Items.Contains(Value)) throw new ValueIsNotOneOfException(nameof(Value));
             return Value;
         }
 
