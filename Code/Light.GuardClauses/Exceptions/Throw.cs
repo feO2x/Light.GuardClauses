@@ -204,10 +204,21 @@ namespace Light.GuardClauses.Exceptions
                                                               .ToString());
 
         /// <summary>
+        /// Throws the default <see cref="ExistingItemException"/> indicating that a collection contains the specified item that should not be part of it, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void ExistingItem<TItem>(IEnumerable<TItem> parameter, TItem item, string parameterName = null, string message = null) => 
+            throw new ExistingItemException(parameterName,
+                                            message ??
+                                            new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not contain {item.ToStringOrNull()}, but it actually does.")
+                                                               .AppendCollectionContent(parameter)
+                                                               .ToString());
+
+        /// <summary>
         /// Throws the default <see cref="ValueNotOneOfException" /> indicating that a value is not one of a specified collection of items, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void ValueNotOneOf<TItem>(TItem parameter, IEnumerable<TItem> collection, string parameterName, string message) =>
+        public static void ValueNotOneOf<TItem>(TItem parameter, IEnumerable<TItem> collection, string parameterName = null, string message = null) =>
             throw new ValueNotOneOfException(parameterName,
                                              message ??
                                              new StringBuilder().AppendLine($"{parameterName ?? "The value"} {parameter.ToStringOrNull()} must be one of the following items, but it actually is not.")
