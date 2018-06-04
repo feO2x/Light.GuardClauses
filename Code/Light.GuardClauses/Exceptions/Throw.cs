@@ -186,6 +186,13 @@ namespace Light.GuardClauses.Exceptions
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have count {count}, but it actually has count {parameter.Count()}.");
 
         /// <summary>
+        /// Throws the default <see cref="InvalidCollectionCountException" /> indicating that a collection has less than a minimal number of items, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void InvalidMinimalCollectionCount(IEnumerable parameter, int count, string parameterName = null, string message = null) =>
+            throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have minimum count {count}, but it actually has count {parameter.Count()}.");
+
+        /// <summary>
         /// Throws the default <see cref="EmptyCollectionException" /> indicating that a collection has no items, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
