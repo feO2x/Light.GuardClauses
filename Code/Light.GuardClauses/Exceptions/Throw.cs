@@ -186,11 +186,18 @@ namespace Light.GuardClauses.Exceptions
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have count {count}, but it actually has count {parameter.Count()}.");
 
         /// <summary>
-        /// Throws the default <see cref="InvalidCollectionCountException" /> indicating that a collection has less than a minimal number of items, using the optional parameter name and message.
+        /// Throws the default <see cref="InvalidCollectionCountException" /> indicating that a collection has less than a minimum number of items, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void InvalidMinimalCollectionCount(IEnumerable parameter, int count, string parameterName = null, string message = null) =>
-            throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have minimum count {count}, but it actually has count {parameter.Count()}.");
+        public static void InvalidMinimumCollectionCount(IEnumerable parameter, int count, string parameterName = null, string message = null) =>
+            throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have at least count {count}, but it actually has count {parameter.Count()}.");
+
+        /// <summary>
+        /// Throws the default <see cref="InvalidCollectionCountException" /> indicating that a collection has more than a maximum number of items, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void InvalidMaximumCollectionCount(IEnumerable parameter, int count, string parameterName = null, string message = null) => 
+            throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have at most count {count}, but it actually has count {parameter.Count()}.");
 
         /// <summary>
         /// Throws the default <see cref="EmptyCollectionException" /> indicating that a collection has no items, using the optional parameter name and message.

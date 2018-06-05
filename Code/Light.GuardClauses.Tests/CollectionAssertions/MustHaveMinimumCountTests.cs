@@ -20,7 +20,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
             Action act = () => collection.MustHaveMinimumCount(minimumCount, nameof(collection));
 
             act.Should().Throw<InvalidCollectionCountException>()
-               .And.Message.Should().Contain($"{nameof(collection)} must have minimum count {minimumCount}, but it actually has count {collection.Count()}.");
+               .And.Message.Should().Contain($"{nameof(collection)} must have at least count {minimumCount}, but it actually has count {collection.Count()}.");
         }
 
         [Theory]
