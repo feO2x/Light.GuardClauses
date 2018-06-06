@@ -251,6 +251,13 @@ namespace Light.GuardClauses.Exceptions
                                                                 .ToString());
 
         /// <summary>
+        /// Throws the default <see cref="RelativeUriException" /> indicating that a URI is relative instead of absolute, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void MustBeAbsoluteUri(Uri parameter, string parameterName = null, string message = null) =>
+            throw new RelativeUriException(parameterName, message ?? $"{parameterName ?? "The URI"} must be an absolute URI, but it actually is \"{parameter}\".");
+
+        /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         [ContractAnnotation("=> halt")]

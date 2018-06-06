@@ -1,6 +1,5 @@
 ﻿#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
 using System.Runtime.CompilerServices;
-
 #endif
 
 namespace Light.GuardClauses.FrameworkExtensions
