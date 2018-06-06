@@ -265,6 +265,18 @@ namespace Light.GuardClauses.Exceptions
             throw new InvalidUriSchemeException(parameterName, message ?? $"{parameterName ?? "The URI"} must use the scheme \"{scheme}\", but it actually is \"{uri}\".");
 
         /// <summary>
+        /// Throws the default <see cref="InvalidUriSchemeException" /> indicating that a URI does not use one of a set of expected schemes, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void UriMustHaveOneSchemeOf(Uri uri, IEnumerable<string> schemes, string parameterName = null, string message = null) =>
+            throw new InvalidUriSchemeException(parameterName,
+                                                message ??
+                                                new StringBuilder().Append($"{parameterName ?? "The URI"} must use one of the following schemes:")
+                                                                   .AppendItems(schemes, ErrorMessageExtensions.DefaultNewLineSeparator)
+                                                                   .Append($"but it actually is \"{uri}\".")
+                                                                   .ToString());
+
+        /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         [ContractAnnotation("=> halt")]
