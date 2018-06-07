@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using Light.GuardClauses.Exceptions;
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -32,7 +34,7 @@ namespace Light.GuardClauses
         /// Ensures that the specified URI is an absolute one, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The URI to be checked.</param>
-        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown. <paramref name="parameter"/> is passed to this delegate.</param>
         /// <param name="parameterName">The name of the parameter. This is used for the <see cref="ArgumentNullException" /> (optional).</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is not an absolute URI.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
@@ -73,7 +75,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The URI to be checked.</param>
         /// <param name="scheme">The scheme that the URI should have.</param>
-        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown. <paramref name="parameter"/> is passed to this delegate.</param>
         /// <param name="parameterName">The name of the parameter. This is used for the <see cref="ArgumentNullException" /> and <see cref="RelativeUriException" /> (optional).</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> uses a different scheme than the specified one.</exception>
         /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter" /> is relative and thus has no scheme.</exception>
@@ -94,7 +96,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The URI to be checked.</param>
         /// <param name="scheme">The scheme that the URI should have.</param>
-        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown. <paramref name="parameter"/> and <paramref name="scheme"/> are passed to this delegate.</param>
         /// <param name="parameterName">The name of the parameter. This is used for the <see cref="ArgumentNullException" /> and <see cref="RelativeUriException" /> (optional).</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> uses a different scheme than the specified one.</exception>
         /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter" /> is relative and thus has no scheme.</exception>
@@ -129,7 +131,7 @@ namespace Light.GuardClauses
         /// Ensures that the specified URI has the "https" scheme, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The URI to be checked.</param>
-        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown. <paramref name="parameter"/> is passed to this delegate.</param>
         /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="RelativeUriException"/> and <see cref="ArgumentNullException"/>.</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> uses a different scheme than "https".</exception>
         /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter" /> is relative and thus has no scheme.</exception>
@@ -159,7 +161,7 @@ namespace Light.GuardClauses
         /// Ensures that the specified URI has the "http" scheme, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The URI to be checked.</param>
-        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown. <paramref name="parameter"/> is passed to this delegate.</param>
         /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="RelativeUriException"/> and <see cref="ArgumentNullException"/>.</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> uses a different scheme than "http".</exception>
         /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter" /> is relative and thus has no scheme.</exception>
@@ -194,7 +196,7 @@ namespace Light.GuardClauses
         /// Ensures that the specified URI has the "http" or "https" scheme, or otherwise throws your custom exception />.
         /// </summary>
         /// <param name="parameter">The URI to be checked.</param>
-        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown.</param>
+        /// <param name="exceptionFactory">The delegate that creates the exception to be thrown. <paramref name="parameter"/> is passed to this delegate.</param>
         /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="RelativeUriException"/> and <see cref="ArgumentNullException"/>.</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> uses a different scheme than "http" or "https".</exception>
         /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter" /> is relative and thus has no scheme.</exception>
@@ -207,6 +209,66 @@ namespace Light.GuardClauses
         {
             if (parameter.MustBeAbsoluteUri(parameterName).Scheme.Equals("https") == false && parameter.Scheme.Equals("http") == false)
                 Throw.CustomException(exceptionFactory, parameter);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the URI has one of the specified schemes, or otherwise throws an <see cref="InvalidUriSchemeException"/>.
+        /// </summary>
+        /// <param name="parameter">The URI to be checked.</param>
+        /// <param name="schemes">One of these strings must be equal to the scheme of the URI.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the <see cref="InvalidUriSchemeException" /> (optional).</param>
+        /// <exception cref="InvalidUriSchemeException">Thrown when the scheme <paramref name="parameter"/> is not equal to one of the specified schemes.</exception>
+        /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter" /> is relative and thus has no scheme.</exception>
+        /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static Uri MustHaveOneSchemeOf<TCollection>(this Uri parameter, TCollection schemes, string parameterName = null, string message = null) where TCollection : IEnumerable<string>
+        {
+            parameter.MustBeAbsoluteUri(parameterName);
+
+            if (schemes is ICollection<string> collection)
+            {
+                if (!collection.Contains(parameter.Scheme))
+                    Throw.UriMustHaveOneSchemeOf(parameter, schemes, parameterName, message);
+                return parameter;
+            }
+
+            if (!schemes.Contains(parameter.Scheme))
+                Throw.UriMustHaveOneSchemeOf(parameter, schemes, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the URI has one of the specified schemes, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The URI to be checked.</param>
+        /// <param name="schemes">One of these strings must be equal to the scheme of the URI.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/></param>
+        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="RelativeUriException"/> and <see cref="ArgumentNullException"/>.</param>
+        /// <exception cref="Exception">Your custom exception thrown when the scheme <paramref name="parameter"/> is not equal to one of the specified schemes.</exception>
+        /// <exception cref="RelativeUriException">Thrown when <paramref name="parameter" /> is relative and thus has no scheme.</exception>
+        /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static Uri MustHaveOneSchemeOf<TCollection>(this Uri parameter, TCollection schemes, Func<Uri, TCollection, Exception> exceptionFactory, string parameterName = null) where TCollection : IEnumerable<string>
+        {
+            parameter.MustBeAbsoluteUri(parameterName);
+
+            if (schemes is ICollection<string> collection)
+            {
+                if (!collection.Contains(parameter.Scheme))
+                    Throw.CustomException(exceptionFactory, parameter, schemes);
+                return parameter;
+            }
+
+            if (!schemes.Contains(parameter.Scheme))
+                Throw.CustomException(exceptionFactory, parameter, schemes);
             return parameter;
         }
     }
