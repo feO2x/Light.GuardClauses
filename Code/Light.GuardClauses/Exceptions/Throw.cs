@@ -271,8 +271,8 @@ namespace Light.GuardClauses.Exceptions
         public static void UriMustHaveOneSchemeOf(Uri uri, IEnumerable<string> schemes, string parameterName = null, string message = null) =>
             throw new InvalidUriSchemeException(parameterName,
                                                 message ??
-                                                new StringBuilder().Append($"{parameterName ?? "The URI"} must use one of the following schemes:")
-                                                                   .AppendItems(schemes, ErrorMessageExtensions.DefaultNewLineSeparator)
+                                                new StringBuilder().AppendLine($"{parameterName ?? "The URI"} must use one of the following schemes")
+                                                                   .AppendItems(schemes, ErrorMessageExtensions.DefaultNewLineSeparator).AppendLine()
                                                                    .Append($"but it actually is \"{uri}\".")
                                                                    .ToString());
 

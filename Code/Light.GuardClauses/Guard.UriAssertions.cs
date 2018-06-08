@@ -226,7 +226,7 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustHaveOneSchemeOf<TCollection>(this Uri parameter, TCollection schemes, string parameterName = null, string message = null) where TCollection : IEnumerable<string>
+        public static Uri MustHaveOneSchemeOf<TCollection>(this Uri parameter, TCollection schemes, string parameterName = null, string message = null) where TCollection : class, IEnumerable<string>
         {
             parameter.MustBeAbsoluteUri(parameterName);
 
@@ -237,7 +237,7 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            if (!schemes.Contains(parameter.Scheme))
+            if (!schemes.MustNotBeNull(nameof(schemes)).Contains(parameter.Scheme))
                 Throw.UriMustHaveOneSchemeOf(parameter, schemes, parameterName, message);
             return parameter;
         }
@@ -256,7 +256,7 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustHaveOneSchemeOf<TCollection>(this Uri parameter, TCollection schemes, Func<Uri, TCollection, Exception> exceptionFactory, string parameterName = null) where TCollection : IEnumerable<string>
+        public static Uri MustHaveOneSchemeOf<TCollection>(this Uri parameter, TCollection schemes, Func<Uri, TCollection, Exception> exceptionFactory, string parameterName = null) where TCollection : class, IEnumerable<string>
         {
             parameter.MustBeAbsoluteUri(parameterName);
 
@@ -267,7 +267,7 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            if (!schemes.Contains(parameter.Scheme))
+            if (!schemes.MustNotBeNull(nameof(schemes)).Contains(parameter.Scheme))
                 Throw.CustomException(exceptionFactory, parameter, schemes);
             return parameter;
         }
