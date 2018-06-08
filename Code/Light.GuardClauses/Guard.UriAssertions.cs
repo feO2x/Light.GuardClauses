@@ -50,6 +50,44 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Ensures that the specified URI is a relative one, or otherwise throws a <see cref="AbsoluteUriException"/>.
+        /// </summary>
+        /// <param name="parameter">The URI to be checked.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the <see cref="AbsoluteUriException" /> (optional).</param>
+        /// <exception cref="AbsoluteUriException">Thrown when <paramref name="parameter"/> is an absolute URI.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static Uri MustBeRelativeUri(this Uri parameter, string parameterName = null, string message = null)
+        {
+            if (parameter.MustNotBeNull(parameterName).IsAbsoluteUri)
+                Throw.MustBeRelativeUri(parameter, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified URI is a relative one, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The URI to be checked.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> is passed to this delegate.</param>
+        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is an absolute URI.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static Uri MustBeRelativeUri(this Uri parameter, Func<Uri, Exception> exceptionFactory, string parameterName = null)
+        {
+            if (parameter.MustNotBeNull(parameterName).IsAbsoluteUri)
+                Throw.CustomException(exceptionFactory, parameter);
+            return parameter;
+        }
+
+        /// <summary>
         /// Ensures that the <paramref name="parameter" /> has the specified scheme, or otherwise throws an <see cref="InvalidUriSchemeException" />.
         /// </summary>
         /// <param name="parameter">The URI to be checked.</param>

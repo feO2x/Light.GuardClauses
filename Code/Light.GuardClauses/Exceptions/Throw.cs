@@ -260,6 +260,13 @@ namespace Light.GuardClauses.Exceptions
             throw new RelativeUriException(parameterName, message ?? $"{parameterName ?? "The URI"} must be an absolute URI, but it actually is \"{parameter}\".");
 
         /// <summary>
+        /// Throws the default <see cref="AbsoluteUriException" /> indicating that a URI is absolute instead of relative, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void MustBeRelativeUri(Uri parameter, string parameterName = null, string message = null) => 
+            throw new AbsoluteUriException(parameterName, message ?? $"{parameterName ?? "The URI"} must be a relative URI, but it actually is \"{parameter}\".");
+
+        /// <summary>
         /// Throws the default <see cref="InvalidUriSchemeException" /> indicating that a URI has an unexpected scheme, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
