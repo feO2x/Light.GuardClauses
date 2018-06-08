@@ -17,9 +17,12 @@ namespace Light.GuardClauses.Tests.UriAssertions
         }
 
         public static readonly TheoryData<Uri> AbsoluteUriData =
-            new TheoryData<Uri>().Append(new Uri("http://localhost:8080/api/contacts/"))
-                                 .Append(new Uri("https://my.service.com/contacts/new"))
-                                 .Append(new Uri("ftp://172.20.10.5/"));
+            new TheoryData<Uri>
+            {
+                new Uri("http://localhost:8080/api/contacts/"),
+                new Uri("https://my.service.com/contacts/new"),
+                new Uri("ftp://172.20.10.5/")
+            };
 
         [Theory(DisplayName = "MustBeAbsoluteUri must throw an ArgumentException when the specified uri is a relative one.")]
         [MemberData(nameof(RelativeUriData))]
@@ -32,8 +35,11 @@ namespace Light.GuardClauses.Tests.UriAssertions
         }
 
         public static readonly TheoryData<Uri> RelativeUriData =
-            new TheoryData<Uri>().Append(new Uri("/api/orders", UriKind.Relative))
-                                 .Append(new Uri("/contacts/new", UriKind.Relative));
+            new TheoryData<Uri>
+            {
+                new Uri("/api/orders", UriKind.Relative),
+                new Uri("/contacts/new", UriKind.Relative)
+            };
 
         [Fact]
         public static void UriNull()
@@ -44,12 +50,12 @@ namespace Light.GuardClauses.Tests.UriAssertions
         }
 
         [Fact]
-        public static void CustomException() => 
+        public static void CustomException() =>
             Test.CustomException(new Uri("/api/foo", UriKind.Relative),
                                  (uri, exceptionFactory) => uri.MustBeAbsoluteUri(exceptionFactory));
 
         [Fact]
-        public static void CustomMessage() => 
+        public static void CustomMessage() =>
             Test.CustomMessage<RelativeUriException>(message => new Uri("/home", UriKind.Relative).MustBeAbsoluteUri(message: message));
     }
 }

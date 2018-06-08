@@ -18,8 +18,11 @@ namespace Light.GuardClauses.Tests.UriAssertions
         }
 
         public static readonly TheoryData<Uri, string> InvalidSchemeData =
-            new TheoryData<Uri, string>().Append(new Uri("http://localhost:8080"), "https")
-                                         .Append(new Uri("http://my.service.com/upload"), "ftp");
+            new TheoryData<Uri, string>
+            {
+                { new Uri("http://localhost:8080"), "https" },
+                { new Uri("http://my.service.com/upload"), "ftp" }
+            };
 
         [Theory(DisplayName = "MustHaveScheme must not throw an exception when the specified scheme is used by the URI.")]
         [MemberData(nameof(ValidSchemeData))]
@@ -31,8 +34,11 @@ namespace Light.GuardClauses.Tests.UriAssertions
         }
 
         public static readonly TheoryData<Uri, string> ValidSchemeData =
-            new TheoryData<Uri, string>().Append(new Uri("https://www.google.com"), "https")
-                                         .Append(new Uri("ftps://192.168.177.2"), "ftps");
+            new TheoryData<Uri, string>
+            {
+                { new Uri("https://www.google.com"), "https" },
+                { new Uri("ftps://192.168.177.2"), "ftps" }
+            };
 
         [Fact(DisplayName = "MustHaveScheme must throw an ArgumentNullException when the specified URI is null.")]
         public static void UriNull()

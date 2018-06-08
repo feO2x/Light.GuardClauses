@@ -38,11 +38,14 @@ namespace Light.GuardClauses.Tests.StringAssertions
         }
 
         public static readonly TheoryData<string> WhiteSpaceData =
-            new TheoryData<string>().Append(Environment.NewLine)
-                                    .Append(" ")
-                                    .Append("\t")
-                                    .Append("\t\t  ")
-                                    .Append("\r");
+            new TheoryData<string>
+            {
+                Environment.NewLine,
+                " ",
+                "\t",
+                "\t\t  ",
+                "\r"
+            };
 
         [Theory]
         [InlineData("a")]
