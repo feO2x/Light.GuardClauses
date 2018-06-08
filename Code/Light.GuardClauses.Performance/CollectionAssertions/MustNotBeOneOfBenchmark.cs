@@ -47,7 +47,7 @@ namespace Light.GuardClauses.Performance.CollectionAssertions
                                                   parameter,
                                                   message ??
                                                   new StringBuilder().AppendLine($"{parameterName ?? "The value"} must not be one of the items")
-                                                                     .AppendItems(items, ErrorMessageExtensions.DefaultNewLineSeparator).AppendLine()
+                                                                     .AppendItemsWithNewLine(items)
                                                                      .AppendLine($"but you specified {parameter}.")
                                                                      .ToString());
             // ReSharper restore PossibleMultipleEnumeration

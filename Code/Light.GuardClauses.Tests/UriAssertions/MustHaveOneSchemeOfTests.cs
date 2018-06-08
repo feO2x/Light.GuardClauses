@@ -19,8 +19,8 @@ namespace Light.GuardClauses.Tests.UriAssertions
 
             act.Should().Throw<InvalidUriSchemeException>()
                .And.Message.Should().Contain(new StringBuilder().AppendLine($"{nameof(uri)} must use one of the following schemes")
-                                                                .AppendItems(schemes, ErrorMessageExtensions.DefaultNewLineSeparator).AppendLine()
-                                                                .Append($"but it actually is \"{uri}\".")
+                                                                .AppendItemsWithNewLine(schemes)
+                                                                .AppendLine($"but it actually is \"{uri}\".")
                                                                 .ToString());
         }
 

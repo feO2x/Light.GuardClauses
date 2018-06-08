@@ -196,7 +196,7 @@ namespace Light.GuardClauses.Exceptions
         /// Throws the default <see cref="InvalidCollectionCountException" /> indicating that a collection has more than a maximum number of items, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void InvalidMaximumCollectionCount(IEnumerable parameter, int count, string parameterName = null, string message = null) => 
+        public static void InvalidMaximumCollectionCount(IEnumerable parameter, int count, string parameterName = null, string message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have at most count {count}, but it actually has count {parameter.Count()}.");
 
         /// <summary>
@@ -218,10 +218,10 @@ namespace Light.GuardClauses.Exceptions
                                                               .ToString());
 
         /// <summary>
-        /// Throws the default <see cref="ExistingItemException"/> indicating that a collection contains the specified item that should not be part of it, using the optional parameter name and message.
+        /// Throws the default <see cref="ExistingItemException" /> indicating that a collection contains the specified item that should not be part of it, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void ExistingItem<TItem>(IEnumerable<TItem> parameter, TItem item, string parameterName = null, string message = null) => 
+        public static void ExistingItem<TItem>(IEnumerable<TItem> parameter, TItem item, string parameterName = null, string message = null) =>
             throw new ExistingItemException(parameterName,
                                             message ??
                                             new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not contain {item.ToStringOrNull()}, but it actually does.")
@@ -234,21 +234,23 @@ namespace Light.GuardClauses.Exceptions
         [ContractAnnotation("=> halt")]
         public static void ValueNotOneOf<TItem>(TItem parameter, IEnumerable<TItem> items, string parameterName = null, string message = null) =>
             throw new ValueIsNotOneOfException(parameterName,
-                                             message ??
-                                             new StringBuilder().AppendLine($"{parameterName ?? "The value"} {parameter.ToStringOrNull()} must be one of the following items, but it actually is not.")
-                                                                .AppendItems(items, ErrorMessageExtensions.DefaultNewLineSeparator)
-                                                                .ToString());
+                                               message ??
+                                               new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be one of the following items")
+                                                                  .AppendItemsWithNewLine(items)
+                                                                  .AppendLine($"but it actually is {parameter.ToStringOrNull()}.")
+                                                                  .ToString());
 
         /// <summary>
         /// Throws the default <see cref="ValueIsOneOfException" /> indicating that a value is one of a specified collection of items, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void ValueIsOneOf<TItem>(TItem parameter, IEnumerable<TItem> items, string parameterName = null, string message = null) => 
+        public static void ValueIsOneOf<TItem>(TItem parameter, IEnumerable<TItem> items, string parameterName = null, string message = null) =>
             throw new ValueIsOneOfException(parameterName,
                                             message ??
-                                            new StringBuilder().AppendLine($"{parameterName ?? "The value"} {parameter.ToStringOrNull()} must not be one of the following items, but it actually is.")
-                                                                .AppendItems(items, ErrorMessageExtensions.DefaultNewLineSeparator)
-                                                                .ToString());
+                                            new StringBuilder().AppendLine($"{parameterName ?? "The value"} must not be one of the following items")
+                                                               .AppendItemsWithNewLine(items)
+                                                               .AppendLine($"but it actually is {parameter.ToStringOrNull()}.")
+                                                               .ToString());
 
         /// <summary>
         /// Throws the default <see cref="RelativeUriException" /> indicating that a URI is relative instead of absolute, using the optional parameter name and message.
@@ -272,8 +274,8 @@ namespace Light.GuardClauses.Exceptions
             throw new InvalidUriSchemeException(parameterName,
                                                 message ??
                                                 new StringBuilder().AppendLine($"{parameterName ?? "The URI"} must use one of the following schemes")
-                                                                   .AppendItems(schemes, ErrorMessageExtensions.DefaultNewLineSeparator).AppendLine()
-                                                                   .Append($"but it actually is \"{uri}\".")
+                                                                   .AppendItemsWithNewLine(schemes)
+                                                                   .AppendLine($"but it actually is \"{uri}\".")
                                                                    .ToString());
 
         /// <summary>

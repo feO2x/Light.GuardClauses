@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
+using Light.GuardClauses.FrameworkExtensions;
 using Xunit;
 
 namespace Light.GuardClauses.Tests.CollectionAssertions
@@ -17,7 +19,10 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
             Action act = () => item.MustBeOneOf(items, nameof(item));
 
             act.Should().Throw<ValueIsNotOneOfException>()
-               .And.Message.Should().Contain($"{nameof(item)} {item} must be one of the following items, but it actually is not.");
+               .And.Message.Should().Contain(new StringBuilder().AppendLine($"{nameof(item)} must be one of the following items")
+                                                                .AppendItemsWithNewLine(items)
+                                                                .AppendLine($"but it actually is {item.ToStringOrNull()}.")
+                                                                .ToString());
         }
 
         [Theory]

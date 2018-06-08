@@ -51,7 +51,7 @@ namespace Light.GuardClauses.Performance.UriAssertions
             throw exception != null
                       ? exception()
                       : new ArgumentException(message ?? new StringBuilder().Append($"{parameterName ?? "The URI"} must have one of the following schemes:")
-                                                                            .AppendItems(schemesCollection, ErrorMessageExtensions.DefaultNewLineSeparator).AppendLine()
+                                                                            .AppendItemsWithNewLine(schemesCollection)
                                                                             .Append(subclause)
                                                                             .ToString());
         }
