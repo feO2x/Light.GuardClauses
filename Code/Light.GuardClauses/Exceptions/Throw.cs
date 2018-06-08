@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using Light.GuardClauses.FrameworkExtensions;
 
@@ -163,6 +164,13 @@ namespace Light.GuardClauses.Exceptions
         [ContractAnnotation("=> halt")]
         public static void WhiteSpaceString(string parameter, string parameterName, string message) =>
             throw new WhiteSpaceStringException(parameterName, message ?? $"{parameterName ?? "The string"} must not contain only white space, but it actually is \"{parameter}\".");
+
+        /// <summary>
+        /// Throws the default <see cref="StringDoesNotMatchException" /> indicating that a string does not match a regular expression, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void StringDoesNotMatch(string parameter, Regex regex, string parameterName = null, string message = null) => 
+            throw new StringDoesNotMatchException(parameterName, message ?? $"{parameterName ?? "The string"} must match the regular expression \"{regex}\", but it actually is \"{parameter}\".");
 
         /// <summary>
         /// Throws the default <see cref="ValuesNotEqualException" /> indicating that two values are not equal, using the optional parameter name and message.

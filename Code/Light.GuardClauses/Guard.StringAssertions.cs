@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
 using System.Runtime.CompilerServices;
 #endif
@@ -210,6 +211,46 @@ namespace Light.GuardClauses
         {
             if (string.Equals(parameter, other, comparisonType))
                 Throw.CustomException(exceptionFactory, parameter, other);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string matches the specified regular expression, or otherwise throws an <see cref="StringDoesNotMatchException" />.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="regex">The regular expression used for pattern matching.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the <see cref="StringDoesNotMatchException" /> (optional).</param>
+        /// <exception cref="StringDoesNotMatchException">Thrown when <paramref name="parameter"/> does not match the specified regular expression.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="regex"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; regex:null => halt")]
+        public static string MustMatch(this string parameter, Regex regex, string parameterName = null, string message = null)
+        {
+            if (!regex.MustNotBeNull(nameof(regex)).IsMatch(parameter.MustNotBeNull(parameterName)))
+                Throw.StringDoesNotMatch(parameter, regex, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string matches the specified regular expression, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="regex">The regular expression used for pattern matching.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="regex"/> are passed to this delegate.</param>
+        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> does not match the specified regular expression.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="regex"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; regex:null => halt")]
+        public static string MustMatch(this string parameter, Regex regex, Func<string, Regex, Exception> exceptionFactory, string parameterName = null)
+        {
+            if (!regex.MustNotBeNull(nameof(regex)).IsMatch(parameter.MustNotBeNull(parameterName)))
+                Throw.CustomException(exceptionFactory, parameter, regex);
             return parameter;
         }
     }
