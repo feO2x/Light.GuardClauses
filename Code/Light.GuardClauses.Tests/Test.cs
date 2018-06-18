@@ -69,6 +69,34 @@ namespace Light.GuardClauses.Tests
             }
         }
 
+        public static void CustomException<T1, T2, T3>(T1 first, T2 second, T3 third, Action<T1, T2, T3, Func<T1, T2, T3, Exception>> executeAssertion)
+        {
+            T1 capturedFirst = default;
+            T2 capturedSecond = default;
+            T3 capturedThird = default;
+
+            Exception ExceptionFactory(T1 x, T2 y, T3 z)
+            {
+                capturedFirst = x;
+                capturedSecond = y;
+                capturedThird = z;
+                return Exception;
+            }
+
+            try
+            {
+                executeAssertion(first, second, third, ExceptionFactory);
+                throw new XunitException("The assertion should have thrown a custom exception at this point.");
+            }
+            catch (ExceptionDummy exception)
+            {
+                exception.Should().BeSameAs(Exception);
+                capturedFirst.Should().Be(first);
+                capturedSecond.Should().Be(second);
+                capturedThird.Should().Be(third);
+            }
+        }
+
         public static void CustomMessage<TException>(Action<string> executeAssertion) where TException : Exception
         {
             try

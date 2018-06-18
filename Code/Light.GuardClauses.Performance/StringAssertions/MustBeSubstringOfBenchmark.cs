@@ -20,10 +20,26 @@ namespace Light.GuardClauses.Performance.StringAssertions
         }
 
         [Benchmark]
+        public string ImperativeVersionCustomComparisonType()
+        {
+            if (Substring == null) throw new ArgumentNullException(nameof(Substring));
+            if (Other.IndexOf(Substring, StringComparison.CurrentCultureIgnoreCase) < 0) throw new SubstringException(nameof(Substring));
+
+            return Substring;
+        }
+
+        [Benchmark]
         public string LightGuardClauses() => Substring.MustBeSubstringOf(Other, nameof(Substring));
 
         [Benchmark]
+        public string LightGuardClausesCustomComparisonType() => Substring.MustBeSubstringOf(Other, StringComparison.CurrentCultureIgnoreCase);
+
+        [Benchmark]
         public string LightGuardClausesCustomException() => Substring.MustBeSubstringOf(Other, (s1, s2) => new Exception($"Where is your honor, {s1}?"));
+
+        [Benchmark]
+        public string LightGuardClausesCustomExceptionCustomComparisonType() =>
+            Substring.MustBeSubstringOf(Other, StringComparison.CurrentCultureIgnoreCase, (x, y, c) => new Exception($"Where is your honor, {x}? ({c})"));
 
         [Benchmark]
         public string OldVersion() => Substring.OldMustBeSubstringOf(Other, parameterName: nameof(Other));
