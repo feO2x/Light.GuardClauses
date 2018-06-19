@@ -257,178 +257,383 @@ namespace Light.GuardClauses
         /// Ensures that the string contains the specified substring, or otherwise throws a <see cref="SubstringException" />.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="substring">The substring that must be part of <paramref name="parameter" />.</param>
+        /// <param name="value">The substring that must be part of <paramref name="parameter" />.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the <see cref="SubstringException" /> (optional).</param>
-        /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> does not contain <paramref name="substring" />.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> does not contain <paramref name="value" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustContain(this string parameter, string substring, string parameterName = null, string message = null)
+        public static string MustContain(this string parameter, string value, string parameterName = null, string message = null)
         {
-            if (!parameter.MustNotBeNull(parameterName).Contains(substring))
-                Throw.StringDoesNotContain(parameter, substring, parameterName, message);
+            if (!parameter.MustNotBeNull(parameterName).Contains(value))
+                Throw.StringDoesNotContain(parameter, value, parameterName, message);
             return parameter;
         }
 
         /// <summary>
-        /// Ensures that the string contains the specified substring, or otherwise throws your custom exception.
+        /// Ensures that the string contains the specified value, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="substring">The substring that must be part of <paramref name="parameter" />.</param>
-        /// <param name="exceptionFactory">The delegate that creates you custom exception. <paramref name="parameter" /> and <paramref name="substring" /> are passed to this delegate.</param>
+        /// <param name="value">The substring that must be part of <paramref name="parameter" />.</param>
+        /// <param name="exceptionFactory">The delegate that creates you custom exception. <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
         /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException" />.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="substring" />.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="value" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustContain(this string parameter, string substring, Func<string, string, Exception> exceptionFactory, string parameterName = null)
+        public static string MustContain(this string parameter, string value, Func<string, string, Exception> exceptionFactory, string parameterName = null)
         {
-            if (!parameter.MustNotBeNull(parameterName).Contains(substring))
-                Throw.CustomException(exceptionFactory, parameter, substring);
+            if (!parameter.MustNotBeNull(parameterName).Contains(value))
+                Throw.CustomException(exceptionFactory, parameter, value);
             return parameter;
         }
 
         /// <summary>
-        /// Ensures that the string contains the specified substring, or otherwise throws a <see cref="SubstringException" />.
+        /// Ensures that the string contains the specified value, or otherwise throws a <see cref="SubstringException" />.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="substring">The substring that must be part of <paramref name="parameter" />.</param>
+        /// <param name="value">The substring that must be part of <paramref name="parameter" />.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the <see cref="SubstringException" /> (optional).</param>
-        /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> does not contain <paramref name="substring" />.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> does not contain <paramref name="value" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustContain(this string parameter, string substring, StringComparison comparisonType, string parameterName = null, string message = null)
+        public static string MustContain(this string parameter, string value, StringComparison comparisonType, string parameterName = null, string message = null)
         {
-            if (parameter.MustNotBeNull(parameterName).IndexOf(substring, comparisonType) < 0)
-                Throw.StringDoesNotContain(parameter, substring, comparisonType, parameterName, message);
+            if (parameter.MustNotBeNull(parameterName).IndexOf(value, comparisonType) < 0)
+                Throw.StringDoesNotContain(parameter, value, comparisonType, parameterName, message);
             return parameter;
         }
 
         /// <summary>
-        /// Ensures that the string contains the specified substring, or otherwise throws your custom exception.
+        /// Ensures that the string contains the specified value, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="substring">The substring that must be part of <paramref name="parameter" />.</param>
+        /// <param name="value">The substring that must be part of <paramref name="parameter" />.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
-        /// <param name="exceptionFactory">The delegate that creates you custom exception. <paramref name="parameter" /> and <paramref name="substring" /> are passed to this delegate.</param>
+        /// <param name="exceptionFactory">The delegate that creates you custom exception. <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType"/> are passed to this delegate.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="substring" />.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="value" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustContain(this string parameter, string substring, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory, string parameterName = null)
+        public static string MustContain(this string parameter, string value, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory, string parameterName = null)
         {
-            if (parameter.MustNotBeNull(parameterName).IndexOf(substring, comparisonType) < 0)
-                Throw.CustomException(exceptionFactory, parameter, substring, comparisonType);
+            if (parameter.MustNotBeNull(parameterName).IndexOf(value, comparisonType) < 0)
+                Throw.CustomException(exceptionFactory, parameter, value, comparisonType);
             return parameter;
         }
 
         /// <summary>
-        /// Ensures that the string does not contain the specified substring, or otherwise throws a <see cref="SubstringException" />.
+        /// Ensures that the string does not contain the specified value, or otherwise throws a <see cref="SubstringException" />.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="substring">The string that must be part of <paramref name="parameter" />.</param>
+        /// <param name="value">The string that must not be part of <paramref name="parameter" />.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the <see cref="SubstringException" /> (optional).</param>
-        /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> contains <paramref name="substring" />.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> contains <paramref name="value" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotContain(this string parameter, string substring, string parameterName = null, string message = null)
+        public static string MustNotContain(this string parameter, string value, string parameterName = null, string message = null)
         {
-            if (parameter.MustNotBeNull(parameterName).Contains(substring))
-                Throw.StringContains(parameter, substring, parameterName, message);
+            if (parameter.MustNotBeNull(parameterName).Contains(value))
+                Throw.StringContains(parameter, value, parameterName, message);
             return parameter;
         }
 
         /// <summary>
-        /// Ensures that the string does not contain the specified substring, or otherwise throws your custom exception.
+        /// Ensures that the string does not contain the specified value, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="substring">The string that must be part of <paramref name="parameter" />.</param>
-        /// <param name="exceptionFactory">The delegate that creates your custom exception (optional). <paramref name="parameter" /> and <paramref name="substring" /> are passed to this </param>
+        /// <param name="value">The string that must not be part of <paramref name="parameter" />.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception (optional). <paramref name="parameter" /> and <paramref name="value" /> are passed to this </param>
         /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException" />.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="substring" />.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="value" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotContain(this string parameter, string substring, Func<string, string, Exception> exceptionFactory, string parameterName = null)
+        public static string MustNotContain(this string parameter, string value, Func<string, string, Exception> exceptionFactory, string parameterName = null)
         {
-            if (parameter.MustNotBeNull(parameterName).Contains(substring))
-                Throw.CustomException(exceptionFactory, parameter, substring);
+            if (parameter.MustNotBeNull(parameterName).Contains(value))
+                Throw.CustomException(exceptionFactory, parameter, value);
             return parameter;
         }
 
         /// <summary>
-        /// Ensures that the string does not contain the specified substring, or otherwise throws a <see cref="SubstringException" />.
+        /// Ensures that the string does not contain the specified value, or otherwise throws a <see cref="SubstringException" />.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="substring">The string that must be part of <paramref name="parameter" />.</param>
+        /// <param name="value">The string that must not be part of <paramref name="parameter" />.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the <see cref="SubstringException" /> (optional).</param>
-        /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> contains <paramref name="substring" />.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> contains <paramref name="value" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotContain(this string parameter, string substring, StringComparison comparisonType, string parameterName = null, string message = null)
+        public static string MustNotContain(this string parameter, string value, StringComparison comparisonType, string parameterName = null, string message = null)
         {
-            if (parameter.MustNotBeNull(parameterName).IndexOf(substring, comparisonType) >= 0)
-                Throw.StringContains(parameter, substring, comparisonType, parameterName, message);
+            if (parameter.MustNotBeNull(parameterName).IndexOf(value, comparisonType) >= 0)
+                Throw.StringContains(parameter, value, comparisonType, parameterName, message);
             return parameter;
         }
 
         /// <summary>
-        /// Ensures that the string does not contain the specified substring, or otherwise throws your custom exception.
+        /// Ensures that the string does not contain the specified value, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="substring">The string that must be part of <paramref name="parameter" />.</param>
+        /// <param name="value">The string that must not be part of <paramref name="parameter" />.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
-        /// <param name="exceptionFactory">The delegate that creates your custom exception (optional). <paramref name="parameter" /> and <paramref name="substring" /> are passed to this </param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception (optional). <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType"/> are passed to this delegate.</param>
         /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException" />.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="substring" />.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="value" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotContain(this string parameter, string substring, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory, string parameterName = null)
+        public static string MustNotContain(this string parameter, string value, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory, string parameterName = null)
         {
-            if (parameter.MustNotBeNull(parameterName).IndexOf(substring, comparisonType) >= 0)
-                Throw.CustomException(exceptionFactory, parameter, substring, comparisonType);
+            if (parameter.MustNotBeNull(parameterName).IndexOf(value, comparisonType) >= 0)
+                Throw.CustomException(exceptionFactory, parameter, value, comparisonType);
             return parameter;
         }
 
         /// <summary>
-        /// Checks if the string contains the specified substring using the given comparison type.
+        /// Checks if the string contains the specified value using the given comparison type.
         /// </summary>
         /// <param name="string">The string to be checked.</param>
-        /// <param name="substring">The other string</param>
+        /// <param name="value">The other string.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
-        /// <returns>True if <paramref name="string" /> contains <paramref name="substring" />, else false.</returns>
+        /// <returns>True if <paramref name="string" /> contains <paramref name="value" />, else false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="string" /> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        [ContractAnnotation("string:null => halt")]
-        public static bool Contains(this string @string, string substring, StringComparison comparisonType) =>
-            @string.MustNotBeNull(nameof(@string)).IndexOf(substring, comparisonType) >= 0;
+        [ContractAnnotation("string:null => halt; value:null => halt")]
+        public static bool Contains(this string @string, string value, StringComparison comparisonType) =>
+            @string.MustNotBeNull(nameof(@string)).IndexOf(value, comparisonType) >= 0;
+
+        /// <summary>
+        /// Checks if the string is a substring of the other string.
+        /// </summary>
+        /// <param name="value">The string to be checked.</param>
+        /// <param name="other">The other string.</param>
+        /// <returns>True if <paramref name="value"/> is a substring of <paramref name="other"/>, else false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="value"/> or <paramref name="other"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("value:null => halt; other:null => halt")]
+        public static bool IsSubstringOf(this string value, string other) =>
+            other.MustNotBeNull(nameof(other)).Contains(value);
+
+        /// <summary>
+        /// Checks if the string is a substring of the other string.
+        /// </summary>
+        /// <param name="value">The string to be checked.</param>
+        /// <param name="other">The other string.</param>
+        /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
+        /// <returns>True if <paramref name="value"/> is a substring of <paramref name="other"/>, else false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="value"/> or <paramref name="other"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("value:null => halt; other:null => halt")]
+        public static bool IsSubstringOf(this string value, string other, StringComparison comparisonType) =>
+            other.MustNotBeNull(nameof(other)).IndexOf(value, comparisonType) != -1;
+        
+
+        /// <summary>
+        /// Ensures that the string is a substring of the specified other string, or otherwise throws a <see cref="SubstringException"/>.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="value">The other string that must contain <paramref name="parameter"/>.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the <see cref="SubstringException" /> (optional).</param>
+        /// <exception cref="SubstringException">Thrown when <paramref name="value"/> does not contain <paramref name="parameter"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
+        public static string MustBeSubstringOf(this string parameter, string value, string parameterName = null, string message = null)
+        {
+            if (!value.MustNotBeNull(nameof(value)).Contains(parameter.MustNotBeNull(parameterName)))
+                Throw.NotSubstring(parameter, value, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string is a substring of the specified other string, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="value">The other string that must contain <paramref name="parameter"/>.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="value"/> are passed to this delegate.</param>
+        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="value"/> does not contain <paramref name="parameter"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
+        public static string MustBeSubstringOf(this string parameter, string value, Func<string, string, Exception> exceptionFactory, string parameterName = null)
+        {
+            if (!value.MustNotBeNull(nameof(value)).Contains(parameter.MustNotBeNull(parameterName)))
+                Throw.CustomException(exceptionFactory, parameter, value);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string is a substring of the specified other string, or otherwise throws a <see cref="SubstringException"/>.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="value">The other string that must contain <paramref name="parameter"/>.</param>
+        /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the <see cref="SubstringException" /> (optional).</param>
+        /// <exception cref="SubstringException">Thrown when <paramref name="value"/> does not contain <paramref name="parameter"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
+        public static string MustBeSubstringOf(this string parameter, string value, StringComparison comparisonType, string parameterName = null, string message = null)
+        {
+            if (value.MustNotBeNull(nameof(value)).IndexOf(parameter.MustNotBeNull(parameterName), comparisonType) == -1)
+                Throw.NotSubstring(parameter, value, comparisonType, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string is a substring of the specified other string, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="value">The other string that must contain <paramref name="parameter"/>.</param>
+        /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/>, <paramref name="value"/>, and <paramref name="comparisonType"/> are passed to this delegate.</param>
+        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="value"/> does not contain <paramref name="parameter"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
+        public static string MustBeSubstringOf(this string parameter, string value, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory, string parameterName = null)
+        {
+            if (value.MustNotBeNull(nameof(value)).IndexOf(parameter.MustNotBeNull(parameterName), comparisonType) == -1)
+                Throw.CustomException(exceptionFactory, parameter, value, comparisonType);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string is not a substring of the specified other string, or otherwise throws a <see cref="SubstringException"/>.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="value">The other string that must not contain <paramref name="parameter"/>.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the <see cref="SubstringException" /> (optional).</param>
+        /// <exception cref="SubstringException">Thrown when <paramref name="value"/> contains <paramref name="parameter"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
+        public static string MustNotBeSubstringOf(this string parameter, string value, string parameterName = null, string message = null)
+        {
+            if (value.MustNotBeNull(nameof(value)).Contains(parameter.MustNotBeNull(parameterName)))
+                Throw.Substring(parameter, value, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string is not a substring of the specified other string, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="value">The other string that must not contain <paramref name="parameter"/>.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="value"/> are passed to this delegate.</param>
+        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="value"/> contains <paramref name="parameter"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
+        public static string MustNotBeSubstringOf(this string parameter, string value, Func<string, string, Exception> exceptionFactory, string parameterName = null)
+        {
+            if (value.MustNotBeNull(nameof(value)).Contains(parameter.MustNotBeNull(parameterName)))
+                Throw.CustomException(exceptionFactory, parameter, value);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string is not a substring of the specified other string, or otherwise throws a <see cref="SubstringException"/>.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="value">The other string that must not contain <paramref name="parameter"/>.</param>
+        /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the <see cref="SubstringException" /> (optional).</param>
+        /// <exception cref="SubstringException">Thrown when <paramref name="value"/> contains <paramref name="parameter"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
+        public static string MustNotBeSubstringOf(this string parameter, string value, StringComparison comparisonType, string parameterName = null, string message = null)
+        {
+            if (value.MustNotBeNull(nameof(value)).IndexOf(parameter.MustNotBeNull(nameof(parameter)), comparisonType) != -1)
+                Throw.Substring(parameter, value, comparisonType, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string is not a substring of the specified other string, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="value">The other string that must not contain <paramref name="parameter"/>.</param>
+        /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="value"/> are passed to this delegate.</param>
+        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="value"/> contains <paramref name="parameter"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
+        public static string MustNotBeSubstringOf(this string parameter, string value, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory, string parameterName = null)
+        {
+            if (value.MustNotBeNull(nameof(value)).IndexOf(parameter.MustNotBeNull(nameof(parameter)), comparisonType) != -1)
+                Throw.CustomException(exceptionFactory, parameter, value, comparisonType);
+            return parameter;
+        }
     }
 }

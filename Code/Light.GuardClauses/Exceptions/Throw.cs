@@ -196,8 +196,37 @@ namespace Light.GuardClauses.Exceptions
         /// <summary>
         /// Throws the default <see cref="SubstringException"/> indicating that a string does contain another string as a substring, using the optional parameter name and message.
         /// </summary>
+        [ContractAnnotation("=> halt")]
         public static void StringContains(string parameter, string substring, StringComparison comparisonType, string parameterName = null, string message = null) =>
             throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not contain {substring.ToStringOrNull()} as a substring ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+
+        /// <summary>
+        /// Throws the default <see cref="SubstringException"/> indicating that a string is not a substring of another one, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void NotSubstring(string parameter, string other, string parameterName = null, string message = null) => 
+            throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must be a substring of \"{other}\", but it actually is {parameter.ToStringOrNull()}.");
+
+        /// <summary>
+        /// Throws the default <see cref="SubstringException"/> indicating that a string is not a substring of another one, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void NotSubstring(string parameter, string other, StringComparison comparisonType, string parameterName = null, string message = null) =>
+            throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must be a substring of \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+
+        /// <summary>
+        /// Throws the default <see cref="SubstringException"/> indicating that a string is a substring of another one, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void Substring(string parameter, string other, string parameterName = null, string message = null) =>
+            throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be a substring of \"{other}\", but it actually is {parameter.ToStringOrNull()}.");
+
+        /// <summary>
+        /// Throws the default <see cref="SubstringException"/> indicating that a string is a substring of another one, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void Substring(string parameter, string other, StringComparison comparisonType, string parameterName = null, string message = null) =>
+            throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be a substring of \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
 
         /// <summary>
         /// Throws the default <see cref="ValuesNotEqualException" /> indicating that two values are not equal, using the optional parameter name and message.
