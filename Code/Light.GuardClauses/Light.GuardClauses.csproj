@@ -1,7 +1,7 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/1.4.0">
+﻿<Project Sdk="MSBuild.Sdk.Extras/1.5.4">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard1.0;net45;net40;net35;net35-cf;sl5</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard1.0;net45;net40;sl5;net35;net35-cf</TargetFrameworks>
     <LangVersion>7.2</LangVersion>
     <Description>A lightweight .NET library for expressive Guard Clauses.</Description>
     <Version>3.5.0</Version>
@@ -21,13 +21,10 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net35-cf'">
-    <!-- inference fails for this TFM, so specify it by hand -->
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>CompactFramework</TargetFrameworkProfile>
-    <!-- define compilation constants by hand too -->
     <DefineConstants>NET35_CF;WindowsCE</DefineConstants>
-    <!-- disable implicit references, these are specified by hand, below -->
     <DisableImplicitFrameworkReferences>True</DisableImplicitFrameworkReferences>
     <NoStdLib>True</NoStdLib>
     <NoConfig>True</NoConfig>
