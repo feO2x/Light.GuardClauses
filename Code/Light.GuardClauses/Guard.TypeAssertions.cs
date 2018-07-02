@@ -1,4 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+#if NETSTANDARD1_0
+using System.Reflection;
+using Light.GuardClauses.FrameworkExtensions;
+#endif
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
 using System.Runtime.CompilerServices;
 #endif
@@ -23,7 +28,7 @@ namespace Light.GuardClauses
         public static bool IsEquivalentTypeTo(this Type type, Type other) =>
             ReferenceEquals(type, other) ||
             !(type is null) &&
-            other != null &&
+            !(other is null) &&
             (type == other ||
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45)
              type.IsConstructedGenericType != other.IsConstructedGenericType &&
@@ -57,5 +62,59 @@ namespace Light.GuardClauses
             return type.IsGenericType && !type.ContainsGenericParameters;
         }
 #endif
+
+        /// <summary>
+        /// Checks if the type implements the specified interface type. Internally, this method uses <see cref="IsEquivalentTypeTo" />
+        /// so that constructed generic types and their corresponding generic type defintions are regarded as equal.
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <param name="interfaceType">The interface type that <paramref name="type" /> should implement.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="interfaceType" /> is null.</exception>
+        /// <returns>True if <paramref name="type" /> implements <paramref name="interfaceType" /> directly or indirectly, else false.</returns>
+        public static bool Implements(this Type type, Type interfaceType)
+        {
+            interfaceType.MustNotBeNull(nameof(interfaceType));
+#if NETSTANDARD1_0
+            var implementedInterfaces = type.GetTypeInfo().ImplementedInterfaces.AsArray();
+#else
+            var implementedInterfaces = type.MustNotBeNull(nameof(type)).GetInterfaces();
+#endif
+
+            for (var i = 0; i < implementedInterfaces.Length; ++i)
+            {
+                if (interfaceType.IsEquivalentTypeTo(implementedInterfaces[i]))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if the type implements the specified interface type. This overload uses the specified <paramref name="typeComparer"/>
+        /// to compare the interface types.
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <param name="interfaceType">The interface type that <paramref name="type" /> should implement.</param>
+        /// <param name="typeComparer">The equality comparer used to compare the interface types.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="interfaceType" />, or <paramref name="typeComparer"/> is null.</exception>
+        /// <returns>True if <paramref name="type" /> implements <paramref name="interfaceType" /> directly or indirectly, else false.</returns>
+        public static bool Implements(this Type type, Type interfaceType, IEqualityComparer<Type> typeComparer)
+        {
+            interfaceType.MustNotBeNull(nameof(interfaceType));
+            typeComparer.MustNotBeNull(nameof(typeComparer));
+
+#if NETSTANDARD1_0
+            var implementedInterfaces = type.GetTypeInfo().ImplementedInterfaces.AsArray();
+#else
+            var implementedInterfaces = type.MustNotBeNull(nameof(type)).GetInterfaces();
+#endif
+            for (var i = 0; i < implementedInterfaces.Length; ++i)
+            {
+                if (typeComparer.Equals(implementedInterfaces[i], interfaceType))
+                    return true;
+            }
+
+            return false;
+        }
     }
 }
