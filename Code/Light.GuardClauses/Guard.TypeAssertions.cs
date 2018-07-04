@@ -264,8 +264,8 @@ namespace Light.GuardClauses
                 : type.DerivesFrom(baseClassOrInterfaceType);
 
         /// <summary>
-        /// Checks if the given type derives from the specified base class or interface type. Internally, this method uses <see cref="IsEquivalentTypeTo" />
-        /// so that constructed generic types and their corresponding generic type defintions are regarded as equal.
+        /// Checks if the given type derives from the specified base class or interface type. This overload uses the specified <paramref name="typeComparer"/>
+        /// to compare the types.
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <param name="baseClassOrInterfaceType">The type describing an interface or base class that <paramref name="type" /> should derive from or implement.</param>
@@ -274,7 +274,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt")]
+        [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt; typeComparer:null => halt")]
         public static bool InheritsFrom(this Type type, Type baseClassOrInterfaceType, IEqualityComparer<Type> typeComparer) =>
             baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType))
 #if NETSTANDARD1_0
@@ -283,5 +283,36 @@ namespace Light.GuardClauses
                                     .IsInterface
                 ? type.Implements(baseClassOrInterfaceType, typeComparer)
                 : type.DerivesFrom(baseClassOrInterfaceType, typeComparer);
+
+        /// <summary>
+        /// Checks if the given <paramref name="type" /> is equal to the specified <paramref name="otherType" /> or if it derives from it or implements it.
+        /// Internally, this method uses <see cref="IsEquivalentTypeTo" /> so that constructed generic types and their corresponding generic type defintions
+        /// are regarded as equal.
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the base class type where <paramref name="type" /> derives from.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("type:null => halt; otherType:null => halt")]
+        public static bool IsOrInheritsFrom(this Type type, Type otherType) => 
+            type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType);
+
+
+        /// <summary>
+        /// Checks if the given <paramref name="type" /> is equal to the specified <paramref name="otherType" /> or if it derives from it or implements it.
+        /// This overload uses the specified <paramref name="typeComparer"/> to compare the types.
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the base class type where <paramref name="type" /> derives from.</param>
+        /// <param name="typeComparer">The equality comparer used to compare the types.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("type:null => halt; otherType:null => halt; typeComparer:null => halt")]
+        public static bool IsOrInheritsFrom(this Type type, Type otherType, IEqualityComparer<Type> typeComparer) =>
+            typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type, otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType, typeComparer);
     }
 }
