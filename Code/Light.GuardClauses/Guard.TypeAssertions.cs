@@ -71,7 +71,6 @@ namespace Light.GuardClauses
         /// <param name="type">The type to be checked.</param>
         /// <param name="interfaceType">The interface type that <paramref name="type" /> should implement.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="interfaceType" /> is null.</exception>
-        /// <returns>True if <paramref name="type" /> implements <paramref name="interfaceType" /> directly or indirectly, else false.</returns>
         [ContractAnnotation("type:null => halt; interfaceType:null => halt")]
         public static bool Implements(this Type type, Type interfaceType)
         {
@@ -99,7 +98,6 @@ namespace Light.GuardClauses
         /// <param name="interfaceType">The interface type that <paramref name="type" /> should implement.</param>
         /// <param name="typeComparer">The equality comparer used to compare the interface types.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="interfaceType" />, or <paramref name="typeComparer"/> is null.</exception>
-        /// <returns>True if <paramref name="type" /> implements <paramref name="interfaceType" /> directly or indirectly, else false.</returns>
         [ContractAnnotation("type:null => halt; interfaceType:null => halt; typeComparer:null => halt")]
         public static bool Implements(this Type type, Type interfaceType, IEqualityComparer<Type> typeComparer)
         {
@@ -127,7 +125,6 @@ namespace Light.GuardClauses
         /// <param name="type">The type to be checked.</param>
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the interface type that <paramref name="type" /> implements.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
-        /// <returns>True if <paramref name="type" /> is equivalent to or implements <paramref name="otherType" /> directly or indirectly, else false.</returns>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -143,7 +140,6 @@ namespace Light.GuardClauses
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the interface type that <paramref name="type" /> implements.</param>
         /// <param name="typeComparer">The equality comparer used to compare the interface types.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
-        /// <returns>True if <paramref name="type" /> is equivalent to or implements <paramref name="otherType" /> directly or indirectly, else false.</returns>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -158,7 +154,6 @@ namespace Light.GuardClauses
         /// <param name="type">The type info to be checked.</param>
         /// <param name="baseClass">The base class that <paramref name="type" /> should derive from.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="baseClass" /> is null.</exception>
-        /// <returns>True if <paramref name="type" /> derives directly or indirectly from <paramref name="baseClass" />, else false.</returns>
         [ContractAnnotation("type:null => halt; baseClass:null => halt")]
         public static bool DerivesFrom(this Type type, Type baseClass)
         {
@@ -192,7 +187,6 @@ namespace Light.GuardClauses
         /// <param name="baseClass">The base class that <paramref name="type" /> should derive from.</param>
         /// <param name="typeComparer">The equality comparer used to compare the types.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="baseClass" />, or <paramref name="typeComparer"/> is null.</exception>
-        /// <returns>True if <paramref name="type" /> derives directly or indirectly from <paramref name="baseClass" />, else false.</returns>
         [ContractAnnotation("type:null => halt; baseClass:null => halt; typeComparer:null => halt")]
         public static bool DerivesFrom(this Type type, Type baseClass, IEqualityComparer<Type> typeComparer)
         {
@@ -240,12 +234,54 @@ namespace Light.GuardClauses
         /// <param name="type">The type to be checked.</param>
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the base class type where <paramref name="type" /> derives from.</param>
         /// <param name="typeComparer">The equality comparer used to compare the types.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="otherType" />, or <paramref name="typeComparer"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("type:null => halt; otherType:null => halt; typeComparer:null => halt")]
         public static bool IsOrDerivesFrom(this Type type, Type otherType, IEqualityComparer<Type> typeComparer) =>
             typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type, otherType.MustNotBeNull(nameof(otherType))) || type.DerivesFrom(otherType, typeComparer);
+
+
+        /// <summary>
+        /// Checks if the given type derives from the specified base class or interface type. Internally, this method uses <see cref="IsEquivalentTypeTo" />
+        /// so that constructed generic types and their corresponding generic type defintions are regarded as equal.
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <param name="baseClassOrInterfaceType">The type describing an interface or base class that <paramref name="type" /> should derive from or implement.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="baseClassOrInterfaceType" /> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt")]
+        public static bool InheritsFrom(this Type type, Type baseClassOrInterfaceType) => 
+            baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType))
+#if NETSTANDARD1_0
+                                    .GetTypeInfo()
+#endif
+                                    .IsInterface
+                ? type.Implements(baseClassOrInterfaceType)
+                : type.DerivesFrom(baseClassOrInterfaceType);
+
+        /// <summary>
+        /// Checks if the given type derives from the specified base class or interface type. Internally, this method uses <see cref="IsEquivalentTypeTo" />
+        /// so that constructed generic types and their corresponding generic type defintions are regarded as equal.
+        /// </summary>
+        /// <param name="type">The type to be checked.</param>
+        /// <param name="baseClassOrInterfaceType">The type describing an interface or base class that <paramref name="type" /> should derive from or implement.</param>
+        /// <param name="typeComparer">The equality comparer used to compare the types.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="baseClassOrInterfaceType" />, or <paramref name="typeComparer"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt")]
+        public static bool InheritsFrom(this Type type, Type baseClassOrInterfaceType, IEqualityComparer<Type> typeComparer) =>
+            baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType))
+#if NETSTANDARD1_0
+                                    .GetTypeInfo()
+#endif
+                                    .IsInterface
+                ? type.Implements(baseClassOrInterfaceType, typeComparer)
+                : type.DerivesFrom(baseClassOrInterfaceType, typeComparer);
     }
 }
