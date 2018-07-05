@@ -12,9 +12,9 @@ using Light.GuardClauses.Exceptions;
 namespace Light.GuardClauses
 {
     /// <summary>
-    /// The <see cref="Guard" /> class provides access to all assertions of Light.GuardClauses.
+    /// The <see cref="Check" /> class provides access to all assertions of Light.GuardClauses.
     /// </summary>
-    public static partial class Guard
+    public static partial class Check
     {
         /// <summary>
         /// Ensures that the specified object reference is not null, or otherwise throws an <see cref="ArgumentNullException" />.

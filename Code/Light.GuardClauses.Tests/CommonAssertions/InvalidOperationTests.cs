@@ -10,7 +10,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [MetasyntacticVariablesData]
         public static void ConditionTrue(string message)
         {
-            Action act = () => Guard.InvalidOperation(true, message);
+            Action act = () => Check.InvalidOperation(true, message);
 
             act.Should().Throw<InvalidOperationException>()
                .And.Message.Should().Be(message);
@@ -19,7 +19,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void ConditionFalse()
         {
-            Guard.InvalidOperation(false);
+            Check.InvalidOperation(false);
         }
     }
 }

@@ -7,7 +7,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses
 {
-    public static partial class Guard
+    public static partial class Check
     {
         /*
          * -------------------------------------

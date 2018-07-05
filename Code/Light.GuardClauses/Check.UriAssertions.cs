@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 
 namespace Light.GuardClauses
 {
-    public static partial class Guard
+    public static partial class Check
     {
         /// <summary>
         /// Ensures that the specified URI is an absolute one, or otherwise throws an <see cref="RelativeUriException" />.

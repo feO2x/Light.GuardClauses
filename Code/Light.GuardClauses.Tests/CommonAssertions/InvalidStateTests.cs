@@ -11,13 +11,13 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [MetasyntacticVariablesData]
         public static void ConditionTrue(string message)
         {
-            Action act = () => Guard.InvalidState(true, message);
+            Action act = () => Check.InvalidState(true, message);
 
             act.Should().Throw<InvalidStateException>()
                .And.Message.Should().Be(message);
         }
 
         [Fact]
-        public static void ConditionFalse() => Guard.InvalidState(false);
+        public static void ConditionFalse() => Check.InvalidState(false);
     }
 }

@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 
 namespace Light.GuardClauses
 {
-    public static partial class Guard
+    public static partial class Check
     {
         /// <summary>
         /// Checks if the two specified types are equivalent. This is true when both types are equal or

@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 namespace Light.GuardClauses
 {
     /// <summary>
-    /// Represents an <see cref="IEqualityComparer{T}" /> that uses <see cref="Guard.IsEquivalentTypeTo" />
+    /// Represents an <see cref="IEqualityComparer{T}" /> that uses <see cref="Check.IsEquivalentTypeTo" />
     /// to compare types. This check works like the normal type equality comparison, but when two
     /// generic types are compared, they are regarded as equal when one of them is a constructed generic type
     /// and the other one is the corresponding generic type definition.
@@ -20,7 +20,7 @@ namespace Light.GuardClauses
         public static readonly EqualivalentTypeComparer Instance = new EqualivalentTypeComparer();
 
         /// <summary>
-        /// Checks if the two types are equivalent (using <see cref="Guard.IsEquivalentTypeTo" />).
+        /// Checks if the two types are equivalent (using <see cref="Check.IsEquivalentTypeTo" />).
         /// This check works like the normal type equality comparison, but when two
         /// generic types are compared, they are regarded as equal when one of them is a constructed generic type
         /// and the other one is the corresponding generic type definition.

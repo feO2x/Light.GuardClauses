@@ -10,16 +10,16 @@ namespace Light.GuardClauses.Tests.TypeAssertions
         [Fact]
         public static void BasicFunctionality()
         {
-            CheckIsInInheritanceHierarchyOf(typeof(string), typeof(string), true);
-            CheckIsInInheritanceHierarchyOf(typeof(int), typeof(ValueType), true);
-            CheckIsInInheritanceHierarchyOf(typeof(double), typeof(decimal), false);
-            CheckIsInInheritanceHierarchyOf(typeof(Exception), typeof(object), true);
-            CheckIsInInheritanceHierarchyOf(typeof(char), typeof(IConvertible), true);
-            CheckIsInInheritanceHierarchyOf(typeof(bool), typeof(IDisposable), false);
+            CheckIsOrInheritsFrom(typeof(string), typeof(string), true);
+            CheckIsOrInheritsFrom(typeof(int), typeof(ValueType), true);
+            CheckIsOrInheritsFrom(typeof(double), typeof(decimal), false);
+            CheckIsOrInheritsFrom(typeof(Exception), typeof(object), true);
+            CheckIsOrInheritsFrom(typeof(char), typeof(IConvertible), true);
+            CheckIsOrInheritsFrom(typeof(bool), typeof(IDisposable), false);
 
-            CheckIsInInheritanceHierarchyOf(typeof(IList<string>), typeof(ICollection<string>), true);
-            CheckIsInInheritanceHierarchyOf(typeof(IList<string>), typeof(ICollection<>), true);
-            CheckIsInInheritanceHierarchyOf(typeof(Dictionary<string, object>), typeof(Dictionary<int, object>), false);
+            CheckIsOrInheritsFrom(typeof(IList<string>), typeof(ICollection<string>), true);
+            CheckIsOrInheritsFrom(typeof(IList<string>), typeof(ICollection<>), true);
+            CheckIsOrInheritsFrom(typeof(Dictionary<string, object>), typeof(Dictionary<int, object>), false);
         }
 
         [Fact]
@@ -46,9 +46,6 @@ namespace Light.GuardClauses.Tests.TypeAssertions
                .And.ParamName.Should().Be(nameof(otherType));
         }
 
-        private static void CheckIsInInheritanceHierarchyOf(Type type, Type otherType, bool expected)
-        {
-            type.IsOrInheritsFrom(otherType).Should().Be(expected);
-        }
+        private static void CheckIsOrInheritsFrom(Type type, Type otherType, bool expected) => type.IsOrInheritsFrom(otherType).Should().Be(expected);
     }
 }

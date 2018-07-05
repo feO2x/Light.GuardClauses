@@ -18,7 +18,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
         [Benchmark]
         public bool LightGuardClauses()
         {
-            Guard.InvalidOperation(Condition, Message);
+            Check.InvalidOperation(Condition, Message);
             return Condition;
         }
     }

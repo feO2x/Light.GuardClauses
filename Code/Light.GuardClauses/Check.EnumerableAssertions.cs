@@ -11,7 +11,7 @@ using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses
 {
-    public static partial class Guard
+    public static partial class Check
     {
         /// <summary>
         /// Ensures that the collection has the specified number of items, or otherwise throws an <see cref="InvalidCollectionCountException"/>.
