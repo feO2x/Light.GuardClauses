@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-#if NET40 || NET35 || SILVERLIGHT
 using System.Collections.ObjectModel;
+#if NET40 || NET35 || SILVERLIGHT
 using System.Linq;
 #endif
 #if NETSTANDARD2_0 || NETSTANDARD1_0 || NET45
@@ -54,11 +54,7 @@ namespace Light.GuardClauses
         /// <summary>
         /// Gets the values of the enum as an read-only list.
         /// </summary>
-#if NETSTANDARD2_0 || NETSTANDARD1_0 || NET45
-        public static IReadOnlyList<T> EnumConstants => EnumConstantsArray;
-#else
-        public static ReadOnlyCollection<T> EnumConstants { get; } = new ReadOnlyCollection<T>(EnumConstantsArray);
-#endif
+        public static ReadOnlyCollection<T> EnumConstants { get; }
 
         static EnumInfo()
         {
@@ -79,6 +75,7 @@ namespace Light.GuardClauses
                 EnumConstantsArray[i - 1] = (T) fields[i].GetValue(null);
             }
 #endif
+            EnumConstants = new ReadOnlyCollection<T>(EnumConstantsArray);
             if (!IsFlagsEnum)
                 return;
 
@@ -106,8 +103,6 @@ namespace Light.GuardClauses
                 }
             }
         }
-
-        
 
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
