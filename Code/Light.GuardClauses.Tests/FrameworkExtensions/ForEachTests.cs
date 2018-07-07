@@ -10,7 +10,7 @@ namespace Light.GuardClauses.Tests.FrameworkExtensions
 {
     public static class ForEachTests
     {
-        [Theory(DisplayName = "ForEach must call the specified action for each element in the given enumerable.")]
+        [Theory]
         [MemberData(nameof(PerformOnEachElementData))]
         public static void PerformOnEachElement(IEnumerable<string> collection)
         {
@@ -39,7 +39,7 @@ namespace Light.GuardClauses.Tests.FrameworkExtensions
             yield return "Baz";
         }
 
-        [Theory(DisplayName = "ForEach must throw a CollectionException when the specified collection contains an item that is null and throwWhenItemIsNull is set to true.")]
+        [Theory]
         [MemberData(nameof(ItemNullData))]
         public static void ItemNullException(IEnumerable<object> collection)
         {
@@ -48,7 +48,7 @@ namespace Light.GuardClauses.Tests.FrameworkExtensions
             act.Should().Throw<CollectionException>();
         }
 
-        [Theory(DisplayName = "ForEach must not throw a CollectionException when the specified collection contains an item that is null and throwWhenItemIsNull is set to false.")]
+        [Theory]
         [MemberData(nameof(ItemNullData))]
         public static void ItemNullOmit(IEnumerable<object> collection)
         {
@@ -76,7 +76,7 @@ namespace Light.GuardClauses.Tests.FrameworkExtensions
             yield return new object();
         }
 
-        [Theory(DisplayName = "ForEach must throw an ArgumentNullException when either enumerable or action is null.")]
+        [Theory]
         [MemberData(nameof(ArgumentNullData))]
         public static void ArgumentNull(IEnumerable<int> collection, Action<int> action)
         {
