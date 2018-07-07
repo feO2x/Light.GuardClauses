@@ -51,17 +51,19 @@ namespace Light.GuardClauses
 
 #if (NET35 || NET40 || SILVERLIGHT)
         /// <summary>
-        /// Gets a value that indicates whether this object represents a constructed generic type. You can create instances of a constructed generic type.
+        /// Gets a value that indicates whether the specified type is a constructed generic type.
+        /// This is true when the type is a generic type, but not a generic type definition.
+        /// Constructed generic types resolve at least one generic parameter of a generic type definition.
+        /// They may either be open (when not all generic parameters are resolved) or closed 
+        /// (when all generic parameters of the generic type definition are resolved).
         /// </summary>
         /// <param name="type">The type to be checked.</param>
-        /// <returns>True if this object represents a constructed generic type, else false.</returns>
-        public static bool IsConstructedGenericType(this Type type)
-        {
-            if (type == null)
-                return false;
-
-            return type.IsGenericType && !type.ContainsGenericParameters;
-        }
+        /// <returns>True if the specified type is not null and a generic type, but not a generic type definition, else false.</returns>
+#if SILVERLIGHT
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static bool IsConstructedGenericType(this Type type) =>
+            type != null ? type.IsGenericType && !type.IsGenericTypeDefinition : false;
 #endif
 
         /// <summary>
