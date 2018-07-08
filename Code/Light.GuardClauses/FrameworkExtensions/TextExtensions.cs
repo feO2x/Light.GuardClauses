@@ -169,5 +169,33 @@ namespace Light.GuardClauses.FrameworkExtensions
                 stringBuilder.MustNotBeNull(nameof(stringBuilder)).AppendLine(value);
             return stringBuilder;
         }
+
+        /// <summary>
+        /// Appends the messages of the <paramref name="exception" /> and its nested exceptions to the
+        /// specified <paramref name="stringBuilder" />.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
+        public static StringBuilder AppendExceptionMessages(this StringBuilder stringBuilder, Exception exception)
+        {
+            stringBuilder.MustNotBeNull(nameof(stringBuilder));
+            var currentException = exception.MustNotBeNull(nameof(exception));
+            while (true)
+            {
+                stringBuilder.AppendLine(currentException.Message);
+                if (currentException.InnerException == null)
+                    return stringBuilder;
+
+                stringBuilder.AppendLine();
+                currentException = exception.InnerException;
+            }
+        }
+
+        /// <summary>
+        /// Formats all messages of the <paramref name="exception" /> and its nested exceptions into
+        /// a single string.
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="exception" /> is null.</exception>
+        public static string GetAllExceptionMessages(this Exception exception) => 
+            new StringBuilder().AppendExceptionMessages(exception).ToString();
     }
 }
