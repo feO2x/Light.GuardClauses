@@ -53,7 +53,17 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        
+        /// <summary>
+        /// Checks if the specified collection is null or empty.
+        /// </summary>
+        /// <param name="collection">The collection to be checked.</param>
+        /// <returns>True if the collection is null or empty, else false.</returns>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("collection:null => false")]
+        public static bool IsNullOrEmpty<TCollection>(this TCollection collection) where TCollection : class, IEnumerable => 
+            collection == null || collection.Count() == 0;
 
         /// <summary>
         /// Ensures that the collection is not null or empty, or otherwise throws an <see cref="EmptyCollectionException"/>.
@@ -202,6 +212,27 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Checks if the given <paramref name="item" /> is one of the specified <paramref name="items" />.
+        /// </summary>
+        /// <param name="item">The item to be checked.</param>
+        /// <param name="items">The collection that might contain the <paramref name="item" />.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="items" /> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("items:null => halt")]
+        public static bool IsOneOf<TItem, TCollection>(this TItem item, TCollection items) where TCollection : class, IEnumerable<TItem>
+        {
+            if (items is ICollection<TItem> collection)
+                return collection.Contains(item);
+
+            if (items is string @string && item is char character)
+                return @string.IndexOf(character) != -1;
+
+            return items.MustNotBeNull(nameof(items)).Contains(item);
+        }
+
+        /// <summary>
         /// Ensures that the value is one of the specified items, or otherwise throws a <see cref="ValueIsNotOneOfException"/>.
         /// </summary>
         /// <param name="parameter">The value to be checked.</param>
@@ -216,14 +247,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("items:null => halt")]
         public static TItem MustBeOneOf<TItem, TCollection>(this TItem parameter, TCollection items, string parameterName = null, string message = null) where TCollection : class, IEnumerable<TItem>
         {
-            if (items is ICollection<TItem> collection)
-            {
-                if (!collection.Contains(parameter))
-                    Throw.ValueNotOneOf(parameter, items, parameterName, message);
-                return parameter;
-            }
-
-            if (!items.MustNotBeNull(nameof(items)).Contains(parameter))
+            if (!parameter.IsOneOf(items))
                 Throw.ValueNotOneOf(parameter, items, parameterName, message);
             return parameter;
         }
@@ -242,14 +266,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("items:null => halt")]
         public static TItem MustBeOneOf<TItem, TCollection>(this TItem parameter, TCollection items, Func<TItem, TCollection, Exception> exceptionFactory) where TCollection : class, IEnumerable<TItem>
         {
-            if (items is ICollection<TItem> collection)
-            {
-                if (!collection.Contains(parameter))
-                    Throw.CustomException(exceptionFactory, parameter, items);
-                return parameter;
-            }
-
-            if (!items.MustNotBeNull(nameof(items)).Contains(parameter))
+            if (!parameter.IsOneOf(items))
                 Throw.CustomException(exceptionFactory, parameter, items);
             return parameter;
         }
@@ -269,14 +286,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("items:null => halt")]
         public static TItem MustNotBeOneOf<TItem, TCollection>(this TItem parameter, TCollection items, string parameterName = null, string message = null) where TCollection : class, IEnumerable<TItem>
         {
-            if (items is ICollection<TItem> collection)
-            {
-                if (collection.Contains(parameter))
-                    Throw.ValueIsOneOf(parameter, items, parameterName, message);
-                return parameter;
-            }
-
-            if (items.MustNotBeNull(nameof(items)).Contains(parameter))
+            if (parameter.IsOneOf(items))
                 Throw.ValueIsOneOf(parameter, items, parameterName, message);
             return parameter;
         }
@@ -295,14 +305,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("items:null => halt")]
         public static TItem MustNotBeOneOf<TItem, TCollection>(this TItem parameter, TCollection items, Func<TItem, TCollection, Exception> exceptionFactory) where TCollection : class, IEnumerable<TItem>
         {
-            if (items is ICollection<TItem> collection)
-            {
-                if (collection.Contains(parameter))
-                    Throw.CustomException(exceptionFactory, parameter, items);
-                return parameter;
-            }
-
-            if (items.MustNotBeNull(nameof(items)).Contains(parameter))
+            if (parameter.IsOneOf(items))
                 Throw.CustomException(exceptionFactory, parameter, items);
             return parameter;
         }
