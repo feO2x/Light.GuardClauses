@@ -350,6 +350,12 @@ namespace Light.GuardClauses.Exceptions
                                                                    .ToString());
 
         /// <summary>
+        /// Throws the default <see cref="InvalidDateTimeException" /> indicating that a date time is not using <see cref="DateTimeKind.Utc" />, using the optional parameter name and message.
+        /// </summary>
+        public static void MustBeUtcDateTime(DateTime parameter, string parameterName = null, string message = null) =>
+            throw new InvalidDateTimeException(parameterName, message ?? $"{parameterName ?? "The date time"} must use kind \"{DateTimeKind.Utc}\", but it actually uses \"{parameter.Kind}\" and is \"{parameter:O}\".");
+
+        /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         [ContractAnnotation("=> halt")]
