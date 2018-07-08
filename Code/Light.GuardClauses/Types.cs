@@ -16,10 +16,5 @@ namespace Light.GuardClauses
         /// Gets the <see cref="ulong" /> type.
         /// </summary>
         public static readonly Type UInt64Type = typeof(ulong);
-
-        /// <summary>
-        /// Gets the <see cref="MulticastDelegate" /> type.
-        /// </summary>
-        public static readonly Type MulticastDelegateType = typeof(MulticastDelegate);
     }
 }
