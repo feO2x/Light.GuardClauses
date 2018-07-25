@@ -257,7 +257,7 @@ namespace Light.GuardClauses
         /// <typeparam name="T">The type of the enum.</typeparam>
         /// <param name="parameter">The value to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. The <paramref name="parameter"/> is passed to this delegate.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is no valid enum value.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is no valid enum value, or when <typeparamref name="T"/> is no enum type.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
