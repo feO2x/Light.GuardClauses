@@ -481,6 +481,7 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the <see cref="ValuesNotEqualException" /> (optional).</param>
         /// <exception cref="ValuesNotEqualException">Thrown when <paramref name="parameter"/> and <paramref name="other"/> are not equal.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="equalityComparer"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -500,6 +501,7 @@ namespace Light.GuardClauses
         /// <param name="equalityComparer">The equality comparer used for comparing the two values.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="other"/> are passed to this delegate.</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> and <paramref name="other"/> are not equal.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="equalityComparer"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -555,6 +557,7 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the <see cref="ValuesEqualException" /> (optional).</param>
         /// <exception cref="ValuesEqualException">Thrown when <paramref name="parameter"/> and <paramref name="other"/> are equal.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="equalityComparer"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -574,6 +577,7 @@ namespace Light.GuardClauses
         /// <param name="equalityComparer">The equality comparer used for comparing the two values.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="other"/> are passed to this delegate.</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> and <paramref name="other"/> are equal.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="equalityComparer"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
