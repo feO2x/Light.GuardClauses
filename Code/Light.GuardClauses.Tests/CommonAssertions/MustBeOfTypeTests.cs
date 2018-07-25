@@ -45,13 +45,17 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
 
         [Fact]
-        public static void CustomExceptionReferenceIsNull()
-        {
-            Action act = () => ((object) null).MustBeOfType<StreamReader>(_ => new Exception(), Metasyntactic.Baz);
+        public static void CustomExceptionArgumentNull() => 
+            Test.CustomException<object>(null,
+                                         (nullReference, exceptionFactory) => nullReference.MustBeOfType<string>(exceptionFactory));
 
-            act.Should().Throw<ArgumentNullException>()
-               .And.ParamName.Should().Be(Metasyntactic.Baz);
+        [Fact]
+        public static void CustomExceptionDowncastValid()
+        {
+            var encoding = Encoding.UTF8;
+            encoding.MustBeOfType<UTF8Encoding>(e => null).Should().BeSameAs(encoding);
         }
+        
 
         [Fact]
         public static void CustomMessage() =>

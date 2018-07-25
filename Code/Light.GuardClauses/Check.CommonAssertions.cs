@@ -161,7 +161,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static T MustBeOfType<T>(this object parameter, string parameterName = null, string message = null)
         {
-            if (parameter.MustNotBeNull(parameterName) is T castedValue)
+            if (parameter.MustNotBeNull(parameterName, message) is T castedValue)
                 return castedValue;
 
             Throw.InvalidTypeCast(parameter, typeof(T), parameterName, message);
@@ -174,15 +174,14 @@ namespace Light.GuardClauses
         /// <param name="parameter">The value to be casted.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. The <paramref name="parameter"/> is passed to this delegate.</param>
         /// <param name="parameterName">The name of the parameter (optional). This is used for the argument-null-check.</param>
-        /// <exception cref="TypeCastException">Thrown when <paramref name="parameter"/> cannot be casted to <typeparamref name="T"/>.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> cannot be casted to <typeparamref name="T"/>.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
         public static T MustBeOfType<T>(this object parameter, Func<object, Exception> exceptionFactory, string parameterName = null)
         {
-            if (parameter.MustNotBeNull(parameterName) is T castedValue)
+            if (parameter is T castedValue)
                 return castedValue;
 
             Throw.CustomException(exceptionFactory, parameter);
