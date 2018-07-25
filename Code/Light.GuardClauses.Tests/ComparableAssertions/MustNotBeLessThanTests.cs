@@ -33,8 +33,19 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
         }
 
         [Fact]
+        public static void OtherStringNull() => "abc".MustNotBeLessThan(null).Should().Be("abc");
+
+        [Fact]
         public static void CustomException() =>
             Test.CustomException(99, 100, (x, y, exceptionFactory) => x.MustNotBeLessThan(y, exceptionFactory));
+
+        [Fact]
+        public static void CustomExceptionParameterNull() => 
+            Test.CustomException<string, string>(null, "abc", (x, y, exceptionFactory) => x.MustNotBeLessThan(y, exceptionFactory));
+
+        [Fact]
+        public static void CustomExceptionParameterValid() => 
+            42.MustNotBeLessThan(40, (x, y) => null).Should().Be(42);
 
         [Fact]
         public static void CustomMessage() =>
