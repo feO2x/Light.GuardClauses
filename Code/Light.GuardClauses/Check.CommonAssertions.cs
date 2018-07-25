@@ -173,13 +173,12 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The value to be casted.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. The <paramref name="parameter"/> is passed to this delegate.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This is used for the argument-null-check.</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> cannot be casted to <typeparamref name="T"/>.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustBeOfType<T>(this object parameter, Func<object, Exception> exceptionFactory, string parameterName = null)
+        public static T MustBeOfType<T>(this object parameter, Func<object, Exception> exceptionFactory)
         {
             if (parameter is T castedValue)
                 return castedValue;
@@ -218,7 +217,7 @@ namespace Light.GuardClauses
 
         /// <summary>
         /// Ensures that the specified enum value is valid, or otherwise throws an <see cref="EnumValueNotDefinedException"/>. An enum value
-        /// is valid when the specified value  is one of the constants defined in the enum, or a valid flags combination when the enum type
+        /// is valid when the specified value is one of the constants defined in the enum, or a valid flags combination when the enum type
         /// is marked with the <see cref="FlagsAttribute"/>.
         /// </summary>
         /// <typeparam name="T">The type of the enum.</typeparam>
@@ -246,26 +245,24 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            Throw.TypeIsNoEnum(typeof(T), parameterName);
+            Throw.TypeIsNoEnum(typeof(T), parameterName, message);
             return default;
         }
 
         /// <summary>
         /// Ensures that the specified enum value is valid, or otherwise throws your custom exception. An enum value
-        /// is valid when the specified value  is one of the constants defined in the enum, or a valid flags combination when the enum type
+        /// is valid when the specified value is one of the constants defined in the enum, or a valid flags combination when the enum type
         /// is marked with the <see cref="FlagsAttribute"/>.
         /// </summary>
         /// <typeparam name="T">The type of the enum.</typeparam>
         /// <param name="parameter">The value to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. The <paramref name="parameter"/> is passed to this delegate.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This value is used for the <see cref="TypeIsNoEnumException"/>.</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is no valid enum value.</exception>
-        /// <exception cref="TypeIsNoEnumException">Thrown when <typeparamref name="T"/> is no enum type.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("exceptionFactory:null => halt")]
-        public static T MustBeValidEnumValue<T>(this T parameter, Func<T, Exception> exceptionFactory, string parameterName = null) where T : struct, IComparable, IFormattable
+        public static T MustBeValidEnumValue<T>(this T parameter, Func<T, Exception> exceptionFactory) where T : struct, IComparable, IFormattable
 #if !NETSTANDARD1_0
 , IConvertible
 #endif
@@ -281,7 +278,7 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            Throw.TypeIsNoEnum(typeof(T), parameterName);
+            Throw.CustomException(exceptionFactory, parameter);
             return default;
         }
 

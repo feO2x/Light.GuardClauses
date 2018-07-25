@@ -30,6 +30,16 @@ namespace Light.GuardClauses.Tests.CommonAssertions
                                  (invalidValue, exceptionFactory) => invalidValue.MustBeValidEnumValue(exceptionFactory));
 
         [Fact]
+        public static void CustomExceptionNoEnumType() =>
+            Test.CustomException(100L,
+                                 (longValue, exceptionFactory) => longValue.MustBeValidEnumValue(exceptionFactory));
+
+        [Fact]
+        public static void CustomExceptionValidEnumValue() => 
+            SampleEnum.Second.MustBeValidEnumValue(_ => null).Should().Be(SampleEnum.Second);
+
+
+        [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<EnumValueNotDefinedException>(
                 message => ((DateTimeKind) 7).MustBeValidEnumValue(message: message));
