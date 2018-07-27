@@ -33,9 +33,9 @@ namespace Light.GuardClauses.Tests.CommonAssertions
             value.MustNotBeNullReference().Should().Be(value);
 
         [Theory]
-        [MetasyntacticVariablesData]
-        [InlineData(new int[] { })]
-        public static void ReferenceNotNull<T>(T reference) where T : class =>
+        [InlineData(Metasyntactic.Foo)]
+        [InlineData(Metasyntactic.Bar)]
+        public static void ReferenceNotNull(string reference) =>
             reference.MustNotBeNullReference().Should().BeSameAs(reference);
 
         [Fact]

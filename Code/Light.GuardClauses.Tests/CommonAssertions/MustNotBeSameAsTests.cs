@@ -21,8 +21,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Theory]
         [InlineData("Hello", "World")]
         [InlineData("1", "2")]
-        [InlineData(new object[] { }, new object[] { "Foo" })]
-        public static void ReferencesDifferent<T>(T first, T second) where T : class
+        public static void ReferencesDifferent(string first, string second)
         {
             var result = first.MustNotBeSameAs(second);
 

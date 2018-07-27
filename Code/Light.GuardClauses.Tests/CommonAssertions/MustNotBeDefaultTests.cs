@@ -44,9 +44,9 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         }
 
         [Theory]
-        [InlineData("Foo")]
-        [InlineData(new int[] { })]
-        public static void ReferenceIsNotNull<T>(T reference) where T : class => reference.MustNotBeDefault().Should().BeSameAs(reference);
+        [InlineData(Metasyntactic.Foo)]
+        [InlineData(Metasyntactic.Bar)]
+        public static void ReferenceIsNotNull(string reference) => reference.MustNotBeDefault().Should().BeSameAs(reference);
 
         [Theory]
         [InlineData(42)]

@@ -10,10 +10,8 @@ namespace Light.GuardClauses.Tests.CommonAssertions
     {
         [Theory]
         [InlineData(Metasyntactic.Qux)]
-        [InlineData(155)]
-        [InlineData(false)]
-        [InlineData('/')]
-        public static void ValuesEqual<T>(T value)
+        [InlineData(Metasyntactic.Foo)]
+        public static void ValuesEqual(string value)
         {
             Action act = () => value.MustNotBe(value, nameof(value));
 
@@ -22,11 +20,9 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         }
 
         [Theory]
-        [InlineData(Metasyntactic.Foo, Metasyntactic.Bar)]
-        [InlineData(23, -699)]
-        [InlineData(true, false)]
-        [InlineData('c', 'a')]
-        public static void ValuesNotEqual<T>(T x, T y) => x.MustNotBe(y).Should().Be(x);
+        [InlineData(42, 43)]
+        [InlineData(34, -153)]
+        public static void ValuesNotEqual(int x, int y) => x.MustNotBe(y).Should().Be(x);
 
 
         [Fact]
