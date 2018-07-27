@@ -13,8 +13,9 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
         {
             Action act = () => value.MustNotBeLessThan(boundary, nameof(value));
 
-            act.Should().Throw<ArgumentOutOfRangeException>()
-               .And.Message.Should().Contain($"{nameof(value)} must not be less than {boundary}, but it actually is {value}.");
+            var exceptionAssertion = act.Should().Throw<ArgumentOutOfRangeException>().Which;
+            exceptionAssertion.Message.Should().Contain($"{nameof(value)} must not be less than {boundary}, but it actually is {value}.");
+            exceptionAssertion.ParamName.Should().BeSameAs(nameof(value));
         }
 
         [Theory]
@@ -51,5 +52,8 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
         public static void CustomMessage() =>
             Test.CustomMessage<ArgumentOutOfRangeException>(message => 'a'.MustNotBeLessThan('b', message: message));
 
+        [Fact]
+        public static void CustomMessageParameterNull() => 
+            Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustNotBeLessThan("a", message: message));
     }
 }
