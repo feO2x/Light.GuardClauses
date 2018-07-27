@@ -17,8 +17,9 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
         {
             Action act = () => value.MustNotBeIn(Range<int>.FromInclusive(lowerBoundary).ToExclusive(upperBoundary), nameof(value));
 
-            act.Should().Throw<ArgumentOutOfRangeException>()
-               .And.Message.Should().Contain($"{nameof(value)} must not be between {lowerBoundary} (inclusive) and {upperBoundary} (exclusive), but it actually is {value}.");
+            var assertion = act.Should().Throw<ArgumentOutOfRangeException>().Which;
+            assertion.Message.Should().Contain($"{nameof(value)} must not be between {lowerBoundary} (inclusive) and {upperBoundary} (exclusive), but it actually is {value}.");
+            assertion.ParamName.Should().BeSameAs(nameof(value));
         }
 
         [Theory]
@@ -32,8 +33,9 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
         {
             Action act = () => value.MustNotBeIn(Range<short>.FromExclusive(lowerBoundary).ToInclusive(upperBoundary), nameof(value));
 
-            act.Should().Throw<ArgumentOutOfRangeException>()
-               .And.Message.Should().Contain($"{nameof(value)} must not be between {lowerBoundary} (exclusive) and {upperBoundary} (inclusive), but it actually is {value}.");
+            var assertion = act.Should().Throw<ArgumentOutOfRangeException>().Which;
+            assertion.Message.Should().Contain($"{nameof(value)} must not be between {lowerBoundary} (exclusive) and {upperBoundary} (inclusive), but it actually is {value}.");
+            assertion.ParamName.Should().BeSameAs(nameof(value));
         }
 
         [Theory]
@@ -50,13 +52,26 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
             result.Should().Be(value);
         }
 
-        [Fact(DisplayName = "MustNotBeIn must throw the custom exception with two parameters when parameter is within the specified range.")]
-        public static void ThrowCustomExceptionWithTwoParameters() =>
+        [Fact]
+        public static void CustomException() =>
             Test.CustomException(12, new Range<int>(10, 15), (x, range, exceptionFactory) => x.MustNotBeIn(range, exceptionFactory));
 
+        [Fact]
+        public static void CustomExceptionParameterNull() => 
+            Test.CustomException((string) null,
+                                 Range<string>.FromInclusive("a").ToInclusive("m"),
+                                 (s, range, exceptionFactory) => s.MustNotBeIn(range, exceptionFactory));
 
         [Fact]
         public static void NoCustomExceptionThrown() =>
             (-15400.8m).MustNotBeIn(Range<decimal>.FromInclusive(0m).ToExclusive(100m), (v, b) => null).Should().Be(-15400.8m);
+
+        [Fact]
+        public static void CustomMessage() => 
+            Test.CustomMessage<ArgumentOutOfRangeException>(message => 42.MustNotBeIn(new Range<int>(20, 60), message: message));
+
+        [Fact]
+        public static void CustomMessageParameterNull() => 
+            Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustNotBeIn(new Range<string>("a", "z"), message: message));
     }
 }
