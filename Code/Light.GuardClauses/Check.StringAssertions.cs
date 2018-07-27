@@ -409,16 +409,16 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">
         /// Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="value" />,
         /// or when <paramref name="parameter"/> is null,
-        /// or when <paramref name="value"/> is null.
+        /// or when <paramref name="value"/> is null,
+        /// or when <paramref name="comparisonType"/> is not a valid value of the <see cref="StringComparison"/> enum.
         /// </exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustNotContain(this string parameter, string value, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory)
         {
-            if (parameter == null || value == null || parameter.IndexOf(value, comparisonType) >= 0)
+            if (parameter == null || value == null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) >= 0)
                 Throw.CustomException(exceptionFactory, parameter, value, comparisonType);
             return parameter;
         }
