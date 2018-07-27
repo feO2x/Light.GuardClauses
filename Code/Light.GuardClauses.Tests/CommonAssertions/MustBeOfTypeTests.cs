@@ -16,8 +16,9 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
             Action act = () => reference.MustBeOfType<Array>(nameof(reference));
 
-            act.Should().Throw<TypeCastException>()
-               .And.Message.Should().Contain($"{nameof(reference)} \"{reference}\" cannot be casted to \"{typeof(Array)}\".");
+            var exceptionAssertions = act.Should().Throw<TypeCastException>().Which;
+            exceptionAssertions.Message.Should().Contain($"{nameof(reference)} \"{reference}\" cannot be casted to \"{typeof(Array)}\".");
+            exceptionAssertions.ParamName.Should().BeSameAs(nameof(reference));
         }
 
         [Fact]
@@ -28,14 +29,14 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         public static void Cast() =>
             Metasyntactic.Baz.MustBeOfType<IConvertible>().Should().BeSameAs(Metasyntactic.Baz);
 
-
         [Fact]
         public static void ReferenceIsNull()
         {
-            Action act = () => ((object) null).MustBeOfType<string>(Metasyntactic.Foo);
+            Action act = () => ((object) null).MustBeOfType<string>(Metasyntactic.Foo, Metasyntactic.Bar);
 
-            act.Should().Throw<ArgumentNullException>()
-               .And.ParamName.Should().Be(Metasyntactic.Foo);
+            var exceptionAssertion = act.Should().Throw<ArgumentNullException>().Which;
+            exceptionAssertion.ParamName.Should().Be(Metasyntactic.Foo);
+            exceptionAssertion.Message.Should().Contain(Metasyntactic.Bar);
         }
 
         [Fact]
@@ -56,7 +57,6 @@ namespace Light.GuardClauses.Tests.CommonAssertions
             encoding.MustBeOfType<UTF8Encoding>(e => null).Should().BeSameAs(encoding);
         }
         
-
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<TypeCastException>(message => "Foo".MustBeOfType<StreamReader>(message: message));
