@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
@@ -32,6 +33,10 @@ namespace Light.GuardClauses.Tests.CommonAssertions
                                  (x, y, exceptionFactory) => x.MustBe(y, exceptionFactory));
 
         [Fact]
+        public static void CustomExceptionValuesEqual() => 
+            87.MustBe(87, (x, y) => new Exception()).MustBe(87);
+
+        [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<ValuesNotEqualException>(message => false.MustBe(true, message: message));
 
@@ -51,10 +56,22 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         public static void CustomExceptionEqualityComparer() =>
             Test.CustomException(Metasyntactic.Foo,
                                  Metasyntactic.Bar,
-                                 (x, y, exceptionFactory) => x.MustBe(y, new EqualityComparerStub<string>(false), exceptionFactory));
+                                 (IEqualityComparer<string>) new EqualityComparerStub<string>(false),
+                                 (x, y, comparer, exceptionFactory) => x.MustBe(y, comparer, exceptionFactory));
+
+        [Fact]
+        public static void CustomExceptionEqualityComparerNull() => 
+            Test.CustomException(35L,
+                                 22L,
+                                 (IEqualityComparer<long>) null,
+                                 (x, y, comparer, exceptionFactory) => x.MustBe(y, comparer, exceptionFactory));
 
         [Fact]
         public static void CustomMessageEqualityComparer() =>
             Test.CustomMessage<ValuesNotEqualException>(message => 99m.MustBe(100m, new EqualityComparerStub<decimal>(false), message: message));
+
+        [Fact]
+        public static void CustomMessageEqualityComparerNull() => 
+            Test.CustomMessage<ArgumentNullException>(message => 42.MustBe(42, (IEqualityComparer<int>) null, message: message));
     }
 }

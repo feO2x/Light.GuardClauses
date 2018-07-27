@@ -99,14 +99,15 @@ namespace Light.GuardClauses.Tests
 
         public static void CustomMessage<TException>(Action<string> executeAssertion) where TException : Exception
         {
+            const string message = "This is a custom exception message";
             try
             {
-                executeAssertion(Metasyntactic.Foo);
+                executeAssertion(message);
                 throw new XunitException("The assertion should have thrown a custom exception at this point.");
             }
             catch (TException exception)
             {
-                exception.Message.Should().BeSameAs(Metasyntactic.Foo);
+                exception.Message.Should().Contain(message);
             }
         }
 

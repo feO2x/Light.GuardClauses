@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
@@ -32,6 +33,10 @@ namespace Light.GuardClauses.Tests.CommonAssertions
                                  (x, y, exceptionFactory) => x.MustNotBe(y, exceptionFactory));
 
         [Fact]
+        public static void CustomExceptionNotEqual() => 
+            42.MustNotBe(43, (x, y) => null).Should().Be(42);
+
+        [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<ValuesEqualException>(message => false.MustNotBe(false, message: message));
 
@@ -51,10 +56,19 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         public static void CustomExceptionEqualityComparer() =>
             Test.CustomException(Metasyntactic.Foo,
                                  Metasyntactic.Bar,
-                                 (x, y, exceptionFactory) => x.MustNotBe(y, new EqualityComparerStub<string>(true), exceptionFactory));
+                                 (IEqualityComparer<string>) new EqualityComparerStub<string>(true),
+                                 (x, y, comparer, exceptionFactory) => x.MustNotBe(y, comparer, exceptionFactory));
+
+        [Fact]
+        public static void CustomExceptionCustomComparerNotEqual() => 
+            Metasyntactic.Foo.MustNotBe(Metasyntactic.Bar, new EqualityComparerStub<string>(false), (x, y, c) => null).Should().BeSameAs(Metasyntactic.Foo);
 
         [Fact]
         public static void CustomMessageEqualityComparer() =>
             Test.CustomMessage<ValuesEqualException>(message => 50m.MustNotBe(50m, new EqualityComparerStub<decimal>(true), message: message));
+
+        [Fact]
+        public static void CustomMessageComparerNull() => 
+            Test.CustomMessage<ArgumentNullException>(message => 42.MustNotBe(89, (IEqualityComparer<int>) null, message: message));
     }
 }
