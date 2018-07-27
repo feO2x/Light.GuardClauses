@@ -50,7 +50,18 @@ namespace Light.GuardClauses.Tests.UriAssertions
                                  (uri, exceptionFactory) => uri.MustBeRelativeUri(exceptionFactory));
 
         [Fact]
+        public static void CustomExceptionUriRelative()
+        {
+            var url = new Uri("api/tweets", UriKind.Relative);
+            url.MustBeRelativeUri(_ => null).Should().BeSameAs(url);
+        }
+
+        [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<AbsoluteUriException>(message => new Uri("ssh://foo.com").MustBeRelativeUri(message: message));
+
+        [Fact]
+        public static void CustomMessageUriNull() =>
+            Test.CustomMessage<ArgumentNullException>(message => ((Uri) null).MustBeRelativeUri(message: message));
     }
 }
