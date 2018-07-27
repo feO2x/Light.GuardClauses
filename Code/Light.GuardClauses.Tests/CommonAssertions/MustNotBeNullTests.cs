@@ -9,10 +9,12 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void ReferenceIsNull()
         {
-            Action act = () => ((object) null).MustNotBeNull(Metasyntactic.Foo);
+            const string parameterName = Metasyntactic.Foo;
+            Action act = () => ((object) null).MustNotBeNull(parameterName);
 
-            act.Should().Throw<ArgumentNullException>()
-               .And.Message.Should().Contain($"{Metasyntactic.Foo} must not be null.");
+            var exceptionAssertion = act.Should().Throw<ArgumentNullException>().And;
+            exceptionAssertion.Message.Should().Contain($"{parameterName} must not be null.");
+            exceptionAssertion.ParamName.Should().BeSameAs(parameterName);
         }
 
         [Fact]
@@ -21,6 +23,10 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void CustomException() =>
             Test.CustomException(exceptionFactory => ((string) null).MustNotBeNull(exceptionFactory));
+
+        [Fact]
+        public static void CustomExceptionParamterNotNull() => 
+            Metasyntactic.Foo.MustNotBeNull(() => null).Should().BeSameAs(Metasyntactic.Foo);
 
         [Fact]
         public static void CustomMessage() =>
