@@ -49,10 +49,8 @@ namespace Light.GuardClauses
 #endif
         public Range(T from, T to, bool isFromInclusive = true, bool isToInclusive = true)
         {
-            to.MustNotBeLessThan(from, nameof(to));
-
             From = from.MustNotBeNullReference(nameof(from));
-            To = to;
+            To = to.MustNotBeLessThan(from, nameof(to));
             IsFromInclusive = isFromInclusive;
             IsToInclusive = isToInclusive;
 
@@ -68,7 +66,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        public bool IsValueWithinRange(T value) => 
+        public bool IsValueWithinRange(T value) =>
             value.MustNotBeNullReference(nameof(value)).CompareTo(From) >= _expectedLowerBoundaryResult && value.CompareTo(To) <= _expectedUpperBoundaryResult;
 
         /// <summary>
