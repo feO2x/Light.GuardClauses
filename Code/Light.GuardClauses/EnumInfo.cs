@@ -52,7 +52,7 @@ namespace Light.GuardClauses
         public static readonly Type UnderlyingType;
 
         /// <summary>
-        /// Gets the values of the enum as an read-only list.
+        /// Gets the values of the enum as a read-only collection.
         /// </summary>
         public static ReadOnlyCollection<T> EnumConstants { get; }
 
