@@ -18,8 +18,9 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         {
             Action act = () => collection.MustNotContain(item, nameof(collection));
 
-            act.Should().Throw<ExistingItemException>()
-               .And.Message.Should().Contain($"{nameof(collection)} must not contain {item.ToStringOrNull()}, but it actually does.");
+            var assertions = act.Should().Throw<ExistingItemException>().Which;
+            assertions.Message.Should().Contain($"{nameof(collection)} must not contain {item.ToStringOrNull()}, but it actually does.");
+            assertions.ParamName.Should().BeSameAs(nameof(collection));
         }
 
         [Theory]
@@ -44,7 +45,24 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
                                  (collection, value, exceptionFactory) => collection.MustNotContain(value, exceptionFactory));
 
         [Fact]
+        public static void CustomExceptionCollectionNull() =>
+            Test.CustomException((Collection<int>) null,
+                                 42,
+                                 (collection, i, exceptionFactory) => collection.MustNotContain(i, exceptionFactory));
+
+        [Fact]
+        public static void NoCustomExceptionThrown()
+        {
+            var collection = new[] { 1, 2 };
+            collection.MustNotContain(3, (c, i) => new Exception()).Should().BeSameAs(collection);
+        }
+
+        [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<ExistingItemException>(message => new HashSet<int> { 42 }.MustNotContain(42, message: message));
+
+        [Fact]
+        public static void CustomMessageCollectionNull() =>
+            Test.CustomMessage<ArgumentNullException>(message => ((List<bool>) null).MustNotContain(false, message: message));
     }
 }
