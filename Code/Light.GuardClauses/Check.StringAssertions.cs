@@ -263,7 +263,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustContain(this string parameter, string value, string parameterName = null, string message = null)
         {
-            if (!parameter.MustNotBeNull(parameterName).Contains(value))
+            if (!parameter.MustNotBeNull(parameterName, message).Contains(value.MustNotBeNull(nameof(value), message)))
                 Throw.StringDoesNotContain(parameter, value, parameterName, message);
             return parameter;
         }
@@ -276,7 +276,8 @@ namespace Light.GuardClauses
         /// <param name="exceptionFactory">The delegate that creates you custom exception. <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="value" />,
         /// or when <paramref name="parameter"/> is null,
-        /// or when <paramref name="value"/> is null.</exception>
+        /// or when <paramref name="value"/> is null.
+        /// </exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -320,16 +321,16 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">
         /// Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="value" />,
         /// or when <paramref name="parameter"/> is null,
-        /// or when <paramref name="value"/> is null.
+        /// or when <paramref name="value"/> is null,
+        /// or when <paramref name="comparisonType"/> is not a valid value from the <see cref="StringComparison"/> emum.
         /// </exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustContain(this string parameter, string value, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory)
         {
-            if (parameter == null || value == null || parameter.IndexOf(value, comparisonType) < 0)
+            if (parameter == null || value == null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) < 0)
                 Throw.CustomException(exceptionFactory, parameter, value, comparisonType);
             return parameter;
         }
