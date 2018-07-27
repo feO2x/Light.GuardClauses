@@ -16,8 +16,9 @@ namespace Light.GuardClauses.Tests.StringAssertions
 
             Action act = () => @string.MustMatch(pattern, nameof(@string));
 
-            act.Should().Throw<StringDoesNotMatchException>()
-               .And.Message.Should().Contain($"{nameof(@string)} must match the regular expression \"{pattern}\", but it actually is \"{@string}\".");
+            var assertion = act.Should().Throw<StringDoesNotMatchException>().Which;
+            assertion.Message.Should().Contain($"{nameof(@string)} must match the regular expression \"{pattern}\", but it actually is \"{@string}\".");
+            assertion.ParamName.Should().BeSameAs(nameof(@string));
         }
 
         [Fact]
@@ -39,16 +40,36 @@ namespace Light.GuardClauses.Tests.StringAssertions
             act.Should().Throw<ArgumentNullException>();
         }
 
-        [Fact]
-        public static void CustomException() =>
-            Test.CustomException("ab",
-                                 new Regex(@"\w{3}"),
+        [Theory]
+        [MemberData(nameof(CustomExceptionData))]
+        public static void CustomException(string input, Regex regularExpression) =>
+            Test.CustomException(input,
+                                 regularExpression,
                                  (@string, regex, exceptionFactory) => @string.MustMatch(regex, exceptionFactory));
-        
+
+        public static readonly TheoryData<string, Regex> CustomExceptionData =
+            new TheoryData<string, Regex>
+            {
+                { "ab", new Regex(@"\w{3}") },
+                { null, new Regex(@"\W{6}") },
+                { Metasyntactic.Foo, null }
+            };
+
+        [Fact]
+        public static void NoCustomExceptionThrown() => 
+            Metasyntactic.Foo.MustMatch(new Regex("\\w{3}"), (s, r) => new Exception()).Should().BeSameAs(Metasyntactic.Foo);
+
 
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<StringDoesNotMatchException>(message => "abcde".MustMatch(new Regex("Foo"), message:message));
-        
+
+        [Fact]
+        public static void CustomMessageParameterNull() => 
+            Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustMatch(new Regex("Foo"), message: message));
+
+        [Fact]
+        public static void CustomMessageRegexNull() =>
+            Test.CustomMessage<ArgumentNullException>(message => Metasyntactic.Foo.MustMatch(null, message: message));
     }
 }

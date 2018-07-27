@@ -233,14 +233,17 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="regex">The regular expression used for pattern matching.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="regex" /> are passed to this delegate.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> does not match the specified regular expression.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="regex" /> is null.</exception>
+        /// <exception cref="Exception">
+        /// Your custom exception thrown when <paramref name="parameter" /> does not match the specified regular expression,
+        /// or when <paramref name="parameter"/> is null,
+        /// or when <paramref name="regex"/> is null.
+        /// </exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public static string MustMatch(this string parameter, Regex regex, Func<string, Regex, Exception> exceptionFactory)
         {
-            if (parameter == null || !regex.MustNotBeNull(nameof(regex)).IsMatch(parameter))
+            if (parameter == null || regex == null || !regex.IsMatch(parameter))
                 Throw.CustomException(exceptionFactory, parameter, regex);
             return parameter;
         }
