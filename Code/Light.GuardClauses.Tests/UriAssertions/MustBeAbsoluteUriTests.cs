@@ -55,7 +55,18 @@ namespace Light.GuardClauses.Tests.UriAssertions
                                  (uri, exceptionFactory) => uri.MustBeAbsoluteUri(exceptionFactory));
 
         [Fact]
+        public static void CustomExceptionUriAbsolute()
+        {
+            var uri = new Uri("https://www.microsoft.com");
+            uri.MustBeAbsoluteUri(_ => null).Should().BeSameAs(uri);
+        }
+
+        [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<RelativeUriException>(message => new Uri("/home", UriKind.Relative).MustBeAbsoluteUri(message: message));
+
+        [Fact]
+        public static void CustomMessageUriNull() => 
+            Test.CustomMessage<ArgumentNullException>(message => ((Uri)null).MustBeAbsoluteUri(message: message));
     }
 }
