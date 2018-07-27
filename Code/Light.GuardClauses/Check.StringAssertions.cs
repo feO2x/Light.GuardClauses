@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using Light.GuardClauses.Exceptions;
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
 using System.Runtime.CompilerServices;
+
 #endif
 
 namespace Light.GuardClauses
@@ -235,8 +236,8 @@ namespace Light.GuardClauses
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="regex" /> are passed to this delegate.</param>
         /// <exception cref="Exception">
         /// Your custom exception thrown when <paramref name="parameter" /> does not match the specified regular expression,
-        /// or when <paramref name="parameter"/> is null,
-        /// or when <paramref name="regex"/> is null.
+        /// or when <paramref name="parameter" /> is null,
+        /// or when <paramref name="regex" /> is null.
         /// </exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -256,7 +257,7 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> does not contain <paramref name="value" />.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -274,9 +275,10 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="value">The substring that must be part of <paramref name="parameter" />.</param>
         /// <param name="exceptionFactory">The delegate that creates you custom exception. <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="value" />,
-        /// or when <paramref name="parameter"/> is null,
-        /// or when <paramref name="value"/> is null.
+        /// <exception cref="Exception">
+        /// Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="value" />,
+        /// or when <paramref name="parameter" /> is null,
+        /// or when <paramref name="value" /> is null.
         /// </exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -298,8 +300,8 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> does not contain <paramref name="value" />.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -317,12 +319,12 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="value">The substring that must be part of <paramref name="parameter" />.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
-        /// <param name="exceptionFactory">The delegate that creates you custom exception. <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType"/> are passed to this delegate.</param>
+        /// <param name="exceptionFactory">The delegate that creates you custom exception. <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType" /> are passed to this delegate.</param>
         /// <exception cref="Exception">
         /// Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="value" />,
-        /// or when <paramref name="parameter"/> is null,
-        /// or when <paramref name="value"/> is null,
-        /// or when <paramref name="comparisonType"/> is not a valid value from the <see cref="StringComparison"/> emum.
+        /// or when <paramref name="parameter" /> is null,
+        /// or when <paramref name="value" /> is null,
+        /// or when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> emum.
         /// </exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -343,7 +345,7 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> contains <paramref name="value" />.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -363,8 +365,8 @@ namespace Light.GuardClauses
         /// <param name="exceptionFactory">The delegate that creates your custom exception (optional). <paramref name="parameter" /> and <paramref name="value" /> are passed to this </param>
         /// <exception cref="Exception">
         /// Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="value" />,
-        /// or when <paramref name="parameter"/> is null,
-        /// or when <paramref name="value"/> is null.
+        /// or when <paramref name="parameter" /> is null,
+        /// or when <paramref name="value" /> is null.
         /// </exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -386,8 +388,8 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> contains <paramref name="value" />.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -405,12 +407,12 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="value">The string that must not be part of <paramref name="parameter" />.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
-        /// <param name="exceptionFactory">The delegate that creates your custom exception (optional). <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType"/> are passed to this delegate.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception (optional). <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType" /> are passed to this delegate.</param>
         /// <exception cref="Exception">
         /// Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="value" />,
-        /// or when <paramref name="parameter"/> is null,
-        /// or when <paramref name="value"/> is null,
-        /// or when <paramref name="comparisonType"/> is not a valid value of the <see cref="StringComparison"/> enum.
+        /// or when <paramref name="parameter" /> is null,
+        /// or when <paramref name="value" /> is null,
+        /// or when <paramref name="comparisonType" /> is not a valid value of the <see cref="StringComparison" /> enum.
         /// </exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -430,8 +432,8 @@ namespace Light.GuardClauses
         /// <param name="value">The other string.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
         /// <returns>True if <paramref name="string" /> contains <paramref name="value" />, else false.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="string" /> or <paramref name="value"/> is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="string" /> or <paramref name="value" /> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -444,8 +446,8 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="value">The string to be checked.</param>
         /// <param name="other">The other string.</param>
-        /// <returns>True if <paramref name="value"/> is a substring of <paramref name="other"/>, else false.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="value"/> or <paramref name="other"/> is null.</exception>
+        /// <returns>True if <paramref name="value" /> is a substring of <paramref name="other" />, else false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="value" /> or <paramref name="other" /> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -459,26 +461,26 @@ namespace Light.GuardClauses
         /// <param name="value">The string to be checked.</param>
         /// <param name="other">The other string.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
-        /// <returns>True if <paramref name="value"/> is a substring of <paramref name="other"/>, else false.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="value"/> or <paramref name="other"/> is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
+        /// <returns>True if <paramref name="value" /> is a substring of <paramref name="other" />, else false.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="value" /> or <paramref name="other" /> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("value:null => halt; other:null => halt")]
         public static bool IsSubstringOf(this string value, string other, StringComparison comparisonType) =>
             other.MustNotBeNull(nameof(other)).IndexOf(value, comparisonType) != -1;
-        
+
 
         /// <summary>
-        /// Ensures that the string is a substring of the specified other string, or otherwise throws a <see cref="SubstringException"/>.
+        /// Ensures that the string is a substring of the specified other string, or otherwise throws a <see cref="SubstringException" />.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="value">The other string that must contain <paramref name="parameter"/>.</param>
+        /// <param name="value">The other string that must contain <paramref name="parameter" />.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref="SubstringException">Thrown when <paramref name="value"/> does not contain <paramref name="parameter"/>.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="SubstringException">Thrown when <paramref name="value" /> does not contain <paramref name="parameter" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -494,12 +496,12 @@ namespace Light.GuardClauses
         /// Ensures that the string is a substring of the specified other string, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="value">The other string that must contain <paramref name="parameter"/>.</param>
-        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="value"/> are passed to this delegate.</param>
+        /// <param name="value">The other string that must contain <paramref name="parameter" />.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
         /// <exception cref="Exception">
-        /// Your custom exception thrown when <paramref name="value"/> does not contain <paramref name="parameter"/>,
-        /// or when <paramref name="parameter"/> is null,
-        /// or when <paramref name="value"/> is null.
+        /// Your custom exception thrown when <paramref name="value" /> does not contain <paramref name="parameter" />,
+        /// or when <paramref name="parameter" /> is null,
+        /// or when <paramref name="value" /> is null.
         /// </exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -513,16 +515,16 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that the string is a substring of the specified other string, or otherwise throws a <see cref="SubstringException"/>.
+        /// Ensures that the string is a substring of the specified other string, or otherwise throws a <see cref="SubstringException" />.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="value">The other string that must contain <paramref name="parameter"/>.</param>
+        /// <param name="value">The other string that must contain <paramref name="parameter" />.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref="SubstringException">Thrown when <paramref name="value"/> does not contain <paramref name="parameter"/>.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
+        /// <exception cref="SubstringException">Thrown when <paramref name="value" /> does not contain <paramref name="parameter" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -538,35 +540,35 @@ namespace Light.GuardClauses
         /// Ensures that the string is a substring of the specified other string, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="value">The other string that must contain <paramref name="parameter"/>.</param>
+        /// <param name="value">The other string that must contain <paramref name="parameter" />.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
-        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/>, <paramref name="value"/>, and <paramref name="comparisonType"/> are passed to this delegate.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType" /> are passed to this delegate.</param>
         /// <exception cref="Exception">
-        /// Your custom exception thrown when <paramref name="value"/> does not contain <paramref name="parameter"/>,
-        /// or when <paramref name="parameter"/> is null,
-        /// or when <paramref name="value"/> is null.
+        /// Your custom exception thrown when <paramref name="value" /> does not contain <paramref name="parameter" />,
+        /// or when <paramref name="parameter" /> is null,
+        /// or when <paramref name="value" /> is null,
+        /// or when <paramref name="comparisonType" /> is not a valid value of the <see cref="StringComparison" /> enum.
         /// </exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
         public static string MustBeSubstringOf(this string parameter, string value, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory)
         {
-            if (parameter == null || value == null || value.IndexOf(parameter, comparisonType) == -1)
+            if (parameter == null || value == null || !comparisonType.IsValidEnumValue() || value.IndexOf(parameter, comparisonType) == -1)
                 Throw.CustomException(exceptionFactory, parameter, value, comparisonType);
             return parameter;
         }
 
         /// <summary>
-        /// Ensures that the string is not a substring of the specified other string, or otherwise throws a <see cref="SubstringException"/>.
+        /// Ensures that the string is not a substring of the specified other string, or otherwise throws a <see cref="SubstringException" />.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="value">The other string that must not contain <paramref name="parameter"/>.</param>
+        /// <param name="value">The other string that must not contain <paramref name="parameter" />.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref="SubstringException">Thrown when <paramref name="value"/> contains <paramref name="parameter"/>.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="SubstringException">Thrown when <paramref name="value" /> contains <paramref name="parameter" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -582,14 +584,14 @@ namespace Light.GuardClauses
         /// Ensures that the string is not a substring of the specified other string, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="value">The other string that must not contain <paramref name="parameter"/>.</param>
-        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="value"/> are passed to this delegate.</param>
+        /// <param name="value">The other string that must not contain <paramref name="parameter" />.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
         /// <exception cref="Exception">
-        /// Your custom exception thrown when <paramref name="value"/> contains <paramref name="parameter"/>,
-        /// or when <paramref name="parameter"/> is null,
-        /// or when <paramref name="value"/> is null.
+        /// Your custom exception thrown when <paramref name="value" /> contains <paramref name="parameter" />,
+        /// or when <paramref name="parameter" /> is null,
+        /// or when <paramref name="value" /> is null.
         /// </exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -602,16 +604,16 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that the string is not a substring of the specified other string, or otherwise throws a <see cref="SubstringException"/>.
+        /// Ensures that the string is not a substring of the specified other string, or otherwise throws a <see cref="SubstringException" />.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="value">The other string that must not contain <paramref name="parameter"/>.</param>
+        /// <param name="value">The other string that must not contain <paramref name="parameter" />.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref="SubstringException">Thrown when <paramref name="value"/> contains <paramref name="parameter"/>.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
+        /// <exception cref="SubstringException">Thrown when <paramref name="value" /> contains <paramref name="parameter" />.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -627,15 +629,15 @@ namespace Light.GuardClauses
         /// Ensures that the string is not a substring of the specified other string, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
-        /// <param name="value">The other string that must not contain <paramref name="parameter"/>.</param>
+        /// <param name="value">The other string that must not contain <paramref name="parameter" />.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
-        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="value"/> are passed to this delegate.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
         /// <exception cref="Exception">
-        /// Your custom exception thrown when <paramref name="value"/> contains <paramref name="parameter"/>,
-        /// or when <paramref name="parameter"/> is null,
-        /// or when <paramref name="value"/> is null.
+        /// Your custom exception thrown when <paramref name="value" /> contains <paramref name="parameter" />,
+        /// or when <paramref name="parameter" /> is null,
+        /// or when <paramref name="value" /> is null.
         /// </exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
