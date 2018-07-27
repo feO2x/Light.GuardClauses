@@ -17,8 +17,9 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
             Action act = () => invalidValue.MustBeValidEnumValue(nameof(invalidValue));
 
-            act.Should().Throw<EnumValueNotDefinedException>()
-               .And.Message.Should().Contain($"{nameof(invalidValue)} \"{invalidValue}\" must be one of the defined constants of enum \"{invalidValue.GetType()}\", but it actually is not.");
+            var exceptionAssertion = act.Should().Throw<EnumValueNotDefinedException>().Which;
+            exceptionAssertion.Message.Should().Contain($"{nameof(invalidValue)} \"{invalidValue}\" must be one of the defined constants of enum \"{invalidValue.GetType()}\", but it actually is not.");
+            exceptionAssertion.ParamName.Should().Be(nameof(invalidValue));
         }
 
         [Fact]
@@ -43,6 +44,11 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         public static void CustomMessage() =>
             Test.CustomMessage<EnumValueNotDefinedException>(
                 message => ((DateTimeKind) 7).MustBeValidEnumValue(message: message));
+
+        [Fact]
+        public static void CustomMessageNoEnumValue() => 
+            Test.CustomMessage<TypeIsNoEnumException>(
+                message => 42.MustBeValidEnumValue(message: message));
 
         [Fact]
         public static void NoEnumType()
