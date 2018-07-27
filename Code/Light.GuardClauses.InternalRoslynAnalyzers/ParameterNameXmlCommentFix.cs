@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Light.GuardClauses.InternalRoslynAnalyzers
 {
@@ -29,7 +29,12 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
         }
 
         private static Task<Document> SetDefaultXmlCommentForParameterName(Document document, SyntaxNode syntaxRoot, XmlElementSyntax xmlElementSyntax) =>
-            Task.FromResult(document.WithSyntaxRoot(syntaxRoot.ReplaceNode(xmlElementSyntax,
-                                                                           xmlElementSyntax.WithContent(new SyntaxList<XmlNodeSyntax>(SyntaxFactory.XmlText(ParameterNameConstants.DefaultComment))))));
+            Task.FromResult(
+                document.WithSyntaxRoot(
+                    syntaxRoot.ReplaceNode(
+                        xmlElementSyntax,
+                        xmlElementSyntax.WithContent(
+                            new SyntaxList<XmlNodeSyntax>(
+                                XmlText(ParameterNameConstants.DefaultComment))))));
     }
 }

@@ -20,62 +20,22 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
             var syntaxRoot = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
             var diagnostic = context.Diagnostics[0];
             var xmlElementSyntax = (XmlElementSyntax) syntaxRoot.FindNode(diagnostic.Location.SourceSpan, true);
-            var documentationSyntax = (DocumentationCommentTriviaSyntax) xmlElementSyntax.Parent;
 
             context.RegisterCodeFix(CodeAction.Create(diagnostic.Descriptor.Title.ToString(),
                                                       cancellationToken => SetDefaultXmlCommentForMessage(context.Document,
                                                                                                           syntaxRoot,
-                                                                                                          xmlElementSyntax,
-                                                                                                          documentationSyntax)),
+                                                                                                          xmlElementSyntax)),
                                     diagnostic);
         }
 
-        private static Task<Document> SetDefaultXmlCommentForMessage(Document document,
-                                                                     SyntaxNode syntaxRoot,
-                                                                     XmlElementSyntax xmlElementSyntax,
-                                                                     DocumentationCommentTriviaSyntax documentationSyntax)
-        {
-            XmlElementSyntax newCommentSyntax;
-
-            if (xmlElementSyntax.Content.Count < 3)
-            {
-                var firstExceptionCref = documentationSyntax.GetFirstXmlExceptionCref();
-
-                if (firstExceptionCref == null)
-                    newCommentSyntax = xmlElementSyntax.WithContent(new SyntaxList<XmlNodeSyntax>(XmlText(MessageConstants.FullDefaultComment)));
-                else
-                {
-                    var seeElement = XmlSeeElement(firstExceptionCref.Cref);
-                    seeElement = seeElement.WithSlashGreaterThanToken(seeElement.SlashGreaterThanToken.WithLeadingTrivia(Whitespace(" ")));
-                    newCommentSyntax = xmlElementSyntax.WithContent(new SyntaxList<XmlNodeSyntax>(new XmlNodeSyntax[]
-                    {
-                        XmlText($"{MessageConstants.CommentStart}the "),
-                        seeElement,
-                        XmlText(MessageConstants.CommentEnd)
-                    }));
-                }
-            }
-            else
-            {
-                var isFirstContentText = xmlElementSyntax.Content.First() is XmlTextSyntax;
-                var isLastContentText = xmlElementSyntax.Content.Last() is XmlTextSyntax;
-                var numberOfElements = xmlElementSyntax.Content.Count
-                                     + (isFirstContentText ? 0 : 1)
-                                     + (isLastContentText ? 0 : 1);
-                var commentTextSyntax = new XmlNodeSyntax[numberOfElements];
-
-                var j = isFirstContentText ? 1 : 0;
-                for (var i = 1; i < numberOfElements - 1; i++)
-                {
-                    commentTextSyntax[i] = xmlElementSyntax.Content[j++];
-                }
-
-                commentTextSyntax[0] = XmlText($"{MessageConstants.CommentStart}the ");
-                commentTextSyntax[numberOfElements - 1] = XmlText(MessageConstants.CommentEnd);
-                newCommentSyntax = xmlElementSyntax.WithContent(new SyntaxList<XmlNodeSyntax>(commentTextSyntax));
-            }
-
-            return Task.FromResult(document.WithSyntaxRoot(syntaxRoot.ReplaceNode(xmlElementSyntax, newCommentSyntax)));
-        }
+        private static Task<Document> SetDefaultXmlCommentForMessage(Document document, SyntaxNode syntaxRoot, XmlElementSyntax xmlElementSyntax) =>
+            Task.FromResult(
+                document.WithSyntaxRoot(
+                    syntaxRoot.ReplaceNode(
+                        xmlElementSyntax,
+                        xmlElementSyntax
+                           .WithContent(
+                                new SyntaxList<XmlNodeSyntax>(
+                                    XmlText(MessageConstants.DefaultComment))))));
     }
 }

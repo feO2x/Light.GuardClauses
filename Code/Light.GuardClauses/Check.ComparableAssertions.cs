@@ -21,7 +21,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The comparable to be checked.</param>
         /// <param name="other">The boundary value that must be less than or equal to <paramref name="parameter"/>.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the specified <paramref name="parameter" /> is less than <paramref name="other" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -59,7 +59,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The comparable to be checked.</param>
         /// <param name="other">The boundary value that must be less than or equal to <paramref name="parameter"/>.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the specified <paramref name="parameter" /> is less than <paramref name="other" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -103,7 +103,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The comparable to be checked.</param>
         /// <param name="other">The boundary value that must be greater than <paramref name="parameter"/>.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the specified <paramref name="parameter" /> is not less than <paramref name="other" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -141,7 +141,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The comparable to be checked.</param>
         /// <param name="other">The boundary value that must be greater than <paramref name="parameter"/>.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the specified <paramref name="parameter" /> is not less than <paramref name="other" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -185,7 +185,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The comparable to be checked.</param>
         /// <param name="other">The boundary value that must be less than <paramref name="parameter"/>.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the specified <paramref name="parameter" /> is less than or equal to <paramref name="other" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -223,7 +223,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The comparable to be checked.</param>
         /// <param name="other">The boundary value that must be less than <paramref name="parameter"/>.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the specified <paramref name="parameter" /> is less than or equal to <paramref name="other" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -267,7 +267,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The comparable to be checked.</param>
         /// <param name="other">The boundary value that must be greater than or equal to <paramref name="parameter"/>.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the specified <paramref name="parameter" /> is greater than <paramref name="other" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -305,7 +305,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The comparable to be checked.</param>
         /// <param name="other">The boundary value that must be greater than or equal to <paramref name="parameter"/>.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the specified <paramref name="parameter" /> is greater than <paramref name="other" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -373,7 +373,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="range">The range where <paramref name="parameter" /> must be in-between.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="parameter" /> is not within <paramref name="range" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -412,7 +412,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The parameter to be checked.</param>
         /// <param name="range">The range where <paramref name="parameter" /> must not be in-between.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ArgumentOutOfRangeException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="parameter" /> is within <paramref name="range" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)

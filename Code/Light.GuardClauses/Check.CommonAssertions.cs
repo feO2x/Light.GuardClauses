@@ -21,7 +21,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The object reference to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ArgumentNullException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -57,7 +57,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The value to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ArgumentNullException"/> or <see cref="ArgumentDefaultException"/> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is a reference type and null.</exception>
         /// <exception cref="ArgumentDefaultException">Thrown when <paramref name="parameter" /> is a value type and the default value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -109,7 +109,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The value to be checked for null.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ArgumentNullException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ArgumentNullException">Thrown when <typeparamref name="T" /> is a reference type and <paramref name="parameter" /> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -152,7 +152,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The value to be casted.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="TypeCastException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="TypeCastException">Thrown when <paramref name="parameter"/> cannot be casted to <typeparamref name="T"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -223,7 +223,7 @@ namespace Light.GuardClauses
         /// <typeparam name="T">The type of the enum.</typeparam>
         /// <param name="parameter">The value to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="EnumValueNotDefinedException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="EnumValueNotDefinedException">Thrown when <paramref name="parameter"/> is no valid enum value.</exception>
         /// <exception cref="TypeIsNoEnumException">Thrown when <typeparamref name="T"/> is no enum type.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -296,7 +296,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The GUID to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="EmptyGuidException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="EmptyGuidException">Thrown when <paramref name="parameter" /> is an empty GUID.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -360,7 +360,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The nullable to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="NullableHasNoValueException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="NullableHasNoValueException">Thrown when <paramref name="parameter"/> has no value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -407,7 +407,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The first reference to be checked.</param>
         /// <param name="other">The second reference to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="SameObjectReferenceException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="SameObjectReferenceException">Thrown when both <paramref name="parameter"/> and <paramref name="other"/> point to the same object.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -443,7 +443,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The first value to be compared.</param>
         /// <param name="other">The other value to be compared.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ValuesNotEqualException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ValuesNotEqualException">Thrown when <paramref name="parameter"/> and <paramref name="other"/> are not equal.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -479,7 +479,7 @@ namespace Light.GuardClauses
         /// <param name="other">The other value to be compared.</param>
         /// <param name="equalityComparer">The equality comparer used for comparing the two values.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ValuesNotEqualException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ValuesNotEqualException">Thrown when <paramref name="parameter"/> and <paramref name="other"/> are not equal.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="equalityComparer"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -519,7 +519,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The first value to be compared.</param>
         /// <param name="other">The other value to be compared.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ValuesEqualException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ValuesEqualException">Thrown when <paramref name="parameter"/> and <paramref name="other"/> are equal.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -555,7 +555,7 @@ namespace Light.GuardClauses
         /// <param name="other">The other value to be compared.</param>
         /// <param name="equalityComparer">The equality comparer used for comparing the two values.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ValuesEqualException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ValuesEqualException">Thrown when <paramref name="parameter"/> and <paramref name="other"/> are equal.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="equalityComparer"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)

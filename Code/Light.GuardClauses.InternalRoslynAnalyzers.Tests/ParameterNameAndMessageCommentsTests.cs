@@ -22,7 +22,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name=""parameter"">The reference to be checked.</param>
         /// <param name=""parameterName""></param>
-        /// <param name=""message"">The message that will be passed to the <see cref=""ArgumentNullException"" /> (optional).</param>
+        /// <param name=""message"">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref=""ArgumentNullException"">Thrown when <paramref name=""parameter"" /> is null.</exception>
 #if !(NET40 || NET35 || NET35_CF)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -49,7 +49,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name=""parameter"">The reference to be checked.</param>
         /// <param name=""parameterName"">The name of the parameter (optional).</param>
-        /// <param name=""message"">The message that will be passed to the <see cref=""ArgumentNullException"" /> (optional).</param>
+        /// <param name=""message"">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref=""ArgumentNullException"">Thrown when <paramref name=""parameter"" /> is null.</exception>
 #if !(NET40 || NET35 || NET35_CF)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -121,7 +121,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name=""parameter"">The reference to be checked.</param>
         /// <param name=""parameterName"">The name of the parameter (optional).</param>
-        /// <param name=""message"">The message that will be passed to the <see cref=""ArgumentNullException"" /> (optional).</param>
+        /// <param name=""message"">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref=""ArgumentNullException"">Thrown when <paramref name=""parameter"" /> is null.</exception>
 #if !(NET40 || NET35 || NET35_CF)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

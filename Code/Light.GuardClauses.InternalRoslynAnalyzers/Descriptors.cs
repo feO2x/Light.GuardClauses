@@ -8,8 +8,6 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
 
         public const string XmlCommentsCategory = "XML Comments";
 
-        public const string PublicApiCategory = "Public API";
-
         public static readonly DiagnosticDescriptor ParameterNameComment =
             new DiagnosticDescriptor("ParameterNameComment".CreateDescriptorId(),
                                      "Use default XML comment for parameterName",
@@ -21,16 +19,8 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
         public static readonly DiagnosticDescriptor MessageComment =
             new DiagnosticDescriptor("MessageComment".CreateDescriptorId(),
                                      "Use default XML comment for message",
-                                     $"Use the default comment for message: \"{MessageConstants.FullDefaultComment}\"",
+                                     $"Use the default comment for message: \"{MessageConstants.DefaultComment}\"",
                                      XmlCommentsCategory,
-                                     DiagnosticSeverity.Warning,
-                                     true);
-
-        public static readonly DiagnosticDescriptor CustomExceptionOverload =
-            new DiagnosticDescriptor("SimpleCustomExceptionOverload".CreateDescriptorId(),
-                                     "Create an overload that allows customizing the exception.",
-                                     "Create an overload that allows customizing the exception.",
-                                     PublicApiCategory,
                                      DiagnosticSeverity.Warning,
                                      true);
 
