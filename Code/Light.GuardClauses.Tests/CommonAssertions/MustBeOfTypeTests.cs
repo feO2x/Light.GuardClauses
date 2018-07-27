@@ -32,11 +32,10 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void ReferenceIsNull()
         {
-            Action act = () => ((object) null).MustBeOfType<string>(Metasyntactic.Foo, Metasyntactic.Bar);
+            Action act = () => ((object) null).MustBeOfType<string>(Metasyntactic.Foo);
 
-            var exceptionAssertion = act.Should().Throw<ArgumentNullException>().Which;
-            exceptionAssertion.ParamName.Should().Be(Metasyntactic.Foo);
-            exceptionAssertion.Message.Should().Contain(Metasyntactic.Bar);
+            act.Should().Throw<ArgumentNullException>()
+               .And.ParamName.Should().Be(Metasyntactic.Foo);
         }
 
         [Fact]
@@ -46,7 +45,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
 
         [Fact]
-        public static void CustomExceptionArgumentNull() => 
+        public static void CustomExceptionArgumentNull() =>
             Test.CustomException<object>(null,
                                          (nullReference, exceptionFactory) => nullReference.MustBeOfType<string>(exceptionFactory));
 
@@ -56,9 +55,13 @@ namespace Light.GuardClauses.Tests.CommonAssertions
             var encoding = Encoding.UTF8;
             encoding.MustBeOfType<UTF8Encoding>(e => null).Should().BeSameAs(encoding);
         }
-        
+
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<TypeCastException>(message => "Foo".MustBeOfType<StreamReader>(message: message));
+
+        [Fact]
+        public static void CustomMessageArgumentNull() =>
+            Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustBeOfType<Array>(message: message));
     }
 }
