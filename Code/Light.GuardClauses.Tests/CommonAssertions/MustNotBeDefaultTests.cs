@@ -10,10 +10,12 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void ReferenceIsNull()
         {
-            Action act = () => ((string) null).MustNotBeDefault(Metasyntactic.Foo);
+            const string paramterName = Metasyntactic.Foo;
+            Action act = () => ((string) null).MustNotBeDefault(paramterName);
 
-            act.Should().Throw<ArgumentNullException>()
-               .And.Message.Should().Contain($"{Metasyntactic.Foo} must not be null.");
+            var exceptionAssertion = act.Should().Throw<ArgumentNullException>().Which;
+            exceptionAssertion.Message.Should().Contain($"{paramterName} must not be null.");
+            exceptionAssertion.ParamName.Should().BeSameAs(paramterName);
         }
 
         [Theory]
@@ -28,17 +30,15 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         {
             Action act = () => defaultValue.MustNotBeDefault(nameof(defaultValue));
 
-            act.Should().Throw<ArgumentDefaultException>()
-               .And.Message.Should().Contain($"{nameof(defaultValue)} must not be the default value.");
+            var exceptionAssertion = act.Should().Throw<ArgumentDefaultException>().Which;
+            exceptionAssertion.Message.Should().Contain($"{nameof(defaultValue)} must not be the default value.");
+            exceptionAssertion.ParamName.Should().BeSameAs(nameof(defaultValue));
         }
 
         [Fact]
         public static void NullableIsNull()
         {
-            int? nullable = null;
-
-            // ReSharper disable once ExpressionIsAlwaysNull
-            Action act = () => nullable.MustNotBeDefault();
+            Action act = () => ((int?) null).MustNotBeDefault();
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -70,6 +70,14 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         public static void CustomExceptionForValueType() =>
             Test.CustomException(exceptionFactory => default(int).MustNotBeDefault(exceptionFactory));
 
+        [Fact]
+        public static void CustomExceptionNotNull() =>
+            Metasyntactic.Foo.MustNotBeDefault(() => null).Should().BeSameAs(Metasyntactic.Foo);
+
+        [Fact]
+        public static void CustomExceptionNotDefault() =>
+            true.MustNotBeDefault(() => null).Should().BeTrue();
+        
         [Fact]
         public static void CustomMessageForReferenceType() =>
             Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustNotBeDefault(message: message));
