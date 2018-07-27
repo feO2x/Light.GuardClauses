@@ -15,8 +15,9 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
         {
             Action act = () => first.MustBeLessThan(second, nameof(first));
 
-            act.Should().Throw<ArgumentOutOfRangeException>()
-               .And.Message.Should().Contain($"{nameof(first)} must be less than {second}, but it actually is {first}.");
+            var exceptionAssertion = act.Should().Throw<ArgumentOutOfRangeException>().Which;
+            exceptionAssertion.Message.Should().Contain($"{nameof(first)} must be less than {second}, but it actually is {first}.");
+            exceptionAssertion.ParamName.Should().BeSameAs(nameof(first));
         }
 
         [Theory]
@@ -31,10 +32,20 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
             Test.CustomException("Z", "A", (z, a, exceptionFactory) => z.MustBeLessThan(a, exceptionFactory));
 
         [Fact]
+        public static void CustomExceptionParameterNull() => 
+            Test.CustomException((string) null,
+                                 Metasyntactic.Foo,
+                                 (x, y, exceptionFactory) => x.MustBeLessThan(y, exceptionFactory));
+
+        [Fact]
         public static void NoCustomExceptionThrown() => 5m.MustBeLessThan(5.1m, (v, b) => null).Should().Be(5m);
 
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<ArgumentOutOfRangeException>(message => 40.MustBeLessThan(10, message: message));
+
+        [Fact]
+        public static void CustomMessageParameterNull() => 
+            Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustBeLessThan(Metasyntactic.Bar, message: message));
     }
 }
