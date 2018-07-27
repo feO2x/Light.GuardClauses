@@ -43,6 +43,14 @@ namespace Light.GuardClauses.Tests.CommonAssertions
             Test.CustomException(exceptionFactory => ((object) null).MustNotBeNullReference(exceptionFactory));
 
         [Fact]
+        public static void CustomExceptionNotNull() => 
+            Metasyntactic.Foo.MustNotBeNullReference(() => null).Should().BeSameAs(Metasyntactic.Foo);
+
+        [Fact]
+        public static void CustomExceptionValueType() => 
+            ConsoleColor.DarkGreen.MustNotBeNullReference(() => null).Should().Be(ConsoleColor.DarkGreen);
+
+        [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<ArgumentNullException>(message => ((object) null).MustNotBeNullReference(message: message));
     }
