@@ -13,8 +13,9 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
         {
             Action act = () => first.MustBeLessThanOrEqualTo(second, nameof(first));
 
-            act.Should().Throw<ArgumentOutOfRangeException>()
-               .And.Message.Should().Contain($"{nameof(first)} must be less than or equal to {second}, but it actually is {first}.");
+            var exceptionAssertion = act.Should().Throw<ArgumentOutOfRangeException>().Which;
+            exceptionAssertion.Message.Should().Contain($"{nameof(first)} must be less than or equal to {second}, but it actually is {first}.");
+            exceptionAssertion.ParamName.Should().BeSameAs(nameof(first));
         }
 
         [Theory]
@@ -23,9 +24,14 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
         public static void ParameterLessOrEqual(int first, int second) => first.MustBeLessThanOrEqualTo(second).Should().Be(first);
 
         [Fact]
-        public static void ThrowCustomExceptionWithTwoParameters() =>
+        public static void CustomException() =>
             Test.CustomException(20, 19, (x, y, exceptionFactory) => x.MustBeLessThanOrEqualTo(y, exceptionFactory));
 
+        [Fact]
+        public static void CustomExceptionParameterNull() =>
+            Test.CustomException((string) null,
+                                 Metasyntactic.Foo,
+                                 (x, y, exceptionFactory) => x.MustBeLessThanOrEqualTo(y, exceptionFactory));
 
         [Fact]
         public static void NoCustomExceptionThrown() => 5m.MustBeLessThanOrEqualTo(5.1m, (v, b) => null).Should().Be(5m);
@@ -33,5 +39,9 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<ArgumentOutOfRangeException>(message => 'c'.MustBeLessThanOrEqualTo('a', message: message));
+
+        [Fact]
+        public static void CustomMessageParameterNull() => 
+            Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustBeLessThanOrEqualTo(Metasyntactic.Bar, message: message));
     }
 }
