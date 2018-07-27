@@ -265,8 +265,9 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; schemes:null => halt")]
-        public static Uri MustHaveOneSchemeOf<TCollection>(this Uri parameter, TCollection schemes, string parameterName = null, string message = null) where TCollection : class, IEnumerable<string>
+        public static Uri MustHaveOneSchemeOf(this Uri parameter, IEnumerable<string> schemes, string parameterName = null, string message = null)
         {
+            // ReSharper disable PossibleMultipleEnumeration
             parameter.MustBeAbsoluteUri(parameterName, message);
 
             if (schemes is ICollection<string> collection)
@@ -276,9 +277,10 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            if (!schemes.MustNotBeNull(nameof(schemes)).Contains(parameter.Scheme))
+            if (!schemes.MustNotBeNull(nameof(schemes), message).Contains(parameter.Scheme))
                 Throw.UriMustHaveOneSchemeOf(parameter, schemes, parameterName, message);
             return parameter;
+            // ReSharper restore PossibleMultipleEnumeration
         }
 
         /// <summary>
@@ -309,7 +311,7 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            if (!schemes.MustNotBeNull(nameof(schemes)).Contains(parameter.Scheme))
+            if (schemes == null || !schemes.Contains(parameter.Scheme))
                 Throw.CustomException(exceptionFactory, parameter, schemes);
             return parameter;
         }

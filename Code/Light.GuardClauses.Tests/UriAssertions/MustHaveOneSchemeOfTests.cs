@@ -17,11 +17,12 @@ namespace Light.GuardClauses.Tests.UriAssertions
         {
             Action act = () => new Uri(uri).MustHaveOneSchemeOf(schemes, nameof(uri));
 
-            act.Should().Throw<InvalidUriSchemeException>()
-               .And.Message.Should().Contain(new StringBuilder().AppendLine($"{nameof(uri)} must use one of the following schemes")
+            var exceptionAssertion = act.Should().Throw<InvalidUriSchemeException>().Which;
+            exceptionAssertion.Message.Should().Contain(new StringBuilder().AppendLine($"{nameof(uri)} must use one of the following schemes")
                                                                 .AppendItemsWithNewLine(schemes)
                                                                 .AppendLine($"but it actually is \"{uri}\".")
                                                                 .ToString());
+            exceptionAssertion.ParamName.Should().BeSameAs(nameof(uri));
         }
 
         [Theory]
@@ -50,14 +51,35 @@ namespace Light.GuardClauses.Tests.UriAssertions
             act.Should().Throw<RelativeUriException>();
         }
 
-        [Fact]
-        public static void CustomException() =>
-            Test.CustomException(new Uri("https://www.microsoft.com"),
-                                 new List<string> { "http", "fttp" },
+        [Theory]
+        [MemberData(nameof(CustomExceptionData))]
+        public static void CustomException(Uri url, List<string> urlSchemes) =>
+            Test.CustomException(url,
+                                 urlSchemes,
                                  (uri, schemes, exceptionFactory) => uri.MustHaveOneSchemeOf(schemes, exceptionFactory));
+
+        public static readonly TheoryData<Uri, List<string>> CustomExceptionData =
+            new TheoryData<Uri, List<string>>
+            {
+                { new Uri("https://www.microsoft.com"), new List<string> { "http", "fttp" } },
+                { null, new List<string>{"http", "https"} },
+                { new Uri("https://github.com"), null }
+            };
 
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<InvalidUriSchemeException>(message => new Uri("https://go.com").MustHaveOneSchemeOf(new[] { "http" }, message: message));
+
+        [Fact]
+        public static void CustomMessageUrlRelative() => 
+            Test.CustomMessage<RelativeUriException>(message => new Uri("/api", UriKind.Relative).MustHaveOneSchemeOf(new []{"https"}, message: message));
+
+        [Fact]
+        public static void CustomMessageUrlNull() => 
+            Test.CustomMessage<ArgumentNullException>(message => ((Uri) null).MustHaveOneSchemeOf(new []{"http"}, message: message));
+
+        [Fact]
+        public static void CustomMessageSchemesNull() =>
+            Test.CustomMessage<ArgumentNullException>(message => new Uri("https://www.dict.cc").MustHaveOneSchemeOf(null, message: message));
     }
 }
