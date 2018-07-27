@@ -19,7 +19,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="count">The number of items the collection must have.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="InvalidCollectionCountException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidCollectionCountException">Thrown when <paramref name="parameter"/> does not have the specified number of items.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -28,7 +28,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static TCollection MustHaveCount<TCollection>(this TCollection parameter, int count, string parameterName = null, string message = null) where TCollection : class, IEnumerable
         {
-            if (parameter.Count(parameterName) != count)
+            if (parameter.Count(parameterName, message) != count)
                 Throw.InvalidCollectionCount(parameter, count, parameterName, message);
             return parameter;
         }
@@ -39,16 +39,14 @@ namespace Light.GuardClauses
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="count">The number of items the collection must have.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="count"/> are passed to this delegate.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> does not have the specified number of items.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> does not have the specified number of items, or when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustHaveCount<TCollection>(this TCollection parameter, int count, Func<TCollection, int, Exception> exceptionFactory, string parameterName = null) where TCollection : class, IEnumerable
+        public static TCollection MustHaveCount<TCollection>(this TCollection parameter, int count, Func<TCollection, int, Exception> exceptionFactory) where TCollection : class, IEnumerable
         {
-            if (parameter.Count(parameterName) != count)
+            if (parameter == null || parameter.Count() != count)
                 Throw.CustomException(exceptionFactory, parameter, count);
             return parameter;
         }
@@ -62,7 +60,7 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("collection:null => false")]
-        public static bool IsNullOrEmpty<TCollection>(this TCollection collection) where TCollection : class, IEnumerable => 
+        public static bool IsNullOrEmpty(this IEnumerable collection) =>
             collection == null || collection.Count() == 0;
 
         /// <summary>
@@ -70,7 +68,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="EmptyCollectionException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="EmptyCollectionException">Thrown when <paramref name="parameter"/> has no items.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -79,26 +77,24 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static TCollection MustNotBeNullOrEmpty<TCollection>(this TCollection parameter, string parameterName = null, string message = null) where TCollection : class, IEnumerable
         {
-            if (parameter.Count(parameterName) == 0)
+            if (parameter.Count(parameterName, message) == 0)
                 Throw.EmptyCollection(parameter, parameterName, message);
             return parameter;
         }
 
         /// <summary>
-        /// Ensures that the collection is not null or empty, or otherwise throws an <see cref="EmptyCollectionException"/>.
+        /// Ensures that the collection is not null or empty, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
-        /// <exception cref="EmptyCollectionException">Thrown when <paramref name="parameter"/> has no items.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+        /// <exception cref="Exception">Thrown when <paramref name="parameter"/> has no items, or when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustNotBeNullOrEmpty<TCollection>(this TCollection parameter, Func<Exception> exceptionFactory, string parameterName = null) where TCollection : class, IEnumerable
+        public static TCollection MustNotBeNullOrEmpty<TCollection>(this TCollection parameter, Func<Exception> exceptionFactory) where TCollection : class, IEnumerable
         {
-            if (parameter.Count(parameterName) == 0)
+            if (parameter == null || parameter.Count() == 0)
                 Throw.CustomException(exceptionFactory);
             return parameter;
         }
@@ -109,7 +105,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="item">The item that must be part of the collection.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="MissingItemException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="MissingItemException">Thrown when <paramref name="parameter" /> does not contain <paramref name="item"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -125,7 +121,7 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            if (!parameter.MustNotBeNull(parameterName).Contains(item))
+            if (!parameter.MustNotBeNull(parameterName, message).Contains(item))
                 Throw.MissingItem(parameter, item, parameterName, message);
             return parameter;
         }
@@ -136,14 +132,12 @@ namespace Light.GuardClauses
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="item">The item that must be part of the collection.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="item"/> are passed to this delegate.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="item"/>.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="item"/>, or when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustContain<TCollection, TItem>(this TCollection parameter, TItem item, Func<TCollection, TItem, Exception> exceptionFactory, string parameterName = null) where TCollection : class, IEnumerable<TItem>
+        public static TCollection MustContain<TCollection, TItem>(this TCollection parameter, TItem item, Func<TCollection, TItem, Exception> exceptionFactory) where TCollection : class, IEnumerable<TItem>
         {
             if (parameter is ICollection<TItem> collection)
             {
@@ -152,7 +146,7 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            if (!parameter.MustNotBeNull(parameterName).Contains(item))
+            if (parameter == null || !parameter.Contains(item))
                 Throw.CustomException(exceptionFactory, parameter, item);
             return parameter;
         }
@@ -163,7 +157,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="item">The item that must not be part of the collection.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ExistingItemException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ExistingItemException">Thrown when <paramref name="parameter" /> contains <paramref name="item"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -179,7 +173,7 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            if (parameter.MustNotBeNull(parameterName).Contains(item))
+            if (parameter.MustNotBeNull(parameterName, message).Contains(item))
                 Throw.ExistingItem(parameter, item, parameterName, message);
             return parameter;
         }
@@ -190,14 +184,12 @@ namespace Light.GuardClauses
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="item">The item that must not be part of the collection.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="item"/> are passed to this delegate.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="item"/>.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustNotContain<TCollection, TItem>(this TCollection parameter, TItem item, Func<TCollection, TItem, Exception> exceptionFactory, string parameterName = null) where TCollection : class, IEnumerable<TItem>
+        public static TCollection MustNotContain<TCollection, TItem>(this TCollection parameter, TItem item, Func<TCollection, TItem, Exception> exceptionFactory) where TCollection : class, IEnumerable<TItem>
         {
             if (parameter is ICollection<TItem> collection)
             {
@@ -206,7 +198,7 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            if (parameter.MustNotBeNull(parameterName).Contains(item))
+            if (parameter == null || parameter.Contains(item))
                 Throw.CustomException(exceptionFactory, parameter, item);
             return parameter;
         }
@@ -238,7 +230,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The value to be checked.</param>
         /// <param name="items">The items that should contain the value.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ValueIsNotOneOfException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ValueIsNotOneOfException">Thrown when <paramref name="parameter"/> is not equal to one of the specified <paramref name="items"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="items"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -247,7 +239,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("items:null => halt")]
         public static TItem MustBeOneOf<TItem, TCollection>(this TItem parameter, TCollection items, string parameterName = null, string message = null) where TCollection : class, IEnumerable<TItem>
         {
-            if (!parameter.IsOneOf(items))
+            if (!parameter.IsOneOf(items.MustNotBeNull(nameof(items), message)))
                 Throw.ValueNotOneOf(parameter, items, parameterName, message);
             return parameter;
         }
@@ -258,15 +250,14 @@ namespace Light.GuardClauses
         /// <param name="parameter">The value to be checked.</param>
         /// <param name="items">The items that should contain the value.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="items"/> are passed to this delegate.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is not equal to one of the specified <paramref name="items"/>.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="items"/> is null.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is not equal to one of the specified <paramref name="items"/>, or when <paramref name="items"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("items:null => halt")]
         public static TItem MustBeOneOf<TItem, TCollection>(this TItem parameter, TCollection items, Func<TItem, TCollection, Exception> exceptionFactory) where TCollection : class, IEnumerable<TItem>
         {
-            if (!parameter.IsOneOf(items))
+            if (items == null || !parameter.IsOneOf(items))
                 Throw.CustomException(exceptionFactory, parameter, items);
             return parameter;
         }
@@ -277,7 +268,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The value to be checked.</param>
         /// <param name="items">The items that must not contain the value.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ValueIsOneOfException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ValueIsOneOfException">Thrown when <paramref name="parameter"/> is equal to one of the specified <paramref name="items"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="items"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -286,7 +277,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("items:null => halt")]
         public static TItem MustNotBeOneOf<TItem, TCollection>(this TItem parameter, TCollection items, string parameterName = null, string message = null) where TCollection : class, IEnumerable<TItem>
         {
-            if (parameter.IsOneOf(items))
+            if (parameter.IsOneOf(items.MustNotBeNull(nameof(items), message)))
                 Throw.ValueIsOneOf(parameter, items, parameterName, message);
             return parameter;
         }
@@ -297,15 +288,14 @@ namespace Light.GuardClauses
         /// <param name="parameter">The value to be checked.</param>
         /// <param name="items">The items that must not contain the value.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="items"/> are passed to this delegate.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is equal to one of the specified <paramref name="items"/>.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="items"/> is null.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is equal to one of the specified <paramref name="items"/>, or when <paramref name="items"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("items:null => halt")]
         public static TItem MustNotBeOneOf<TItem, TCollection>(this TItem parameter, TCollection items, Func<TItem, TCollection, Exception> exceptionFactory) where TCollection : class, IEnumerable<TItem>
         {
-            if (parameter.IsOneOf(items))
+            if (items == null || parameter.IsOneOf(items))
                 Throw.CustomException(exceptionFactory, parameter, items);
             return parameter;
         }
@@ -316,7 +306,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="count">The number of items the collection should have at least.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="InvalidCollectionCountException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidCollectionCountException">Thrown when <paramref name="parameter"/> does not contain at least the specified number of items.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -325,7 +315,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static TCollection MustHaveMinimumCount<TCollection>(this TCollection parameter, int count, string parameterName = null, string message = null) where TCollection : class, IEnumerable
         {
-            if (parameter.Count(parameterName) < count)
+            if (parameter.Count(parameterName, message) < count)
                 Throw.InvalidMinimumCollectionCount(parameter, count, parameterName, message);
             return parameter;
         }
@@ -336,16 +326,14 @@ namespace Light.GuardClauses
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="count">The number of items the collection should have at least.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="count"/> are passed to this delegate.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> does not contain at least the specified number of items.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> does not contain at least the specified number of items, or when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustHaveMinimumCount<TCollection>(this TCollection parameter, int count, Func<TCollection, int, Exception> exceptionFactory, string parameterName = null) where TCollection : class, IEnumerable
+        public static TCollection MustHaveMinimumCount<TCollection>(this TCollection parameter, int count, Func<TCollection, int, Exception> exceptionFactory) where TCollection : class, IEnumerable
         {
-            if (parameter.Count(parameterName) < count)
+            if (parameter == null || parameter.Count() < count)
                 Throw.CustomException(exceptionFactory, parameter, count);
             return parameter;
         }
@@ -356,7 +344,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="count">The number of items the collection should have at most.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="InvalidCollectionCountException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidCollectionCountException">Thrown when <paramref name="parameter"/> does not contain at most the specified number of items.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -365,7 +353,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static TCollection MustHaveMaximumCount<TCollection>(this TCollection parameter, int count, string parameterName = null, string message = null) where TCollection : class, IEnumerable
         {
-            if (parameter.Count(parameterName) > count)
+            if (parameter.Count(parameterName, message) > count)
                 Throw.InvalidMaximumCollectionCount(parameter, count, parameterName, message);
             return parameter;
         }
@@ -376,16 +364,14 @@ namespace Light.GuardClauses
         /// <param name="parameter">The collection to be checked.</param>
         /// <param name="count">The number of items the collection should have at most.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="count"/> are passed to this delegate.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> does not contain at most the specified number of items.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> does not contain at most the specified number of items, or when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustHaveMaximumCount<TCollection>(this TCollection parameter, int count, Func<TCollection, int, Exception> exceptionFactory, string parameterName = null) where TCollection : class, IEnumerable
+        public static TCollection MustHaveMaximumCount<TCollection>(this TCollection parameter, int count, Func<TCollection, int, Exception> exceptionFactory) where TCollection : class, IEnumerable
         {
-            if (parameter.Count(parameterName) > count)
+            if (parameter == null || parameter.Count() > count)
                 Throw.CustomException(exceptionFactory, parameter, count);
             return parameter;
         }

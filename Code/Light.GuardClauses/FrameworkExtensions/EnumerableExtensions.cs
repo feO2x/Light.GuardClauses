@@ -141,26 +141,55 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// Gets the count of the specified enumerable.
         /// </summary>
         /// <param name="enumerable">The enumerable whose count should be determined.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("enumerable:null => halt")]
-        public static int Count(this IEnumerable enumerable, string parameterName = null)
+        public static int Count(this IEnumerable enumerable)
         {
             if (enumerable is ICollection collection)
                 return collection.Count;
             if (enumerable is string @string)
                 return @string.Length;
 
-            return DetermineCountViaEnumerating(enumerable, parameterName);
+            return DetermineCountViaEnumerating(enumerable);
         }
 
-        private static int DetermineCountViaEnumerating(IEnumerable enumerable, string parameterName)
+        /// <summary>
+        /// Gets the count of the specified enumerable.
+        /// </summary>
+        /// <param name="enumerable">The enumerable whose count should be determined.</param>
+        /// <param name="parameterName">The name of the parameter that is passed to the <see cref="ArgumentNullException"/> (optional).</param>
+        /// <param name="message">The message that is passed to the <see cref="ArgumentNullException"/> (optional).</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("enumerable:null => halt")]
+        public static int Count(this IEnumerable enumerable, string parameterName, string message)
+        {
+            if (enumerable is ICollection collection)
+                return collection.Count;
+            if (enumerable is string @string)
+                return @string.Length;
+
+            return DetermineCountViaEnumerating(enumerable, parameterName, message);
+        }
+
+        private static int DetermineCountViaEnumerating(IEnumerable enumerable)
         {
             var count = 0;
-            var enumerator = enumerable.MustNotBeNull(parameterName ?? nameof(enumerable)).GetEnumerator();
+            var enumerator = enumerable.MustNotBeNull(nameof(enumerable)).GetEnumerator();
+            while (enumerator.MoveNext())
+                ++count;
+            return count;
+        }
+
+        private static int DetermineCountViaEnumerating(IEnumerable enumerable, string parameterName, string message)
+        {
+            var count = 0;
+            var enumerator = enumerable.MustNotBeNull(parameterName, message).GetEnumerator();
             while (enumerator.MoveNext())
                 ++count;
             return count;

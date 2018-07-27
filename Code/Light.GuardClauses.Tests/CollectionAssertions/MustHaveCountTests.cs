@@ -42,12 +42,10 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
                                  (collection, count, exceptionFactory) => collection.MustHaveCount(count, exceptionFactory));
 
         [Fact]
-        public static void CustomExceptionCollectionNull()
-        {
-            Action act = () => ((int[])null).MustHaveCount(1, (collection, count) => null);
-
-            act.Should().Throw<ArgumentNullException>();
-        }
+        public static void CustomExceptionCollectionNull() =>
+            Test.CustomException<IReadOnlyList<string>, int>(null,
+                                                             42,
+                                                             (collection, count, exceptionFactory) => collection.MustHaveCount(count, exceptionFactory));
 
         [Fact]
         public static void CustomMessage() =>

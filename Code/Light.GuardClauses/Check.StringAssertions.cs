@@ -25,7 +25,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="EmptyStringException" /> or the <see cref="ArgumentNullException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="EmptyStringException">Thrown when <paramref name="parameter" /> is an empty string.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -90,7 +90,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="WhiteSpaceStringException" />, the <see cref="EmptyStringException" />, or the <see cref="ArgumentNullException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="WhiteSpaceStringException">Thrown when <paramref name="parameter" /> contains only white space.</exception>
         /// <exception cref="EmptyStringException">Thrown when <paramref name="parameter" /> is an empty string.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
@@ -124,15 +124,8 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory: null => halt")]
         public static string MustNotBeNullOrWhiteSpace(this string parameter, Func<string, Exception> exceptionFactory)
         {
-            parameter.MustNotBeNullOrEmpty(exceptionFactory);
-
-            foreach (var character in parameter)
-            {
-                if (!char.IsWhiteSpace(character))
-                    return parameter;
-            }
-
-            Throw.CustomException(exceptionFactory, parameter);
+            if (parameter.IsNullOrWhiteSpace())
+                Throw.CustomException(exceptionFactory, parameter);
             return null;
         }
 
@@ -143,7 +136,7 @@ namespace Light.GuardClauses
         /// <param name="other">The second string to be compared.</param>
         /// <param name="comparisonType">The enum value specifying how the two strings should be compared.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ValuesNotEqualException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ValuesNotEqualException">Thrown when <paramref name="parameter" /> is not equal to <paramref name="other" />.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -182,7 +175,7 @@ namespace Light.GuardClauses
         /// <param name="other">The second string to be compared.</param>
         /// <param name="comparisonType">The enum value specifying how the two strings should be compared.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="ValuesEqualException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ValuesEqualException">Thrown when <paramref name="parameter" /> is equal to <paramref name="other" />.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -220,7 +213,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="regex">The regular expression used for pattern matching.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="StringDoesNotMatchException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="StringDoesNotMatchException">Thrown when <paramref name="parameter" /> does not match the specified regular expression.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="regex" /> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -229,7 +222,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; regex:null => halt")]
         public static string MustMatch(this string parameter, Regex regex, string parameterName = null, string message = null)
         {
-            if (!regex.MustNotBeNull(nameof(regex)).IsMatch(parameter.MustNotBeNull(parameterName)))
+            if (!regex.MustNotBeNull(nameof(regex), message).IsMatch(parameter.MustNotBeNull(parameterName, message)))
                 Throw.StringDoesNotMatch(parameter, regex, parameterName, message);
             return parameter;
         }
@@ -240,15 +233,14 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="regex">The regular expression used for pattern matching.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="regex" /> are passed to this delegate.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException" />.</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> does not match the specified regular expression.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="regex" /> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="regex" /> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        public static string MustMatch(this string parameter, Regex regex, Func<string, Regex, Exception> exceptionFactory, string parameterName = null)
+        public static string MustMatch(this string parameter, Regex regex, Func<string, Regex, Exception> exceptionFactory)
         {
-            if (!regex.MustNotBeNull(nameof(regex)).IsMatch(parameter.MustNotBeNull(parameterName)))
+            if (parameter == null || !regex.MustNotBeNull(nameof(regex)).IsMatch(parameter))
                 Throw.CustomException(exceptionFactory, parameter, regex);
             return parameter;
         }
@@ -259,7 +251,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="value">The substring that must be part of <paramref name="parameter" />.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="SubstringException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> does not contain <paramref name="value" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -279,16 +271,16 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="value">The substring that must be part of <paramref name="parameter" />.</param>
         /// <param name="exceptionFactory">The delegate that creates you custom exception. <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException" />.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="value" />.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="value" />,
+        /// or when <paramref name="parameter"/> is null,
+        /// or when <paramref name="value"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustContain(this string parameter, string value, Func<string, string, Exception> exceptionFactory, string parameterName = null)
+        public static string MustContain(this string parameter, string value, Func<string, string, Exception> exceptionFactory)
         {
-            if (!parameter.MustNotBeNull(parameterName).Contains(value))
+            if (parameter == null || value == null || !parameter.Contains(value))
                 Throw.CustomException(exceptionFactory, parameter, value);
             return parameter;
         }
@@ -300,7 +292,7 @@ namespace Light.GuardClauses
         /// <param name="value">The substring that must be part of <paramref name="parameter" />.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="SubstringException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> does not contain <paramref name="value" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
@@ -310,7 +302,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustContain(this string parameter, string value, StringComparison comparisonType, string parameterName = null, string message = null)
         {
-            if (parameter.MustNotBeNull(parameterName).IndexOf(value, comparisonType) < 0)
+            if (parameter.MustNotBeNull(parameterName, message).IndexOf(value.MustNotBeNull(nameof(value), message), comparisonType) < 0)
                 Throw.StringDoesNotContain(parameter, value, comparisonType, parameterName, message);
             return parameter;
         }
@@ -322,17 +314,19 @@ namespace Light.GuardClauses
         /// <param name="value">The substring that must be part of <paramref name="parameter" />.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
         /// <param name="exceptionFactory">The delegate that creates you custom exception. <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType"/> are passed to this delegate.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="value" />.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="Exception">
+        /// Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="value" />,
+        /// or when <paramref name="parameter"/> is null,
+        /// or when <paramref name="value"/> is null.
+        /// </exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustContain(this string parameter, string value, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory, string parameterName = null)
+        public static string MustContain(this string parameter, string value, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory)
         {
-            if (parameter.MustNotBeNull(parameterName).IndexOf(value, comparisonType) < 0)
+            if (parameter == null || value == null || parameter.IndexOf(value, comparisonType) < 0)
                 Throw.CustomException(exceptionFactory, parameter, value, comparisonType);
             return parameter;
         }
@@ -343,7 +337,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="value">The string that must not be part of <paramref name="parameter" />.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="SubstringException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> contains <paramref name="value" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -352,7 +346,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustNotContain(this string parameter, string value, string parameterName = null, string message = null)
         {
-            if (parameter.MustNotBeNull(parameterName).Contains(value))
+            if (parameter.MustNotBeNull(parameterName, message).Contains(value.MustNotBeNull(nameof(value), message)))
                 Throw.StringContains(parameter, value, parameterName, message);
             return parameter;
         }
@@ -363,16 +357,18 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="value">The string that must not be part of <paramref name="parameter" />.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception (optional). <paramref name="parameter" /> and <paramref name="value" /> are passed to this </param>
-        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException" />.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="value" />.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="Exception">
+        /// Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="value" />,
+        /// or when <paramref name="parameter"/> is null,
+        /// or when <paramref name="value"/> is null.
+        /// </exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotContain(this string parameter, string value, Func<string, string, Exception> exceptionFactory, string parameterName = null)
+        public static string MustNotContain(this string parameter, string value, Func<string, string, Exception> exceptionFactory)
         {
-            if (parameter.MustNotBeNull(parameterName).Contains(value))
+            if (parameter == null || value == null || parameter.Contains(value))
                 Throw.CustomException(exceptionFactory, parameter, value);
             return parameter;
         }
@@ -384,7 +380,7 @@ namespace Light.GuardClauses
         /// <param name="value">The string that must not be part of <paramref name="parameter" />.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="SubstringException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> contains <paramref name="value" />.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
@@ -394,7 +390,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustNotContain(this string parameter, string value, StringComparison comparisonType, string parameterName = null, string message = null)
         {
-            if (parameter.MustNotBeNull(parameterName).IndexOf(value, comparisonType) >= 0)
+            if (parameter.MustNotBeNull(parameterName, message).IndexOf(value.MustNotBeNull(nameof(value), message), comparisonType) >= 0)
                 Throw.StringContains(parameter, value, comparisonType, parameterName, message);
             return parameter;
         }
@@ -406,17 +402,19 @@ namespace Light.GuardClauses
         /// <param name="value">The string that must not be part of <paramref name="parameter" />.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception (optional). <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType"/> are passed to this delegate.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException" />.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="value" />.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="Exception">
+        /// Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="value" />,
+        /// or when <paramref name="parameter"/> is null,
+        /// or when <paramref name="value"/> is null.
+        /// </exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotContain(this string parameter, string value, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory, string parameterName = null)
+        public static string MustNotContain(this string parameter, string value, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory)
         {
-            if (parameter.MustNotBeNull(parameterName).IndexOf(value, comparisonType) >= 0)
+            if (parameter == null || value == null || parameter.IndexOf(value, comparisonType) >= 0)
                 Throw.CustomException(exceptionFactory, parameter, value, comparisonType);
             return parameter;
         }
@@ -474,7 +472,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="value">The other string that must contain <paramref name="parameter"/>.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="SubstringException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="SubstringException">Thrown when <paramref name="value"/> does not contain <paramref name="parameter"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -483,7 +481,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
         public static string MustBeSubstringOf(this string parameter, string value, string parameterName = null, string message = null)
         {
-            if (!value.MustNotBeNull(nameof(value)).Contains(parameter.MustNotBeNull(parameterName)))
+            if (!value.MustNotBeNull(nameof(value), message).Contains(parameter.MustNotBeNull(parameterName, message)))
                 Throw.NotSubstring(parameter, value, parameterName, message);
             return parameter;
         }
@@ -494,16 +492,18 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="value">The other string that must contain <paramref name="parameter"/>.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="value"/> are passed to this delegate.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="value"/> does not contain <paramref name="parameter"/>.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="Exception">
+        /// Your custom exception thrown when <paramref name="value"/> does not contain <paramref name="parameter"/>,
+        /// or when <paramref name="parameter"/> is null,
+        /// or when <paramref name="value"/> is null.
+        /// </exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustBeSubstringOf(this string parameter, string value, Func<string, string, Exception> exceptionFactory, string parameterName = null)
+        public static string MustBeSubstringOf(this string parameter, string value, Func<string, string, Exception> exceptionFactory)
         {
-            if (!value.MustNotBeNull(nameof(value)).Contains(parameter.MustNotBeNull(parameterName)))
+            if (parameter == null || value == null || !value.Contains(parameter))
                 Throw.CustomException(exceptionFactory, parameter, value);
             return parameter;
         }
@@ -515,7 +515,7 @@ namespace Light.GuardClauses
         /// <param name="value">The other string that must contain <paramref name="parameter"/>.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="SubstringException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="SubstringException">Thrown when <paramref name="value"/> does not contain <paramref name="parameter"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
@@ -525,7 +525,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
         public static string MustBeSubstringOf(this string parameter, string value, StringComparison comparisonType, string parameterName = null, string message = null)
         {
-            if (value.MustNotBeNull(nameof(value)).IndexOf(parameter.MustNotBeNull(parameterName), comparisonType) == -1)
+            if (value.MustNotBeNull(nameof(value), message).IndexOf(parameter.MustNotBeNull(parameterName, message), comparisonType) == -1)
                 Throw.NotSubstring(parameter, value, comparisonType, parameterName, message);
             return parameter;
         }
@@ -537,17 +537,19 @@ namespace Light.GuardClauses
         /// <param name="value">The other string that must contain <paramref name="parameter"/>.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/>, <paramref name="value"/>, and <paramref name="comparisonType"/> are passed to this delegate.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="value"/> does not contain <paramref name="parameter"/>.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="Exception">
+        /// Your custom exception thrown when <paramref name="value"/> does not contain <paramref name="parameter"/>,
+        /// or when <paramref name="parameter"/> is null,
+        /// or when <paramref name="value"/> is null.
+        /// </exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustBeSubstringOf(this string parameter, string value, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory, string parameterName = null)
+        public static string MustBeSubstringOf(this string parameter, string value, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory)
         {
-            if (value.MustNotBeNull(nameof(value)).IndexOf(parameter.MustNotBeNull(parameterName), comparisonType) == -1)
+            if (parameter == null || value == null || value.IndexOf(parameter, comparisonType) == -1)
                 Throw.CustomException(exceptionFactory, parameter, value, comparisonType);
             return parameter;
         }
@@ -558,7 +560,7 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="value">The other string that must not contain <paramref name="parameter"/>.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="SubstringException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="SubstringException">Thrown when <paramref name="value"/> contains <paramref name="parameter"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -567,7 +569,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
         public static string MustNotBeSubstringOf(this string parameter, string value, string parameterName = null, string message = null)
         {
-            if (value.MustNotBeNull(nameof(value)).Contains(parameter.MustNotBeNull(parameterName)))
+            if (value.MustNotBeNull(nameof(value), message).Contains(parameter.MustNotBeNull(parameterName, message)))
                 Throw.Substring(parameter, value, parameterName, message);
             return parameter;
         }
@@ -578,16 +580,19 @@ namespace Light.GuardClauses
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="value">The other string that must not contain <paramref name="parameter"/>.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="value"/> are passed to this delegate.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="value"/> contains <paramref name="parameter"/>.</exception>
+        /// <exception cref="Exception">
+        /// Your custom exception thrown when <paramref name="value"/> contains <paramref name="parameter"/>,
+        /// or when <paramref name="parameter"/> is null,
+        /// or when <paramref name="value"/> is null.
+        /// </exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustNotBeSubstringOf(this string parameter, string value, Func<string, string, Exception> exceptionFactory, string parameterName = null)
+        public static string MustNotBeSubstringOf(this string parameter, string value, Func<string, string, Exception> exceptionFactory)
         {
-            if (value.MustNotBeNull(nameof(value)).Contains(parameter.MustNotBeNull(parameterName)))
+            if (parameter == null || value == null || value.Contains(parameter))
                 Throw.CustomException(exceptionFactory, parameter, value);
             return parameter;
         }
@@ -599,7 +604,7 @@ namespace Light.GuardClauses
         /// <param name="value">The other string that must not contain <paramref name="parameter"/>.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="SubstringException" /> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="SubstringException">Thrown when <paramref name="value"/> contains <paramref name="parameter"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
@@ -609,7 +614,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
         public static string MustNotBeSubstringOf(this string parameter, string value, StringComparison comparisonType, string parameterName = null, string message = null)
         {
-            if (value.MustNotBeNull(nameof(value)).IndexOf(parameter.MustNotBeNull(nameof(parameter)), comparisonType) != -1)
+            if (value.MustNotBeNull(nameof(value), message).IndexOf(parameter.MustNotBeNull(nameof(parameter), message), comparisonType) != -1)
                 Throw.Substring(parameter, value, comparisonType, parameterName, message);
             return parameter;
         }
@@ -621,17 +626,19 @@ namespace Light.GuardClauses
         /// <param name="value">The other string that must not contain <paramref name="parameter"/>.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="value"/> are passed to this delegate.</param>
-        /// <param name="parameterName">The name of the parameter (optional). This is used for the <see cref="ArgumentNullException"/>.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="value"/> contains <paramref name="parameter"/>.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> or <paramref name="value"/> is null.</exception>
+        /// <exception cref="Exception">
+        /// Your custom exception thrown when <paramref name="value"/> contains <paramref name="parameter"/>,
+        /// or when <paramref name="parameter"/> is null,
+        /// or when <paramref name="value"/> is null.
+        /// </exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType"/> is not a valid <see cref="StringComparison"/> value.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustNotBeSubstringOf(this string parameter, string value, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory, string parameterName = null)
+        public static string MustNotBeSubstringOf(this string parameter, string value, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory)
         {
-            if (value.MustNotBeNull(nameof(value)).IndexOf(parameter.MustNotBeNull(nameof(parameter)), comparisonType) != -1)
+            if (parameter == null || value == null || value.IndexOf(parameter, comparisonType) != -1)
                 Throw.CustomException(exceptionFactory, parameter, value, comparisonType);
             return parameter;
         }
