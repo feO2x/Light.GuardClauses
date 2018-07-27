@@ -14,7 +14,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The date time to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="InvalidDateTimeException"/> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidDateTimeException">Thrown when <paramref name="parameter"/> does not use <see cref="DateTimeKind.Utc"/>.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -48,7 +48,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The date time to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="InvalidDateTimeException"/> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidDateTimeException">Thrown when <paramref name="parameter"/> does not use <see cref="DateTimeKind.Local"/>.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -82,7 +82,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The date time to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the <see cref="InvalidDateTimeException"/> (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidDateTimeException">Thrown when <paramref name="parameter"/> does not use <see cref="DateTimeKind.Unspecified"/>.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
