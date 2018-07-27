@@ -56,14 +56,46 @@ namespace Light.GuardClauses.Tests.UriAssertions
             act.Should().Throw<RelativeUriException>();
         }
 
-        [Fact]
-        public static void CustomException() =>
-            Test.CustomException(new Uri("https://www.microsoft.com"),
-                                 "http",
+        [Theory]
+        [MemberData(nameof(CustomExceptionData))]
+        public static void CustomException(Uri uri, string urlScheme) =>
+            Test.CustomException(uri,
+                                 urlScheme,
                                  (url, scheme, exceptionFactory) => url.MustHaveScheme(scheme, exceptionFactory));
+
+        public static readonly TheoryData<Uri, string> CustomExceptionData =
+            new TheoryData<Uri, string>
+            {
+                { new Uri("https://www.microsoft.com"), "http" },
+                { null, "ftp" },
+                { new Uri("https://duckduckgo.com/", UriKind.Absolute), null }
+            };
+
+        [Fact]
+        public static void CustomExceptionNoScheme() => 
+            Test.CustomException(new Uri("/contact", UriKind.Relative),
+                                 (url, exceptionFactory) => url.MustHaveScheme("ssl", exceptionFactory));
+
+        [Fact]
+        public static void CustomExceptionNoSchemeUriValid()
+        {
+            var url = new Uri("https://www.hbo.com/westworld");
+            url.MustHaveScheme("https", u => new Exception()).Should().BeSameAs(url);
+        }
+
+        [Fact]
+        public static void CustomExceptionSchemeIsValid()
+        {
+            var uri = new Uri("https://github.com/feO2x/Light.GuardClauses");
+            uri.MustHaveScheme("https", (u, s) => null).Should().BeSameAs(uri);
+        }
 
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<InvalidUriSchemeException>(message => new Uri("ftp://foo.com").MustHaveScheme("https", message: message));
+
+        [Fact]
+        public static void CustomMessageUriNull() => 
+            Test.CustomMessage<ArgumentNullException>(message => ((Uri) null).MustHaveScheme("http", message: message));
     }
 }
