@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
@@ -18,11 +17,12 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         {
             Action act = () => item.MustBeOneOf(items, nameof(item));
 
-            act.Should().Throw<ValueIsNotOneOfException>()
-               .And.Message.Should().Contain(new StringBuilder().AppendLine($"{nameof(item)} must be one of the following items")
-                                                                .AppendItemsWithNewLine(items)
-                                                                .AppendLine($"but it actually is {item.ToStringOrNull()}.")
-                                                                .ToString());
+            var assertion = act.Should().Throw<ValueIsNotOneOfException>().Which;
+            assertion.Message.Should().Contain(new StringBuilder().AppendLine($"{nameof(item)} must be one of the following items")
+                                                                  .AppendItemsWithNewLine(items)
+                                                                  .AppendLine($"but it actually is {item.ToStringOrNull()}.")
+                                                                  .ToString());
+            assertion.ParamName.Should().BeSameAs(nameof(item));
         }
 
         [Theory]
@@ -35,19 +35,29 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void ItemsNull()
         {
-            Action act = () => Metasyntactic.Foo.MustBeOneOf<string, List<string>>(null);
+            Action act = () => Metasyntactic.Foo.MustBeOneOf(null);
 
             act.Should().Throw<ArgumentNullException>();
         }
 
+        [Theory]
+        [InlineData(42, new[] { 1, 2, 3 })]
+        [InlineData(87, null)]
+        public static void CustomException(int item, int[] collection) =>
+            Test.CustomException(item,
+                                 collection,
+                                 (i, items, exceptionFactory) => i.MustBeOneOf(items, exceptionFactory));
+
         [Fact]
-        public static void CustomException() =>
-            Test.CustomException(Metasyntactic.Foo,
-                                 new List<string> { Metasyntactic.Bar, Metasyntactic.Baz },
-                                 (@string, items, exceptionFactory) => @string.MustBeOneOf(items, exceptionFactory));
+        public static void NoCustomExceptionThrown() => 
+            42.MustBeOneOf(new[] { 42, 43 }, (i, c) => new Exception()).Should().Be(42);
 
         [Fact]
         public static void CustomMessage() =>
-            Test.CustomMessage<ValueIsNotOneOfException>(message => 42.MustBeOneOf(new [] { 1, 2 }, message: message));
+            Test.CustomMessage<ValueIsNotOneOfException>(message => 42.MustBeOneOf(new[] { 1, 2 }, message: message));
+
+        [Fact]
+        public static void CustomMessageCollectionNull() => 
+            Test.CustomMessage<ArgumentNullException>(message => long.MaxValue.MustBeOneOf(null, message: message));
     }
 }

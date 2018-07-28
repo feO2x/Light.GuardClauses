@@ -213,7 +213,7 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("items:null => halt")]
-        public static bool IsOneOf<TItem, TCollection>(this TItem item, TCollection items) where TCollection : class, IEnumerable<TItem>
+        public static bool IsOneOf<TItem>(this TItem item, IEnumerable<TItem> items)
         {
             if (items is ICollection<TItem> collection)
                 return collection.Contains(item);
@@ -237,11 +237,13 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("items:null => halt")]
-        public static TItem MustBeOneOf<TItem, TCollection>(this TItem parameter, TCollection items, string parameterName = null, string message = null) where TCollection : class, IEnumerable<TItem>
+        public static TItem MustBeOneOf<TItem>(this TItem parameter, IEnumerable<TItem> items, string parameterName = null, string message = null)
         {
+            // ReSharper disable PossibleMultipleEnumeration
             if (!parameter.IsOneOf(items.MustNotBeNull(nameof(items), message)))
                 Throw.ValueNotOneOf(parameter, items, parameterName, message);
             return parameter;
+            // ReSharper restore PossibleMultipleEnumeration
         }
 
         /// <summary>
@@ -275,11 +277,13 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("items:null => halt")]
-        public static TItem MustNotBeOneOf<TItem, TCollection>(this TItem parameter, TCollection items, string parameterName = null, string message = null) where TCollection : class, IEnumerable<TItem>
+        public static TItem MustNotBeOneOf<TItem>(this TItem parameter, IEnumerable<TItem> items, string parameterName = null, string message = null)
         {
+            // ReSharper disable PossibleMultipleEnumeration
             if (parameter.IsOneOf(items.MustNotBeNull(nameof(items), message)))
                 Throw.ValueIsOneOf(parameter, items, parameterName, message);
             return parameter;
+            // ReSharper restore PossibleMultipleEnumeration
         }
 
         /// <summary>
