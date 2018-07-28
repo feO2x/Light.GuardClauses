@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-#if NET40 || NET35 || SILVERLIGHT
+#if NET40 || NET35 || NET35_CF || SILVERLIGHT
 using System.Linq;
 #endif
 #if NETSTANDARD2_0 || NETSTANDARD1_0 || NET45

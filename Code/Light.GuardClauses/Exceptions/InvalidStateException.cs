@@ -1,5 +1,5 @@
 ﻿using System;
-#if (NETSTANDARD2_0 || NET45 || NET40 || NET35_FULL)
+#if (NETSTANDARD2_0 || NET45 || NET40 || NET35)
 using System.Runtime.Serialization;
 #endif
 
@@ -20,7 +20,7 @@ namespace Light.GuardClauses.Exceptions
         /// <param name="innerException">The exception that is the cause of this one (optional).</param>
         public InvalidStateException(string message = null, Exception innerException = null) : base(message, innerException) { }
 
-#if (NETSTANDARD2_0 || NET45 || NET40 || NET35_FULL)
+#if (NETSTANDARD2_0 || NET45 || NET40 || NET35)
         /// <inheritdoc />
         protected InvalidStateException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 #endif

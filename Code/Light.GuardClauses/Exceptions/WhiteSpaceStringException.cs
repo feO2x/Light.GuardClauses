@@ -1,5 +1,5 @@
 ﻿using System;
-#if (NETSTANDARD2_0 || NET45 || NET40 || NET35_FULL)
+#if (NETSTANDARD2_0 || NET45 || NET40 || NET35)
 using System.Runtime.Serialization;
 #endif
 
@@ -21,7 +21,7 @@ namespace Light.GuardClauses.Exceptions
         /// <param name="message">The message of the exception (optional).</param>
         public WhiteSpaceStringException(string parameterName = null, string message = null) : base(parameterName, message) { }
 
-#if (NETSTANDARD2_0 || NET45 || NET40 || NET35_FULL)
+#if (NETSTANDARD2_0 || NET45 || NET40 || NET35)
         /// <inheritdoc />
         protected WhiteSpaceStringException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 #endif

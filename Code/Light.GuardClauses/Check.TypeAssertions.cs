@@ -50,7 +50,7 @@ namespace Light.GuardClauses
             return other.GetGenericTypeDefinition() == type;
         }
 
-#if (NET35 || NET40 || SILVERLIGHT)
+#if (NET35 || NET35_CF || NET40 || SILVERLIGHT)
         /// <summary>
         /// Gets a value that indicates whether the specified type is a constructed generic type.
         /// This is true when the type is a generic type, but not a generic type definition.
@@ -64,7 +64,7 @@ namespace Light.GuardClauses
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
         #endif
                 public static bool IsConstructedGenericType(this Type type) =>
-                    type != null ? type.IsGenericType && !type.IsGenericTypeDefinition : false;
+                    type != null && type.IsGenericType && !type.IsGenericTypeDefinition;
 #endif
 
         /// <summary>

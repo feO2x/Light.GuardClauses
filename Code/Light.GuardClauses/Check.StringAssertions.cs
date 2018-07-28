@@ -68,7 +68,7 @@ namespace Light.GuardClauses
 #endif
         [ContractAnnotation("string:null => false")]
         public static bool IsNullOrWhiteSpace(this string @string)
-#if NET35
+#if NET35 || NET35_CF
         {
             if (string.IsNullOrEmpty(@string))
                 return true;
