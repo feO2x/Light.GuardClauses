@@ -19,8 +19,9 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         {
             Action act = () => collection.MustHaveMinimumCount(minimumCount, nameof(collection));
 
-            act.Should().Throw<InvalidCollectionCountException>()
-               .And.Message.Should().Contain($"{nameof(collection)} must have at least count {minimumCount}, but it actually has count {collection.Count()}.");
+            var assertion = act.Should().Throw<InvalidCollectionCountException>().Which;
+            assertion.Message.Should().Contain($"{nameof(collection)} must have at least count {minimumCount}, but it actually has count {collection.Count()}.");
+            assertion.ParamName.Should().BeSameAs(nameof(collection));
         }
 
         [Theory]
@@ -38,14 +39,27 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
             act.Should().Throw<ArgumentNullException>();
         }
 
+        [Theory]
+        [InlineData(new[] { 1, 2, 3 }, 4)]
+        [InlineData(null, 3)]
+        public static void CustomException(int[] collection, int minimumCount) =>
+            Test.CustomException(collection,
+                                 minimumCount,
+                                 (c, minCount, exceptionFactory) => c.MustHaveMinimumCount(minCount, exceptionFactory));
+
         [Fact]
-        public static void CustomException() =>
-            Test.CustomException(new List<short>(),
-                                 12,
-                                 (collection, minimumCount, exceptionFactory) => collection.MustHaveMinimumCount(minimumCount, exceptionFactory));
+        public static void NoCustomExceptionThrown()
+        {
+            var set = new HashSet<string> { Metasyntactic.Foo, Metasyntactic.Bar, Metasyntactic.Baz };
+            set.MustHaveMinimumCount(2, (s, i) => new Exception()).Should().BeSameAs(set);
+        }
 
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<InvalidCollectionCountException>(message => new ObservableCollection<bool> { true }.MustHaveMinimumCount(2, message: message));
+
+        [Fact]
+        public static void CustomMessageCollectionNull() => 
+            Test.CustomMessage<ArgumentNullException>(message => ((ObservableCollection<string>) null).MustHaveMinimumCount(42, message: message));
     }
 }
