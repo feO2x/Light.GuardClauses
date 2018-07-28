@@ -23,7 +23,7 @@ namespace Light.GuardClauses.Performance.CollectionAssertions
         public List<string> LightGuardClauses() => Collection.MustNotBeNullOrEmpty(nameof(Collection));
 
         [Benchmark]
-        public List<string> LightGuardClausesCustomException() => Collection.MustNotBeNullOrEmpty(() => new Exception("The collection is empty, you fool"));
+        public List<string> LightGuardClausesCustomException() => Collection.MustNotBeNullOrEmpty(c => new Exception("The collection is empty, you fool"));
 
         [Benchmark]
         public IEnumerable<string> OldVersion() => Collection.OldMustNotBeNullOrEmpty(nameof(Collection));

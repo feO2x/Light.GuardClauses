@@ -20,7 +20,7 @@ namespace Light.GuardClauses.Performance.UriAssertions
         public Uri LightGuardClauses() => AbsoluteUri.MustBeAbsoluteUri(nameof(AbsoluteUri));
 
         [Benchmark]
-        public Uri LightGuardClausesCustomException() => AbsoluteUri.MustBeAbsoluteUri(uri => new Exception($"This uri {uri} is wrong"), nameof(AbsoluteUri));
+        public Uri LightGuardClausesCustomException() => AbsoluteUri.MustBeAbsoluteUri(uri => new Exception($"This uri {uri} is wrong"));
 
         [Benchmark]
         public Uri OldVersion() => AbsoluteUri.OldMustBeAbsoluteUri(nameof(AbsoluteUri));

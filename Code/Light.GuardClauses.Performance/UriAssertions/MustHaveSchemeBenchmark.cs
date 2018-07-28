@@ -21,7 +21,7 @@ namespace Light.GuardClauses.Performance.UriAssertions
         public Uri LightGuardClauses() => HttpsUrl.MustHaveScheme("https", nameof(HttpsUrl));
 
         [Benchmark]
-        public Uri CustomException() => HttpsUrl.MustHaveScheme("https", (uri, scheme) => new Exception($"The {uri} does not use {scheme}"), nameof(HttpsUrl));
+        public Uri CustomException() => HttpsUrl.MustHaveScheme("https", (uri, scheme) => new Exception($"The {uri} does not use {scheme}"));
 
         [Benchmark]
         public Uri OldVersion() => HttpsUrl.OldMustHaveScheme("https", nameof(HttpsUrl));
