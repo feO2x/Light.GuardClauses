@@ -46,6 +46,13 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
                                  (a, c, exceptionFactory) => a.MustHaveCount(c, exceptionFactory));
 
         [Fact]
+        public static void CustomExceptionNotThrown()
+        {
+            var collection = new List<short>{1, -2, 3};
+            collection.MustHaveCount(3, (c, i) => new Exception()).Should().BeSameAs(collection);
+        }
+
+        [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<InvalidCollectionCountException>(message => new[] { 1 }.MustHaveCount(3, message: message));
 

@@ -45,6 +45,13 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
                                  (c, exceptionFactory) => collection.MustNotBeNullOrEmpty(exceptionFactory));
 
         [Fact]
+        public static void NoCustomExceptionThrown()
+        {
+            var collection = new List<int>{42};
+            collection.MustNotBeNullOrEmpty(c => new Exception()).Should().BeSameAs(collection);
+        }
+
+        [Fact]
         public static void CustomMessage() => 
             Test.CustomMessage<EmptyCollectionException>(message => new HashSet<string>().MustNotBeNullOrEmpty(message: message));
 
