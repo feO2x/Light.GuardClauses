@@ -17,11 +17,12 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         {
             Action act = () => value.MustNotBeOneOf(items, nameof(value));
 
-            act.Should().Throw<ValueIsOneOfException>()
-               .And.Message.Should().Contain(new StringBuilder().AppendLine($"{nameof(value)} must not be one of the following items")
-                                                                .AppendItemsWithNewLine(items)
-                                                                .AppendLine($"but it actually is {value.ToStringOrNull()}.")
-                                                                .ToString());
+            var assertion = act.Should().Throw<ValueIsOneOfException>().Which;
+            assertion.Message.Should().Contain(new StringBuilder().AppendLine($"{nameof(value)} must not be one of the following items")
+                                                                  .AppendItemsWithNewLine(items)
+                                                                  .AppendLine($"but it actually is {value.ToStringOrNull()}.")
+                                                                  .ToString());
+            assertion.ParamName.Should().BeSameAs(nameof(value));
         }
 
         [Theory]
@@ -33,19 +34,29 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void ItemsNull()
         {
-            Action act = () => Metasyntactic.Foo.MustNotBeOneOf((List<string>) null);
+            Action act = () => Metasyntactic.Foo.MustNotBeOneOf(null);
 
             act.Should().Throw<ArgumentNullException>();
         }
 
-        [Fact]
-        public static void CustomException() =>
-            Test.CustomException(42,
-                                 new HashSet<int> { 42, 35 },
+        [Theory]
+        [InlineData(42, new[] { 1, 42, 3 })]
+        [InlineData(42, null)]
+        public static void CustomException(int item, int[] collection) =>
+            Test.CustomException(item,
+                                 collection == null ? null : new HashSet<int>(collection),
                                  (value, set, exceptionFactory) => value.MustNotBeOneOf(set, exceptionFactory));
+
+        [Fact]
+        public static void NoCustomExceptionThrown() =>
+            42.MustNotBeOneOf(new[] { 1, 2, 3 }, (i, c) => new Exception()).Should().Be(42);
 
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<ValueIsOneOfException>(message => false.MustNotBeOneOf(new[] { true, false }, message: message));
+
+        [Fact]
+        public static void CustomMessageCollectionNull() =>
+            Test.CustomMessage<ArgumentNullException>(message => true.MustNotBeOneOf(null, message: message));
     }
 }
