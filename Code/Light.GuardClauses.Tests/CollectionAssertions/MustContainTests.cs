@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Xunit;
@@ -9,14 +10,14 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
     public static class MustContainTests
     {
         [Theory]
-        [InlineData(new []{1, 2, 3}, 5)]
-        [InlineData(new []{-5491, 6199}, 42)]
+        [InlineData(new[] { 1, 2, 3 }, 5)]
+        [InlineData(new[] { -5491, 6199 }, 42)]
         public static void ItemNotPartOf(int[] collection, int item)
         {
             Action act = () => collection.MustContain(item, nameof(collection));
 
-            act.Should().Throw<MissingItemException>()
-               .And.Message.Should().Contain($"{nameof(collection)} must contain {item}, but it actually does not.");
+            var assertion = act.Should().Throw<MissingItemException>().Which;
+            assertion.Message.Should().Contain($"{nameof(collection)} must contain {item}, but it actually does not.");
         }
 
         [Theory]
@@ -35,15 +36,27 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
             act.Should().Throw<ArgumentNullException>();
         }
 
+        [Theory]
+        [InlineData(new[] { long.MinValue, long.MaxValue }, 42L)]
+        [InlineData(null, 42L)]
+        public static void CustomException(long[] array, long item) =>
+            Test.CustomException(array,
+                                 item,
+                                 (collection, i, exceptionFactory) => collection.MustContain(i, exceptionFactory));
+
         [Fact]
-        public static void CustomException() => 
-            Test.CustomException(new List<long>{long.MaxValue, long.MinValue},
-                                 42L,
-                                 (collection, item, exceptionFactory) => collection.MustContain(item, exceptionFactory));
+        public static void CustomExceptionNotThrown()
+        {
+            var collection = new List<int> { 1, 2, 3 };
+            collection.MustContain(2, (c, i) => new Exception()).Should().BeSameAs(collection);
+        }
 
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<MissingItemException>(message => new List<string>().MustContain(Metasyntactic.Foo, message: message));
-        
+
+        [Fact]
+        public static void CustomMessageCollectionNull() => 
+            Test.CustomMessage<ArgumentNullException>(message => ((ObservableCollection<string>) null).MustContain(Metasyntactic.Foo, message: message));
     }
 }
