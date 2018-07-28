@@ -15,8 +15,9 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
 
             Action act = () => collection.MustHaveCount(10, nameof(collection));
 
-            act.Should().Throw<InvalidCollectionCountException>()
-               .And.Message.Should().Contain($"{nameof(collection)} must have count 10, but it actually has count {collection.Count}.");
+            var assertion = act.Should().Throw<InvalidCollectionCountException>().Which;
+            assertion.Message.Should().Contain($"{nameof(collection)} must have count 10, but it actually has count {collection.Count}.");
+            assertion.ParamName.Should().BeSameAs(nameof(collection));
         }
 
         [Fact]
@@ -35,20 +36,21 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
             act.Should().Throw<ArgumentNullException>();
         }
 
-        [Fact]
-        public static void CustomException() =>
-            Test.CustomException(new[] { true },
-                                 42,
-                                 (collection, count, exceptionFactory) => collection.MustHaveCount(count, exceptionFactory));
-
-        [Fact]
-        public static void CustomExceptionCollectionNull() =>
-            Test.CustomException<IReadOnlyList<string>, int>(null,
-                                                             42,
-                                                             (collection, count, exceptionFactory) => collection.MustHaveCount(count, exceptionFactory));
+        [Theory]
+        [InlineData(new[] { true }, 42)]
+        [InlineData(null, 3)]
+        [InlineData(new[] { false }, -1)]
+        public static void CustomException(bool[] collection, int count) =>
+            Test.CustomException(collection,
+                                 count,
+                                 (a, c, exceptionFactory) => a.MustHaveCount(c, exceptionFactory));
 
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<InvalidCollectionCountException>(message => new[] { 1 }.MustHaveCount(3, message: message));
+
+        [Fact]
+        public static void CustomMessageCollectionNull() => 
+            Test.CustomMessage<ArgumentNullException>(message => ((List<string>) null).MustHaveCount(42, message: message));
     }
 }
