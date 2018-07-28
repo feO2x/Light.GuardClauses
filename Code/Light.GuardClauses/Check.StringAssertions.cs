@@ -4,7 +4,6 @@ using JetBrains.Annotations;
 using Light.GuardClauses.Exceptions;
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
 using System.Runtime.CompilerServices;
-
 #endif
 
 namespace Light.GuardClauses
@@ -644,7 +643,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
         public static string MustNotBeSubstringOf(this string parameter, string value, StringComparison comparisonType, Func<string, string, StringComparison, Exception> exceptionFactory)
         {
-            if (parameter == null || value == null || value.IndexOf(parameter, comparisonType) != -1)
+            if (parameter == null || value == null || !comparisonType.IsValidEnumValue() || value.IndexOf(parameter, comparisonType) != -1)
                 Throw.CustomException(exceptionFactory, parameter, value, comparisonType);
             return parameter;
         }

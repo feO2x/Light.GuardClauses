@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertions
 {
-    public static class MustNotBeSubstringTests
+    public static class MustNotBeSubstringOfTests
     {
         [Theory]
         [InlineData("123", " 12345 ")]
@@ -14,8 +14,9 @@ namespace Light.GuardClauses.Tests.StringAssertions
         {
             Action act = () => x.MustNotBeSubstringOf(y, nameof(x));
 
-            act.Should().Throw<SubstringException>()
-               .And.Message.Should().Contain($"{nameof(x)} must not be a substring of \"{y}\", but it actually is \"{x}\".");
+            var assertion = act.Should().Throw<SubstringException>().Which;
+            assertion.Message.Should().Contain($"{nameof(x)} must not be a substring of \"{y}\", but it actually is \"{x}\".");
+            assertion.ParamName.Should().BeSameAs(nameof(x));
         }
 
         [Theory]
@@ -32,8 +33,9 @@ namespace Light.GuardClauses.Tests.StringAssertions
         {
             Action act = () => s1.MustNotBeSubstringOf(s2, comparisonType, nameof(s1));
 
-            act.Should().Throw<SubstringException>()
-               .And.Message.Should().Contain($"{nameof(s1)} must not be a substring of \"{s2}\" ({comparisonType}), but it actually is \"{s1}\".");
+            var assertion = act.Should().Throw<SubstringException>().Which;
+            assertion.Message.Should().Contain($"{nameof(s1)} must not be a substring of \"{s2}\" ({comparisonType}), but it actually is \"{s1}\".");
+            assertion.ParamName.Should().BeSameAs(nameof(s1));
         }
 
         [Theory]
@@ -75,17 +77,24 @@ namespace Light.GuardClauses.Tests.StringAssertions
             act.Should().Throw<ArgumentNullException>();
         }
 
-        [Fact]
-        public static void CustomException() => 
-            Test.CustomException("drink",
-                                 "I'll have a drink right now",
+        [Theory]
+        [InlineData("drink", "I'll have a drink right now")]
+        [InlineData(null, "Foo")]
+        [InlineData("Bar", null)]
+        public static void CustomException(string first, string second) => 
+            Test.CustomException(first,
+                                 second,
                                  (s1, s2, exceptionFactory) => s1.MustNotBeSubstringOf(s2, exceptionFactory));
 
-        [Fact]
-        public static void CustomExceptionCustomComparison() => 
-            Test.CustomException("Full of Possibilities",
-                                 "Death is so terribly final, while life is full of possibilities",
-                                 StringComparison.OrdinalIgnoreCase,
+        [Theory]
+        [InlineData("Full of Possibilities", "Death is so terribly final, while life is full of possibilities", StringComparison.OrdinalIgnoreCase)]
+        [InlineData(null, "Foo", StringComparison.Ordinal)]
+        [InlineData("Bar", null, StringComparison.CurrentCulture)]
+        [InlineData("Baz", "Qux", (StringComparison) (-14))]
+        public static void CustomExceptionCustomComparison(string a, string b, StringComparison comparisonType) => 
+            Test.CustomException(a,
+                                 b,
+                                 comparisonType,
                                  (s1, s2, ct, exceptionFactory) => s1.MustNotBeSubstringOf(s2, ct, exceptionFactory));
 
         [Fact]
@@ -93,7 +102,23 @@ namespace Light.GuardClauses.Tests.StringAssertions
             Test.CustomMessage<SubstringException>(message => "Foo".MustNotBeSubstringOf("Food", message: message));
 
         [Fact]
+        public static void CustomMessageParameterNull() => 
+            Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustNotBeSubstringOf("Foo", message: message));
+
+        [Fact]
+        public static void CustomMessageValueNull() => 
+            Test.CustomMessage<ArgumentNullException>(message => "Foo".MustNotBeSubstringOf(null, message: message));
+
+        [Fact]
         public static void CustomMessageCustomComparison() => 
             Test.CustomMessage<SubstringException>(message => "Bar".MustNotBeSubstringOf("Walk into a bar", StringComparison.OrdinalIgnoreCase, message: message));
+
+        [Fact]
+        public static void CustomMessageCustomComparisonParameterNull() =>
+            Test.CustomMessage<ArgumentNullException>(message => ((string)null).MustNotBeSubstringOf("Foo", StringComparison.Ordinal, message: message));
+
+        [Fact]
+        public static void CustomMessageCustomComparisonValueNull() =>
+            Test.CustomMessage<ArgumentNullException>(message => "Foo".MustNotBeSubstringOf(null, StringComparison.CurrentCulture, message: message));
     }
 }
