@@ -22,10 +22,11 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         {
             var empty = new List<double>();
 
-            Action act = () => empty.MustNotBeNullOrEmpty(nameof(Metasyntactic.Bar));
+            Action act = () => empty.MustNotBeNullOrEmpty(nameof(empty));
 
-            act.Should().Throw<EmptyCollectionException>()
-               .And.Message.Should().Contain($"{Metasyntactic.Bar} must not be an empty collection, but it actually is.");
+            var assertion = act.Should().Throw<EmptyCollectionException>().Which;
+            assertion.Message.Should().Contain($"{nameof(empty)} must not be an empty collection, but it actually is.");
+            assertion.ParamName.Should().BeSameAs(nameof(empty));
         }
 
         [Fact]
@@ -36,12 +37,19 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
             collection.MustNotBeNullOrEmpty().Should().BeSameAs(collection);
         }
 
-        [Fact]
-        public static void CustomException() =>
-            Test.CustomException(exceptionFactory => new List<object>().MustNotBeNullOrEmpty(exceptionFactory));
+        [Theory]
+        [InlineData(new int[] {})]
+        [InlineData(null)]
+        public static void CustomException(int[] collection) =>
+            Test.CustomException(collection, 
+                                 (c, exceptionFactory) => collection.MustNotBeNullOrEmpty(exceptionFactory));
 
         [Fact]
         public static void CustomMessage() => 
             Test.CustomMessage<EmptyCollectionException>(message => new HashSet<string>().MustNotBeNullOrEmpty(message: message));
+
+        [Fact]
+        public static void CustomMessageCollectionNull() => 
+            Test.CustomMessage<ArgumentNullException>(message => ((List<int>) null).MustNotBeNullOrEmpty(message: message));
     }
 }

@@ -92,10 +92,10 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustNotBeNullOrEmpty<TCollection>(this TCollection parameter, Func<Exception> exceptionFactory) where TCollection : class, IEnumerable
+        public static TCollection MustNotBeNullOrEmpty<TCollection>(this TCollection parameter, Func<TCollection, Exception> exceptionFactory) where TCollection : class, IEnumerable
         {
             if (parameter == null || parameter.Count() == 0)
-                Throw.CustomException(exceptionFactory);
+                Throw.CustomException(exceptionFactory, parameter);
             return parameter;
         }
 
