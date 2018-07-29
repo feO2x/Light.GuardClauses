@@ -211,3 +211,6 @@ GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 /Code/Light.GuardClauses.Performance/BenchmarkDotNet.Artifacts
+
+# TargetFrameworks.props files
+**/TargetFrameworks.props
