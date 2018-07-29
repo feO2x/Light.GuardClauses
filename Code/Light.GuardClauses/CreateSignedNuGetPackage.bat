@@ -1,1 +1,1 @@
-msbuild Light.GuardClauses.csproj /t:clean;build;pack  /p:Configuration=Release /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=bin\Light.GuardClauses.snk
+msbuild Light.GuardClauses.csproj /t:restore;clean;build;pack /p:Configuration=Release /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=bin\Light.GuardClauses.snk
