@@ -30,6 +30,9 @@ namespace Light.GuardClauses.Performance.CommonAssertions
         public SampleEntity LightGuardClausesReference() => Instance.MustNotBeNullReference(nameof(Instance));
 
         [Benchmark]
+        public SampleEntity LightGuardClausesReferenceCustomException() => Instance.MustNotBeNullReference(() => new Exception());
+
+        [Benchmark]
         public int ValueTypeV1() => Value.MustNotBeNullReferenceV1(nameof(Value));
 
         [Benchmark]
@@ -37,6 +40,9 @@ namespace Light.GuardClauses.Performance.CommonAssertions
 
         [Benchmark]
         public int LightGuardClausesValueType() => Value.MustNotBeNullReference(nameof(Value));
+
+        [Benchmark]
+        public int LightGuardClausesValueTypeCustomException() => Value.MustNotBeNullReference(() => new Exception());
     }
 
     public static class MustNotBeNullReferenceExtensionMethods
