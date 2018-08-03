@@ -30,6 +30,9 @@ namespace Light.GuardClauses.Performance.CommonAssertions
         public int LightGuardClausesValueType() => Value.MustNotBeDefault(nameof(Value));
 
         [Benchmark]
+        public int LightGuardClausesValueTypeCustomException() => Value.MustNotBeDefault(() => new Exception());
+
+        [Benchmark]
         public SampleEntity ImperativeVersionForReferenceType()
         {
             if (Reference == null) throw new ArgumentNullException(nameof(Reference));
@@ -47,6 +50,9 @@ namespace Light.GuardClauses.Performance.CommonAssertions
 
         [Benchmark]
         public SampleEntity LightGuardClausesReferenceType() => Reference.MustNotBeDefault(nameof(Reference));
+
+        [Benchmark]
+        public SampleEntity LightGuardClausesReferenceTypeCustomException() => Reference.MustNotBeDefault(() => new Exception());
     }
 
     public static class MustNotBeDefaultExtensionMethods
