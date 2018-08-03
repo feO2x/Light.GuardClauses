@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
-using BenchmarkDotNet.Attributes.Jobs;
+using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 
 namespace Light.GuardClauses.Performance
