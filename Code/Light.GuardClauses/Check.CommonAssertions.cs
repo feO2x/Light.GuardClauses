@@ -73,7 +73,7 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            if (parameter.Equals(default(T)))
+            if (EqualityComparer<T>.Default.Equals(parameter, default))
                 Throw.ArgumentDefault(parameterName, message);
             return parameter;
         }
@@ -97,7 +97,7 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            if (parameter.Equals(default(T)))
+            if (EqualityComparer<T>.Default.Equals(parameter, default))
                 Throw.CustomException(exceptionFactory);
             return parameter;
         }
