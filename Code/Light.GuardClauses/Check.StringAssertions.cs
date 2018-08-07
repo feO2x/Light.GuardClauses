@@ -47,14 +47,14 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.</param>
-        /// <exception cref="Exception">Thrown when <paramref name="parameter" /> is an empty string or null.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is an empty string or null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
         public static string MustNotBeNullOrEmpty(this string parameter, Func<string, Exception> exceptionFactory)
         {
-            if (parameter.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(parameter))
                 Throw.CustomException(exceptionFactory, parameter);
             return parameter;
         }
