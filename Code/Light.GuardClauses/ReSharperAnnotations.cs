@@ -23,8 +23,6 @@ SOFTWARE. */
 using System;
 // ReSharper disable CheckNamespace
 
-#pragma warning disable 1591
-
 namespace JetBrains.Annotations
 {
     /// <summary>

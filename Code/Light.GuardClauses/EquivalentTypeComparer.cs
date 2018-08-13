@@ -42,7 +42,7 @@ namespace Light.GuardClauses
 #endif
         public int GetHashCode(Type type) => 
             type == null ? 0 :
-#if (NETSTANDARD || NET45)
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45)
             type.IsConstructedGenericType ?
 #else
             type.IsConstructedGenericType() ?

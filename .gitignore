@@ -214,3 +214,6 @@ ModelManifest.xml
 
 # TargetFrameworks.props files
 **/TargetFrameworks.props
+
+# The source code redistributable of Light.GuardClauses
+/Code/Light.GuardClauses.Source/Light.GuardClauses.cs
