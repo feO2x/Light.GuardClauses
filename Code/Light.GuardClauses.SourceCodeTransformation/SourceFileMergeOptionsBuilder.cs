@@ -26,7 +26,7 @@ namespace Light.GuardClauses.SourceCodeTransformation
 
         public string TargetFile { get; set; }
 
-        public bool ChangePublicToInternal { get; set; }
+        public bool ChangePublicToInternal { get; set; } = true;
 
         public SourceFileMergeOptions Build() =>
             new SourceFileMergeOptions(SourceFolder, TargetFile, ChangePublicToInternal);

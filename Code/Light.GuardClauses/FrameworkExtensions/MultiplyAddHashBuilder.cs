@@ -43,8 +43,6 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Initializes a new instance of <see cref="MultiplyAddHashBuilder"/> with the specified initial hash.
         /// </summary>
-        /// <param name="initialHash"></param>
-        /// <returns></returns>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
