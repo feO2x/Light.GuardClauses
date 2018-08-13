@@ -397,6 +397,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
+        [ContractAnnotation("parameter:notNull => true, other:notnull; parameter:notNull => false, other:canbenull; other:notnull => true, parameter:notnull; other:notnull => false, parameter:canbenull")]
         public static bool IsSameAs<T>(this T parameter, T other) where T : class =>
             ReferenceEquals(parameter, other);
 

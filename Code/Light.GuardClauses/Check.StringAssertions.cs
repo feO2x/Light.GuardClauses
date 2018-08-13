@@ -17,7 +17,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        [ContractAnnotation("string:null => false")]
+        [ContractAnnotation("=> false, string:notnull; => true, string:canbenull")]
         public static bool IsNullOrEmpty(this string @string) => string.IsNullOrEmpty(@string);
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        [ContractAnnotation("string:null => false")]
+        [ContractAnnotation("=> false, string:notnull; => true, string:canbenull")]
         public static bool IsNullOrWhiteSpace(this string @string)
 #if NET35 || NET35_CF
         {

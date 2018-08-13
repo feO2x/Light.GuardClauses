@@ -59,7 +59,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        [ContractAnnotation("collection:null => false")]
+        [ContractAnnotation("=> true, collection:canbenull; => false, collection:notnull")]
         public static bool IsNullOrEmpty(this IEnumerable collection) =>
             collection == null || collection.Count() == 0;
 
