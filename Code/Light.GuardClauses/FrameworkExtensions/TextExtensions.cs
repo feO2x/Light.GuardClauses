@@ -181,6 +181,7 @@ namespace Light.GuardClauses.FrameworkExtensions
             var currentException = exception.MustNotBeNull(nameof(exception));
             while (true)
             {
+                // ReSharper disable once PossibleNullReferenceException
                 stringBuilder.AppendLine(currentException.Message);
                 if (currentException.InnerException == null)
                     return stringBuilder;

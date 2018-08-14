@@ -139,7 +139,7 @@ namespace Light.GuardClauses
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-            public Range<T> ToInclusive(T value) => new Range<T>(_from, value, _isFromInclusive, true);
+            public Range<T> ToInclusive(T value) => new Range<T>(_from, value, _isFromInclusive);
         }
 
         /// <inheritdoc />
