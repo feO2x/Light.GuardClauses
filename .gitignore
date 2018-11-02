@@ -212,6 +212,9 @@ _Pvt_Extensions/
 ModelManifest.xml
 /Code/Light.GuardClauses.Performance/BenchmarkDotNet.Artifacts
 
+# VS Code files
+**/.vscode/
+
 # TargetFrameworks.props files
 **/TargetFrameworks.props
 
