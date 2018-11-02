@@ -19,7 +19,7 @@ using System.Runtime.CompilerServices;
 namespace Light.GuardClauses
 {
     /// <summary>
-    /// Provides metainformation about enum values and the flag bitmask if the enum is marked with the <see cref="FlagsAttribute" />.
+    /// Provides meta-information about enum values and the flag bitmask if the enum is marked with the <see cref="FlagsAttribute" />.
     /// Can be used to validate that an enum value is valid.
     /// </summary>
     /// <typeparam name="T">The type of the enum.</typeparam>
