@@ -24,7 +24,7 @@ namespace Light.GuardClauses.Tests.TypeAssertions
         }
 
         private static void CheckEquals(Type x, Type y, bool expected) =>
-            new EqualivalentTypeComparer().Equals(x, y).Should().Be(expected);
+            new EquivalentTypeComparer().Equals(x, y).Should().Be(expected);
 
         [Fact]
         public static void HashCode()
@@ -42,7 +42,7 @@ namespace Light.GuardClauses.Tests.TypeAssertions
 
         private static void CheckGetHashCode(Type x, Type y, bool shouldBeEqualHashCodes)
         {
-            var comparer = new EqualivalentTypeComparer();
+            var comparer = new EquivalentTypeComparer();
             var firstHashCode = comparer.GetHashCode(x);
             var secondHashCode = comparer.GetHashCode(y);
             if (shouldBeEqualHashCodes)

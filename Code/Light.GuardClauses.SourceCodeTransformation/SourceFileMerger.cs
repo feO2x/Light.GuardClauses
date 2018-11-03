@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Light.Undefine;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Light.GuardClauses.SourceCodeTransformation
@@ -20,13 +22,11 @@ namespace Light.GuardClauses.SourceCodeTransformation
         public async Task CreateSingleSourceFileAsync()
         {
             // Prepare the target syntax
-            var targetSyntaxTree = CSharpSyntaxTree.ParseText(
-
-                @"/*
-Licence information for Light.GuardClauses
+            var stringBuilder = new StringBuilder().AppendLine($@"/*
+License information for Light.GuardClauses
 
 The MIT License (MIT)
-Copyright (c) 2016 - 2018 Kenny Pflug
+Copyright (c) 2016 - 2018 Kenny Pflug mailto:kenny.pflug@live.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the ""Software""), to deal
@@ -65,26 +65,26 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
-using Light.GuardClauses.Exceptions;
-using Light.GuardClauses.FrameworkExtensions;
+using {_options.BaseNamespace}.Exceptions;
+using {_options.BaseNamespace}.FrameworkExtensions;
 
 // ReSharper disable StaticMemberInGenericType
 
-namespace Light.GuardClauses
-{
-}
+namespace {_options.BaseNamespace}
+{{
+}}
 
-namespace Light.GuardClauses.Exceptions
-{
-}
+namespace {_options.BaseNamespace}.Exceptions
+{{
+}}
 
-namespace Light.GuardClauses.FrameworkExtensions
-{
-}
-
-
-/* 
-Licence information for JetBrains.Annotations
+namespace {_options.BaseNamespace}.FrameworkExtensions
+{{
+}}");
+            if (_options.IncludeJetBrainsAnnotations)
+            {
+                stringBuilder.AppendLine().AppendLine(@"/* 
+License information for JetBrains.Annotations
 
 MIT License
 Copyright (c) 2016 JetBrains http://www.jetbrains.com
@@ -110,8 +110,11 @@ SOFTWARE. */
 namespace JetBrains.Annotations
 {
 }");
+            }
 
-            var targetRoot = (CompilationUnitSyntax)targetSyntaxTree.GetRoot();
+            var targetSyntaxTree = CSharpSyntaxTree.ParseText(stringBuilder.ToString());
+
+            var targetRoot = (CompilationUnitSyntax) targetSyntaxTree.GetRoot();
 
             var namespaces = targetRoot.Members
                                        .OfType<NamespaceDeclarationSyntax>()
@@ -119,7 +122,7 @@ namespace JetBrains.Annotations
             var defaultNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == "Light.GuardClauses");
             var exceptionsNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == "Light.GuardClauses.Exceptions");
             var extensionsNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == "Light.GuardClauses.FrameworkExtensions");
-            var jetBrainsNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == "JetBrains.Annotations");
+            var jetBrainsNamespace = namespaces.FirstOrDefault(@namespace => @namespace.Name.ToString() == "JetBrains.Annotations");
             var replacedNodes = new Dictionary<NamespaceDeclarationSyntax, NamespaceDeclarationSyntax>
             {
                 [defaultNamespace] = defaultNamespace,
@@ -129,8 +132,8 @@ namespace JetBrains.Annotations
             };
 
             var allSourceFiles = new DirectoryInfo(_options.SourceFolder).GetFiles("*.cs", SearchOption.AllDirectories)
-                                                                         .Where(f => !f.FullName.Contains(@"\obj\") &&
-                                                                                     !f.FullName.Contains(@"\bin\"))
+                                                                         .Where(f => !f.FullName.Contains("obj") &&
+                                                                                     !f.FullName.Contains("bin"))
                                                                          .ToDictionary(f => f.Name);
 
             // Start with Check.CommonAssertions before all other files to prepare the Check class
@@ -155,7 +158,7 @@ namespace JetBrains.Annotations
                     originalNamespace = extensionsNamespace;
                 else if (currentFile.Directory?.Name == "Exceptions")
                     originalNamespace = exceptionsNamespace;
-                else if (currentFile.Name == "ReSharperAnnotations.cs")
+                else if (_options.IncludeJetBrainsAnnotations && currentFile.Name == "ReSharperAnnotations.cs")
                     originalNamespace = jetBrainsNamespace;
 
                 // If the file contains assertions, add it to the existing Check class declaration
@@ -226,10 +229,7 @@ namespace JetBrains.Annotations
                         typeDeclaration
                         .Modifiers
                         .RemoveAt(0)
-                        .Insert(
-                            0,
-                            Token(SyntaxKind.InternalKeyword)
-                            .WithTriviaFrom(publicModifier));
+                        .Insert(0, Token(SyntaxKind.InternalKeyword).WithTriviaFrom(publicModifier));
 
                     if (typeDeclaration is ClassDeclarationSyntax classDeclaration)
                         changedTypeDeclarations[classDeclaration] = classDeclaration.WithModifiers(adjustedModifiers);
@@ -241,8 +241,12 @@ namespace JetBrains.Annotations
                 targetRoot = targetRoot.ReplaceNodes(changedTypeDeclarations.Keys, (originalNode, _) => changedTypeDeclarations[originalNode]);
             }
 
-            // Write the target file 
+            // Remove preprocessor directives if necessary
             var targetFileContent = targetRoot.ToFullString();
+            if (_options.RemovePreprocessorDirectives)
+                targetFileContent = new UndefineTransformation().Undefine(targetFileContent, _options.DefinedPreprocessorSymbols).ToString();
+
+            // Write the target file 
             await File.WriteAllTextAsync(_options.TargetFile, targetFileContent);
         }
     }
