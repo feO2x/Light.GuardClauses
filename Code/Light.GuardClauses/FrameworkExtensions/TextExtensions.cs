@@ -38,7 +38,7 @@ namespace Light.GuardClauses.FrameworkExtensions
             });
 
         /// <summary>
-        /// Returns the string reprensentation of <paramref name="value" />, or <paramref name="nullText" /> if <paramref name="value" /> is null.
+        /// Returns the string representation of <paramref name="value" />, or <paramref name="nullText" /> if <paramref name="value" /> is null.
         /// If the type of <paramref name="value" /> is not one of <see cref="UnquotedTypes" />, then quotation marks will be put around the string representation.
         /// </summary>
         /// <param name="value">The item whose string representation should be returned.</param>
