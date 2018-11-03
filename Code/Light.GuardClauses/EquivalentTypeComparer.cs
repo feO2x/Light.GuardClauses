@@ -12,12 +12,12 @@ namespace Light.GuardClauses
     /// generic types are compared, they are regarded as equal when one of them is a constructed generic type
     /// and the other one is the corresponding generic type definition.
     /// </summary>
-    public sealed class EqualivalentTypeComparer : IEqualityComparer<Type>
+    public sealed class EquivalentTypeComparer : IEqualityComparer<Type>
     {
         /// <summary>
         /// Gets a singleton instance of the equality comparer.
         /// </summary>
-        public static readonly EqualivalentTypeComparer Instance = new EqualivalentTypeComparer();
+        public static readonly EquivalentTypeComparer Instance = new EquivalentTypeComparer();
 
         /// <summary>
         /// Checks if the two types are equivalent (using <see cref="Check.IsEquivalentTypeTo" />).
