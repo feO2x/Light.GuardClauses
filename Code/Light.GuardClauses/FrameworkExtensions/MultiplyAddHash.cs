@@ -6,7 +6,7 @@ namespace Light.GuardClauses.FrameworkExtensions
 {
     /// <summary>
     /// The <see cref="MultiplyAddHash" /> class represents a simple non-cryptographic hash function that uses a prime number
-    /// as seed and then manipulate this value by constantly performing <c>hash = unchecked(hash * SecondPrime + value?.GetHashCode() ?? 0);</c>
+    /// as seed and then manipulates this value by constantly performing <c>hash = unchecked(hash * SecondPrime + value?.GetHashCode() ?? 0);</c>
     /// for each given value. It is implemented according to the guidelines of Jon Skeet as stated in this Stack Overflow
     /// answer: http://stackoverflow.com/a/263416/1560623. IMPORTANT: do not persist any hash codes and rely on them
     /// to stay the same. Hash codes should only be used in memory within a single process session, usually for the use
