@@ -216,7 +216,7 @@ namespace JetBrains.Annotations
             targetRoot = targetRoot.ReplaceNodes(replacedNodes.Keys, (originalNode, _) => replacedNodes[originalNode]).NormalizeWhitespace();
 
             // Make types internal if necessary
-            if (_options.ChangePublicToInternal)
+            if (_options.ChangePublicTypesToInternalTypes)
             {
                 var changedTypeDeclarations = new Dictionary<BaseTypeDeclarationSyntax, BaseTypeDeclarationSyntax>();
 
@@ -245,6 +245,8 @@ namespace JetBrains.Annotations
             var targetFileContent = targetRoot.ToFullString();
             if (_options.RemovePreprocessorDirectives)
                 targetFileContent = new UndefineTransformation().Undefine(targetFileContent, _options.DefinedPreprocessorSymbols).ToString();
+
+            targetFileContent = CleanupStep.Cleanup(targetFileContent, _options.RemoveContractAnnotations).ToString();
 
             // Write the target file 
             await File.WriteAllTextAsync(_options.TargetFile, targetFileContent);

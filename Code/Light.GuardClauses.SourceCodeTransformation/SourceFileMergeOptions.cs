@@ -6,27 +6,29 @@ namespace Light.GuardClauses.SourceCodeTransformation
     {
         public SourceFileMergeOptions(string sourceFolder,
                                       string targetFile,
-                                      bool changePublicToInternal,
+                                      bool changePublicTypesToInternalTypes,
                                       string baseNamespace,
                                       bool includeJetBrainsAnnotations, 
                                       bool removePreprocessorDirectives,
-                                      IReadOnlyList<string> definedPreprocessorSymbols)
+                                      IReadOnlyList<string> definedPreprocessorSymbols,
+                                      bool removeContractAnnotations)
         {
             SourceFolder = sourceFolder.MustNotBeNullOrWhiteSpace(nameof(sourceFolder));
             TargetFile = targetFile.MustNotBeNullOrWhiteSpace(nameof(targetFile));
-            ChangePublicToInternal = changePublicToInternal;
+            ChangePublicTypesToInternalTypes = changePublicTypesToInternalTypes;
             BaseNamespace = baseNamespace.MustNotBeNullOrWhiteSpace(nameof(baseNamespace));
             IncludeJetBrainsAnnotations = includeJetBrainsAnnotations;
             RemovePreprocessorDirectives = removePreprocessorDirectives;
             if (removePreprocessorDirectives)
                 DefinedPreprocessorSymbols = definedPreprocessorSymbols.MustNotBeNull(nameof(definedPreprocessorSymbols));
+            RemoveContractAnnotations = removeContractAnnotations;
         }
 
         public string SourceFolder { get; }
 
         public string TargetFile { get; }
 
-        public bool ChangePublicToInternal { get; }
+        public bool ChangePublicTypesToInternalTypes { get; }
 
         public string BaseNamespace { get; }
 
@@ -35,5 +37,7 @@ namespace Light.GuardClauses.SourceCodeTransformation
         public bool RemovePreprocessorDirectives { get; }
 
         public IReadOnlyList<string> DefinedPreprocessorSymbols { get; }
+
+        public bool RemoveContractAnnotations { get; }
     }
 }
