@@ -9,10 +9,11 @@ namespace Light.GuardClauses.SourceCodeTransformation
         {
             var configuration =
                 new ConfigurationBuilder()
+                   .AddJsonFile("settings.json", true)
                    .AddCommandLine(args)
                    .Build();
 
-            var mergeOptionsBuilder = new SourceFileMergeOptionsBuilder();
+            var mergeOptionsBuilder = new SourceFileMergeOptions.Builder();
             configuration.Bind(mergeOptionsBuilder);
             var merger = new SourceFileMerger(mergeOptionsBuilder.Build());
             await merger.CreateSingleSourceFileAsync();

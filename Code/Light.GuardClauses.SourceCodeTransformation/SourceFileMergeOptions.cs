@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 namespace Light.GuardClauses.SourceCodeTransformation
 {
@@ -11,7 +12,8 @@ namespace Light.GuardClauses.SourceCodeTransformation
                                       bool includeJetBrainsAnnotations, 
                                       bool removePreprocessorDirectives,
                                       IReadOnlyList<string> definedPreprocessorSymbols,
-                                      bool removeContractAnnotations)
+                                      bool removeContractAnnotations, 
+                                      bool includeJetBrainsAnnotationsUsing)
         {
             SourceFolder = sourceFolder.MustNotBeNullOrWhiteSpace(nameof(sourceFolder));
             TargetFile = targetFile.MustNotBeNullOrWhiteSpace(nameof(targetFile));
@@ -22,6 +24,7 @@ namespace Light.GuardClauses.SourceCodeTransformation
             if (removePreprocessorDirectives)
                 DefinedPreprocessorSymbols = definedPreprocessorSymbols.MustNotBeNull(nameof(definedPreprocessorSymbols));
             RemoveContractAnnotations = removeContractAnnotations;
+            IncludeJetBrainsAnnotationsUsing = includeJetBrainsAnnotationsUsing;
         }
 
         public string SourceFolder { get; }
@@ -39,5 +42,60 @@ namespace Light.GuardClauses.SourceCodeTransformation
         public IReadOnlyList<string> DefinedPreprocessorSymbols { get; }
 
         public bool RemoveContractAnnotations { get; }
+
+        public bool IncludeJetBrainsAnnotationsUsing { get; }
+
+        public sealed class Builder
+        {
+            public Builder()
+            {
+                try
+                {
+                    var currentDirectory = new DirectoryInfo(".");
+                    while (currentDirectory != null && currentDirectory.Name != "Code")
+                        currentDirectory = currentDirectory.Parent;
+
+                    if (currentDirectory == null)
+                        return;
+
+                    TargetFile = Path.Combine(currentDirectory.FullName, "Light.GuardClauses.Source", "Light.GuardClauses.cs");
+                    SourceFolder = Path.Combine(currentDirectory.FullName, "Light.GuardClauses");
+                }
+                // ReSharper disable once EmptyGeneralCatchClause
+                catch { }
+            }
+
+            public string SourceFolder { get; set; }
+
+            public string TargetFile { get; set; }
+
+            public bool ChangePublicTypesToInternalTypes { get; set; } = true;
+
+            public string BaseNamespace { get; set; } = "Light.GuardClauses";
+
+
+            public bool RemovePreprocessorDirectives { get; set; } = true;
+
+            public List<string> DefinedPreprocessorSymbols { get; set; } = new List<string> { "NETSTANDARD2_0" };
+
+            public bool RemoveContractAnnotations { get; set; } = false;
+
+            public bool IncludeJetBrainsAnnotations { get; set; } = true;
+
+            public bool IncludeJetBrainsAnnotationsUsing { get; set; } = true;
+
+
+            public SourceFileMergeOptions Build() =>
+                new SourceFileMergeOptions(
+                    SourceFolder,
+                    TargetFile,
+                    ChangePublicTypesToInternalTypes,
+                    BaseNamespace,
+                    IncludeJetBrainsAnnotations,
+                    RemovePreprocessorDirectives,
+                    DefinedPreprocessorSymbols,
+                    RemoveContractAnnotations,
+                    IncludeJetBrainsAnnotationsUsing);
+        }
     }
 }

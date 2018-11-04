@@ -7,14 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Light.GuardClauses\Light.GuardClauses.csproj" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.8.2" />
     <PackageReference Include="Light.Undefine" Version="0.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Light.GuardClauses\Light.GuardClauses.csproj" />
+    <None Update="settings.json" Condition="Exists('settings.json')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

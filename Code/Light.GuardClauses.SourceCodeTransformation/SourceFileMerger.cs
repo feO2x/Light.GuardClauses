@@ -64,8 +64,7 @@ using System.Runtime.Serialization;
 #endif
 using System.Text;
 using System.Text.RegularExpressions;
-using JetBrains.Annotations;
-using {_options.BaseNamespace}.Exceptions;
+{(_options.IncludeJetBrainsAnnotationsUsing ? "using JetBrains.Annotations;" + Environment.NewLine : string.Empty)}using {_options.BaseNamespace}.Exceptions;
 using {_options.BaseNamespace}.FrameworkExtensions;
 
 // ReSharper disable StaticMemberInGenericType
@@ -128,8 +127,9 @@ namespace JetBrains.Annotations
                 [defaultNamespace] = defaultNamespace,
                 [exceptionsNamespace] = exceptionsNamespace,
                 [extensionsNamespace] = extensionsNamespace,
-                [jetBrainsNamespace] = jetBrainsNamespace
             };
+            if (_options.IncludeJetBrainsAnnotations)
+                replacedNodes.Add(jetBrainsNamespace, jetBrainsNamespace);
 
             var allSourceFiles = new DirectoryInfo(_options.SourceFolder).GetFiles("*.cs", SearchOption.AllDirectories)
                                                                          .Where(f => !f.FullName.Contains("obj") &&
