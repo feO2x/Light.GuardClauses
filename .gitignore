@@ -220,3 +220,4 @@ ModelManifest.xml
 
 # The source code redistributable of Light.GuardClauses
 /Code/Light.GuardClauses.Source/Light.GuardClauses.cs
+/Code/Light.GuardClauses.SourceCodeTransformation/settings.json
