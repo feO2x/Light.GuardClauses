@@ -13,7 +13,8 @@ namespace Light.GuardClauses.SourceCodeTransformation
                                       bool removePreprocessorDirectives,
                                       IReadOnlyList<string> definedPreprocessorSymbols,
                                       bool removeContractAnnotations, 
-                                      bool includeJetBrainsAnnotationsUsing)
+                                      bool includeJetBrainsAnnotationsUsing, 
+                                      bool includeVersionComment)
         {
             SourceFolder = sourceFolder.MustNotBeNullOrWhiteSpace(nameof(sourceFolder));
             TargetFile = targetFile.MustNotBeNullOrWhiteSpace(nameof(targetFile));
@@ -25,6 +26,7 @@ namespace Light.GuardClauses.SourceCodeTransformation
                 DefinedPreprocessorSymbols = definedPreprocessorSymbols.MustNotBeNull(nameof(definedPreprocessorSymbols));
             RemoveContractAnnotations = removeContractAnnotations;
             IncludeJetBrainsAnnotationsUsing = includeJetBrainsAnnotationsUsing;
+            IncludeVersionComment = includeVersionComment;
         }
 
         public string SourceFolder { get; }
@@ -44,6 +46,8 @@ namespace Light.GuardClauses.SourceCodeTransformation
         public bool RemoveContractAnnotations { get; }
 
         public bool IncludeJetBrainsAnnotationsUsing { get; }
+
+        public bool IncludeVersionComment { get; }
 
         public sealed class Builder
         {
@@ -84,6 +88,8 @@ namespace Light.GuardClauses.SourceCodeTransformation
 
             public bool IncludeJetBrainsAnnotationsUsing { get; set; } = true;
 
+            public bool IncludeVersionComment { get; set; } = true;
+
 
             public SourceFileMergeOptions Build() =>
                 new SourceFileMergeOptions(
@@ -95,7 +101,8 @@ namespace Light.GuardClauses.SourceCodeTransformation
                     RemovePreprocessorDirectives,
                     DefinedPreprocessorSymbols,
                     RemoveContractAnnotations,
-                    IncludeJetBrainsAnnotationsUsing);
+                    IncludeJetBrainsAnnotationsUsing,
+                    IncludeVersionComment);
         }
     }
 }

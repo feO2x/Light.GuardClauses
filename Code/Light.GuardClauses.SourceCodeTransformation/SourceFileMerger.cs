@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Light.GuardClauses.FrameworkExtensions;
 using Light.Undefine;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
@@ -17,13 +18,21 @@ namespace Light.GuardClauses.SourceCodeTransformation
         private readonly SourceFileMergeOptions _options;
 
         public SourceFileMerger(SourceFileMergeOptions options) =>
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _options = options.MustNotBeNull(nameof(options));
 
         public async Task CreateSingleSourceFileAsync()
         {
             // Prepare the target syntax
-            var stringBuilder = new StringBuilder().AppendLine($@"/*
-License information for Light.GuardClauses
+            var stringBuilder = new StringBuilder();
+
+            if (_options.IncludeVersionComment)
+                stringBuilder.AppendLine("/* ------------------------------")
+                             .AppendLine($"   Light.GuardClauses {typeof(SourceFileMerger).Assembly.GetName().Version.ToString(3)}")
+                             .AppendLine("   ------------------------------")
+                             .AppendLine();
+               
+            stringBuilder.AppendLineIf(!_options.IncludeVersionComment, "/*")
+                         .AppendLine($@"License information for Light.GuardClauses
 
 The MIT License (MIT)
 Copyright (c) 2016 - 2018 Kenny Pflug mailto:kenny.pflug@live.de

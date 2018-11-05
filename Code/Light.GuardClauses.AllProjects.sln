@@ -21,9 +21,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.Tests.Ne
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SourceCodePublishing", "SourceCodePublishing", "{0E0A86F9-C976-4FA1-8BF6-3A6A21D86BFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Light.GuardClauses.SourceCodeTransformation", "Light.GuardClauses.SourceCodeTransformation\Light.GuardClauses.SourceCodeTransformation.csproj", "{ECE42390-E3B5-49D4-9452-3B0CC04C633A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.SourceCodeTransformation", "Light.GuardClauses.SourceCodeTransformation\Light.GuardClauses.SourceCodeTransformation.csproj", "{ECE42390-E3B5-49D4-9452-3B0CC04C633A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Light.GuardClauses.Source", "Light.GuardClauses.Source\Light.GuardClauses.Source.csproj", "{A7B9AC78-FA4F-4BDE-9DAF-B854408AB843}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.Source", "Light.GuardClauses.Source\Light.GuardClauses.Source.csproj", "{A7B9AC78-FA4F-4BDE-9DAF-B854408AB843}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Versioning", "Versioning", "{176BEDC4-CFE3-4084-8213-B4EC155A7E38}"
+	ProjectSection(SolutionItems) = preProject
+		Version.props = Version.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
