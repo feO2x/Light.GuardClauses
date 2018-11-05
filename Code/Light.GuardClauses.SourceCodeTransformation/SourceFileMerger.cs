@@ -127,9 +127,9 @@ namespace JetBrains.Annotations
             var namespaces = targetRoot.Members
                                        .OfType<NamespaceDeclarationSyntax>()
                                        .ToList();
-            var defaultNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == "Light.GuardClauses");
-            var exceptionsNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == "Light.GuardClauses.Exceptions");
-            var extensionsNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == "Light.GuardClauses.FrameworkExtensions");
+            var defaultNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == $"{_options.BaseNamespace}");
+            var exceptionsNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == $"{_options.BaseNamespace}.Exceptions");
+            var extensionsNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == $"{_options.BaseNamespace}.FrameworkExtensions");
             var jetBrainsNamespace = namespaces.FirstOrDefault(@namespace => @namespace.Name.ToString() == "JetBrains.Annotations");
             var replacedNodes = new Dictionary<NamespaceDeclarationSyntax, NamespaceDeclarationSyntax>
             {
