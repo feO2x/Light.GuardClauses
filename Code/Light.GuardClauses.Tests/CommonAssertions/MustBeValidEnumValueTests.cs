@@ -31,11 +31,6 @@ namespace Light.GuardClauses.Tests.CommonAssertions
                                  (invalidValue, exceptionFactory) => invalidValue.MustBeValidEnumValue(exceptionFactory));
 
         [Fact]
-        public static void CustomExceptionNoEnumType() =>
-            Test.CustomException(100L,
-                                 (longValue, exceptionFactory) => longValue.MustBeValidEnumValue(exceptionFactory));
-
-        [Fact]
         public static void CustomExceptionValidEnumValue() => 
             SampleEnum.Second.MustBeValidEnumValue(_ => null).Should().Be(SampleEnum.Second);
 
@@ -44,20 +39,6 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         public static void CustomMessage() =>
             Test.CustomMessage<EnumValueNotDefinedException>(
                 message => ((DateTimeKind) 7).MustBeValidEnumValue(message: message));
-
-        [Fact]
-        public static void CustomMessageNoEnumValue() => 
-            Test.CustomMessage<TypeIsNoEnumException>(
-                message => 42.MustBeValidEnumValue(message: message));
-
-        [Fact]
-        public static void NoEnumType()
-        {
-            Action act = () => 42.0.MustBeValidEnumValue();
-
-            act.Should().Throw<TypeIsNoEnumException>()
-               .And.Message.Should().Contain($"The type \"{typeof(double)}\" must be an enum type, but it actually is not.");
-        }
 
         [Fact]
         public static void GetAllEnumValues()
@@ -83,6 +64,5 @@ namespace Light.GuardClauses.Tests.CommonAssertions
     {
         First,
         Second,
-        Third = 42
     }
 }

@@ -23,7 +23,7 @@ namespace Light.GuardClauses
     /// Can be used to validate that an enum value is valid.
     /// </summary>
     /// <typeparam name="T">The type of the enum.</typeparam>
-    public static class EnumInfo<T> where T : struct, IComparable, IFormattable
+    public static class EnumInfo<T> where T : Enum
 #if !NETSTANDARD1_0
       , IConvertible
 #endif

@@ -194,26 +194,14 @@ namespace Light.GuardClauses
         /// </summary>
         /// <typeparam name="T">The type of the enum.</typeparam>
         /// <param name="parameter">The enum value to be checked.</param>
-        /// <exception cref="TypeIsNoEnumException">Thrown when <typeparamref name="T"/> is no enum type.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        public static bool IsValidEnumValue<T>(this T parameter) where T : struct, IComparable, IFormattable
+        public static bool IsValidEnumValue<T>(this T parameter) where T : Enum
 #if !NETSTANDARD1_0
-          , IConvertible
+        , IConvertible
 #endif
-        {
-#if !NETSTANDARD1_0
-            if (typeof(T).IsEnum)
-#else
-            if (typeof(T).GetTypeInfo().IsEnum)
-#endif
-                return EnumInfo<T>.IsValidEnumValue(parameter);
-
-            Throw.TypeIsNoEnum(typeof(T));
-            return false;
-
-        } 
+            => EnumInfo<T>.IsValidEnumValue(parameter);
 
         /// <summary>
         /// Ensures that the specified enum value is valid, or otherwise throws an <see cref="EnumValueNotDefinedException"/>. An enum value
@@ -225,28 +213,17 @@ namespace Light.GuardClauses
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="EnumValueNotDefinedException">Thrown when <paramref name="parameter"/> is no valid enum value.</exception>
-        /// <exception cref="TypeIsNoEnumException">Thrown when <typeparamref name="T"/> is no enum type.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        public static T MustBeValidEnumValue<T>(this T parameter, string parameterName = null, string message = null) where T : struct, IComparable, IFormattable
+        public static T MustBeValidEnumValue<T>(this T parameter, string parameterName = null, string message = null) where T : Enum
 #if !NETSTANDARD1_0
-, IConvertible
+        , IConvertible
 #endif
         {
-#if !NETSTANDARD1_0
-            if (typeof(T).IsEnum)
-#else
-            if (typeof(T).GetTypeInfo().IsEnum)
-#endif
-            {
-                if (!EnumInfo<T>.IsValidEnumValue(parameter))
-                    Throw.EnumValueNotDefined(parameter, parameterName, message);
-                return parameter;
-            }
-
-            Throw.TypeIsNoEnum(typeof(T), parameterName, message);
-            return default;
+            if (!EnumInfo<T>.IsValidEnumValue(parameter))
+                Throw.EnumValueNotDefined(parameter, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -262,24 +239,14 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("exceptionFactory:null => halt")]
-        public static T MustBeValidEnumValue<T>(this T parameter, Func<T, Exception> exceptionFactory) where T : struct, IComparable, IFormattable
+        public static T MustBeValidEnumValue<T>(this T parameter, Func<T, Exception> exceptionFactory) where T : Enum
 #if !NETSTANDARD1_0
-, IConvertible
+        , IConvertible
 #endif
         {
-#if !NETSTANDARD1_0
-            if (typeof(T).IsEnum)
-#else
-            if (typeof(T).GetTypeInfo().IsEnum)
-#endif
-            {
-                if (!EnumInfo<T>.IsValidEnumValue(parameter))
-                    Throw.CustomException(exceptionFactory, parameter);
-                return parameter;
-            }
-
-            Throw.CustomException(exceptionFactory, parameter);
-            return default;
+            if (!EnumInfo<T>.IsValidEnumValue(parameter))
+                Throw.CustomException(exceptionFactory, parameter);
+            return parameter;
         }
 
         /// <summary>

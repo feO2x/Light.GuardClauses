@@ -22,7 +22,7 @@ namespace Light.GuardClauses.Tests.Net35CompactFramework
             CheckValidEnumValue(UInt64Enum.AllHigh);
             CheckValidEnumValue(UInt64Enum.MaxValue);
 
-            void CheckValidEnumValue<T>(T enumValue) where T : struct, IConvertible, IComparable, IFormattable => 
+            void CheckValidEnumValue<T>(T enumValue) where T : Enum => 
                 Assert.IsTrue(enumValue.IsValidEnumValue());
         }
 
@@ -40,7 +40,7 @@ namespace Light.GuardClauses.Tests.Net35CompactFramework
             CheckInvalidEnumValue((BindingFlags) (1 << 22));
         }
 
-        private static void CheckInvalidEnumValue<T>(T invalidEnumValue) where T : struct, IConvertible, IComparable, IFormattable =>
+        private static void CheckInvalidEnumValue<T>(T invalidEnumValue) where T : Enum =>
             Assert.IsFalse(invalidEnumValue.IsValidEnumValue());
 
         [Flags]

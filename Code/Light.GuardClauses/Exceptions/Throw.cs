@@ -35,13 +35,6 @@ namespace Light.GuardClauses.Exceptions
             throw new TypeCastException(parameterName, message ?? $"{parameterName ?? "The value"} \"{parameter}\" cannot be cast to \"{targetType}\".");
 
         /// <summary>
-        /// Throws the default <see cref="TypeIsNoEnumException" /> indicating that a type is no enum type, using the optional parameter name and message.
-        /// </summary>
-        [ContractAnnotation("=> halt")]
-        public static void TypeIsNoEnum(Type type, string parameterName = null, string message = null) =>
-            throw new TypeIsNoEnumException(parameterName, message ?? $"{parameterName ?? "The type"} \"{type}\" must be an enum type, but it actually is not.");
-
-        /// <summary>
         /// Throws the default <see cref="EnumValueNotDefinedException" /> indicating that a value is not one of the constants defined in an enum, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]

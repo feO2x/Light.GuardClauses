@@ -20,7 +20,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [InlineData(UInt64Enum.AllLow | UInt64Enum.High1)]
         [InlineData(UInt64Enum.AllHigh)]
         [InlineData(UInt64Enum.MaxValue)]
-        public static void EnumValueValid<T>(T enumValue) where T : struct, IConvertible, IComparable, IFormattable => 
+        public static void EnumValueValid<T>(T enumValue) where T : Enum, IComparable => 
             enumValue.IsValidEnumValue().Should().BeTrue();
 
         [Theory]
