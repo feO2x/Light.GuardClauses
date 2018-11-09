@@ -1,5 +1,7 @@
 ﻿using System;
 using FluentAssertions;
+using FluentAssertions.Specialized;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Light.GuardClauses.Tests
@@ -112,5 +114,8 @@ namespace Light.GuardClauses.Tests
         }
 
         private sealed class ExceptionDummy : Exception { };
+
+        public static void WriteExceptionTo<T>(this ExceptionAssertions<T> exceptionAssertions, ITestOutputHelper output) where T : Exception =>
+            output.WriteLine(exceptionAssertions.Which.ToString());
     }
 }

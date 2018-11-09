@@ -198,5 +198,84 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="exception" /> is null.</exception>
         public static string GetAllExceptionMessages(this Exception exception) => 
             new StringBuilder().AppendExceptionMessages(exception).ToString();
+
+        /// <summary>
+        /// Checks if the two strings are equal using ordinal sorting rules as well as ignoring the white space
+        /// of the provided strings.
+        /// </summary>
+        public static bool EqualsOrdinalIgnoreWhiteSpace(this string x, string y)
+        {
+            if (ReferenceEquals(x, y))
+                return true;
+
+            if (x == null || y == null)
+                return false;
+
+            if (x.Length == 0)
+                return y.Length == 0;
+
+            var indexX = 0;
+            var indexY = 0;
+            bool wasXSuccessful;
+            bool wasYSuccessful;
+            // This condition of the while loop actually has to use the single '&' operator because
+            // y.TryAdvanceToNextNonWhiteSpaceCharacter must be called even though it already returned
+            // false on x. Otherwise the 'wasXSuccessful == wasYSuccessful' comparison would not return
+            // the desired result.
+            while ((wasXSuccessful = x.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexX)) & 
+                   (wasYSuccessful = y.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexY)))
+            {
+                if (x[indexX++] != y[indexY++])
+                    return false;
+            }
+
+            return wasXSuccessful == wasYSuccessful;
+        }
+
+        /// <summary>
+        /// Checks if the two strings are equal using ordinal sorting rules, ignoring the case of the letters
+        /// as well as ignoring the white space of the provided strings.
+        /// </summary>
+        public static bool EqualsOrdinalIgnoreCaseIgnoreWhiteSpace(this string x, string y)
+        {
+            if (ReferenceEquals(x, y))
+                return true;
+
+            if (x == null || y == null)
+                return false;
+
+            if (x.Length == 0)
+                return y.Length == 0;
+
+            var indexX = 0;
+            var indexY = 0;
+            bool wasXSuccessful;
+            bool wasYSuccessful;
+            // This condition of the while loop actually has to use the single '&' operator because
+            // y.TryAdvanceToNextNonWhiteSpaceCharacter must be called even though it already returned
+            // false on x. Otherwise the 'wasXSuccessful == wasYSuccessful' comparison would not return
+            // the desired result.
+            while ((wasXSuccessful = x.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexX)) &
+                   (wasYSuccessful = y.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexY)))
+            {
+                if (char.ToLowerInvariant(x[indexX++]) != char.ToLowerInvariant(y[indexY++]))
+                return false;
+            }
+
+            return wasXSuccessful == wasYSuccessful;
+        }
+
+        private static bool TryAdvanceToNextNonWhiteSpaceCharacter(this string @string, ref int currentIndex)
+        {
+            while (currentIndex < @string.Length)
+            {
+                if (!char.IsWhiteSpace(@string[currentIndex]))
+                    return true;
+
+                ++currentIndex;
+            }
+
+            return false;
+        }
     }
 }

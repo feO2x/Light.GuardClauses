@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using Light.GuardClauses.Exceptions;
+using Light.GuardClauses.FrameworkExtensions;
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
 using System.Runtime.CompilerServices;
 #endif
@@ -130,6 +131,14 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Checks if the specified character is a white space character.
+        /// </summary>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static bool IsWhiteSpace(this char character) => char.IsWhiteSpace(character);
+
+        /// <summary>
         /// Ensures that the two strings are equal using the specified <paramref name="comparisonType" />, or otherwise throws a <see cref="ValuesNotEqualException" />.
         /// </summary>
         /// <param name="parameter">The first string to be compared.</param>
@@ -246,6 +255,29 @@ namespace Light.GuardClauses
             if (parameter == null || regex == null || !regex.IsMatch(parameter))
                 Throw.CustomException(exceptionFactory, parameter, regex);
             return parameter;
+        }
+
+        /// <summary>
+        /// Checks if the specified strings are equal, using the given comparison rules.
+        /// </summary>
+        /// <param name="string">The first string to compare.</param>
+        /// <param name="value">The second string to compare.</param>
+        /// <param name="comparisonType">One of the enumeration values that specifies the rules for the comparison.</param>
+        /// <returns>True if the two strings are considered equal, else false.</returns>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static bool Equals(this string @string, string value, StringComparisonType comparisonType)
+        {
+            if ((int) comparisonType < 6)
+                return string.Equals(@string, value, (StringComparison) comparisonType);
+            if (comparisonType == StringComparisonType.OrdinalIgnoreWhiteSpace)
+                return @string.EqualsOrdinalIgnoreWhiteSpace(value);
+            if (comparisonType == StringComparisonType.OrdinalIgnoreCaseIgnoreWhiteSpace)
+                return @string.EqualsOrdinalIgnoreCaseIgnoreWhiteSpace(value);
+
+            Throw.EnumValueNotDefined(comparisonType, nameof(comparisonType));
+            return false;
         }
 
         /// <summary>
