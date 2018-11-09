@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace Light.GuardClauses.Exceptions
 {
     /// <summary>
-    /// This exception indicates that a value cannot be casted to another type.
+    /// This exception indicates that a value cannot be cast to another type.
     /// </summary>
 #if (NETSTANDARD2_0 || NET45 || NET40)
     [Serializable]

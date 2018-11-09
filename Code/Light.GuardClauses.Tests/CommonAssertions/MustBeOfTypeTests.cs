@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
             Action act = () => reference.MustBeOfType<Array>(nameof(reference));
 
             var exceptionAssertions = act.Should().Throw<TypeCastException>().Which;
-            exceptionAssertions.Message.Should().Contain($"{nameof(reference)} \"{reference}\" cannot be casted to \"{typeof(Array)}\".");
+            exceptionAssertions.Message.Should().Contain($"{nameof(reference)} \"{reference}\" cannot be cast to \"{typeof(Array)}\".");
             exceptionAssertions.ParamName.Should().BeSameAs(nameof(reference));
         }
 

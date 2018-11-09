@@ -51,7 +51,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// </summary>
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="source">The enumerable that will be converted to an array.</param>
-        /// <returns>The casted array, or a new array containing the enumerable's items.</returns>
+        /// <returns>The cast array, or a new array containing the enumerable's items.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -64,7 +64,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// </summary>
         /// <typeparam name="T">The item type of the enumerable.</typeparam>
         /// <param name="enumerable">The collection containing the items that will be passed to the action.</param>
-        /// <param name="action">The action that exectues for each item of the collection.</param>
+        /// <param name="action">The action that executes for each item of the collection.</param>
         /// <param name="throwWhenItemIsNull">The value indicating whether this method should throw a <see cref="CollectionException" /> when any of the items is null (optional). Defaults to true.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> or <paramref name="action" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="enumerable" /> contains a value that is null and <paramref name="throwWhenItemIsNull" /> is set to true.</exception>
@@ -127,7 +127,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="source">The enumerable that will be converted to <see cref="IReadOnlyList{T}" />.</param>
         /// <param name="createCollection">The delegate that creates the collection containing the specified items.</param>
-        /// <returns>The casted enumerable, or a new collection containing the enumerable's items.</returns>
+        /// <returns>The cast enumerable, or a new collection containing the enumerable's items.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> or <paramref name="createCollection" /> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

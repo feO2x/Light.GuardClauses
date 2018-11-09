@@ -148,12 +148,12 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that <paramref name="parameter"/> can be casted to <typeparamref name="T"/> and returns the casted value, or otherwise throws a <see cref="TypeCastException"/>.
+        /// Ensures that <paramref name="parameter"/> can be cast to <typeparamref name="T"/> and returns the cast value, or otherwise throws a <see cref="TypeCastException"/>.
         /// </summary>
-        /// <param name="parameter">The value to be casted.</param>
+        /// <param name="parameter">The value to be cast.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref="TypeCastException">Thrown when <paramref name="parameter"/> cannot be casted to <typeparamref name="T"/>.</exception>
+        /// <exception cref="TypeCastException">Thrown when <paramref name="parameter"/> cannot be cast to <typeparamref name="T"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -161,27 +161,27 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static T MustBeOfType<T>(this object parameter, string parameterName = null, string message = null)
         {
-            if (parameter.MustNotBeNull(parameterName, message) is T castedValue)
-                return castedValue;
+            if (parameter.MustNotBeNull(parameterName, message) is T castValue)
+                return castValue;
 
             Throw.InvalidTypeCast(parameter, typeof(T), parameterName, message);
             return default;
         }
 
         /// <summary>
-        /// Ensures that <paramref name="parameter"/> can be casted to <typeparamref name="T"/> and returns the casted value, or otherwise throws your custom exception.
+        /// Ensures that <paramref name="parameter"/> can be cast to <typeparamref name="T"/> and returns the cast value, or otherwise throws your custom exception.
         /// </summary>
-        /// <param name="parameter">The value to be casted.</param>
+        /// <param name="parameter">The value to be cast.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. The <paramref name="parameter"/> is passed to this delegate.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> cannot be casted to <typeparamref name="T"/>.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> cannot be cast to <typeparamref name="T"/>.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
         public static T MustBeOfType<T>(this object parameter, Func<object, Exception> exceptionFactory)
         {
-            if (parameter is T castedValue)
-                return castedValue;
+            if (parameter is T castValue)
+                return castValue;
 
             Throw.CustomException(exceptionFactory, parameter);
             return default;

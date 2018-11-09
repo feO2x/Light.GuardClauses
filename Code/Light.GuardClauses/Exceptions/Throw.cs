@@ -28,11 +28,11 @@ namespace Light.GuardClauses.Exceptions
             throw new ArgumentDefaultException(parameterName, message ?? $"{parameterName ?? "The value"} must not be the default value.");
 
         /// <summary>
-        /// Throws the default <see cref="TypeCastException" /> indicating that a reference cannot be downcasted, using the optional parameter name and message.
+        /// Throws the default <see cref="TypeCastException" /> indicating that a reference cannot be downcast, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         public static void InvalidTypeCast(object parameter, Type targetType, string parameterName = null, string message = null) =>
-            throw new TypeCastException(parameterName, message ?? $"{parameterName ?? "The value"} \"{parameter}\" cannot be casted to \"{targetType}\".");
+            throw new TypeCastException(parameterName, message ?? $"{parameterName ?? "The value"} \"{parameter}\" cannot be cast to \"{targetType}\".");
 
         /// <summary>
         /// Throws the default <see cref="TypeIsNoEnumException" /> indicating that a type is no enum type, using the optional parameter name and message.
@@ -42,7 +42,7 @@ namespace Light.GuardClauses.Exceptions
             throw new TypeIsNoEnumException(parameterName, message ?? $"{parameterName ?? "The type"} \"{type}\" must be an enum type, but it actually is not.");
 
         /// <summary>
-        /// Throws the default <see cref="EnumValueNotDefinedException" /> indicating that a value is not one of the constants defined in an enum, using the optional paramter name and message.
+        /// Throws the default <see cref="EnumValueNotDefinedException" /> indicating that a value is not one of the constants defined in an enum, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         public static void EnumValueNotDefined<T>(T parameter, string parameterName = null, string message = null) =>

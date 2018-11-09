@@ -323,7 +323,7 @@ namespace Light.GuardClauses
         /// Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="value" />,
         /// or when <paramref name="parameter" /> is null,
         /// or when <paramref name="value" /> is null,
-        /// or when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> emum.
+        /// or when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.
         /// </exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
