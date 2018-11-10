@@ -16,8 +16,17 @@
     <RepositoryType>Git</RepositoryType>
     <PackageTags>Assertions Preconditions GuardClauses DesignByContract DbC</PackageTags>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-    <PackageReleaseNotes>Light.GuardClauses 5.0.1 - performance fix
-- MustNotBeDefault now does not allocate when T is resolved to a value type
+    <PackageReleaseNotes>
+Light.GuardClauses 6.0.0
+--------------------------------
+- Light.GuardClauses is now available as source code distribution with internal types (see Light.GuardClauses.SingleFile.cs in the top-level folder of the repository).
+- Added string.Equals extension method which allows comparing strings ignoring the white space. Added corresponding MustBe and MustNotBe overloads for strings.
+- added char.IsLetter, char.IsDigit, char.IsLetterOrDigit, and char.IsWhiteSpace extension methods
+- fixed some typos in XML comments
+
+Breaking changes:
+--------------------------------
+- Fixed typo in type: EqualivalentTypeComparer is now called EquivalentTypeComparer
     </PackageReleaseNotes>
   </PropertyGroup>
 
