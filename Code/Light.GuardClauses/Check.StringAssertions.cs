@@ -139,6 +139,30 @@ namespace Light.GuardClauses
         public static bool IsWhiteSpace(this char character) => char.IsWhiteSpace(character);
 
         /// <summary>
+        /// Checks if the specified character is a letter.
+        /// </summary>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static bool IsLetter(this char character) => char.IsLetter(character);
+
+        /// <summary>
+        /// Checks if the specified character is a letter or digit.
+        /// </summary>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static bool IsLetterOrDigit(this char character) => char.IsLetterOrDigit(character);
+
+        /// <summary>
+        /// Checks if the specified character is a digit.
+        /// </summary>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static bool IsDigit(this char character) => char.IsDigit(character);
+
+        /// <summary>
         /// Ensures that the two strings are equal using the specified <paramref name="comparisonType" />, or otherwise throws a <see cref="ValuesNotEqualException" />.
         /// </summary>
         /// <param name="parameter">The first string to be compared.</param>
