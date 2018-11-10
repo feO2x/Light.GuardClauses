@@ -26,11 +26,15 @@ namespace Light.GuardClauses.SourceCodeTransformation
             var stringBuilder = new StringBuilder();
 
             if (_options.IncludeVersionComment)
+            {
+                Console.WriteLine("Appending version header...");
                 stringBuilder.AppendLine("/* ------------------------------")
                              .AppendLine($"   Light.GuardClauses {typeof(SourceFileMerger).Assembly.GetName().Version.ToString(3)}")
                              .AppendLine("   ------------------------------")
                              .AppendLine();
-               
+            }
+
+            Console.WriteLine("Creating default file layout...");
             stringBuilder.AppendLineIf(!_options.IncludeVersionComment, "/*")
                          .AppendLine($@"License information for Light.GuardClauses
 
@@ -75,8 +79,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 {(_options.IncludeJetBrainsAnnotationsUsing ? "using JetBrains.Annotations;" + Environment.NewLine : string.Empty)}using {_options.BaseNamespace}.Exceptions;
 using {_options.BaseNamespace}.FrameworkExtensions;
-
-// ReSharper disable StaticMemberInGenericType
 
 namespace {_options.BaseNamespace}
 {{
@@ -146,6 +148,7 @@ namespace JetBrains.Annotations
                                                                          .ToDictionary(f => f.Name);
 
             // Start with Check.CommonAssertions before all other files to prepare the Check class
+            Console.WriteLine("Merging source files of the Check class...");
             var currentFile = allSourceFiles["Check.CommonAssertions.cs"];
 
             var sourceSyntaxTree = CSharpSyntaxTree.ParseText(await currentFile.ReadContentAsync());
@@ -155,6 +158,7 @@ namespace JetBrains.Annotations
             checkClassDeclaration = checkClassDeclaration.WithModifiers(checkClassDeclaration.Modifiers.Remove(checkClassDeclaration.Modifiers.First(token => token.Kind() == SyntaxKind.PartialKeyword)));
 
             // Process all other files
+            Console.WriteLine("Merging remaining files...");
             foreach (var fileName in allSourceFiles.Keys)
             {
                 if (fileName == "Check.CommonAssertions.cs")
@@ -227,10 +231,12 @@ namespace JetBrains.Annotations
             // Make types internal if necessary
             if (_options.ChangePublicTypesToInternalTypes)
             {
+                Console.WriteLine("Types are changed from public to internal...");
                 var changedTypeDeclarations = new Dictionary<BaseTypeDeclarationSyntax, BaseTypeDeclarationSyntax>();
 
                 foreach (var typeDeclaration in targetRoot.DescendantNodes().Where(node => node.Kind() == SyntaxKind.ClassDeclaration ||
-                                                                                           node.Kind() == SyntaxKind.StructDeclaration)
+                                                                                           node.Kind() == SyntaxKind.StructDeclaration ||
+                                                                                           node.Kind() == SyntaxKind.EnumDeclaration)
                                                                             .Cast<BaseTypeDeclarationSyntax>())
                 {
                     var publicModifier = typeDeclaration.Modifiers[0];
@@ -245,6 +251,9 @@ namespace JetBrains.Annotations
 
                     else if (typeDeclaration is StructDeclarationSyntax structDeclaration)
                         changedTypeDeclarations[structDeclaration] = structDeclaration.WithModifiers(adjustedModifiers);
+
+                    else if (typeDeclaration is EnumDeclarationSyntax enumDeclaration)
+                        changedTypeDeclarations[enumDeclaration] = enumDeclaration.WithModifiers(adjustedModifiers);
                 }
 
                 targetRoot = targetRoot.ReplaceNodes(changedTypeDeclarations.Keys, (originalNode, _) => changedTypeDeclarations[originalNode]);
@@ -253,11 +262,16 @@ namespace JetBrains.Annotations
             // Remove preprocessor directives if necessary
             var targetFileContent = targetRoot.ToFullString();
             if (_options.RemovePreprocessorDirectives)
+            {
+                Console.WriteLine("Preprocessor directives are removed...");
                 targetFileContent = new UndefineTransformation().Undefine(targetFileContent, _options.DefinedPreprocessorSymbols).ToString();
+            }
 
+            Console.WriteLine("File is cleaned up...");
             targetFileContent = CleanupStep.Cleanup(targetFileContent, _options.RemoveContractAnnotations).ToString();
 
             // Write the target file 
+            Console.WriteLine("File is written to disk...");
             await File.WriteAllTextAsync(_options.TargetFile, targetFileContent);
         }
     }

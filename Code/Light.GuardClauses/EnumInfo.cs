@@ -14,8 +14,6 @@ using Light.GuardClauses.FrameworkExtensions;
 using System.Runtime.CompilerServices;
 #endif
 
-// ReSharper disable StaticMemberInGenericType
-
 namespace Light.GuardClauses
 {
     /// <summary>
@@ -28,6 +26,8 @@ namespace Light.GuardClauses
       , IConvertible
 #endif
     {
+        // ReSharper disable StaticMemberInGenericType
+
         /// <summary>
         /// Gets the value indicating whether the enum type is marked with the flags attribute.
         /// </summary>
