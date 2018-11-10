@@ -27,6 +27,25 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [InlineData(Metasyntactic.Quux, null, StringComparison.OrdinalIgnoreCase)]
         public static void ValuesNotEqual(string x, string y, StringComparison comparisonType) => x.MustNotBe(y, comparisonType).Should().Be(x);
 
+        [Theory]
+        [InlineData("Foo", "  Foo  ", StringComparisonType.OrdinalIgnoreWhiteSpace)]
+        [InlineData("\tBar", "bar\r\n", StringComparisonType.OrdinalIgnoreCaseIgnoreWhiteSpace)]
+        [InlineData(null, null, StringComparisonType.OrdinalIgnoreCaseIgnoreWhiteSpace)]
+        public static void StringsEqualIgnoreWhiteSpace(string x, string y, StringComparisonType comparisonType)
+        {
+            Action act = () => x.MustNotBe(y, comparisonType, nameof(x));
+
+            act.Should().Throw<ValuesEqualException>()
+               .And.Message.Should().Contain($"{nameof(x)} must not be equal to {y.ToStringOrNull()}, but it actually is {x.ToStringOrNull()}");
+        }
+
+        [Theory]
+        [InlineData("Foo", "Bar", StringComparisonType.OrdinalIgnoreWhiteSpace)]
+        [InlineData("Baz", "", StringComparisonType.OrdinalIgnoreCaseIgnoreWhiteSpace)]
+        [InlineData(null, "Qux", StringComparisonType.OrdinalIgnoreCaseIgnoreWhiteSpace)]
+        public static void StringsNotEqualIgnoreWhiteSpace(string x, string y, StringComparisonType comparisonType) => 
+            x.MustNotBe(y, comparisonType).Should().BeSameAs(x);
+
         [Fact]
         public static void CustomException() =>
             Test.CustomException(Metasyntactic.Foo,
@@ -34,7 +53,17 @@ namespace Light.GuardClauses.Tests.StringAssertions
                                  (x, y, exceptionFactory) => x.MustNotBe(y, StringComparison.CurrentCulture, exceptionFactory));
 
         [Fact]
+        public static void CustomExceptionIgnoreWhiteSpace() => 
+            Test.CustomException("Foo",
+                                 "  Foo",
+                                 (x, y, exceptionFactory) => x.MustNotBe(y, StringComparisonType.OrdinalIgnoreWhiteSpace, exceptionFactory));
+
+        [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<ValuesEqualException>(message => Metasyntactic.Foo.MustNotBe(Metasyntactic.Foo, StringComparison.CurrentCulture, message: message));
+
+        [Fact]
+        public static void CustomMessageIgnoreWhiteSpace() => 
+            Test.CustomMessage<ValuesEqualException>(message => "Bar".MustNotBe("bar  ", StringComparisonType.OrdinalIgnoreCaseIgnoreWhiteSpace, message: message));
     }
 }

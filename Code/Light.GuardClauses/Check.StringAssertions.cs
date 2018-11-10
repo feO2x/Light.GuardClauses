@@ -277,6 +277,45 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Ensures that the two strings are not equal using the specified <paramref name="comparisonType" />, or otherwise throws a <see cref="ValuesEqualException" />.
+        /// </summary>
+        /// <param name="parameter">The first string to be compared.</param>
+        /// <param name="other">The second string to be compared.</param>
+        /// <param name="comparisonType">The enum value specifying how the two strings should be compared.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref="ValuesEqualException">Thrown when <paramref name="parameter" /> is equal to <paramref name="other" />.</exception>
+        /// <exception cref="EnumValueNotDefinedException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static string MustNotBe(this string parameter, string other, StringComparisonType comparisonType, string parameterName = null, string message = null)
+        {
+            if (parameter.Equals(other, comparisonType))
+                Throw.ValuesEqual(parameter, other, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the two strings are not equal using the specified <paramref name="comparisonType" />, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The first string to be compared.</param>
+        /// <param name="other">The second string to be compared.</param>
+        /// <param name="comparisonType">The enum value specifying how the two strings should be compared.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="other" /> are passed to this delegate.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is equal to <paramref name="other" />.</exception>
+        /// <exception cref="EnumValueNotDefinedException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static string MustNotBe(this string parameter, string other, StringComparisonType comparisonType, Func<string, string, Exception> exceptionFactory)
+        {
+            if (parameter.Equals(other, comparisonType))
+                Throw.CustomException(exceptionFactory, parameter, other);
+            return parameter;
+        }
+
+        /// <summary>
         /// Ensures that the string matches the specified regular expression, or otherwise throws an <see cref="StringDoesNotMatchException" />.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
