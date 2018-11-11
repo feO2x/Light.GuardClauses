@@ -2,7 +2,7 @@
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
-    public class IsSameAsBenchmark : DefaultBenchmark
+    public class IsSameAsBenchmark
     {
         public object First = new object();
         public object Second = new object();

@@ -9,7 +9,7 @@ using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses.Performance.CollectionAssertions
 {
-    public class MustBeOneOfBenchmark : DefaultBenchmark
+    public class MustBeOneOfBenchmark
     {
         public int Value = 4;
         public IList<int> Items = new ObservableCollection<int> { 1, 2, 3, 4, 5 };

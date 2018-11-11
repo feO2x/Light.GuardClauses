@@ -6,7 +6,7 @@ using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses.Performance.FrameworkExtensions
 {
-    public class HashFunctionStringBenchmark : DefaultBenchmark
+    public class HashFunctionStringBenchmark
     {
         public string Bar = "Bar";
         public string Baz = "Baz";
@@ -50,7 +50,7 @@ namespace Light.GuardClauses.Performance.FrameworkExtensions
         public int MultiplyAdd4Parameters() => MultiplyAddHash.CreateHashCode(Foo, Bar, Baz, Qux);
     }
 
-    public class HashFunctionIntBenchmark : DefaultBenchmark
+    public class HashFunctionIntBenchmark
     {
         public int First = 475940556;
         public int Fourth = 2041509450;

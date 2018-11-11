@@ -7,7 +7,7 @@ using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses.Performance.UriAssertions
 {
-    public class MustHaveOneSchemeOfBenchmark : DefaultBenchmark
+    public class MustHaveOneSchemeOfBenchmark
     {
         public List<string> Schemes = new List<string> { "http", "https" };
         public Uri Uri = new Uri("https://www.microsoft.com");

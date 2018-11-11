@@ -5,7 +5,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.StringAssertions
 {
-    public class MustMatchBenchmark : DefaultBenchmark
+    public class MustMatchBenchmark
     {
         public Regex ComplexRegex = new Regex("^[\\w!#$%&\'*+\\-/=?\\^_`{|}~]+(\\.[\\w!#$%&\'*+\\-/=?\\^_`{|}~]+)*@((([\\-\\w]+\\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\\.){3}[0-9]{1,3}))$"); // as per https://stackoverflow.com/a/6893571/1560623
         public Regex SimpleRegex = new Regex(@"\w5");

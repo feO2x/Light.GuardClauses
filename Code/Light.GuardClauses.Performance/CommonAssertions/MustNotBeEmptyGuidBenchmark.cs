@@ -4,7 +4,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
-    public class MustNotBeEmptyGuidBenchmark : DefaultBenchmark
+    public class MustNotBeEmptyGuidBenchmark
     {
         public Guid Guid = Guid.NewGuid();
 

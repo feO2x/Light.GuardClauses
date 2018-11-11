@@ -8,7 +8,7 @@ using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses.Performance.CollectionAssertions
 {
-    public class MustNotContainBenchmark : DefaultBenchmark
+    public class MustNotContainBenchmark
     {
         public List<string> Collection = new List<string> { "Foo", "Bar", "Baz", "Qux" };
         public string Item = "Corge";

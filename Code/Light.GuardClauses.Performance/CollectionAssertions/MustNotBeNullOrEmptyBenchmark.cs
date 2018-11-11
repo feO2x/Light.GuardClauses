@@ -6,7 +6,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CollectionAssertions
 {
-    public class MustNotBeNullOrEmptyBenchmark : DefaultBenchmark
+    public class MustNotBeNullOrEmptyBenchmark
     {
         public List<string> Collection = new List<string> { "Foo", "Bar", "Baz", "Qux" };
 

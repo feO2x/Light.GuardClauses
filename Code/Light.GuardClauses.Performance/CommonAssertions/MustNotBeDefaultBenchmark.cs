@@ -5,7 +5,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
-    public class MustNotBeDefaultBenchmark : DefaultBenchmark
+    public class MustNotBeDefaultBenchmark
     {
         public SampleEntity Reference = new SampleEntity(Guid.NewGuid());
         public readonly int Value = 42;

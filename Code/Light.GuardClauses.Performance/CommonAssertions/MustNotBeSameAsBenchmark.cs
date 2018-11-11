@@ -5,7 +5,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
-    public class MustNotBeSameAsBenchmark : DefaultBenchmark
+    public class MustNotBeSameAsBenchmark
     {
         public object Reference1 = new object();
         public object Reference2 = new List<string>();

@@ -4,7 +4,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.UriAssertions
 {
-    public class MustBeRelativeUriBenchmark : DefaultBenchmark
+    public class MustBeRelativeUriBenchmark
     {
         public Uri RelativeUri = new Uri("/api/login", UriKind.Relative);
 

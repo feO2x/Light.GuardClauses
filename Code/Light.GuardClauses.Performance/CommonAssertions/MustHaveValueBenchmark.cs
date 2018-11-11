@@ -5,7 +5,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
-    public class MustHaveValueIntBenchmark : DefaultBenchmark
+    public class MustHaveValueIntBenchmark
     {
         public int? Nullable = 42;
 
@@ -29,7 +29,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
         public int LightGuardClausesWithCustomException() => Nullable.MustHaveValue(() => new Exception());
     }
 
-    public class MustHaveValueDoubleBenchmark : DefaultBenchmark
+    public class MustHaveValueDoubleBenchmark
     {
         public double? Nullable = 42.74;
 

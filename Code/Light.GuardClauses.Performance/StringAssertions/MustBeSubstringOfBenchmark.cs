@@ -5,7 +5,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.StringAssertions
 {
-    public class MustBeSubstringOfBenchmark : DefaultBenchmark
+    public class MustBeSubstringOfBenchmark
     {
         public string Other = "I shall wear this as a badge of honor.";
         public string Substring = "wear this";

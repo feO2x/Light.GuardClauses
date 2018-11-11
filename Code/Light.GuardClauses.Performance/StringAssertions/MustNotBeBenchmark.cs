@@ -4,7 +4,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.StringAssertions
 {
-    public class MustNotBeBenchmark : DefaultBenchmark
+    public class MustNotBeBenchmark
     {
         public string X = "This is the first string";
 

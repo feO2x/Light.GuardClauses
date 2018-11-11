@@ -8,7 +8,7 @@ using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses.Performance.CollectionAssertions
 {
-    public class MustContainBenchmark : DefaultBenchmark
+    public class MustContainBenchmark
     {
         public IList<int> Collection = new[] { 42, 35, 89 };
 

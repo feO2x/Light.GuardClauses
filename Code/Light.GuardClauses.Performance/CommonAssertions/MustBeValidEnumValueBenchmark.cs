@@ -5,7 +5,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
-    public class MustBeValidEnumValueBenchmark : DefaultBenchmark
+    public class MustBeValidEnumValueBenchmark
     {
         public ConsoleColor EnumValue = ConsoleColor.Blue;
         public BindingFlags FlagsEnumValue = BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly;

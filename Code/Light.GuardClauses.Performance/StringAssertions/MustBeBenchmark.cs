@@ -4,7 +4,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.StringAssertions
 {
-    public class MustBeBenchmark : DefaultBenchmark
+    public class MustBeBenchmark
     {
         public string X = "{\"foo\":42}";
         public string Y = "{\r\n  \"foo\": 42\r\n}\r\n";

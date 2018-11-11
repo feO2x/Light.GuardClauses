@@ -4,7 +4,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.UriAssertions
 {
-    public class MustHaveSchemeBenchmarks : DefaultBenchmark
+    public class MustHaveSchemeBenchmarks
     {
         public Uri HttpsUrl = new Uri("https://ravendb.net");
 

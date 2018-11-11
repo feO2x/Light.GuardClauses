@@ -3,7 +3,7 @@ using BenchmarkDotNet.Attributes;
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
-    public class InvalidOperationBenchmark : DefaultBenchmark
+    public class InvalidOperationBenchmark
     {
         public bool Condition = false;
         public const string Message = "You must not call this method when Condition is true";

@@ -3,7 +3,7 @@ using BenchmarkDotNet.Attributes;
 
 namespace Light.GuardClauses.Performance.ComparableAssertions
 {
-    public class MustBeGreaterThanBenchmark : DefaultBenchmark
+    public class MustBeGreaterThanBenchmark
     {
         public int First = 5000;
         public int Second = -1939;

@@ -4,7 +4,7 @@ using BenchmarkDotNet.Attributes;
 
 namespace Light.GuardClauses.Performance.ComparableAssertions
 {
-    public class MustBeLessThanOrEqualToBenchmark : DefaultBenchmark
+    public class MustBeLessThanOrEqualToBenchmark
     {
         public float First = 42.7f;
         public float Second = 78.21f;

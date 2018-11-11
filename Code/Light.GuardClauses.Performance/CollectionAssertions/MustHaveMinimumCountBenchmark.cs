@@ -7,7 +7,7 @@ using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses.Performance.CollectionAssertions
 {
-    public class MustHaveMinimumCountBenchmark : DefaultBenchmark
+    public class MustHaveMinimumCountBenchmark
     {
         public IReadOnlyList<string> Collection = new List<string>{"Foo", "Bar", "Baz"};
         public int MinimumCount = 3;

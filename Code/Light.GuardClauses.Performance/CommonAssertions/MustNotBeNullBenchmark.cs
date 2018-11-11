@@ -4,7 +4,7 @@ using BenchmarkDotNet.Attributes;
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
-    public class MustNotBeNullBenchmark : DefaultBenchmark
+    public class MustNotBeNullBenchmark
     {
         public SampleEntity Instance = new SampleEntity(Guid.NewGuid());
 

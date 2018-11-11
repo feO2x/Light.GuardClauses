@@ -3,7 +3,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
-    public class InvalidStateBenchmark : DefaultBenchmark
+    public class InvalidStateBenchmark
     {
         public const string Message = "Condition must not be true.";
         public bool Condition = false;

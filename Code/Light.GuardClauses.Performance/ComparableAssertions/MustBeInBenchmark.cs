@@ -3,7 +3,7 @@ using BenchmarkDotNet.Attributes;
 
 namespace Light.GuardClauses.Performance.ComparableAssertions
 {
-    public class MustBeInBenchmark : DefaultBenchmark
+    public class MustBeInBenchmark
     {
         public Range<int> Range = Range<int>.FromInclusive(30).ToExclusive(50);
         public int Value = 42;

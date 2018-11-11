@@ -4,7 +4,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.UriAssertions
 {
-    public class MustBeHttpOrHttpsUrlBenchmark : DefaultBenchmark
+    public class MustBeHttpOrHttpsUrlBenchmark
     {
         public Uri Uri = new Uri("https://www.microsoft.com");
 

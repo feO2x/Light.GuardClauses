@@ -6,7 +6,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CollectionAssertions
 {
-    public class MustHaveCountBenchmark : DefaultBenchmark
+    public class MustHaveCountBenchmark
     {
         public List<string> Collection = new List<string>{"Foo", "Bar"};
         public string String = "Baz";

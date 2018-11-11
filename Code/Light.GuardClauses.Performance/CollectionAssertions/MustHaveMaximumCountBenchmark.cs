@@ -7,7 +7,7 @@ using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses.Performance.CollectionAssertions
 {
-    public class MustHaveMaximumCountBenchmark : DefaultBenchmark
+    public class MustHaveMaximumCountBenchmark
     {
         public ICollection<int> Collection = new[] { 1, 2, 3, 4, 5 };
         public int MaximumCount = 5;

@@ -5,7 +5,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.StringAssertions
 {
-    public class MustContainBenchmark : DefaultBenchmark
+    public class MustContainBenchmark
     {
         public string LongString = "A mind needs books as a sword needs a whetstone, if it is to keep its edge.";
         public string ShortString = "Edge";

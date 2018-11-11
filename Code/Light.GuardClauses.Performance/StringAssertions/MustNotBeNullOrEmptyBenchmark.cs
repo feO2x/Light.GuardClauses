@@ -4,7 +4,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.StringAssertions
 {
-    public class MustNotBeNullOrEmptyBenchmark : DefaultBenchmark
+    public class MustNotBeNullOrEmptyBenchmark
     {
         public string NonEmptyString = "Foo";
 

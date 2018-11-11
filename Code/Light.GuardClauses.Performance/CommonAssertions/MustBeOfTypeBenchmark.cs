@@ -4,7 +4,7 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
-    public class MustBeOfTypeBenchmark : DefaultBenchmark
+    public class MustBeOfTypeBenchmark
     {
         public object Instance = new SampleEntity(Guid.NewGuid());
 
