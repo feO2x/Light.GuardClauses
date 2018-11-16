@@ -1,5 +1,5 @@
 /* ------------------------------
-   Light.GuardClauses 6.0.0
+   Light.GuardClauses 6.1.0
    ------------------------------
 
 License information for Light.GuardClauses
@@ -2761,16 +2761,16 @@ namespace Light.GuardClauses
         /// Use this method to create a range in a fluent style using method chaining.
         /// Defines the lower boundary as an inclusive value.
         /// </summary>
-        /// <param name = "value">The value that indicates the inclusive lower boundary of the resulting Range.</param>
-        /// <returns>A value you can use to fluently define the upper boundary of a new Range.</returns>
+        /// <param name = "value">The value that indicates the inclusive lower boundary of the resulting range.</param>
+        /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static RangeFromInfo FromInclusive(T value) => new RangeFromInfo(value, true);
         /// <summary>
         /// Use this method to create a range in a fluent style using method chaining.
         /// Defines the lower boundary as an exclusive value.
         /// </summary>
-        /// <param name = "value">The value that indicates the exclusive lower boundary of the resulting Range.</param>
-        /// <returns>A value you can use to fluently define the upper boundary of a new Range.</returns>
+        /// <param name = "value">The value that indicates the exclusive lower boundary of the resulting range.</param>
+        /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static RangeFromInfo FromExclusive(T value) => new RangeFromInfo(value, false);
         /// <summary>
@@ -2793,10 +2793,10 @@ namespace Light.GuardClauses
             }
 
             /// <summary>
-            /// Use this method to create a Range in a fluent style using method chaining.
+            /// Use this method to create a range in a fluent style using method chaining.
             /// Defines the upper boundary as an exclusive value.
             /// </summary>
-            /// <param name = "value">The value that indicates the exclusive upper boundary of the resulting Range.</param>
+            /// <param name = "value">The value that indicates the exclusive upper boundary of the resulting range.</param>
             /// <returns>A new range with the specified upper and lower boundaries.</returns>
             /// <exception cref = "ArgumentOutOfRangeException">
             /// Thrown when <paramref name = "value"/> is less than the lower boundary value.
@@ -2804,10 +2804,10 @@ namespace Light.GuardClauses
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public Range<T> ToExclusive(T value) => new Range<T>(_from, value, _isFromInclusive, false);
             /// <summary>
-            /// Use this method to create a Range in a fluent style using method chaining.
+            /// Use this method to create a range in a fluent style using method chaining.
             /// Defines the upper boundary as an inclusive value.
             /// </summary>
-            /// <param name = "value">The value that indicates the inclusive upper boundary of the resulting Range.</param>
+            /// <param name = "value">The value that indicates the inclusive upper boundary of the resulting range.</param>
             /// <returns>A new range with the specified upper and lower boundaries.</returns>
             /// <exception cref = "ArgumentOutOfRangeException">
             /// Thrown when <paramref name = "value"/> is less than the lower boundary value.
@@ -2847,6 +2847,31 @@ namespace Light.GuardClauses
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator !=(Range<T> first, Range<T> second) => first.Equals(second) == false;
+    }
+
+    /// <summary>
+    /// Provides methods to simplify the creation of <see cref = "Range{T}"/> instances.
+    /// </summary>
+    internal static class Range
+    {
+        /// <summary>
+        /// Use this method to create a range in a fluent style using method chaining.
+        /// Defines the lower boundary as an inclusive value.
+        /// </summary>
+        /// <param name = "value">The value that indicates the inclusive lower boundary of the resulting range.</param>
+        /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Range<T>.RangeFromInfo FromInclusive<T>(T value)
+            where T : IComparable<T> => new Range<T>.RangeFromInfo(value, true);
+        /// <summary>
+        /// Use this method to create a range in a fluent style using method chaining.
+        /// Defines the lower boundary as an exclusive value.
+        /// </summary>
+        /// <param name = "value">The value that indicates the exclusive lower boundary of the resulting range.</param>
+        /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Range<T>.RangeFromInfo FromExclusive<T>(T value)
+            where T : IComparable<T> => new Range<T>.RangeFromInfo(value, false);
     }
 
     /// <summary>
