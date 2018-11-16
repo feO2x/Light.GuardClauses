@@ -73,8 +73,8 @@ namespace Light.GuardClauses
         /// Use this method to create a range in a fluent style using method chaining.
         /// Defines the lower boundary as an inclusive value.
         /// </summary>
-        /// <param name="value">The value that indicates the inclusive lower boundary of the resulting Range.</param>
-        /// <returns>A value you can use to fluently define the upper boundary of a new Range.</returns>
+        /// <param name="value">The value that indicates the inclusive lower boundary of the resulting range.</param>
+        /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -84,8 +84,8 @@ namespace Light.GuardClauses
         /// Use this method to create a range in a fluent style using method chaining.
         /// Defines the lower boundary as an exclusive value.
         /// </summary>
-        /// <param name="value">The value that indicates the exclusive lower boundary of the resulting Range.</param>
-        /// <returns>A value you can use to fluently define the upper boundary of a new Range.</returns>
+        /// <param name="value">The value that indicates the exclusive lower boundary of the resulting range.</param>
+        /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -182,5 +182,35 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public static bool operator !=(Range<T> first, Range<T> second) => first.Equals(second) == false;
+    }
+
+    /// <summary>
+    /// Provides methods to simplify the creation of <see cref="Range{T}"/> instances.
+    /// </summary>
+    public static class Range
+    {
+        /// <summary>
+        /// Use this method to create a range in a fluent style using method chaining.
+        /// Defines the lower boundary as an inclusive value.
+        /// </summary>
+        /// <param name="value">The value that indicates the inclusive lower boundary of the resulting Range.</param>
+        /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static Range<T>.RangeFromInfo FromInclusive<T>(T value) where T : IComparable<T> =>
+            new Range<T>.RangeFromInfo(value, true);
+
+        /// <summary>
+        /// Use this method to create a range in a fluent style using method chaining.
+        /// Defines the lower boundary as an exclusive value.
+        /// </summary>
+        /// <param name="value">The value that indicates the exclusive lower boundary of the resulting range.</param>
+        /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static Range<T>.RangeFromInfo FromExclusive<T>(T value) where T : IComparable<T> =>
+            new Range<T>.RangeFromInfo(value, false); 
     }
 }
