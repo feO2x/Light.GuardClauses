@@ -114,10 +114,10 @@ namespace Light.GuardClauses
             }
 
             /// <summary>
-            /// Use this method to create a Range in a fluent style using method chaining.
+            /// Use this method to create a range in a fluent style using method chaining.
             /// Defines the upper boundary as an exclusive value.
             /// </summary>
-            /// <param name="value">The value that indicates the exclusive upper boundary of the resulting Range.</param>
+            /// <param name="value">The value that indicates the exclusive upper boundary of the resulting range.</param>
             /// <returns>A new range with the specified upper and lower boundaries.</returns>
             /// <exception cref="ArgumentOutOfRangeException">
             /// Thrown when <paramref name="value" /> is less than the lower boundary value.
@@ -128,10 +128,10 @@ namespace Light.GuardClauses
             public Range<T> ToExclusive(T value) => new Range<T>(_from, value, _isFromInclusive, false);
 
             /// <summary>
-            /// Use this method to create a Range in a fluent style using method chaining.
+            /// Use this method to create a range in a fluent style using method chaining.
             /// Defines the upper boundary as an inclusive value.
             /// </summary>
-            /// <param name="value">The value that indicates the inclusive upper boundary of the resulting Range.</param>
+            /// <param name="value">The value that indicates the inclusive upper boundary of the resulting range.</param>
             /// <returns>A new range with the specified upper and lower boundaries.</returns>
             /// <exception cref="ArgumentOutOfRangeException">
             /// Thrown when <paramref name="value" /> is less than the lower boundary value.
@@ -193,7 +193,7 @@ namespace Light.GuardClauses
         /// Use this method to create a range in a fluent style using method chaining.
         /// Defines the lower boundary as an inclusive value.
         /// </summary>
-        /// <param name="value">The value that indicates the inclusive lower boundary of the resulting Range.</param>
+        /// <param name="value">The value that indicates the inclusive lower boundary of the resulting range.</param>
         /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
