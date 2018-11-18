@@ -9,6 +9,7 @@
     <Description>A lightweight .NET library for expressive Guard Clauses.</Description>
     <Authors>Kenny Pflug</Authors>
     <Company>Kenny Pflug</Company>
+    <DebugType>Portable</DebugType>
     <Copyright>Copyright © Kenny Pflug 2016 - 2018</Copyright>
     <PackageIconUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/Images/light_logo.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/feO2x/Light.GuardClauses</PackageProjectUrl>
@@ -19,6 +20,7 @@
     <PackageReleaseNotes>Light.GuardClauses 6.1.0
 --------------------------------
 - added static Range class to simplify the creating of ranges
+- added support for .snupkg
     </PackageReleaseNotes>
   </PropertyGroup>
 
