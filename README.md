@@ -110,7 +110,7 @@ Light.GuardClauses is available as a [NuGet package](https://www.nuget.org/packa
 - **dotnet CLI**: `dotnet add package Light.GuardClauses`
 - **Visual Studio Package Manager Console**: `Install-Package Light.GuardClauses` 
 
-Also, you can incorporate Light.GuardClauses as a **single source file** where the API is changed to `internal`. This is especially interesting for framework / library developers that do not want to have a dependency on the Light.GuardClauses DLL. You can grab the default .NET Standard 2.0 version in [Light.GuardClauses.SingleFile.cs](https://github.com/feO2x/Light.GuardClauses/blob/master/Light.GuardClauses.SingleFile.cs) or you can use the [Light.GuardClauses.SourceCodeTransformation](https://github.com/feO2x/Light.GuardClauses/tree/master/Code/Light.GuardClauses.SourceCodeTransformation) project to create your custom file.
+Also, you can incorporate Light.GuardClauses as a **single source file** where the API is changed to `internal`. This is especially interesting for framework / library developers that do not want to have a dependency on the Light.GuardClauses DLL. You can grab the default .NET Standard 2.0 version in [Light.GuardClauses.SingleFile.cs](https://github.com/feO2x/Light.GuardClauses/blob/master/Light.GuardClauses.SingleFile.cs) or you can use the [Light.GuardClauses.SourceCodeTransformation](https://github.com/feO2x/Light.GuardClauses/tree/master/Code/Light.GuardClauses.SourceCodeTransformation) project to create your custom file. You can learn more about it  [here](https://github.com/feO2x/Light.GuardClauses/wiki/Including-Light.GuardClauses-as-source-code).
 
 ### Let there be... Light
 ![Light Libraries Logo](/Images/light_logo.png)
