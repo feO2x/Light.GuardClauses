@@ -88,7 +88,9 @@ In addition to assertions that throw exceptions (all these start with `Must`), *
 
 You can use these in your branching logic to easily check if an assertion is true or false. 
 
-Every assertion is well-documented - explore them using IntelliSense.
+Every assertion is well-documented - explore them using IntelliSense or check out [this overview](https://github.com/feO2x/Light.GuardClauses/wiki/Overview-of-All-Assertions).
+
+## Light.GuardClauses is optimized
 
 Since version 4.x, **Light.GuardClauses** is optimized for performance (measured in .NET 4.7.x and .NET Core 2.x). With the incredible help of [@redknightlois](https://github.com/redknightlois) and the awesome tool [Benchmark.NET](https://github.com/dotnet/BenchmarkDotNet), most assertions are as fast as your imperative code would be.
 
