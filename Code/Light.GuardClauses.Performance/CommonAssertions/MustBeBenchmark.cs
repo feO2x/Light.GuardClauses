@@ -5,13 +5,13 @@ using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
-    public class MustBeNumberBenchmark
+    public class MustBeInt32Benchmark
     {
         public int NumberA = 284930;
         public int NumberB;
         public EqualityComparer<int> EqualityComparer = EqualityComparer<int>.Default;
 
-        public MustBeNumberBenchmark() => NumberB = NumberA;
+        public MustBeInt32Benchmark() => NumberB = NumberA;
 
         [Benchmark(Baseline = true)]
         public int Imperative()
