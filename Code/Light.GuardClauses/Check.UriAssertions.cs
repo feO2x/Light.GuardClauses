@@ -12,7 +12,7 @@ namespace Light.GuardClauses
     public static partial class Check
     {
         /// <summary>
-        /// Ensures that the specified URI is an absolute one, or otherwise throws an <see cref="RelativeUriException" />.
+        /// Ensures that the specified URI is an absolute one, or otherwise throws a <see cref="RelativeUriException" />.
         /// </summary>
         /// <param name="parameter">The URI to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
@@ -48,7 +48,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that the specified URI is a relative one, or otherwise throws a <see cref="AbsoluteUriException"/>.
+        /// Ensures that the specified URI is a relative one, or otherwise throws an <see cref="AbsoluteUriException"/>.
         /// </summary>
         /// <param name="parameter">The URI to be checked.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>

@@ -316,7 +316,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that the string matches the specified regular expression, or otherwise throws an <see cref="StringDoesNotMatchException" />.
+        /// Ensures that the string matches the specified regular expression, or otherwise throws a <see cref="StringDoesNotMatchException" />.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="regex">The regular expression used for pattern matching.</param>
