@@ -1,0 +1,28 @@
+﻿using System;
+#if (NETSTANDARD2_0 || NET45 || NET40 || NET35)
+using System.Runtime.Serialization;
+#endif
+
+namespace Light.GuardClauses.Exceptions
+{
+    /// <summary>
+    /// This exception indicates that configuration data is invalid.
+    /// </summary>
+#if (NETSTANDARD2_0 || NET45 || NET40)
+    [Serializable]
+#endif
+    public class InvalidConfigurationException : Exception
+    {
+        /// <summary>
+        /// Initializes a new instance of <see cref="InvalidConfigurationException"/>.
+        /// </summary>
+        /// <param name="message">The message of the exception (optional).</param>
+        /// <param name="innerException">The exception that is the cause of this one (optional).</param>
+        public InvalidConfigurationException(string message = null, Exception innerException = null) : base(message, innerException) { }
+
+#if (NETSTANDARD2_0 || NET45 || NET40 || NET35)
+        /// <inheritdoc />
+        protected InvalidConfigurationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
+    }
+}
