@@ -1,4 +1,4 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/1.6.46">
+﻿<Project Sdk="MSBuild.Sdk.Extras/1.6.65">
 
   <Import Project="TargetFrameworks.props" Condition="Exists('TargetFrameworks.props')" />
   <Import Project="..\Version.props" />
