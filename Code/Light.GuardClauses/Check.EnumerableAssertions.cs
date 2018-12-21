@@ -221,7 +221,7 @@ namespace Light.GuardClauses
             if (items is string @string && item is char character)
                 return @string.IndexOf(character) != -1;
 
-            return items.MustNotBeNull(nameof(items)).Contains(item);
+            return items.MustNotBeNull(nameof(items)).ContainsViaForeach(item);
         }
 
         /// <summary>

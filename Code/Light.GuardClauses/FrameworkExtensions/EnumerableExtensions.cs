@@ -194,5 +194,18 @@ namespace Light.GuardClauses.FrameworkExtensions
                 ++count;
             return count;
         }
+
+        internal static bool ContainsViaForeach<TItem>(this IEnumerable<TItem> items, TItem item)
+        {
+            var equalityComparer = EqualityComparer<TItem>.Default;
+            foreach (var i in items)
+            {
+                if (equalityComparer.Equals(i, item))
+                    return true;
+            }
+
+            return false;
+            // ReSharper restore PossibleMultipleEnumeration
+        }
     }
 }
