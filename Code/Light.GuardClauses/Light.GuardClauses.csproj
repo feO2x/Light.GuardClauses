@@ -1,10 +1,10 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/1.6.65">
+﻿﻿<Project Sdk="MSBuild.Sdk.Extras/1.6.65">
 
   <Import Project="TargetFrameworks.props" Condition="Exists('TargetFrameworks.props')" />
   <Import Project="..\Version.props" />
 
   <PropertyGroup>
-    <TargetFrameworks Condition="'$(TargetFrameworks)' == ''">netstandard2.0;netstandard1.0;net45;net40</TargetFrameworks>
+    <TargetFrameworks Condition="'$(TargetFrameworks)' == ''">netstandard2.0;netstandard1.0;net45;net40;sl5;net35;net35-cf</TargetFrameworks>
     <LangVersion>7.3</LangVersion>
     <Description>A lightweight .NET library for expressive Guard Clauses.</Description>
     <Authors>Kenny Pflug</Authors>
@@ -25,8 +25,31 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net35-cf'">
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>CompactFramework</TargetFrameworkProfile>
+    <DefineConstants>NET35_CF;WindowsCE</DefineConstants>
+    <DisableImplicitFrameworkReferences>True</DisableImplicitFrameworkReferences>
+    <NoStdLib>True</NoStdLib>
+    <NoConfig>True</NoConfig>
+    <FileAlignment>512</FileAlignment>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <GenerateAssemblyFileVersionAttribute>False</GenerateAssemblyFileVersionAttribute>
+    <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net35-cf'">
+    <Reference Include="mscorlib, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+    <Reference Include="System, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+    <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <Analyzer Include="..\Light.GuardClauses.InternalRoslynAnalyzers\bin\$(Configuration)\netstandard2.0\Light.GuardClauses.InternalRoslynAnalyzers.dll" Condition="Exists('..\Light.GuardClauses.InternalRoslynAnalyzers\bin\$(Configuration)\netstandard2.0\Light.GuardClauses.InternalRoslynAnalyzers.dll')" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net35'">
+    <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
@@ -38,6 +61,10 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.0'">
+    <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'sl5'">
     <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" />
   </ItemGroup>
 
