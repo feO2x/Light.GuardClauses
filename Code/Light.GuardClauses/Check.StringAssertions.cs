@@ -801,5 +801,23 @@ namespace Light.GuardClauses
 
             return regex.IsMatch(emailAddress);
         }
+
+        /// <summary>
+        /// Ensures that the string is a valid email address
+        /// </summary>
+        /// <param name="emailAddress">The email address that will be validated.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref="ValuesNotEqualException">Thrown when <paramref name="parameter" /> is not equal to <paramref name="other" />.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static string MustBeEmailAddress(this string emailAddress, string parameterName = null, string message = null)
+        {
+            if (!IsEmailAddress(emailAddress))
+                Throw.InvalidEmailAddress(parameterName, message);
+            return emailAddress;
+        }
     }
 }

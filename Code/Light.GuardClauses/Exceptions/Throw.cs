@@ -61,6 +61,13 @@ namespace Light.GuardClauses.Exceptions
         public static void InvalidState(string message = null) => throw new InvalidStateException(message);
 
         /// <summary>
+        /// Throws an <see cref="InvalidEmailAddressException"/> using the optional message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void InvalidEmailAddress(string parameterName = null, string message = null) =>
+            throw new InvalidEmailAddressException(parameterName, message ?? $"{parameterName ?? "The email address"} is not a valid email address");
+
+        /// <summary>
         /// Throws the default <see cref="NullableHasNoValueException" /> indicating that a <see cref="Nullable{T}" /> has no value, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
@@ -162,21 +169,21 @@ namespace Light.GuardClauses.Exceptions
         /// Throws the default <see cref="StringDoesNotMatchException" /> indicating that a string does not match a regular expression, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void StringDoesNotMatch(string parameter, Regex regex, string parameterName = null, string message = null) => 
+        public static void StringDoesNotMatch(string parameter, Regex regex, string parameterName = null, string message = null) =>
             throw new StringDoesNotMatchException(parameterName, message ?? $"{parameterName ?? "The string"} must match the regular expression \"{regex}\", but it actually is \"{parameter}\".");
 
         /// <summary>
         /// Throws the default <see cref="SubstringException"/> indicating that a string does not contain another string as a substring, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void StringDoesNotContain(string parameter, string substring, string parameterName = null, string message = null) => 
+        public static void StringDoesNotContain(string parameter, string substring, string parameterName = null, string message = null) =>
             throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must contain {substring.ToStringOrNull()}, but it actually is {parameter.ToStringOrNull()}.");
 
         /// <summary>
         /// Throws the default <see cref="SubstringException"/> indicating that a string does not contain another string as a substring, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void StringDoesNotContain(string parameter, string substring, StringComparison comparisonType, string parameterName = null, string message = null) => 
+        public static void StringDoesNotContain(string parameter, string substring, StringComparison comparisonType, string parameterName = null, string message = null) =>
             throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must contain {substring.ToStringOrNull()} ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
 
         /// <summary>
@@ -197,7 +204,7 @@ namespace Light.GuardClauses.Exceptions
         /// Throws the default <see cref="SubstringException"/> indicating that a string is not a substring of another one, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void NotSubstring(string parameter, string other, string parameterName = null, string message = null) => 
+        public static void NotSubstring(string parameter, string other, string parameterName = null, string message = null) =>
             throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must be a substring of \"{other}\", but it actually is {parameter.ToStringOrNull()}.");
 
         /// <summary>
@@ -320,7 +327,7 @@ namespace Light.GuardClauses.Exceptions
         /// Throws the default <see cref="AbsoluteUriException" /> indicating that a URI is absolute instead of relative, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void MustBeRelativeUri(Uri parameter, string parameterName = null, string message = null) => 
+        public static void MustBeRelativeUri(Uri parameter, string parameterName = null, string message = null) =>
             throw new AbsoluteUriException(parameterName, message ?? $"{parameterName ?? "The URI"} must be a relative URI, but it actually is \"{parameter}\".");
 
         /// <summary>
@@ -367,21 +374,21 @@ namespace Light.GuardClauses.Exceptions
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void CustomException(Func<Exception> exceptionFactory) => 
+        public static void CustomException(Func<Exception> exceptionFactory) =>
             throw exceptionFactory.MustNotBeNull(nameof(exceptionFactory))();
 
         /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="parameter" /> is passed to <paramref name="exceptionFactory" />.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void CustomException<T>(Func<T, Exception> exceptionFactory, T parameter) => 
+        public static void CustomException<T>(Func<T, Exception> exceptionFactory, T parameter) =>
             throw exceptionFactory.MustNotBeNull(nameof(exceptionFactory))(parameter);
 
         /// <summary>
         /// Throws the exception that is returned by <paramref name="exceptionFactory" />. <paramref name="first" /> and <paramref name="second" /> are passed to <paramref name="exceptionFactory" />.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void CustomException<T1, T2>(Func<T1, T2, Exception> exceptionFactory, T1 first, T2 second) => 
+        public static void CustomException<T1, T2>(Func<T1, T2, Exception> exceptionFactory, T1 first, T2 second) =>
             throw exceptionFactory.MustNotBeNull(nameof(exceptionFactory))(first, second);
 
         /// <summary>
