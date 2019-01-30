@@ -5,6 +5,7 @@ using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
 using System.Runtime.CompilerServices;
+
 #endif
 
 namespace Light.GuardClauses
@@ -778,6 +779,27 @@ namespace Light.GuardClauses
             if (parameter == null || value == null || !comparisonType.IsValidEnumValue() || value.IndexOf(parameter, comparisonType) != -1)
                 Throw.CustomException(exceptionFactory, parameter, value, comparisonType);
             return parameter;
+        }
+
+        /// <summary>
+        /// Checks if the specified string is an email address.
+        ///
+        /// For more information about mail address patterns see <see cref="!:https://emailregex.com/">here</see> 
+        /// </summary>
+        /// <param name="emailAddress">The string to be checked if it is an email address.</param>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static bool IsEmailAddress(this string emailAddress)
+        {
+            if (emailAddress == null) return false;
+
+            var regex = new Regex(
+                @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*@((((\w+\-?)+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$",
+                RegexOptions.CultureInvariant | RegexOptions.ECMAScript
+            );
+
+            return regex.IsMatch(emailAddress);
         }
     }
 }
