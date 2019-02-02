@@ -11,14 +11,14 @@ namespace Light.GuardClauses.Exceptions
 #if (NETSTANDARD2_0 || NET45 || NET40)
     [Serializable]
 #endif
-    public class InvalidEmailAddressException : ArgumentException
+    public class InvalidEmailAddressException : StringException
     {
         /// <summary>
         /// Creates a new instance of <see cref="InvalidEmailAddressException" />.
         /// </summary>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message of the exception (optional).</param>
-        public InvalidEmailAddressException(string parameterName = null, string message = null) : base(message, parameterName) { }
+        public InvalidEmailAddressException(string parameterName = null, string message = null) : base(parameterName, message) { }
 
 #if (NETSTANDARD2_0 || NET45 || NET40 || NET35)
         /// <inheritdoc />

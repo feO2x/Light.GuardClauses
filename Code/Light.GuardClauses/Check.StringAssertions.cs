@@ -5,7 +5,6 @@ using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
 using System.Runtime.CompilerServices;
-
 #endif
 
 namespace Light.GuardClauses
@@ -782,42 +781,112 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Checks if the specified string is an email address.
+        /// Checks if the specified string is an email address using the default email regular expression
+        /// defined in <see cref="RegularExpressions.EmailRegex"/>.
         ///
-        /// For more information about mail address patterns see <see cref="!:https://emailregex.com/">here</see> 
+        /// For more information about mail address patterns see https://emailregex.com/".
         /// </summary>
         /// <param name="emailAddress">The string to be checked if it is an email address.</param>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        public static bool IsEmailAddress(this string emailAddress)
-        {
-            if (emailAddress == null) return false;
-
-            var regex = new Regex(
-                @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*@((((\w+\-?)+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$",
-                RegexOptions.CultureInvariant | RegexOptions.ECMAScript
-            );
-
-            return regex.IsMatch(emailAddress);
-        }
+        [ContractAnnotation("emailAddress:null => false")]
+        public static bool IsEmailAddress(this string emailAddress) =>
+            emailAddress != null && RegularExpressions.EmailRegex.IsMatch(emailAddress);
 
         /// <summary>
-        /// Ensures that the string is a valid email address
+        /// Checks if the specified string is an email address using the provided regular expression for validation.
         /// </summary>
-        /// <param name="emailAddress">The email address that will be validated.</param>
-        /// <param name="parameterName">The name of the parameter (optional).</param>
-        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref="ValuesNotEqualException">Thrown when <paramref name="parameter" /> is not equal to <paramref name="other" />.</exception>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
+        /// <param name="emailAddress">The string to be checked.</param>
+        /// <param name="emailAddressPattern">The regular expression that determines whether the input string is an email address.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="emailAddressPattern"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
-        public static string MustBeEmailAddress(this string emailAddress, string parameterName = null, string message = null)
+        [ContractAnnotation("emailAddress:null => false; emailAddressPattern:null => halt")]
+        public static bool IsEmailAddress(this string emailAddress, Regex emailAddressPattern) =>
+            emailAddress != null && emailAddressPattern.MustNotBeNull(nameof(emailAddressPattern)).IsMatch(emailAddress);
+
+        /// <summary>
+        /// Ensures that the string is a valid email address using the default email regular expression
+        /// defined in <see cref="RegularExpressions.EmailRegex"/>, or otherwise throws an <see cref="InvalidEmailAddressException"/>.
+        ///
+        /// For more information about mail address patterns see https://emailregex.com/".
+        /// </summary>
+        /// <param name="parameter">The email address that will be validated.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref="InvalidEmailAddressException">Thrown when <paramref name="parameter" /> is no valid email address.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeEmailAddress(this string parameter, string parameterName = null, string message = null)
         {
-            if (!IsEmailAddress(emailAddress))
-                Throw.InvalidEmailAddress(parameterName, message);
-            return emailAddress;
+            if (!parameter.MustNotBeNull(parameterName, message).IsEmailAddress())
+                Throw.InvalidEmailAddress(parameter, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string is a valid email address using the default email regular expression
+        /// defined in <see cref="RegularExpressions.EmailRegex"/>, or otherwise throws your custom exception.
+        ///
+        /// For more information about mail address patterns see https://emailregex.com/".
+        /// </summary>
+        /// <param name="parameter">The email address that will be validated.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> is passed to this delegate.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or no valid email address.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeEmailAddress(this string parameter, Func<string, Exception> exceptionFactory)
+        {
+            if (!parameter.IsEmailAddress())
+                Throw.CustomException(exceptionFactory, parameter);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string is a valid email address using the provided regular expression,
+        /// or otherwise throws an <see cref="InvalidEmailAddressException"/>.
+        /// </summary>
+        /// <param name="parameter">The email address that will be validated.</param>
+        /// <param name="emailAddressPattern">The regular expression that determines if the input string is a valid email.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref="InvalidEmailAddressException">Thrown when <paramref name="parameter" /> is no valid email address.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; emailAddressPattern:null => halt")]
+        public static string MustBeEmailAddress(this string parameter, Regex emailAddressPattern, string parameterName = null, string message = null)
+        {
+            if (!parameter.MustNotBeNull(parameterName, message).IsEmailAddress(emailAddressPattern))
+                Throw.InvalidEmailAddress(parameter, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string is a valid email address using the provided regular expression,
+        /// or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The email address that will be validated.</param>
+        /// <param name="emailAddressPattern">The regular expression that determines if the input string is a valid email.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="emailAddressPattern"/> are passed to this delegate.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or no valid email address.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; emailAddressPattern:null => halt")]
+        public static string MustBeEmailAddress(this string parameter, Regex emailAddressPattern, Func<string, Regex, Exception> exceptionFactory)
+        {
+            if (emailAddressPattern is null || !parameter.IsEmailAddress(emailAddressPattern))
+                Throw.CustomException(exceptionFactory, parameter, emailAddressPattern);
+            return parameter;
         }
     }
 }

@@ -3,12 +3,7 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertions
 {
-    /// <summary>
-    /// Test if an email address is valid.
-    ///
-    /// The values are taken from <see cref="!:https://blogs.msdn.microsoft.com/testing123/2009/02/06/email-address-test-cases/">here</see>
-    /// </summary>
-    public class IsEmailAddressTest
+    public sealed class IsEmailAddressTest
     {
         [Theory]
         [InlineData(null)]

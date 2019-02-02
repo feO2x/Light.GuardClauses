@@ -64,8 +64,8 @@ namespace Light.GuardClauses.Exceptions
         /// Throws an <see cref="InvalidEmailAddressException"/> using the optional message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void InvalidEmailAddress(string parameterName = null, string message = null) =>
-            throw new InvalidEmailAddressException(parameterName, message ?? $"{parameterName ?? "The email address"} is not a valid email address");
+        public static void InvalidEmailAddress(string emailAddress, string parameterName = null, string message = null) =>
+            throw new InvalidEmailAddressException(parameterName, message ?? $"{parameterName ?? "The string"} must be a valid email address, but it actually is \"{emailAddress}\".");
 
         /// <summary>
         /// Throws the default <see cref="NullableHasNoValueException" /> indicating that a <see cref="Nullable{T}" /> has no value, using the optional parameter name and message.
