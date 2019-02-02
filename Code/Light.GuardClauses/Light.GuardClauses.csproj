@@ -1,4 +1,4 @@
-﻿﻿<Project Sdk="MSBuild.Sdk.Extras/1.6.65">
+﻿<Project Sdk="MSBuild.Sdk.Extras/1.6.65">
 
   <Import Project="TargetFrameworks.props" Condition="Exists('TargetFrameworks.props')" />
   <Import Project="..\Version.props" />
@@ -22,7 +22,6 @@
 - added static Range class to simplify the creating of ranges
 - added support for .snupkg
     </PackageReleaseNotes>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net35-cf'">
@@ -46,26 +45,6 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <Analyzer Include="..\Light.GuardClauses.InternalRoslynAnalyzers\bin\$(Configuration)\netstandard2.0\Light.GuardClauses.InternalRoslynAnalyzers.dll" Condition="Exists('..\Light.GuardClauses.InternalRoslynAnalyzers\bin\$(Configuration)\netstandard2.0\Light.GuardClauses.InternalRoslynAnalyzers.dll')" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net35'">
-    <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
-    <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
-    <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.0'">
-    <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'sl5'">
-    <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" />
   </ItemGroup>
 
 </Project>
