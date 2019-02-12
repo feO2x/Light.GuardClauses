@@ -1,11 +1,11 @@
 /* ------------------------------
-   Light.GuardClauses 6.1.0
+   Light.GuardClauses 6.2.0
    ------------------------------
 
 License information for Light.GuardClauses
 
 The MIT License (MIT)
-Copyright (c) 2016 - 2018 Kenny Pflug mailto:kenny.pflug@live.de
+Copyright (c) 2016, 2019 Kenny Pflug mailto:kenny.pflug@live.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -1215,7 +1215,7 @@ namespace Light.GuardClauses
                 return collection.Contains(item);
             if (items is string @string && item is char character)
                 return @string.IndexOf(character) != -1;
-            return items.MustNotBeNull(nameof(items)).Contains(item);
+            return items.MustNotBeNull(nameof(items)).ContainsViaForeach(item);
         }
 
         /// <summary>
@@ -1516,7 +1516,7 @@ namespace Light.GuardClauses
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "ValuesNotEqualException">Thrown when <paramref name = "parameter"/> is not equal to <paramref name = "other"/>.</exception>
-        /// <exception cref = "EnumValueNotDefinedException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string MustBe(this string parameter, string other, StringComparisonType comparisonType, string parameterName = null, string message = null)
         {
@@ -1533,7 +1533,7 @@ namespace Light.GuardClauses
         /// <param name = "comparisonType">The enum value specifying how the two strings should be compared.</param>
         /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is not equal to <paramref name = "other"/>.</exception>
-        /// <exception cref = "EnumValueNotDefinedException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
         public static string MustBe(this string parameter, string other, StringComparisonType comparisonType, Func<string, string, Exception> exceptionFactory)
         {
             if (!parameter.Equals(other, comparisonType))
@@ -1585,7 +1585,7 @@ namespace Light.GuardClauses
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "ValuesEqualException">Thrown when <paramref name = "parameter"/> is equal to <paramref name = "other"/>.</exception>
-        /// <exception cref = "EnumValueNotDefinedException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string MustNotBe(this string parameter, string other, StringComparisonType comparisonType, string parameterName = null, string message = null)
         {
@@ -1602,7 +1602,7 @@ namespace Light.GuardClauses
         /// <param name = "comparisonType">The enum value specifying how the two strings should be compared.</param>
         /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is equal to <paramref name = "other"/>.</exception>
-        /// <exception cref = "EnumValueNotDefinedException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string MustNotBe(this string parameter, string other, StringComparisonType comparisonType, Func<string, string, Exception> exceptionFactory)
         {
@@ -1612,7 +1612,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that the string matches the specified regular expression, or otherwise throws an <see cref = "StringDoesNotMatchException"/>.
+        /// Ensures that the string matches the specified regular expression, or otherwise throws a <see cref = "StringDoesNotMatchException"/>.
         /// </summary>
         /// <param name = "parameter">The string to be checked.</param>
         /// <param name = "regex">The regular expression used for pattern matching.</param>
@@ -1655,6 +1655,7 @@ namespace Light.GuardClauses
         /// <param name = "value">The second string to compare.</param>
         /// <param name = "comparisonType">One of the enumeration values that specifies the rules for the comparison.</param>
         /// <returns>True if the two strings are considered equal, else false.</returns>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is no valid enum value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Equals(this string @string, string value, StringComparisonType comparisonType)
         {
@@ -2024,6 +2025,93 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Checks if the specified string is an email address using the default email regular expression
+        /// defined in <see cref = "RegularExpressions.EmailRegex"/>.
+        /// </summary>
+        /// <param name = "emailAddress">The string to be checked if it is an email address.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("emailAddress:null => false")]
+        public static bool IsEmailAddress(this string emailAddress) => emailAddress != null && RegularExpressions.EmailRegex.IsMatch(emailAddress);
+        /// <summary>
+        /// Checks if the specified string is an email address using the provided regular expression for validation.
+        /// </summary>
+        /// <param name = "emailAddress">The string to be checked.</param>
+        /// <param name = "emailAddressPattern">The regular expression that determines whether the input string is an email address.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "emailAddressPattern"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("emailAddress:null => false; emailAddressPattern:null => halt")]
+        public static bool IsEmailAddress(this string emailAddress, Regex emailAddressPattern) => emailAddress != null && emailAddressPattern.MustNotBeNull(nameof(emailAddressPattern)).IsMatch(emailAddress);
+        /// <summary>
+        /// Ensures that the string is a valid email address using the default email regular expression
+        /// defined in <see cref = "RegularExpressions.EmailRegex"/>, or otherwise throws an <see cref = "InvalidEmailAddressException"/>.
+        /// </summary>
+        /// <param name = "parameter">The email address that will be validated.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "InvalidEmailAddressException">Thrown when <paramref name = "parameter"/> is no valid email address.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeEmailAddress(this string parameter, string parameterName = null, string message = null)
+        {
+            if (!parameter.MustNotBeNull(parameterName, message).IsEmailAddress())
+                Throw.InvalidEmailAddress(parameter, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string is a valid email address using the default email regular expression
+        /// defined in <see cref = "RegularExpressions.EmailRegex"/>, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The email address that will be validated.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or no valid email address.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeEmailAddress(this string parameter, Func<string, Exception> exceptionFactory)
+        {
+            if (!parameter.IsEmailAddress())
+                Throw.CustomException(exceptionFactory, parameter);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string is a valid email address using the provided regular expression,
+        /// or otherwise throws an <see cref = "InvalidEmailAddressException"/>.
+        /// </summary>
+        /// <param name = "parameter">The email address that will be validated.</param>
+        /// <param name = "emailAddressPattern">The regular expression that determines if the input string is a valid email.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "InvalidEmailAddressException">Thrown when <paramref name = "parameter"/> is no valid email address.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; emailAddressPattern:null => halt")]
+        public static string MustBeEmailAddress(this string parameter, Regex emailAddressPattern, string parameterName = null, string message = null)
+        {
+            if (!parameter.MustNotBeNull(parameterName, message).IsEmailAddress(emailAddressPattern))
+                Throw.InvalidEmailAddress(parameter, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string is a valid email address using the provided regular expression,
+        /// or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The email address that will be validated.</param>
+        /// <param name = "emailAddressPattern">The regular expression that determines if the input string is a valid email.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "emailAddressPattern"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or no valid email address.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; emailAddressPattern:null => halt")]
+        public static string MustBeEmailAddress(this string parameter, Regex emailAddressPattern, Func<string, Regex, Exception> exceptionFactory)
+        {
+            if (emailAddressPattern is null || !parameter.IsEmailAddress(emailAddressPattern))
+                Throw.CustomException(exceptionFactory, parameter, emailAddressPattern);
+            return parameter;
+        }
+
+        /// <summary>
         /// Checks if the two specified types are equivalent. This is true when both types are equal or
         /// when one type is a constructed generic type and the other type is the corresponding generic type definition.
         /// </summary>
@@ -2236,7 +2324,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that the specified URI is an absolute one, or otherwise throws an <see cref = "RelativeUriException"/>.
+        /// Ensures that the specified URI is an absolute one, or otherwise throws a <see cref = "RelativeUriException"/>.
         /// </summary>
         /// <param name = "parameter">The URI to be checked.</param>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
@@ -2268,7 +2356,7 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that the specified URI is a relative one, or otherwise throws a <see cref = "AbsoluteUriException"/>.
+        /// Ensures that the specified URI is a relative one, or otherwise throws an <see cref = "AbsoluteUriException"/>.
         /// </summary>
         /// <param name = "parameter">The URI to be checked.</param>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
@@ -2875,6 +2963,19 @@ namespace Light.GuardClauses
     }
 
     /// <summary>
+    /// Provides regular expressions that are used in string assertions.
+    /// </summary>
+    internal static class RegularExpressions
+    {
+        /// <summary>
+        /// Gets the default regular expression for email validation.
+        /// This pattern is based on https://www.rhyous.com/2010/06/15/csharp-email-regular-expression/ and
+        /// was modified to satisfy all tests of https://blogs.msdn.microsoft.com/testing123/2009/02/06/email-address-test-cases/.
+        /// </summary>
+        public static readonly Regex EmailRegex = new Regex(@"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*@((((\w+\-?)+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$", RegexOptions.CultureInvariant | RegexOptions.ECMAScript);
+    }
+
+    /// <summary>
     /// Specifies the culture, case , and sort rules when comparing strings.
     /// </summary>
     /// <remarks>
@@ -3105,6 +3206,24 @@ namespace Light.GuardClauses.Exceptions
     }
 
     /// <summary>
+    /// This exception indicates that configuration data is invalid.
+    /// </summary>
+    [Serializable]
+    internal class InvalidConfigurationException : Exception
+    {
+        /// <summary>
+        /// Initializes a new instance of <see cref = "InvalidConfigurationException"/>.
+        /// </summary>
+        /// <param name = "message">The message of the exception (optional).</param>
+        /// <param name = "innerException">The exception that is the cause of this one (optional).</param>
+        public InvalidConfigurationException(string message = null, Exception innerException = null): base(message, innerException)
+        {
+        }
+        /// <inheritdoc />
+        protected InvalidConfigurationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+    }
+
+    /// <summary>
     /// This exception indicates that a <see cref = "DateTime"/> value is invalid.
     /// </summary>
     [Serializable]
@@ -3120,6 +3239,24 @@ namespace Light.GuardClauses.Exceptions
         }
         /// <inheritdoc />
         protected InvalidDateTimeException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+    }
+
+    /// <summary>
+    /// This exception indicates that an Email address is invalid.
+    /// </summary>
+    [Serializable]
+    internal class InvalidEmailAddressException : StringException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "InvalidEmailAddressException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public InvalidEmailAddressException(string parameterName = null, string message = null): base(parameterName, message)
+        {
+        }
+        /// <inheritdoc />
+        protected InvalidEmailAddressException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 
     /// <summary>
@@ -3324,6 +3461,11 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         public static void InvalidState(string message = null) => throw new InvalidStateException(message);
+        /// <summary>
+        /// Throws an <see cref = "InvalidEmailAddressException"/> using the optional message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void InvalidEmailAddress(string emailAddress, string parameterName = null, string message = null) => throw new InvalidEmailAddressException(parameterName, message ?? $"{parameterName ?? "The string"} must be a valid email address, but it actually is \"{emailAddress}\".");
         /// <summary>
         /// Throws the default <see cref = "NullableHasNoValueException"/> indicating that a <see cref = "Nullable{T}"/> has no value, using the optional parameter name and message.
         /// </summary>
@@ -3846,6 +3988,19 @@ namespace Light.GuardClauses.FrameworkExtensions
             while (enumerator.MoveNext())
                 ++count;
             return count;
+        }
+
+        internal static bool ContainsViaForeach<TItem>(this IEnumerable<TItem> items, TItem item)
+        {
+            var equalityComparer = EqualityComparer<TItem>.Default;
+            foreach (var i in items)
+            {
+                if (equalityComparer.Equals(i, item))
+                    return true;
+            }
+
+            return false;
+        // ReSharper restore PossibleMultipleEnumeration
         }
     }
 

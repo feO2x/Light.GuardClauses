@@ -10,17 +10,16 @@
     <Authors>Kenny Pflug</Authors>
     <Company>Kenny Pflug</Company>
     <DebugType>Portable</DebugType>
-    <Copyright>Copyright © Kenny Pflug 2016 - 2018</Copyright>
+    <Copyright>Copyright © Kenny Pflug 2016 - 2019</Copyright>
     <PackageIconUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/Images/light_logo.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/feO2x/Light.GuardClauses</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>Assertions;Preconditions;GuardClauses;DesignByContract;DbC</PackageTags>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-    <PackageReleaseNotes>Light.GuardClauses 6.1.0
+    <PackageReleaseNotes>Light.GuardClauses 6.2.0
 --------------------------------
-- added static Range class to simplify the creating of ranges
-- added support for .snupkg
+- added MustBeEmailAddress and IsEmailAddress (thanks to Johan Vergeer for his contribution)
     </PackageReleaseNotes>
   </PropertyGroup>
 

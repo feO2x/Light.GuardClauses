@@ -783,8 +783,6 @@ namespace Light.GuardClauses
         /// <summary>
         /// Checks if the specified string is an email address using the default email regular expression
         /// defined in <see cref="RegularExpressions.EmailRegex"/>.
-        ///
-        /// For more information about mail address patterns see https://emailregex.com/".
         /// </summary>
         /// <param name="emailAddress">The string to be checked if it is an email address.</param>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
@@ -810,8 +808,6 @@ namespace Light.GuardClauses
         /// <summary>
         /// Ensures that the string is a valid email address using the default email regular expression
         /// defined in <see cref="RegularExpressions.EmailRegex"/>, or otherwise throws an <see cref="InvalidEmailAddressException"/>.
-        ///
-        /// For more information about mail address patterns see https://emailregex.com/".
         /// </summary>
         /// <param name="parameter">The email address that will be validated.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
@@ -832,8 +828,6 @@ namespace Light.GuardClauses
         /// <summary>
         /// Ensures that the string is a valid email address using the default email regular expression
         /// defined in <see cref="RegularExpressions.EmailRegex"/>, or otherwise throws your custom exception.
-        ///
-        /// For more information about mail address patterns see https://emailregex.com/".
         /// </summary>
         /// <param name="parameter">The email address that will be validated.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> is passed to this delegate.</param>
