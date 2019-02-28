@@ -554,5 +554,18 @@ namespace Light.GuardClauses
                 Throw.CustomException(exceptionFactory, parameter, other, equalityComparer);
             return parameter;
         }
+
+        /// <summary>
+        /// Checks if the specified value is approximately the same as the other value.
+        /// </summary>
+        /// <param name="value">The first value to compare.</param>
+        /// <param name="other">The second value to compare.</param>
+        /// <param name="tolerance">The tolerance indicating how much the two values may differ from each other.</param>
+        /// <returns>
+        /// True if <paramref name="value"/> <paramref name="other"/> are equal or if their absolute difference
+        /// is smaller than the given <paramref name="tolerance"/>, otherwise false.
+        /// </returns>
+        public static bool IsApproximately(this double value, double other, double tolerance = 0.0001) =>
+            Math.Abs(value - other) < tolerance;
     }
 }
