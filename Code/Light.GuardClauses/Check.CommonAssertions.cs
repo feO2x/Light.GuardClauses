@@ -556,20 +556,38 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Checks if the specified value is approximately the same as the other value.
+        /// Checks if the specified value is approximately the same as the other value, using the given tolerance.
         /// </summary>
-        /// <param name="value">The first value to compare.</param>
-        /// <param name="other">The second value to compare.</param>
+        /// <param name="value">The first value to be compared.</param>
+        /// <param name="other">The second value to be compared.</param>
         /// <param name="tolerance">The tolerance indicating how much the two values may differ from each other.</param>
         /// <returns>
         /// True if <paramref name="value"/> <paramref name="other"/> are equal or if their absolute difference
         /// is smaller than the given <paramref name="tolerance"/>, otherwise false.
         /// </returns>
-        public static bool IsApproximately(this double value, double other, double tolerance = 0.0001) =>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static bool IsApproximately(this double value, double other, double tolerance) =>
             Math.Abs(value - other) < tolerance;
 
         /// <summary>
-        /// Checks if the specified value is approximately the same as the other value.
+        /// Checks if the specified value is approximately the same as the other value, using the default tolerance of 0.0001.
+        /// </summary>
+        /// <param name="value">The first value to be compared.</param>
+        /// <param name="other">The second value to be compared.</param>
+        /// <returns>
+        /// True if <paramref name="value"/> <paramref name="other"/> are equal or if their absolute difference
+        /// is smaller than 0.0001, otherwise false.
+        /// </returns>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static bool IsApproximately(this double value, double other) =>
+            Math.Abs(value - other) < 0.0001;
+
+        /// <summary>
+        /// Checks if the specified value is approximately the same as the other value, using the given tolerance.
         /// </summary>
         /// <param name="value">The first value to compare.</param>
         /// <param name="other">The second value to compare.</param>
@@ -578,7 +596,25 @@ namespace Light.GuardClauses
         /// True if <paramref name="value"/> <paramref name="other"/> are equal or if their absolute difference
         /// is smaller than the given <paramref name="tolerance"/>, otherwise false.
         /// </returns>
-        public static bool IsApproximately(this float value, float other, float tolerance = 0.0001f) =>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static bool IsApproximately(this float value, float other, float tolerance) =>
             Math.Abs(value - other) < tolerance;
+
+        /// <summary>
+        /// Checks if the specified value is approximately the same as the other value, using the default tolerance of 0.0001f.
+        /// </summary>
+        /// <param name="value">The first value to be compared.</param>
+        /// <param name="other">The second value to be compared.</param>
+        /// <returns>
+        /// True if <paramref name="value"/> <paramref name="other"/> are equal or if their absolute difference
+        /// is smaller than 0.0001f, otherwise false.
+        /// </returns>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        public static bool IsApproximately(this float value, float other) =>
+            Math.Abs(value - other) < 0.0001f;
     }
 }
