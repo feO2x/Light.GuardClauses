@@ -1,7 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Light.GuardClauses.FrameworkExtensions;
 using Light.Undefine;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Light.GuardClauses.SourceCodeTransformation
@@ -137,7 +137,7 @@ namespace JetBrains.Annotations
             {
                 [defaultNamespace] = defaultNamespace,
                 [exceptionsNamespace] = exceptionsNamespace,
-                [extensionsNamespace] = extensionsNamespace,
+                [extensionsNamespace] = extensionsNamespace
             };
             if (_options.IncludeJetBrainsAnnotations)
                 replacedNodes.Add(jetBrainsNamespace, jetBrainsNamespace);
@@ -152,9 +152,9 @@ namespace JetBrains.Annotations
             var currentFile = allSourceFiles["Check.CommonAssertions.cs"];
 
             var sourceSyntaxTree = CSharpSyntaxTree.ParseText(await currentFile.ReadContentAsync());
-            var checkClassDeclaration = (ClassDeclarationSyntax)sourceSyntaxTree.GetRoot()
-                                                                                .DescendantNodes()
-                                                                                .First(node => node.Kind() == SyntaxKind.ClassDeclaration);
+            var checkClassDeclaration = (ClassDeclarationSyntax) sourceSyntaxTree.GetRoot()
+                                                                                 .DescendantNodes()
+                                                                                 .First(node => node.Kind() == SyntaxKind.ClassDeclaration);
             checkClassDeclaration = checkClassDeclaration.WithModifiers(checkClassDeclaration.Modifiers.Remove(checkClassDeclaration.Modifiers.First(token => token.Kind() == SyntaxKind.PartialKeyword)));
 
             // Process all other files
@@ -177,27 +177,27 @@ namespace JetBrains.Annotations
                 // If the file contains assertions, add it to the existing Check class declaration
                 if (originalNamespace == defaultNamespace && currentFile.Name.StartsWith("Check."))
                 {
-                    var classDeclaration = (ClassDeclarationSyntax)sourceSyntaxTree.GetRoot()
-                                                                                   .DescendantNodes()
-                                                                                   .First(node => node.Kind() == SyntaxKind.ClassDeclaration);
+                    var classDeclaration = (ClassDeclarationSyntax) sourceSyntaxTree.GetRoot()
+                                                                                    .DescendantNodes()
+                                                                                    .First(node => node.Kind() == SyntaxKind.ClassDeclaration);
                     checkClassDeclaration = checkClassDeclaration.WithMembers(checkClassDeclaration.Members.AddRange(classDeclaration.Members));
                     continue;
                 }
 
                 // Else just get the members of the first namespace and add them to the corresponding one
-                var sourceCompilationUnit = (CompilationUnitSyntax)sourceSyntaxTree.GetRoot();
-                var membersToAdd = ((NamespaceDeclarationSyntax)sourceCompilationUnit.Members[0]).Members;
+                var sourceCompilationUnit = (CompilationUnitSyntax) sourceSyntaxTree.GetRoot();
+                var membersToAdd = ((NamespaceDeclarationSyntax) sourceCompilationUnit.Members[0]).Members;
 
                 // The ExpressionExtensions.cs file needs to be adjusted as it cannot be compiled for .NET 3.5 Compact Framework
                 if (currentFile.Name == "ExpressionExtensions.cs")
                 {
-                    var expressionExtensionsClass = (ClassDeclarationSyntax)membersToAdd[0];
+                    var expressionExtensionsClass = (ClassDeclarationSyntax) membersToAdd[0];
                     expressionExtensionsClass =
                         expressionExtensionsClass
                            .WithLeadingTrivia(
                                 TriviaList(
-                                    Trivia(
-                                        IfDirectiveTrivia(
+                                        Trivia(
+                                            IfDirectiveTrivia(
                                                 PrefixUnaryExpression(
                                                     SyntaxKind.LogicalNotExpression,
                                                     IdentifierName("NET35_CF")),
@@ -237,14 +237,12 @@ namespace JetBrains.Annotations
                 foreach (var typeDeclaration in targetRoot.DescendantNodes().Where(node => node.Kind() == SyntaxKind.ClassDeclaration ||
                                                                                            node.Kind() == SyntaxKind.StructDeclaration ||
                                                                                            node.Kind() == SyntaxKind.EnumDeclaration)
-                                                                            .Cast<BaseTypeDeclarationSyntax>())
+                                                          .Cast<BaseTypeDeclarationSyntax>())
                 {
                     var publicModifier = typeDeclaration.Modifiers[0];
-                    var adjustedModifiers =
-                        typeDeclaration
-                        .Modifiers
-                        .RemoveAt(0)
-                        .Insert(0, Token(SyntaxKind.InternalKeyword).WithTriviaFrom(publicModifier));
+                    var adjustedModifiers = typeDeclaration.Modifiers
+                                                           .RemoveAt(0)
+                                                           .Insert(0, Token(SyntaxKind.InternalKeyword).WithTriviaFrom(publicModifier));
 
                     if (typeDeclaration is ClassDeclarationSyntax classDeclaration)
                         changedTypeDeclarations[classDeclaration] = classDeclaration.WithModifiers(adjustedModifiers);
@@ -257,6 +255,33 @@ namespace JetBrains.Annotations
                 }
 
                 targetRoot = targetRoot.ReplaceNodes(changedTypeDeclarations.Keys, (originalNode, _) => changedTypeDeclarations[originalNode]);
+            }
+
+            // Remove assertion overloads that incorporate an exception factory if necessary
+            if (_options.RemoveOverloadsWithExceptionFactory)
+            {
+                Console.WriteLine("Removing overloads with exception factory...");
+
+                var checkClass = (ClassDeclarationSyntax) targetRoot.DescendantNodes()
+                                                                    .First(node => node.Kind() == SyntaxKind.ClassDeclaration &&
+                                                                                   node is ClassDeclarationSyntax classDeclaration &&
+                                                                                   classDeclaration.Identifier.Text == "Check");
+
+                var membersWithoutExceptionFactory =
+                    checkClass.Members
+                              .Where(member => !(member is MethodDeclarationSyntax method) || method.ParameterList.Parameters.All(parameter => parameter.Identifier.Text != "exceptionFactory"));
+                targetRoot = targetRoot.ReplaceNode(checkClass, checkClass.WithMembers(new SyntaxList<MemberDeclarationSyntax>(membersWithoutExceptionFactory)));
+
+                // Remove members from Throw class that use exception factories
+                var throwClass = (ClassDeclarationSyntax) targetRoot.DescendantNodes()
+                                                                    .First(node => node.Kind() == SyntaxKind.ClassDeclaration &&
+                                                                                   node is ClassDeclarationSyntax classDeclaration &&
+                                                                                   classDeclaration.Identifier.Text == "Throw");
+
+                membersWithoutExceptionFactory =
+                    throwClass.Members
+                              .Where(member => !(member is MethodDeclarationSyntax method) || method.ParameterList.Parameters.All(parameter => parameter.Identifier.Text != "exceptionFactory"));
+                targetRoot = targetRoot.ReplaceNode(throwClass, throwClass.WithMembers(new SyntaxList<MemberDeclarationSyntax>(membersWithoutExceptionFactory)));
             }
 
             // Remove preprocessor directives if necessary

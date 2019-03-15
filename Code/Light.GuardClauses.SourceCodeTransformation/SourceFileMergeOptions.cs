@@ -14,7 +14,8 @@ namespace Light.GuardClauses.SourceCodeTransformation
                                       IReadOnlyList<string> definedPreprocessorSymbols,
                                       bool removeContractAnnotations, 
                                       bool includeJetBrainsAnnotationsUsing, 
-                                      bool includeVersionComment)
+                                      bool includeVersionComment, 
+                                      bool removeOverloadsWithExceptionFactory)
         {
             SourceFolder = sourceFolder.MustNotBeNullOrWhiteSpace(nameof(sourceFolder));
             TargetFile = targetFile.MustNotBeNullOrWhiteSpace(nameof(targetFile));
@@ -27,6 +28,7 @@ namespace Light.GuardClauses.SourceCodeTransformation
             RemoveContractAnnotations = removeContractAnnotations;
             IncludeJetBrainsAnnotationsUsing = includeJetBrainsAnnotationsUsing;
             IncludeVersionComment = includeVersionComment;
+            RemoveOverloadsWithExceptionFactory = removeOverloadsWithExceptionFactory;
         }
 
         public string SourceFolder { get; }
@@ -48,6 +50,8 @@ namespace Light.GuardClauses.SourceCodeTransformation
         public bool IncludeJetBrainsAnnotationsUsing { get; }
 
         public bool IncludeVersionComment { get; }
+
+        public bool RemoveOverloadsWithExceptionFactory { get; }
 
         public sealed class Builder
         {
@@ -90,6 +94,8 @@ namespace Light.GuardClauses.SourceCodeTransformation
 
             public bool IncludeVersionComment { get; set; } = true;
 
+            public bool RemoveOverloadsWithExceptionFactory { get; set; } = false;
+
 
             public SourceFileMergeOptions Build() =>
                 new SourceFileMergeOptions(
@@ -102,7 +108,8 @@ namespace Light.GuardClauses.SourceCodeTransformation
                     DefinedPreprocessorSymbols,
                     RemoveContractAnnotations,
                     IncludeJetBrainsAnnotationsUsing,
-                    IncludeVersionComment);
+                    IncludeVersionComment,
+                    RemoveOverloadsWithExceptionFactory);
         }
     }
 }
