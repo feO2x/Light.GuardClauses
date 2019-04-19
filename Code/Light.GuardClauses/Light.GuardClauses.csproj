@@ -23,6 +23,11 @@
     </PackageReleaseNotes>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netstandard1.0' Or '$(TargetFramework)' == 'net45'" />
+    <PackageReference Include="System.Memory" Version="4.5.2" Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net45'" />
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)' == 'net35-cf'">
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>

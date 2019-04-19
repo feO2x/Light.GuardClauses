@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using Light.GuardClauses.Exceptions;
 #if NET40 || NET35 || NET35_CF || SILVERLIGHT
 using System.Linq;
 #endif
@@ -22,9 +24,6 @@ namespace Light.GuardClauses
     /// </summary>
     /// <typeparam name="T">The type of the enum.</typeparam>
     public static class EnumInfo<T> where T : Enum
-#if !NETSTANDARD1_0
-      , IConvertible
-#endif
     {
         // ReSharper disable StaticMemberInGenericType
 
@@ -43,7 +42,11 @@ namespace Light.GuardClauses
         /// Gets the flags pattern when <see cref="IsFlagsEnum"/> is true. If the enum is not a flags enum, then 0UL is returned.
         /// </summary>
         public static readonly ulong FlagsPattern;
+#if (NET45 || NETSTANDARD1_0 || NETSTANDARD2_0)
+        private static readonly int EnumSize = Unsafe.SizeOf<T>();
+#else
         private static readonly bool IsUInt64Enum;
+#endif
         private static readonly T[] EnumConstantsArray;
 
         /// <summary>
@@ -54,7 +57,11 @@ namespace Light.GuardClauses
         /// <summary>
         /// Gets the values of the enum as a read-only collection.
         /// </summary>
+#if NETSTANDARD2_0 || NET45
+        public static ReadOnlyMemory<T> EnumConstants { get; }
+#else
         public static ReadOnlyCollection<T> EnumConstants { get; }
+#endif
 
         static EnumInfo()
         {
@@ -75,32 +82,22 @@ namespace Light.GuardClauses
                 EnumConstantsArray[i - 1] = (T) fields[i].GetValue(null);
             }
 #endif
+#if NET45 || NETSTANDARD2_0
+            EnumConstants = new ReadOnlyMemory<T>(EnumConstantsArray);
+#else
             EnumConstants = new ReadOnlyCollection<T>(EnumConstantsArray);
+#endif
+
             if (!IsFlagsEnum)
                 return;
 
+#if !(NET45 || NETSTANDARD1_0 || NETSTANDARD2_0)
             IsUInt64Enum = UnderlyingType == Types.UInt64Type;
+#endif
             for (var i = 0; i < EnumConstantsArray.Length; ++i)
             {
-                if (IsUInt64Enum)
-                {
-#if !NETSTANDARD1_0
-                    FlagsPattern |= EnumConstantsArray[i].ToUInt64(null);
-#else
-                    FlagsPattern |= Convert.ToUInt64(EnumConstantsArray[i]);
-#endif
-                }
-                else
-                {
-                    unchecked
-                    {
-#if !NETSTANDARD1_0
-                        FlagsPattern |= (ulong) EnumConstantsArray[i].ToInt64(null);
-#else
-                        FlagsPattern |= (ulong) Convert.ToInt64(EnumConstantsArray[i]);
-#endif
-                    }
-                }
+                var convertedValue = ConvertToUInt64(EnumConstantsArray[i]);
+                FlagsPattern |= convertedValue;
             }
         }
 
@@ -109,26 +106,8 @@ namespace Light.GuardClauses
 #endif
         private static bool IsValidFlagsValue(T enumValue)
         {
-            if (IsUInt64Enum)
-            {
-#if !NETSTANDARD1_0
-                var convertedUInt64Value = enumValue.ToUInt64(null);
-#else
-                var convertedUInt64Value = Convert.ToUInt64(enumValue);
-#endif
-                return (FlagsPattern & convertedUInt64Value) == convertedUInt64Value;
-            }
-
-            unchecked
-            {
-#if !NETSTANDARD1_0
-            
-                var convertedInt64Value = (ulong) enumValue.ToInt64(null);
-#else
-                var convertedInt64Value = (ulong) Convert.ToInt64(enumValue);
-#endif
-                return (FlagsPattern & convertedInt64Value) == convertedInt64Value;
-            }
+            var convertedValue = ConvertToUInt64(enumValue);
+            return (FlagsPattern & convertedValue) == convertedValue;
         }
 
         private static bool IsValidValue(T parameter)
@@ -153,5 +132,33 @@ namespace Light.GuardClauses
 #endif
         public static bool IsValidEnumValue(T enumValue) =>
             IsFlagsEnum ? IsValidFlagsValue(enumValue) : IsValidValue(enumValue);
+
+        private static ulong ConvertToUInt64(T value)
+        {
+#if NETSTANDARD2_0 || NETSTANDARD1_0 || NET45
+
+            switch (EnumSize)
+            {
+                case 1: return Unsafe.As<T, byte>(ref value);
+                case 2: return Unsafe.As<T, ushort>(ref value);
+                case 4: return Unsafe.As<T, uint>(ref value);
+                case 8: return Unsafe.As<T, ulong>(ref value);
+                default:
+                    ThrowUnknownEnumSize();
+                    return default;
+            }
+#else
+            if (IsUInt64Enum)
+                return Convert.ToUInt64(value);
+            return (ulong) Convert.ToInt64(value);
+#endif
+        }
+
+#if NETSTANDARD2_0 || NETSTANDARD1_0 || NET45
+        private static void ThrowUnknownEnumSize()
+        {
+            throw new InvalidOperationException($"The enum type \"{typeof(T)}\" has an unknown size of {EnumSize}. This means that the underlying enum type is not one of the supported ones.");
+        }
+#endif
     }
 }

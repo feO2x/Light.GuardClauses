@@ -3,11 +3,11 @@
   <Import Project="TargetFrameworks.props" Condition="Exists('TargetFrameworks.props')" />
 
   <PropertyGroup Condition="'$(Configuration)' == 'SourceCode'">
-    <TargetFrameworks>netcoreapp2.1;net47</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.2;net47</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFrameworks Condition="'$(TargetFrameworks)' == ''">netcoreapp2.1;netcoreapp1.1;net47</TargetFrameworks>
+    <TargetFrameworks Condition="'$(TargetFrameworks)' == ''">netcoreapp2.2;netcoreapp1.1;net47</TargetFrameworks>
     <LangVersion>7.3</LangVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
