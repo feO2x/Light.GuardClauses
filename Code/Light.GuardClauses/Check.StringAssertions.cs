@@ -884,13 +884,13 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that the string is shorten then the specified length, or otherwise throws a <see cref="StringLengthException"/>.
+        /// Ensures that the string is shorten than the specified length, or otherwise throws a <see cref="StringLengthException"/>.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="length">The length that the string must be shorter than.</param>
         /// <param name="parameterName">The name of the parameter (optional).</param>
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref="StringLengthException">Thrown when <paramref name="parameter"/> has a length greater or equal to <paramref name="length"/>.</exception>
+        /// <exception cref="StringLengthException">Thrown when <paramref name="parameter"/> has a length greater than or equal to <paramref name="length"/>.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -904,12 +904,12 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
-        /// Ensures that the string is shorten then the specified length, or otherwise throws your custom exception.
+        /// Ensures that the string is shorten than the specified length, or otherwise throws your custom exception.
         /// </summary>
         /// <param name="parameter">The string to be checked.</param>
         /// <param name="length">The length that the string must be shorter than.</param>
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="length"/> are passed to this delegate.</param>
-        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or when it has a length greater or equal to <paramref name="length"/>.</exception>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or when it has a length greater than or equal to <paramref name="length"/>.</exception>
 #if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
@@ -917,6 +917,41 @@ namespace Light.GuardClauses
         public static string MustBeShorterThan(this string parameter, int length, Func<string, int, Exception> exceptionFactory)
         {
             if (parameter == null || parameter.Length >= length)
+                Throw.CustomException(exceptionFactory, parameter, length);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string is shorten than or equal to the specified length, or otherwise throws a <see cref="StringLengthException"/>.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="length">The length that the string must be shorter than or equal to.</param>
+        /// <param name="parameterName">The name of the parameter (optional).</param>
+        /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref="StringLengthException">Thrown when <paramref name="parameter"/> has a length greater than <paramref name="length"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeShorterThanOrEqualTo(this string parameter, int length, string parameterName = null, string message = null)
+        {
+            if (parameter.MustNotBeNull(parameterName, message).Length > length)
+                Throw.StringNotShorterOrEqualTo(parameter, length, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string is shorten than or equal to the specified length, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name="parameter">The string to be checked.</param>
+        /// <param name="length">The length that the string must be shorter than or equal to.</param>
+        /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="length"/> are passed to this delegate.</param>
+        /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or when it has a length greater than or equal to <paramref name="length"/>.</exception>
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeShorterThanOrEqualTo(this string parameter, int length, Func<string, int, Exception> exceptionFactory)
+        {
+            if (parameter == null || parameter.Length > length)
                 Throw.CustomException(exceptionFactory, parameter, length);
             return parameter;
         }
