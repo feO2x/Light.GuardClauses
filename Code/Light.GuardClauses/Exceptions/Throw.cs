@@ -239,7 +239,7 @@ namespace Light.GuardClauses.Exceptions
         /// Throws the default <see cref="StringLengthException"/> indicating that a string is not shorter or equal to the given length, using the optional parameter name an message.
         /// </summary>
         [ContractAnnotation("=> halt")]
-        public static void StringNotShorterOrEqualTo(string parameter, int length, string parameterName, string message) =>
+        public static void StringNotShorterThanOrEqualTo(string parameter, int length, string parameterName, string message) =>
             throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be shorter or equal to {length}, but it actually has length {parameter.Length}.");
 
         /// <summary>
@@ -255,6 +255,13 @@ namespace Light.GuardClauses.Exceptions
         [ContractAnnotation("=> halt")]
         public static void StringNotLongerThan(string parameter, int length, string parameterName, string message) =>
             throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be longer than {length}, but it actually has length {parameter.Length}.");
+
+        /// <summary>
+        /// Throws the default <see cref="StringLengthException"/> indicating that a string is not longer or equal to the given length, using the optional parameter name an message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void StringNotLongerThanOrEqualTo(string parameter, int length, string parameterName, string message) =>
+            throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be longer than or equal to {length}, but it actually has length {parameter.Length}.");
 
         /// <summary>
         /// Throws the default <see cref="ValuesNotEqualException" /> indicating that two values are not equal, using the optional parameter name and message.
