@@ -67,7 +67,8 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public bool IsValueWithinRange(T value) =>
-            value.MustNotBeNullReference(nameof(value)).CompareTo(From) >= _expectedLowerBoundaryResult && value.CompareTo(To) <= _expectedUpperBoundaryResult;
+            value.MustNotBeNullReference(nameof(value)).CompareTo(From) >= _expectedLowerBoundaryResult && 
+            value.CompareTo(To) <= _expectedUpperBoundaryResult;
 
         /// <summary>
         /// Use this method to create a range in a fluent style using method chaining.
@@ -144,7 +145,34 @@ namespace Light.GuardClauses
 
         /// <inheritdoc />
         public override string ToString() => 
-            $"Range from {From} ({(IsFromInclusive ? "inclusive" : "exclusive")}) to {To} ({(IsToInclusive ? "inclusive" : "exclusive")})";
+            $"Range from {CreateRangeDescriptionText()}";
+
+        /// <summary>
+        /// Returns either "inclusive" or "exclusive", depending whether <see cref="IsFromInclusive"/> is true or false.
+        /// </summary>
+        public string LowerBoundaryText
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => GetBoundaryText(IsFromInclusive);
+        }
+
+        /// <summary>
+        /// Returns either "inclusive" or "exclusive", depending whether <see cref="IsToInclusive"/> is true or false.
+        /// </summary>
+        public string UpperBoundaryText
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => GetBoundaryText(IsToInclusive);
+        }
+
+        /// <summary>
+        /// Returns a text description of this range with the following pattern: From (inclusive | exclusive) to To (inclusive | exclusive).
+        /// </summary>
+        public string CreateRangeDescriptionText(string fromToConnectionWord = "to") =>
+            From + " (" + LowerBoundaryText + ") " + fromToConnectionWord + ' ' + To + " (" + UpperBoundaryText + ")";
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static string GetBoundaryText(bool isInclusive) => isInclusive ? "inclusive" : "exclusive";
 
         /// <inheritdoc />
         public bool Equals(Range<T> other)

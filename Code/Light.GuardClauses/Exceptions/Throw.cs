@@ -135,14 +135,14 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         public static void MustBeInRange<T>(T parameter, Range<T> range, string parameterName = null, string message = null) where T : IComparable<T> =>
-            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be between {range.From} ({(range.IsFromInclusive ? "inclusive" : "exclusive")}) and {range.To} ({(range.IsToInclusive ? "inclusive" : "exclusive")}), but it actually is {parameter}.");
+            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be between {range.CreateRangeDescriptionText("and")}, but it actually is {parameter}.");
 
         /// <summary>
         /// Throws the default <see cref="ArgumentOutOfRangeException" /> indicating that a value is within a specified range, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         public static void MustNotBeInRange<T>(T parameter, Range<T> range, string parameterName = null, string message = null) where T : IComparable<T> =>
-            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be between {range.From} ({(range.IsFromInclusive ? "inclusive" : "exclusive")}) and {range.To} ({(range.IsToInclusive ? "inclusive" : "exclusive")}), but it actually is {parameter}.");
+            throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be between {range.CreateRangeDescriptionText("and")}, but it actually is {parameter}.");
 
         /// <summary>
         /// Throws the default <see cref="SameObjectReferenceException" /> indicating that two references point to the same object, using the optional parameter name and message.
@@ -263,6 +263,12 @@ namespace Light.GuardClauses.Exceptions
         public static void StringNotLongerThanOrEqualTo(string parameter, int length, string parameterName, string message) =>
             throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be longer than or equal to {length}, but it actually has length {parameter.Length}.");
 
+        /// <summary>
+        /// Throws the default <see cref="StringLengthException"/> indicating that a string's length is not in between the given range, using the optional parameter name an message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void StringLengthNotInRange(string parameter, Range<int> range, string parameterName, string message) =>
+            throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must have its length in between {range.CreateRangeDescriptionText("and")}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref="ValuesNotEqualException" /> indicating that two values are not equal, using the optional parameter name and message.
         /// </summary>
