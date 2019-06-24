@@ -9,7 +9,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
         public Guid Guid = Guid.NewGuid();
 
         [Benchmark(Baseline = true)]
-        public Guid BaseVersion()
+        public Guid Imperative()
         {
             if (Guid == Guid.Empty) throw new EmptyGuidException(nameof(Guid));
             return Guid;
