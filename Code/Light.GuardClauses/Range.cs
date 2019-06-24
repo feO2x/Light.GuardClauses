@@ -152,7 +152,9 @@ namespace Light.GuardClauses
         /// </summary>
         public string LowerBoundaryText
         {
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
             get => GetBoundaryText(IsFromInclusive);
         }
 
@@ -161,7 +163,9 @@ namespace Light.GuardClauses
         /// </summary>
         public string UpperBoundaryText
         {
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
             get => GetBoundaryText(IsToInclusive);
         }
 
@@ -171,7 +175,9 @@ namespace Light.GuardClauses
         public string CreateRangeDescriptionText(string fromToConnectionWord = "to") =>
             From + " (" + LowerBoundaryText + ") " + fromToConnectionWord + ' ' + To + " (" + UpperBoundaryText + ")";
 
+#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         private static string GetBoundaryText(bool isInclusive) => isInclusive ? "inclusive" : "exclusive";
 
         /// <inheritdoc />

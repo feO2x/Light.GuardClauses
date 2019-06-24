@@ -290,6 +290,15 @@ namespace Light.GuardClauses.Exceptions
         public static void InvalidCollectionCount(IEnumerable parameter, int count, string parameterName = null, string message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have count {count}, but it actually has count {parameter.Count()}.");
 
+#if (NETSTANDARD2_0 || NET45)
+        /// <summary>
+        /// Throws the default <see cref="InvalidCollectionCountException" /> indicating that a span has an invalid length, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void InvalidSpanLength<T>(in Span<T> parameter, int length, string parameterName = null, string message = null) =>
+            throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must have length {length}, but it actually has length {parameter.Length}.");
+#endif
+
         /// <summary>
         /// Throws the default <see cref="InvalidCollectionCountException" /> indicating that a collection has less than a minimum number of items, using the optional parameter name and message.
         /// </summary>
@@ -438,5 +447,14 @@ namespace Light.GuardClauses.Exceptions
         [ContractAnnotation("=> halt")]
         public static void CustomException<T1, T2, T3>(Func<T1, T2, T3, Exception> exceptionFactory, T1 first, T2 second, T3 third) =>
             throw exceptionFactory.MustNotBeNull(nameof(exceptionFactory))(first, second, third);
+
+#if  (NETSTANDARD2_0 || NET45)
+        /// <summary>
+        /// Throws the exception that is returned by <paramref name="exceptionFactory"/>. <paramref name="span"/> and <paramref name="value"/> are passed to <paramref name="exceptionFactory"/>.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void CustomSpanException<TItem, T>(SpanExceptionFactory<TItem, T> exceptionFactory, in Span<TItem> span, T value) =>
+            throw exceptionFactory.MustNotBeNull(nameof(exceptionFactory))(span, value);
+#endif
     }
 }
