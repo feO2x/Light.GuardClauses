@@ -313,6 +313,15 @@ namespace Light.GuardClauses.Exceptions
         public static void InvalidMinimumCollectionCount(IEnumerable parameter, int count, string parameterName = null, string message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have at least count {count}, but it actually has count {parameter.Count()}.");
 
+#if (NETSTANDARD2_0 || NET45)
+        /// <summary>
+        /// Throws the default <see cref="InvalidCollectionCountException" /> indicating that a span is not longer than the specified length.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void SpanMustBeLongerThan<T>(in Span<T> parameter, int length, string parameterName = null, string message = null) =>
+            throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be longer than {length}, but it actually has length {parameter.Length}.");
+#endif
+
         /// <summary>
         /// Throws the default <see cref="InvalidCollectionCountException" /> indicating that a collection has more than a maximum number of items, using the optional parameter name and message.
         /// </summary>
