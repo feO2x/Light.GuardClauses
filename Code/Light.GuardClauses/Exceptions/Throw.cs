@@ -367,6 +367,13 @@ namespace Light.GuardClauses.Exceptions
         /// Throws the default <see cref="InvalidCollectionCountException" /> indicating that a span is not shorter than the specified length.
         /// </summary>
         [ContractAnnotation("=> halt")]
+        public static void SpanMustBeShorterThanOrEqualTo<T>(in ReadOnlySpan<T> parameter, int length, string parameterName = null, string message = null) =>
+            throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be shorter than or equal to {length}, but it actually has length {parameter.Length}.");
+
+        /// <summary>
+        /// Throws the default <see cref="InvalidCollectionCountException" /> indicating that a span is not shorter than the specified length.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
         public static void SpanMustBeShorterThan<T>(in ReadOnlySpan<T> parameter, int length, string parameterName = null, string message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be shorter than {length}, but it actually has length {parameter.Length}.");
 #endif
