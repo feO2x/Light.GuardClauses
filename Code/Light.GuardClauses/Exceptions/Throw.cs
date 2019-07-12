@@ -61,6 +61,13 @@ namespace Light.GuardClauses.Exceptions
         public static void InvalidState(string message = null) => throw new InvalidStateException(message);
 
         /// <summary>
+        /// Throws an <see cref="ArgumentException" /> using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void Argument(string parameterName = null, string message = null) =>
+            throw new ArgumentException(message ?? $"{parameterName ?? "The value"} is invalid.", parameterName);
+
+        /// <summary>
         /// Throws an <see cref="InvalidEmailAddressException"/> using the optional message.
         /// </summary>
         [ContractAnnotation("=> halt")]
