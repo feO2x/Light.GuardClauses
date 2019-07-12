@@ -5,8 +5,12 @@
     <LangVersion>7.3</LangVersion>
     <Authors>Kenny Pflug</Authors>
     <Company>Kenny Pflug</Company>
-    <Copyright>Copyright © Kenny Pflug 2016 - 2018</Copyright>
+    <Copyright>Copyright © Kenny Pflug 2016 - 2019</Copyright>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Memory" Version="4.5.*" />
+  </ItemGroup>
 
 </Project>

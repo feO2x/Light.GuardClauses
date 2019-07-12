@@ -1,8 +1,8 @@
-﻿using System;
+﻿#if NETSTANDARD2_0 || NET45
+using System;
 
 namespace Light.GuardClauses
 {
-#if (NETSTANDARD2_0 || NET45)
     /// <summary>
     /// Represents a delegate that receives a span and a value as parameters and that produces an exception.
     /// </summary>
@@ -12,5 +12,5 @@ namespace Light.GuardClauses
     /// Represents a delegate that receives a read-only span and a value as parameters and that produces an exception.
     /// </summary>
     public delegate Exception ReadOnlySpanExceptionFactory<TItem, in T>(ReadOnlySpan<TItem> span, T value);
-#endif
 }
+#endif

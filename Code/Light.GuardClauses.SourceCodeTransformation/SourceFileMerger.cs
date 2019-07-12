@@ -82,6 +82,7 @@ using {_options.BaseNamespace}.FrameworkExtensions;
 
 namespace {_options.BaseNamespace}
 {{
+    
 }}
 
 namespace {_options.BaseNamespace}.Exceptions
@@ -122,7 +123,8 @@ namespace JetBrains.Annotations
 }");
             }
 
-            var targetSyntaxTree = CSharpSyntaxTree.ParseText(stringBuilder.ToString());
+            var csharpParseOptions = new CSharpParseOptions(LanguageVersion.CSharp7_3, preprocessorSymbols: _options.DefinedPreprocessorSymbols);
+            var targetSyntaxTree = CSharpSyntaxTree.ParseText(stringBuilder.ToString(), csharpParseOptions);
 
             var targetRoot = (CompilationUnitSyntax) targetSyntaxTree.GetRoot();
 
@@ -151,7 +153,7 @@ namespace JetBrains.Annotations
             Console.WriteLine("Merging source files of the Check class...");
             var currentFile = allSourceFiles["Check.CommonAssertions.cs"];
 
-            var sourceSyntaxTree = CSharpSyntaxTree.ParseText(await currentFile.ReadContentAsync());
+            var sourceSyntaxTree = CSharpSyntaxTree.ParseText(await currentFile.ReadContentAsync(), csharpParseOptions);
             var checkClassDeclaration = (ClassDeclarationSyntax) sourceSyntaxTree.GetRoot()
                                                                                  .DescendantNodes()
                                                                                  .First(node => node.Kind() == SyntaxKind.ClassDeclaration);
@@ -165,7 +167,7 @@ namespace JetBrains.Annotations
                     continue;
 
                 currentFile = allSourceFiles[fileName];
-                sourceSyntaxTree = CSharpSyntaxTree.ParseText(await currentFile.ReadContentAsync());
+                sourceSyntaxTree = CSharpSyntaxTree.ParseText(await currentFile.ReadContentAsync(), csharpParseOptions);
                 var originalNamespace = defaultNamespace;
                 if (currentFile.Directory?.Name == "FrameworkExtensions")
                     originalNamespace = extensionsNamespace;
@@ -186,33 +188,15 @@ namespace JetBrains.Annotations
 
                 // Else just get the members of the first namespace and add them to the corresponding one
                 var sourceCompilationUnit = (CompilationUnitSyntax) sourceSyntaxTree.GetRoot();
+                if (sourceCompilationUnit.Members.IsNullOrEmpty())
+                    continue;
+
                 var membersToAdd = ((NamespaceDeclarationSyntax) sourceCompilationUnit.Members[0]).Members;
 
                 // The ExpressionExtensions.cs file needs to be adjusted as it cannot be compiled for .NET 3.5 Compact Framework
                 if (currentFile.Name == "ExpressionExtensions.cs")
                 {
-                    var expressionExtensionsClass = (ClassDeclarationSyntax) membersToAdd[0];
-                    expressionExtensionsClass =
-                        expressionExtensionsClass
-                           .WithLeadingTrivia(
-                                TriviaList(
-                                        Trivia(
-                                            IfDirectiveTrivia(
-                                                PrefixUnaryExpression(
-                                                    SyntaxKind.LogicalNotExpression,
-                                                    IdentifierName("NET35_CF")),
-                                                true,
-                                                true,
-                                                true)))
-                                   .AddRange(
-                                        expressionExtensionsClass.GetLeadingTrivia()))
-                           .WithTrailingTrivia(
-                                TriviaList(
-                                    Trivia(
-                                        EndIfDirectiveTrivia(true))))
-                           .NormalizeWhitespace();
-
-                    membersToAdd = List<MemberDeclarationSyntax>(new[] { expressionExtensionsClass });
+                    membersToAdd = NormalizeExpressionExtensions(membersToAdd);
                 }
 
                 var currentlyEditedNamespace = replacedNodes[originalNamespace];
@@ -232,26 +216,38 @@ namespace JetBrains.Annotations
             if (_options.ChangePublicTypesToInternalTypes)
             {
                 Console.WriteLine("Types are changed from public to internal...");
-                var changedTypeDeclarations = new Dictionary<BaseTypeDeclarationSyntax, BaseTypeDeclarationSyntax>();
+                var changedTypeDeclarations = new Dictionary<MemberDeclarationSyntax, MemberDeclarationSyntax>();
 
                 foreach (var typeDeclaration in targetRoot.DescendantNodes().Where(node => node.Kind() == SyntaxKind.ClassDeclaration ||
                                                                                            node.Kind() == SyntaxKind.StructDeclaration ||
-                                                                                           node.Kind() == SyntaxKind.EnumDeclaration)
-                                                          .Cast<BaseTypeDeclarationSyntax>())
+                                                                                           node.Kind() == SyntaxKind.EnumDeclaration ||
+                                                                                           node.Kind() == SyntaxKind.DelegateDeclaration))
                 {
-                    var publicModifier = typeDeclaration.Modifiers[0];
-                    var adjustedModifiers = typeDeclaration.Modifiers
-                                                           .RemoveAt(0)
-                                                           .Insert(0, Token(SyntaxKind.InternalKeyword).WithTriviaFrom(publicModifier));
+                    if (typeDeclaration is BaseTypeDeclarationSyntax typeDeclarationSyntax)
+                    {
+                        var publicModifier = typeDeclarationSyntax.Modifiers[0];
+                        var adjustedModifiers = typeDeclarationSyntax.Modifiers
+                                                               .RemoveAt(0)
+                                                               .Insert(0, Token(SyntaxKind.InternalKeyword).WithTriviaFrom(publicModifier));
 
-                    if (typeDeclaration is ClassDeclarationSyntax classDeclaration)
-                        changedTypeDeclarations[classDeclaration] = classDeclaration.WithModifiers(adjustedModifiers);
+                        if (typeDeclarationSyntax is ClassDeclarationSyntax classDeclaration)
+                            changedTypeDeclarations[classDeclaration] = classDeclaration.WithModifiers(adjustedModifiers);
 
-                    else if (typeDeclaration is StructDeclarationSyntax structDeclaration)
-                        changedTypeDeclarations[structDeclaration] = structDeclaration.WithModifiers(adjustedModifiers);
+                        else if (typeDeclarationSyntax is StructDeclarationSyntax structDeclaration)
+                            changedTypeDeclarations[structDeclaration] = structDeclaration.WithModifiers(adjustedModifiers);
 
-                    else if (typeDeclaration is EnumDeclarationSyntax enumDeclaration)
-                        changedTypeDeclarations[enumDeclaration] = enumDeclaration.WithModifiers(adjustedModifiers);
+                        else if (typeDeclarationSyntax is EnumDeclarationSyntax enumDeclaration)
+                            changedTypeDeclarations[enumDeclaration] = enumDeclaration.WithModifiers(adjustedModifiers);
+                    }
+                    else if (typeDeclaration is DelegateDeclarationSyntax delegateDeclaration)
+                    {
+                        var publicModifier = delegateDeclaration.Modifiers[0];
+                        var adjustedModifiers = delegateDeclaration.Modifiers
+                                                                   .RemoveAt(0)
+                                                                   .Insert(0, Token(SyntaxKind.InternalKeyword).WithTriviaFrom(publicModifier));
+                        changedTypeDeclarations[delegateDeclaration] = delegateDeclaration.WithModifiers(adjustedModifiers);
+                    }
+
                 }
 
                 targetRoot = targetRoot.ReplaceNodes(changedTypeDeclarations.Keys, (originalNode, _) => changedTypeDeclarations[originalNode]);
@@ -298,6 +294,33 @@ namespace JetBrains.Annotations
             // Write the target file 
             Console.WriteLine("File is written to disk...");
             await File.WriteAllTextAsync(_options.TargetFile, targetFileContent);
+        }
+
+        private static SyntaxList<MemberDeclarationSyntax> NormalizeExpressionExtensions(SyntaxList<MemberDeclarationSyntax> membersToAdd)
+        {
+            var expressionExtensionsClass = (ClassDeclarationSyntax) membersToAdd[0];
+            expressionExtensionsClass =
+                expressionExtensionsClass
+                   .WithLeadingTrivia(
+                        TriviaList(
+                                Trivia(
+                                    IfDirectiveTrivia(
+                                        PrefixUnaryExpression(
+                                            SyntaxKind.LogicalNotExpression,
+                                            IdentifierName("NET35_CF")),
+                                        true,
+                                        true,
+                                        true)))
+                           .AddRange(
+                                expressionExtensionsClass.GetLeadingTrivia()))
+                   .WithTrailingTrivia(
+                        TriviaList(
+                            Trivia(
+                                EndIfDirectiveTrivia(true))))
+                   .NormalizeWhitespace();
+
+            membersToAdd = List<MemberDeclarationSyntax>(new[] { expressionExtensionsClass });
+            return membersToAdd;
         }
     }
 }
