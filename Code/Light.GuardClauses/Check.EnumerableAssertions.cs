@@ -61,11 +61,11 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidCollectionCountException">Thrown when <paramref name="parameter"/> does not have the specified length.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ref Span<T> MustHaveLength<T>(ref this Span<T> parameter, int length, string parameterName = null, string message = null)
+        public static Span<T> MustHaveLength<T>(this Span<T> parameter, int length, string parameterName = null, string message = null)
         {
             if (parameter.Length != length)
                 Throw.InvalidSpanLength(parameter, length, parameterName, message);
-            return ref parameter;
+            return parameter;
         }
 
         /// <summary>
@@ -76,11 +76,11 @@ namespace Light.GuardClauses
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="length"/> are passed to this delegate.</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> does not have the specified length.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ref Span<T> MustHaveLength<T>(ref this Span<T> parameter, int length, SpanExceptionFactory<T, int> exceptionFactory)
+        public static Span<T> MustHaveLength<T>(this Span<T> parameter, int length, SpanExceptionFactory<T, int> exceptionFactory)
         {
             if (parameter.Length != length)
                 Throw.CustomSpanException(exceptionFactory, parameter, length);
-            return ref parameter;
+            return parameter;
         }
 
         /// <summary>
@@ -92,11 +92,11 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> does not have the specified length.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ref readonly ReadOnlySpan<T> MustHaveLength<T>(in this ReadOnlySpan<T> parameter, int length, string parameterName = null, string message = null)
+        public static ReadOnlySpan<T> MustHaveLength<T>(this ReadOnlySpan<T> parameter, int length, string parameterName = null, string message = null)
         {
             if (parameter.Length != length)
                 Throw.InvalidSpanLength(parameter, length, parameterName, message);
-            return ref parameter;
+            return parameter;
         }
 
         /// <summary>
@@ -107,11 +107,11 @@ namespace Light.GuardClauses
         /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="length"/> are passed to this delegate.</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> does not have the specified length.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ref readonly ReadOnlySpan<T> MustHaveLength<T>(in this ReadOnlySpan<T> parameter, int length, ReadOnlySpanExceptionFactory<T, int> exceptionFactory)
+        public static ReadOnlySpan<T> MustHaveLength<T>(this ReadOnlySpan<T> parameter, int length, ReadOnlySpanExceptionFactory<T, int> exceptionFactory)
         {
             if (parameter.Length != length)
                 Throw.CustomSpanException(exceptionFactory, parameter, length);
-            return ref parameter;
+            return parameter;
         }
 #endif
 
