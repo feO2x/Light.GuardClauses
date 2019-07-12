@@ -297,6 +297,13 @@ namespace Light.GuardClauses.Exceptions
         [ContractAnnotation("=> halt")]
         public static void InvalidSpanLength<T>(in Span<T> parameter, int length, string parameterName = null, string message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must have length {length}, but it actually has length {parameter.Length}.");
+
+        /// <summary>
+        /// Throws the default <see cref="InvalidCollectionCountException" /> indicating that a span has an invalid length, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void InvalidSpanLength<T>(in ReadOnlySpan<T> parameter, int length, string parameterName = null, string message = null) =>
+            throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The read-only span"} must have length {length}, but it actually has length {parameter.Length}.");
 #endif
 
         /// <summary>
@@ -454,6 +461,13 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         public static void CustomSpanException<TItem, T>(SpanExceptionFactory<TItem, T> exceptionFactory, in Span<TItem> span, T value) =>
+            throw exceptionFactory.MustNotBeNull(nameof(exceptionFactory))(span, value);
+
+        /// <summary>
+        /// Throws the exception that is returned by <paramref name="exceptionFactory"/>. <paramref name="span"/> and <paramref name="value"/> are passed to <paramref name="exceptionFactory"/>.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        public static void CustomSpanException<TItem, T>(ReadOnlySpanExceptionFactory<TItem, T> exceptionFactory, in ReadOnlySpan<TItem> span, T value) =>
             throw exceptionFactory.MustNotBeNull(nameof(exceptionFactory))(span, value);
 #endif
     }
