@@ -17,15 +17,23 @@
     <RepositoryType>Git</RepositoryType>
     <PackageTags>Assertions;Preconditions;GuardClauses;DesignByContract;DbC</PackageTags>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-    <PackageReleaseNotes>Light.GuardClauses 6.2.0
+    <PackageReleaseNotes>Light.GuardClauses 7.0.0
 --------------------------------
-- added MustBeEmailAddress and IsEmailAddress (thanks to Johan Vergeer for his contribution)
+- added length assertions for Span&lt;T&gt;
+- added Check.InvalidArgument (thanks to Igor Rončević for his contribution) 
+- added new length assertions for strings
+- IsValidEnumValue and MustBeValidEnumValue now do not allocate memory when checking a flags enum value for validity (in .NET Standard 1.0 and 2.0 as well as .NET 4.5)
+
+Breaking Changes: 
+--------------------------------
+- EnumInfo&lt;T&gt;.EnumConstants now returns ReadOnlyMemory&lt;T&gt; in .NET Standard 2.0 and .NET 4.5
+- new dependencies: System.Runtime.CompilerServices.Unsafe (.NET Standard 1.0 and 2.0 as well as .NET 4.5) and System.Memory (.NET Standard 2.0 and .NET 4.5)
     </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netstandard1.0' Or '$(TargetFramework)' == 'net45'" />
-    <PackageReference Include="System.Memory" Version="4.5.2" Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net45'" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.*" Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netstandard1.0' Or '$(TargetFramework)' == 'net45'" />
+    <PackageReference Include="System.Memory" Version="4.5.*" Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net45'" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net35-cf'">

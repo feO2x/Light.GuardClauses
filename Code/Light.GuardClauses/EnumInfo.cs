@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+#if !(NETSTANDARD2_0 || NET45)
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using Light.GuardClauses.Exceptions;
+#endif
 #if NET40 || NET35 || NET35_CF || SILVERLIGHT
 using System.Linq;
 #endif
