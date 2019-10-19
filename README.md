@@ -2,8 +2,8 @@
 **A lightweight .NET library for expressive Guard Clauses.** 
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/blob/master/LICENSE)
-[![NuGet](https://img.shields.io/badge/NuGet-6.2.0-blue.svg?style=for-the-badge)](https://www.nuget.org/packages/Light.GuardClauses/)
-[![Source Code](https://img.shields.io/badge/Source%20Code-6.2.0-blue.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/blob/master/Light.GuardClauses.SingleFile.cs)
+[![NuGet](https://img.shields.io/badge/NuGet-7.0.0-blue.svg?style=for-the-badge)](https://www.nuget.org/packages/Light.GuardClauses/)
+[![Source Code](https://img.shields.io/badge/Source%20Code-7.0.0-blue.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/blob/master/Light.GuardClauses.SingleFile.cs)
 [![Documentation](https://img.shields.io/badge/Docs-Wiki-yellowgreen.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/wiki)
 [![Documentation](https://img.shields.io/badge/Docs-Changelog-yellowgreen.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/releases)
 
@@ -44,7 +44,7 @@ public class Foo
 }
 ```
 
-By using **Light.GuardClauses**, you'll gain access to assertions for a vast amount of scenarios like checking strings, collections, enums, URIs, `DateTime`, `Type`, `IComparable<T>`, `IEnumerable`and `IEnumerable<T>`. Just have a look at these examples:
+By using **Light.GuardClauses**, you'll gain access to assertions for a vast amount of scenarios like checking strings, collections, enums, URIs, `DateTime`, `Type`, `IComparable<T>`, `IEnumerable`, `IEnumerable<T>`, and `Span<T>`. Just have a look at these examples:
 
 ```csharp
 public class ConsoleWriter
