@@ -1,5 +1,4 @@
-﻿#if NETSTANDARD2_0 || NET45
-using System;
+﻿using System;
 
 namespace Light.GuardClauses
 {
@@ -13,4 +12,3 @@ namespace Light.GuardClauses
     /// </summary>
     public delegate Exception ReadOnlySpanExceptionFactory<TItem, in T>(ReadOnlySpan<TItem> span, T value);
 }
-#endif

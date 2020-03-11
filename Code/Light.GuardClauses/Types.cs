@@ -12,9 +12,5 @@ namespace Light.GuardClauses
         /// </summary>
         public static readonly Type FlagsAttributeType = typeof(FlagsAttribute);
 
-        /// <summary>
-        /// Gets the <see cref="ulong" /> type.
-        /// </summary>
-        public static readonly Type UInt64Type = typeof(ulong);
     }
 }

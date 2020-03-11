@@ -21,12 +21,16 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
             var diagnostic = context.Diagnostics[0];
             var xmlElementSyntax = (XmlElementSyntax) syntaxRoot.FindNode(diagnostic.Location.SourceSpan, true);
 
-            context.RegisterCodeFix(CodeAction.Create(diagnostic.Descriptor.Title.ToString(),
+            var title = diagnostic.Descriptor.Title.ToString();
+            context.RegisterCodeFix(CodeAction.Create(title,
                                                       cancellationToken => SetDefaultXmlCommentForMessage(context.Document,
                                                                                                           syntaxRoot,
-                                                                                                          xmlElementSyntax)),
+                                                                                                          xmlElementSyntax),
+                                                      title),
                                     diagnostic);
         }
+
+        public override FixAllProvider GetFixAllProvider() => null;
 
         private static Task<Document> SetDefaultXmlCommentForMessage(Document document, SyntaxNode syntaxRoot, XmlElementSyntax xmlElementSyntax) =>
             Task.FromResult(

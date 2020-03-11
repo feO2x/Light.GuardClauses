@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Light.GuardClauses.FrameworkExtensions;
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
 using System.Runtime.CompilerServices;
-#endif
 
 namespace Light.GuardClauses
 {
@@ -44,9 +42,7 @@ namespace Light.GuardClauses
         /// <param name="isFromInclusive">The value indicating whether <paramref name="from" /> is part of the range.</param>
         /// <param name="isToInclusive">The value indicating whether <paramref name="to" /> is part of the range.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="to" /> is less than <paramref name="from" />.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public Range(T from, T to, bool isFromInclusive = true, bool isToInclusive = true)
         {
             From = from.MustNotBeNullReference(nameof(from));
@@ -63,9 +59,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="value">The value to be checked.</param>
         /// <returns>True if value is within range, otherwise false.</returns>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public bool IsValueWithinRange(T value) =>
             value.MustNotBeNullReference(nameof(value)).CompareTo(From) >= _expectedLowerBoundaryResult && 
             value.CompareTo(To) <= _expectedUpperBoundaryResult;
@@ -76,9 +70,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="value">The value that indicates the inclusive lower boundary of the resulting range.</param>
         /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static RangeFromInfo FromInclusive(T value) => new RangeFromInfo(value, true);
 
         /// <summary>
@@ -87,9 +79,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="value">The value that indicates the exclusive lower boundary of the resulting range.</param>
         /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static RangeFromInfo FromExclusive(T value) => new RangeFromInfo(value, false);
 
         /// <summary>
@@ -105,9 +95,7 @@ namespace Light.GuardClauses
             /// </summary>
             /// <param name="from">The lower boundary of the range.</param>
             /// <param name="isFromInclusive">The value indicating whether <paramref name="from" /> is part of the range.</param>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
             public RangeFromInfo(T from, bool isFromInclusive)
             {
                 _from = from;
@@ -123,9 +111,7 @@ namespace Light.GuardClauses
             /// <exception cref="ArgumentOutOfRangeException">
             /// Thrown when <paramref name="value" /> is less than the lower boundary value.
             /// </exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
             public Range<T> ToExclusive(T value) => new Range<T>(_from, value, _isFromInclusive, false);
 
             /// <summary>
@@ -137,9 +123,7 @@ namespace Light.GuardClauses
             /// <exception cref="ArgumentOutOfRangeException">
             /// Thrown when <paramref name="value" /> is less than the lower boundary value.
             /// </exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
             public Range<T> ToInclusive(T value) => new Range<T>(_from, value, _isFromInclusive);
         }
 
@@ -152,9 +136,7 @@ namespace Light.GuardClauses
         /// </summary>
         public string LowerBoundaryText
         {
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
             get => GetBoundaryText(IsFromInclusive);
         }
 
@@ -163,9 +145,7 @@ namespace Light.GuardClauses
         /// </summary>
         public string UpperBoundaryText
         {
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
             get => GetBoundaryText(IsToInclusive);
         }
 
@@ -175,9 +155,7 @@ namespace Light.GuardClauses
         public string CreateRangeDescriptionText(string fromToConnectionWord = "to") =>
             From + " (" + LowerBoundaryText + ") " + fromToConnectionWord + ' ' + To + " (" + UpperBoundaryText + ")";
 
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         private static string GetBoundaryText(bool isInclusive) => isInclusive ? "inclusive" : "exclusive";
 
         /// <inheritdoc />
@@ -192,7 +170,7 @@ namespace Light.GuardClauses
         }
 
         /// <inheritdoc />
-        public override bool Equals(object other)
+        public override bool Equals(object? other)
         {
             if (other is null) return false;
             return other is Range<T> range && Equals(range);
@@ -204,17 +182,13 @@ namespace Light.GuardClauses
         /// <summary>
         /// Checks if two ranges are equal.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static bool operator ==(Range<T> first, Range<T> second) => first.Equals(second);
 
         /// <summary>
         /// Checks if two ranges are not equal.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static bool operator !=(Range<T> first, Range<T> second) => first.Equals(second) == false;
     }
 
@@ -229,9 +203,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="value">The value that indicates the inclusive lower boundary of the resulting range.</param>
         /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static Range<T>.RangeFromInfo FromInclusive<T>(T value) where T : IComparable<T> =>
             new Range<T>.RangeFromInfo(value, true);
 
@@ -241,9 +213,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="value">The value that indicates the exclusive lower boundary of the resulting range.</param>
         /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static Range<T>.RangeFromInfo FromExclusive<T>(T value) where T : IComparable<T> =>
             new Range<T>.RangeFromInfo(value, false); 
     }

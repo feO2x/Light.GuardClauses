@@ -22,7 +22,6 @@
         /// </summary>
         CurrentCultureIgnoreCase = 1,
 
-#if !NETSTANDARD1_0
         /// <summary>
         /// Compare strings using culture-sensitive sort rules and the invariant culture.
         /// </summary>
@@ -33,7 +32,6 @@
         /// ignoring the case of the strings being compared.
         /// </summary>
         InvariantCultureIgnoreCase = 3,
-#endif
 
         /// <summary>
         /// Compare strings using ordinal sort rules.

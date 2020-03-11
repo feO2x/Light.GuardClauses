@@ -1,61 +1,43 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="TargetFrameworks.props" Condition="Exists('TargetFrameworks.props')" />
   <Import Project="..\Version.props" />
 
   <PropertyGroup>
-    <TargetFrameworks Condition="'$(TargetFrameworks)' == ''">netstandard2.0;netstandard1.0;net45;net40;sl5;net35;net35-cf</TargetFrameworks>
-    <LangVersion>7.3</LangVersion>
+    <TargetFrameworks>netcoreapp3.0;netstandard2.0</TargetFrameworks>
     <Description>A lightweight .NET library for expressive Guard Clauses.</Description>
     <Authors>Kenny Pflug</Authors>
     <Company>Kenny Pflug</Company>
     <DebugType>Portable</DebugType>
-    <Copyright>Copyright © Kenny Pflug 2016 - 2019</Copyright>
+    <Nullable>enable</Nullable>
+    <Copyright>Copyright © Kenny Pflug 2016 - 2020</Copyright>
+    <LangVersion>8.0</LangVersion>
     <PackageIconUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/Images/light_logo.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/feO2x/Light.GuardClauses</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>Assertions;Preconditions;GuardClauses;DesignByContract;DbC</PackageTags>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-    <PackageReleaseNotes>Light.GuardClauses 7.0.0
+    <PackageReleaseNotes>Light.GuardClauses 8.0.0
 --------------------------------
-- added length assertions for Span&lt;T&gt;
-- added Check.InvalidArgument (thanks to Igor Rončević for his contribution) 
-- added new length assertions for strings
-- IsValidEnumValue and MustBeValidEnumValue now do not allocate memory when checking a flags enum value for validity (in .NET Standard 1.0 and 2.0 as well as .NET 4.5)
+- added support for Nullable Reference Types
+
 
 Breaking Changes: 
 --------------------------------
-- EnumInfo&lt;T&gt;.EnumConstants now returns ReadOnlyMemory&lt;T&gt; in .NET Standard 2.0 and .NET 4.5
-- new dependencies: System.Runtime.CompilerServices.Unsafe (.NET Standard 1.0 and 2.0 as well as .NET 4.5) and System.Memory (.NET Standard 2.0 and .NET 4.5)
+- Removed support for older frameworks (.NET Standard 2.0 and .NET Core App 3.0 are supported)
     </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.*" Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netstandard1.0' Or '$(TargetFramework)' == 'net45'" />
-    <PackageReference Include="System.Memory" Version="4.5.*" Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net45'" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.*" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
+    <PackageReference Include="System.Memory" Version="4.5.*" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
+    <PackageReference Include="Nullable" Version="1.2.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net35-cf'">
-    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>CompactFramework</TargetFrameworkProfile>
-    <DefineConstants>NET35_CF;WindowsCE</DefineConstants>
-    <DisableImplicitFrameworkReferences>True</DisableImplicitFrameworkReferences>
-    <NoStdLib>True</NoStdLib>
-    <NoConfig>True</NoConfig>
-    <FileAlignment>512</FileAlignment>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <GenerateAssemblyFileVersionAttribute>False</GenerateAssemblyFileVersionAttribute>
-    <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
-  </PropertyGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net35-cf'">
-    <Reference Include="mscorlib, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
-    <Reference Include="System, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
-    <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+  <ItemGroup>
     <Analyzer Include="..\Light.GuardClauses.InternalRoslynAnalyzers\bin\$(Configuration)\netstandard2.0\Light.GuardClauses.InternalRoslynAnalyzers.dll" Condition="Exists('..\Light.GuardClauses.InternalRoslynAnalyzers\bin\$(Configuration)\netstandard2.0\Light.GuardClauses.InternalRoslynAnalyzers.dll')" />
   </ItemGroup>
 

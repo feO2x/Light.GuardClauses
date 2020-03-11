@@ -1,5 +1,4 @@
-﻿#if !NET35_CF
-using System;
+﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -54,4 +53,3 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
     }
 }
-#endif

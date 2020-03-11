@@ -3,9 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
 using System.Runtime.CompilerServices;
-#endif
 using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.FrameworkExtensions
@@ -16,46 +14,40 @@ namespace Light.GuardClauses.FrameworkExtensions
     public static class EnumerableExtensions
     {
         /// <summary>
-        /// Tries to cast the specified enumerable as an <see cref="IList{T}" />, or
-        /// creates a new <see cref="List{T}" /> containing the enumerable's items.
+        /// Tries to cast the specified enumerable to an <see cref="IList{T}" />, or
+        /// creates a new <see cref="List{T}" /> containing the enumerable items.
         /// </summary>
         /// <typeparam name="T">The item type of the enumerable.</typeparam>
         /// <param name="source">The enumerable to be transformed.</param>
         /// <returns>The list containing the items of the enumerable.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("source:null => halt; source:notnull => notnull")]
         public static IList<T> AsList<T>(this IEnumerable<T> source) => 
             source as IList<T> ?? source.ToList();
 
         /// <summary>
-        /// Tries to cast the specified enumerable as an <see cref="IList{T}" />, or
-        /// creates a new collection containing the enumerable's items by calling the specified delegate.
+        /// Tries to cast the specified enumerable to an <see cref="IList{T}" />, or
+        /// creates a new collection containing the enumerable items by calling the specified delegate.
         /// </summary>
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="source">The enumerable that will be converted to <see cref="IList{T}" />.</param>
         /// <param name="createCollection">The delegate that creates the collection containing the specified items.</param>
-        /// <returns>The casted enumerable, or a new collection containing the enumerable's items.</returns>
+        /// <returns>The cast enumerable, or a new collection containing the enumerable items.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> or <paramref name="createCollection" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("source:null => halt; source:notnull => notnull; createCollection:null => halt")]
         public static IList<T> AsList<T>(this IEnumerable<T> source, Func<IEnumerable<T>, IList<T>> createCollection) => 
             source as IList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(source.MustNotBeNull(nameof(source)));
 
         /// <summary>
-        /// Tries to downcast the specified enumerable as an array, or creates a new collection
+        /// Tries to downcast the specified enumerable to an array, or creates a new collection
         /// </summary>
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="source">The enumerable that will be converted to an array.</param>
-        /// <returns>The cast array, or a new array containing the enumerable's items.</returns>
+        /// <returns>The cast array, or a new array containing the enumerable items.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("source:null => halt; source:notnull => notnull")]
         public static T[] AsArray<T>(this IEnumerable<T> source) => source as T[] ?? source.ToArray();
 
@@ -104,47 +96,39 @@ namespace Light.GuardClauses.FrameworkExtensions
             // ReSharper restore PossibleMultipleEnumeration
         }
 
-#if NETSTANDARD2_0 || NETSTANDARD1_0 || NET45
         /// <summary>
         /// Tries to cast the specified enumerable as an <see cref="IReadOnlyList{T}" />, or
-        /// creates a new <see cref="List{T}" /> containing the enumerable's items.
+        /// creates a new <see cref="List{T}" /> containing the enumerable items.
         /// </summary>
         /// <typeparam name="T">The item type of the enumerable.</typeparam>
         /// <param name="source">The enumerable to be transformed.</param>
         /// <returns>The list containing the items of the enumerable.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("source:null => halt; source:notnull => notnull")]
         public static IReadOnlyList<T> AsReadOnlyList<T>(this IEnumerable<T> source) =>
             source as IReadOnlyList<T> ?? source.ToList();
 
         /// <summary>
         /// Tries to cast the specified enumerable as an <see cref="IReadOnlyList{T}" />, or
-        /// creates a new collection containing the enumerable's items by calling the specified delegate.
+        /// creates a new collection containing the enumerable items by calling the specified delegate.
         /// </summary>
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="source">The enumerable that will be converted to <see cref="IReadOnlyList{T}" />.</param>
         /// <param name="createCollection">The delegate that creates the collection containing the specified items.</param>
-        /// <returns>The cast enumerable, or a new collection containing the enumerable's items.</returns>
+        /// <returns>The cast enumerable, or a new collection containing the enumerable items.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> or <paramref name="createCollection" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("source:null => halt; source:notnull => notnull; createCollection:null => halt")]
         public static IReadOnlyList<T> AsReadOnlyList<T>(this IEnumerable<T> source, Func<IEnumerable<T>, IReadOnlyList<T>> createCollection) =>
             source as IReadOnlyList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(source.MustNotBeNull(nameof(source)));
-#endif
 
         /// <summary>
         /// Gets the count of the specified enumerable.
         /// </summary>
         /// <param name="enumerable">The enumerable whose count should be determined.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("enumerable:null => halt")]
         public static int Count(this IEnumerable enumerable)
         {
@@ -163,11 +147,9 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <param name="parameterName">The name of the parameter that is passed to the <see cref="ArgumentNullException"/> (optional).</param>
         /// <param name="message">The message that is passed to the <see cref="ArgumentNullException"/> (optional).</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("enumerable:null => halt")]
-        public static int Count(this IEnumerable enumerable, string parameterName, string message)
+        public static int Count(this IEnumerable enumerable, string? parameterName, string? message)
         {
             if (enumerable is ICollection collection)
                 return collection.Count;
@@ -186,7 +168,7 @@ namespace Light.GuardClauses.FrameworkExtensions
             return count;
         }
 
-        private static int DetermineCountViaEnumerating(IEnumerable enumerable, string parameterName, string message)
+        private static int DetermineCountViaEnumerating(IEnumerable enumerable, string? parameterName, string? message)
         {
             var count = 0;
             var enumerator = enumerable.MustNotBeNull(parameterName, message).GetEnumerator();
