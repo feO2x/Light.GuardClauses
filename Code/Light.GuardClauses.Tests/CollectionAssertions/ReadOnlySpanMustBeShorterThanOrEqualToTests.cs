@@ -1,5 +1,4 @@
-﻿#if NETCOREAPP2_2 || NET47
-using System;
+﻿using System;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Xunit;
@@ -78,4 +77,3 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         }
     }
 }
-#endif
