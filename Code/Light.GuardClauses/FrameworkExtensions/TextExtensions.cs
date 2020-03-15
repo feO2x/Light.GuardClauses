@@ -43,11 +43,9 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// </summary>
         /// <param name="value">The item whose string representation should be returned.</param>
         /// <param name="nullText">The text that is returned when <paramref name="value" /> is null (defaults to "null").</param>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("=> notnull")]
-        public static string ToStringOrNull<T>(this T value, string nullText = "null") => value == null ? nullText : value.ToStringRepresentation();
+        public static string ToStringOrNull<T>(this T value, string nullText = "null") => value?.ToStringRepresentation() ?? nullText;
 
         /// <summary>
         /// Returns the string representation of <paramref name="value" />. This is done by calling <see cref="object.ToString" />. If the type of
@@ -55,14 +53,14 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// </summary>
         /// <param name="value">The value whose string representation is requested.</param>
         [ContractAnnotation("value:null => halt; value:notnull => notnull")]
-        public static string ToStringRepresentation<T>(this T value)
+        public static string? ToStringRepresentation<T>(this T value)
         {
             value.MustNotBeNullReference(nameof(value));
 
-            if (UnquotedTypes.Contains(value.GetType()))
-                return value.ToString();
+            var content = value!.ToString();
+            if (UnquotedTypes.Contains(value.GetType()) || content == null)
+                return content;
 
-            var content = value.ToString();
             var contentWithQuotationMarks = new char[content.Length + 2];
             contentWithQuotationMarks[0] = contentWithQuotationMarks[contentWithQuotationMarks.Length - 1] = '"';
             content.CopyTo(0, contentWithQuotationMarks, 1, content.Length);
@@ -79,9 +77,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <param name="headerLine">The string that will be placed before the actual items as a header.</param>
         /// <param name="finishWithNewLine">The value indicating if a new line is added after the last item. This value defaults to true.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> or <paramref name="items" />is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("stringBuilder:null => halt; items:null => halt; stringBuilder:notnull => notnull")]
         public static StringBuilder AppendCollectionContent<T>(this StringBuilder stringBuilder, IEnumerable<T> items, string headerLine = "Content of the collection:", bool finishWithNewLine = true) =>
             stringBuilder.MustNotBeNull(nameof(stringBuilder))
@@ -126,9 +122,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <param name="emptyCollectionText">The text that is appended to the string builder when <paramref name="items" /> is empty. Defaults to "empty collection".</param>
         /// <param name="finishWithNewLine">The value indicating if a new line is added after the last item. This value defaults to true.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder"/> or <paramref name="items"/> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("stringBuilder:null => halt; items:null => halt; stringBuilder:notnull => notnull")]
         public static StringBuilder AppendItemsWithNewLine<T>(this StringBuilder stringBuilder, IEnumerable<T> items, string emptyCollectionText = "empty collection", bool finishWithNewLine = true) =>
             stringBuilder.AppendItems(items, DefaultNewLineSeparator, emptyCollectionText)
@@ -141,9 +135,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <param name="condition">The boolean value indicating whether the append will be performed or not.</param>
         /// <param name="value">The value to be appended to the string builder.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("stringBuilder:null => halt; stringBuilder:notnull => notnull")]
         public static StringBuilder AppendIf(this StringBuilder stringBuilder, bool condition, string value)
         {
@@ -159,9 +151,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <param name="condition">The boolean value indicating whether the append will be performed or not.</param>
         /// <param name="value">The value to be appended to the string builder (optional). This value defaults to an empty string.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("stringBuilder:null => halt; stringBuilder:notnull => notnull")]
         public static StringBuilder AppendLineIf(this StringBuilder stringBuilder, bool condition, string value = "")
         {
@@ -178,16 +168,17 @@ namespace Light.GuardClauses.FrameworkExtensions
         public static StringBuilder AppendExceptionMessages(this StringBuilder stringBuilder, Exception exception)
         {
             stringBuilder.MustNotBeNull(nameof(stringBuilder));
-            var currentException = exception.MustNotBeNull(nameof(exception));
+            exception.MustNotBeNull(nameof(exception));
+
             while (true)
             {
                 // ReSharper disable once PossibleNullReferenceException
-                stringBuilder.AppendLine(currentException.Message);
-                if (currentException.InnerException == null)
+                stringBuilder.AppendLine(exception.Message);
+                if (exception.InnerException == null)
                     return stringBuilder;
 
                 stringBuilder.AppendLine();
-                currentException = exception.InnerException;
+                exception = exception.InnerException;
             }
         }
 
@@ -203,7 +194,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// Checks if the two strings are equal using ordinal sorting rules as well as ignoring the white space
         /// of the provided strings.
         /// </summary>
-        public static bool EqualsOrdinalIgnoreWhiteSpace(this string x, string y)
+        public static bool EqualsOrdinalIgnoreWhiteSpace(this string? x, string? y)
         {
             if (ReferenceEquals(x, y))
                 return true;
@@ -236,7 +227,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// Checks if the two strings are equal using ordinal sorting rules, ignoring the case of the letters
         /// as well as ignoring the white space of the provided strings.
         /// </summary>
-        public static bool EqualsOrdinalIgnoreCaseIgnoreWhiteSpace(this string x, string y)
+        public static bool EqualsOrdinalIgnoreCaseIgnoreWhiteSpace(this string? x, string? y)
         {
             if (ReferenceEquals(x, y))
                 return true;
@@ -259,7 +250,7 @@ namespace Light.GuardClauses.FrameworkExtensions
                    (wasYSuccessful = y.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexY)))
             {
                 if (char.ToLowerInvariant(x[indexX++]) != char.ToLowerInvariant(y[indexY++]))
-                return false;
+                    return false;
             }
 
             return wasXSuccessful == wasYSuccessful;

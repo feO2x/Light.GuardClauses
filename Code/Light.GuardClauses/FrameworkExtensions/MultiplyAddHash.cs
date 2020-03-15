@@ -1,6 +1,4 @@
-﻿#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
-using System.Runtime.CompilerServices;
-#endif
+﻿using System.Runtime.CompilerServices;
 
 namespace Light.GuardClauses.FrameworkExtensions
 {
@@ -30,9 +28,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Creates a hash code from the two specified values.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static int CreateHashCode<T1, T2>(T1 value1, T2 value2)
         {
             var hash = FirstPrime;
@@ -44,9 +40,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Creates a hash code from the three specified values.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static int CreateHashCode<T1, T2, T3>(T1 value1, T2 value2, T3 value3)
         {
             var hash = FirstPrime;
@@ -59,9 +53,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Creates a hash code from the four specified values.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static int CreateHashCode<T1, T2, T3, T4>(T1 value1, T2 value2, T3 value3, T4 value4)
         {
             var hash = FirstPrime;
@@ -75,9 +67,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Creates a hash code from the five specified values.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static int CreateHashCode<T1, T2, T3, T4, T5>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5)
         {
             var hash = FirstPrime;
@@ -92,9 +82,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Creates a hash code from the six specified values.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static int CreateHashCode<T1, T2, T3, T4, T5, T6>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6)
         {
             var hash = FirstPrime;
@@ -110,9 +98,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Creates a hash code from the seven specified values.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7)
         {
             var hash = FirstPrime;
@@ -129,9 +115,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Creates a hash code from the eight specified values.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8)
         {
             var hash = FirstPrime;
@@ -149,9 +133,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Creates a hash code from the nine specified values.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9)
         {
             var hash = FirstPrime;
@@ -170,9 +152,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Creates a hash code from the ten specified values.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9, T10 value10)
         {
             var hash = FirstPrime;
@@ -192,9 +172,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Creates a hash code from the eleven specified values.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9, T10 value10, T11 value11)
         {
             var hash = FirstPrime;
@@ -215,9 +193,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Creates a hash code from the eleven specified values.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9, T10 value10, T11 value11, T12 value12)
         {
             var hash = FirstPrime;
@@ -239,9 +215,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Creates a hash code from the thirteen specified values.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9, T10 value10, T11 value11, T12 value12, T13 value13)
         {
             var hash = FirstPrime;
@@ -264,9 +238,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Creates a hash code from the fourteen specified values.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9, T10 value10, T11 value11, T12 value12, T13 value13, T14 value14)
         {
             var hash = FirstPrime;
@@ -290,9 +262,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Creates a hash code from the fifteen specified values.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9, T10 value10, T11 value11, T12 value12, T13 value13, T14 value14, T15 value15)
         {
             var hash = FirstPrime;
@@ -317,9 +287,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Creates a hash code from the sixteen specified values.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9, T10 value10, T11 value11, T12 value12, T13 value13, T14 value14, T15 value15, T16 value16)
         {
             var hash = FirstPrime;
@@ -346,9 +314,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// Mutates the given hash with the specified value using the following statement:
         /// <c>hash = unchecked(hash * SecondPrime + value?.GetHashCode() ?? 0);</c>.
         /// </summary>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static void CombineIntoHash<T>(ref int hash, T value) => hash = unchecked(hash * SecondPrime + value?.GetHashCode() ?? 0);
     }
 }

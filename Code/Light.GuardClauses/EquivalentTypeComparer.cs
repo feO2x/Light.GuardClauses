@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
 using System.Runtime.CompilerServices;
 #endif
 
@@ -27,7 +27,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="x">The first type.</param>
         /// <param name="y">The second type.</param>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public bool Equals(Type x, Type y) => x.IsEquivalentTypeTo(y);
@@ -37,13 +37,13 @@ namespace Light.GuardClauses
         /// the hash code of the generic type definition is returned instead.
         /// </summary>
         /// <param name="type">The type whose hash code is requested.</param>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public int GetHashCode(Type type) => 
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             type == null ? 0 :
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45)
+#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45)
             type.IsConstructedGenericType ?
 #else
             type.IsConstructedGenericType() ?

@@ -5,7 +5,7 @@ using Light.GuardClauses.FrameworkExtensions;
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
 using System.Runtime.CompilerServices;
 
 #endif
@@ -24,7 +24,7 @@ namespace Light.GuardClauses
         /// True if both types are null, or if both are equal, or if one type
         /// is a constructed generic type and the other one is the corresponding generic type definition, else false.
         /// </returns>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public static bool IsEquivalentTypeTo(this Type type, Type other) =>
@@ -32,7 +32,7 @@ namespace Light.GuardClauses
             !(type is null) &&
             !(other is null) &&
             (type == other ||
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45)
+#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45)
              type.IsConstructedGenericType != other.IsConstructedGenericType &&
 #else
              type.IsConstructedGenericType() != other.IsConstructedGenericType() &&
@@ -41,7 +41,7 @@ namespace Light.GuardClauses
 
         private static bool CheckTypeEquivalency(Type type, Type other)
         {
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45)
+#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45)
             if (type.IsConstructedGenericType)
 #else
 			if (type.IsConstructedGenericType())
@@ -128,7 +128,7 @@ namespace Light.GuardClauses
         /// <param name="type">The type to be checked.</param>
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the interface type that <paramref name="type" /> implements.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("type:null => halt; otherType:null => halt")]
@@ -144,7 +144,7 @@ namespace Light.GuardClauses
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the interface type that <paramref name="type" /> implements.</param>
         /// <param name="typeComparer">The equality comparer used to compare the interface types.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("type:null => halt; otherType:null => halt")]
@@ -224,7 +224,7 @@ namespace Light.GuardClauses
         /// <param name="type">The type to be checked.</param>
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the base class type where <paramref name="type" /> derives from.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("type:null => halt; otherType:null => halt")]
@@ -239,7 +239,7 @@ namespace Light.GuardClauses
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the base class type where <paramref name="type" /> derives from.</param>
         /// <param name="typeComparer">The equality comparer used to compare the types.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="otherType" />, or <paramref name="typeComparer" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("type:null => halt; otherType:null => halt; typeComparer:null => halt")]
@@ -254,7 +254,7 @@ namespace Light.GuardClauses
         /// <param name="type">The type to be checked.</param>
         /// <param name="baseClassOrInterfaceType">The type describing an interface or base class that <paramref name="type" /> should derive from or implement.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="baseClassOrInterfaceType" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt")]
@@ -275,7 +275,7 @@ namespace Light.GuardClauses
         /// <param name="baseClassOrInterfaceType">The type describing an interface or base class that <paramref name="type" /> should derive from or implement.</param>
         /// <param name="typeComparer">The equality comparer used to compare the types.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="baseClassOrInterfaceType" />, or <paramref name="typeComparer" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt; typeComparer:null => halt")]
@@ -296,7 +296,7 @@ namespace Light.GuardClauses
         /// <param name="type">The type to be checked.</param>
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the base class type where <paramref name="type" /> derives from.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("type:null => halt; otherType:null => halt")]
@@ -312,7 +312,7 @@ namespace Light.GuardClauses
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the base class type where <paramref name="type" /> derives from.</param>
         /// <param name="typeComparer">The equality comparer used to compare the types.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("type:null => halt; otherType:null => halt; typeComparer:null => halt")]
@@ -326,7 +326,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
+#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         [ContractAnnotation("type:null => halt")]
