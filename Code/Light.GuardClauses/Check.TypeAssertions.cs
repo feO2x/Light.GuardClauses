@@ -1,14 +1,7 @@
-﻿#if NETSTANDARD1_0
-using System.Reflection;
-using Light.GuardClauses.FrameworkExtensions;
-#endif
-using System;
+﻿using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
-#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
 using System.Runtime.CompilerServices;
-
-#endif
+using JetBrains.Annotations;
 
 namespace Light.GuardClauses
 {
@@ -24,48 +17,21 @@ namespace Light.GuardClauses
         /// True if both types are null, or if both are equal, or if one type
         /// is a constructed generic type and the other one is the corresponding generic type definition, else false.
         /// </returns>
-#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static bool IsEquivalentTypeTo(this Type type, Type other) =>
             ReferenceEquals(type, other) ||
             !(type is null) &&
             !(other is null) &&
             (type == other ||
-#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45)
              type.IsConstructedGenericType != other.IsConstructedGenericType &&
-#else
-             type.IsConstructedGenericType() != other.IsConstructedGenericType() &&
-#endif
              CheckTypeEquivalency(type, other));
 
         private static bool CheckTypeEquivalency(Type type, Type other)
         {
-#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45)
             if (type.IsConstructedGenericType)
-#else
-			if (type.IsConstructedGenericType())
-#endif
                 return type.GetGenericTypeDefinition() == other;
             return other.GetGenericTypeDefinition() == type;
         }
-
-#if (NET35 || NET35_CF || NET40 || SILVERLIGHT)
-        /// <summary>
-        /// Gets a value that indicates whether the specified type is a constructed generic type.
-        /// This is true when the type is a generic type, but not a generic type definition.
-        /// Constructed generic types resolve at least one generic parameter of a generic type definition.
-        /// They may either be open (when not all generic parameters are resolved) or closed 
-        /// (when all generic parameters of the generic type definition are resolved).
-        /// </summary>
-        /// <param name="type">The type to be checked.</param>
-        /// <returns>True if the specified type is not null and a generic type, but not a generic type definition, else false.</returns>
-        #if SILVERLIGHT
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        #endif
-                public static bool IsConstructedGenericType(this Type type) =>
-                    type != null && type.IsGenericType && !type.IsGenericTypeDefinition;
-#endif
 
         /// <summary>
         /// Checks if the type implements the specified interface type. Internally, this method uses <see cref="IsEquivalentTypeTo" />
@@ -78,11 +44,7 @@ namespace Light.GuardClauses
         public static bool Implements(this Type type, Type interfaceType)
         {
             interfaceType.MustNotBeNull(nameof(interfaceType));
-#if NETSTANDARD1_0
-            var implementedInterfaces = type.GetTypeInfo().ImplementedInterfaces.AsArray();
-#else
             var implementedInterfaces = type.MustNotBeNull(nameof(type)).GetInterfaces();
-#endif
 
             for (var i = 0; i < implementedInterfaces.Length; ++i)
             {
@@ -107,11 +69,7 @@ namespace Light.GuardClauses
             interfaceType.MustNotBeNull(nameof(interfaceType));
             typeComparer.MustNotBeNull(nameof(typeComparer));
 
-#if NETSTANDARD1_0
-            var implementedInterfaces = type.GetTypeInfo().ImplementedInterfaces.AsArray();
-#else
             var implementedInterfaces = type.MustNotBeNull(nameof(type)).GetInterfaces();
-#endif
             for (var i = 0; i < implementedInterfaces.Length; ++i)
             {
                 if (typeComparer.Equals(implementedInterfaces[i], interfaceType))
@@ -128,9 +86,7 @@ namespace Light.GuardClauses
         /// <param name="type">The type to be checked.</param>
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the interface type that <paramref name="type" /> implements.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
-#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("type:null => halt; otherType:null => halt")]
         public static bool IsOrImplements(this Type type, Type otherType) =>
             type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.Implements(otherType);
@@ -144,9 +100,7 @@ namespace Light.GuardClauses
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the interface type that <paramref name="type" /> implements.</param>
         /// <param name="typeComparer">The equality comparer used to compare the interface types.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
-#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("type:null => halt; otherType:null => halt")]
         public static bool IsOrImplements(this Type type, Type otherType, IEqualityComparer<Type> typeComparer) =>
             typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type.MustNotBeNull(nameof(type)), otherType.MustNotBeNull(nameof(otherType))) || type.Implements(otherType, typeComparer);
@@ -163,21 +117,13 @@ namespace Light.GuardClauses
         {
             baseClass.MustNotBeNull(nameof(baseClass));
 
-#if NETSTANDARD1_0
-            var currentBaseType = type.GetTypeInfo().BaseType;
-#else
             var currentBaseType = type.MustNotBeNull(nameof(type)).BaseType;
-#endif
             while (currentBaseType != null)
             {
                 if (currentBaseType.IsEquivalentTypeTo(baseClass))
                     return true;
 
-#if NETSTANDARD1_0
-                currentBaseType = currentBaseType.GetTypeInfo().BaseType;
-#else
                 currentBaseType = currentBaseType.BaseType;
-#endif
             }
 
             return false;
@@ -197,21 +143,13 @@ namespace Light.GuardClauses
             baseClass.MustNotBeNull(nameof(baseClass));
             typeComparer.MustNotBeNull(nameof(typeComparer));
 
-#if NETSTANDARD1_0
-            var currentBaseType = type.GetTypeInfo().BaseType;
-#else
             var currentBaseType = type.MustNotBeNull(nameof(type)).BaseType;
-#endif
             while (currentBaseType != null)
             {
                 if (typeComparer.Equals(currentBaseType, baseClass))
                     return true;
 
-#if NETSTANDARD1_0
-                currentBaseType = currentBaseType.GetTypeInfo().BaseType;
-#else
                 currentBaseType = currentBaseType.BaseType;
-#endif
             }
 
             return false;
@@ -224,9 +162,7 @@ namespace Light.GuardClauses
         /// <param name="type">The type to be checked.</param>
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the base class type where <paramref name="type" /> derives from.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
-#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("type:null => halt; otherType:null => halt")]
         public static bool IsOrDerivesFrom(this Type type, Type otherType) =>
             type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.DerivesFrom(otherType);
@@ -239,9 +175,7 @@ namespace Light.GuardClauses
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the base class type where <paramref name="type" /> derives from.</param>
         /// <param name="typeComparer">The equality comparer used to compare the types.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="otherType" />, or <paramref name="typeComparer" /> is null.</exception>
-#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("type:null => halt; otherType:null => halt; typeComparer:null => halt")]
         public static bool IsOrDerivesFrom(this Type type, Type otherType, IEqualityComparer<Type> typeComparer) =>
             typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type, otherType.MustNotBeNull(nameof(otherType))) || type.DerivesFrom(otherType, typeComparer);
@@ -254,15 +188,10 @@ namespace Light.GuardClauses
         /// <param name="type">The type to be checked.</param>
         /// <param name="baseClassOrInterfaceType">The type describing an interface or base class that <paramref name="type" /> should derive from or implement.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="baseClassOrInterfaceType" /> is null.</exception>
-#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt")]
         public static bool InheritsFrom(this Type type, Type baseClassOrInterfaceType) =>
             baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType))
-#if NETSTANDARD1_0
-                                    .GetTypeInfo()
-#endif
                                     .IsInterface
                 ? type.Implements(baseClassOrInterfaceType)
                 : type.DerivesFrom(baseClassOrInterfaceType);
@@ -275,15 +204,10 @@ namespace Light.GuardClauses
         /// <param name="baseClassOrInterfaceType">The type describing an interface or base class that <paramref name="type" /> should derive from or implement.</param>
         /// <param name="typeComparer">The equality comparer used to compare the types.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="baseClassOrInterfaceType" />, or <paramref name="typeComparer" /> is null.</exception>
-#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt; typeComparer:null => halt")]
         public static bool InheritsFrom(this Type type, Type baseClassOrInterfaceType, IEqualityComparer<Type> typeComparer) =>
             baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType))
-#if NETSTANDARD1_0
-                                    .GetTypeInfo()
-#endif
                                     .IsInterface
                 ? type.Implements(baseClassOrInterfaceType, typeComparer)
                 : type.DerivesFrom(baseClassOrInterfaceType, typeComparer);
@@ -296,9 +220,7 @@ namespace Light.GuardClauses
         /// <param name="type">The type to be checked.</param>
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the base class type where <paramref name="type" /> derives from.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
-#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("type:null => halt; otherType:null => halt")]
         public static bool IsOrInheritsFrom(this Type type, Type otherType) =>
             type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType);
@@ -312,9 +234,7 @@ namespace Light.GuardClauses
         /// <param name="otherType">The type that is equivalent to <paramref name="type" /> or the base class type where <paramref name="type" /> derives from.</param>
         /// <param name="typeComparer">The equality comparer used to compare the types.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
-#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("type:null => halt; otherType:null => halt; typeComparer:null => halt")]
         public static bool IsOrInheritsFrom(this Type type, Type otherType, IEqualityComparer<Type> typeComparer) =>
             typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type, otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType, typeComparer);
@@ -326,23 +246,13 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="type">The type to be checked.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
-#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("type:null => halt")]
         public static bool IsOpenConstructedGenericType(this Type type)
         {
-#if (!NETSTANDARD1_0)
             return type.MustNotBeNull(nameof(type)).IsGenericType &&
                    type.ContainsGenericParameters &&
                    type.IsGenericTypeDefinition == false;
-#else
-            var typeInfo = type.GetTypeInfo();
-            return typeInfo.IsGenericType && 
-                   typeInfo.ContainsGenericParameters &&
-                   !typeInfo.IsGenericTypeDefinition;
-#endif
         }
-
     }
 }

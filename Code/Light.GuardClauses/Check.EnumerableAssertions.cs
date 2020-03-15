@@ -51,9 +51,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name="collection">The collection to be checked.</param>
         /// <returns>True if the collection is null or empty, else false.</returns>
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         [ContractAnnotation("=> true, collection:canbenull; => false, collection:notnull")]
         public static bool IsNullOrEmpty([NotNullWhen(false)] this IEnumerable? collection) =>
             collection == null || collection.Count() == 0;

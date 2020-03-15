@@ -467,10 +467,10 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> and <paramref name="other" /> are not equal, or when <paramref name="equalityComparer" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("equalityComparer:null => halt")]
-        public static T MustBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, Func<T, T, IEqualityComparer<T>?, Exception> exceptionFactory)
+        public static T MustBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, Func<T, T, IEqualityComparer<T>, Exception> exceptionFactory)
         {
             if (equalityComparer == null || !equalityComparer.Equals(parameter, other))
-                Throw.CustomException(exceptionFactory, parameter, other, equalityComparer);
+                Throw.CustomException(exceptionFactory, parameter, other, equalityComparer!);
             return parameter;
         }
 
@@ -534,10 +534,10 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> and <paramref name="other" /> are equal, or when <paramref name="equalityComparer" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("equalityComparer:null => halt")]
-        public static T MustNotBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, Func<T, T, IEqualityComparer<T>?, Exception> exceptionFactory)
+        public static T MustNotBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, Func<T, T, IEqualityComparer<T>, Exception> exceptionFactory)
         {
             if (equalityComparer == null || equalityComparer.Equals(parameter, other))
-                Throw.CustomException(exceptionFactory, parameter, other, equalityComparer);
+                Throw.CustomException(exceptionFactory, parameter, other, equalityComparer!);
             return parameter;
         }
 
