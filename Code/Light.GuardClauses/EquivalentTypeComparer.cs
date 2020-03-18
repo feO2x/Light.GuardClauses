@@ -35,6 +35,8 @@ namespace Light.GuardClauses
         /// <param name="type">The type whose hash code is requested.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetHashCode(Type type) =>
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            type == null                  ? 0 :
             type.IsConstructedGenericType ? type.GetGenericTypeDefinition().GetHashCode() :
                                             type.GetHashCode();
     }
