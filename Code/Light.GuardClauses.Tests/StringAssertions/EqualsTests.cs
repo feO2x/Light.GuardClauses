@@ -61,7 +61,6 @@ namespace Light.GuardClauses.Tests.StringAssertions
         public static void FallbackToCurrentCultureIgnoreCase(string x, string y, bool expected) =>
             x.Equals(y, StringComparisonType.CurrentCultureIgnoreCase).Should().Be(expected);
 
-#if !NETCOREAPP1_1
         [Theory]
         [InlineData("Foo", "Foo", true)]
         [InlineData("Foo", "foo", false)]
@@ -73,6 +72,5 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [InlineData("Foo", "Bar", false)]
         public static void FallbackToInvariantCultureIgnoreCase(string x, string y, bool expected) =>
             x.Equals(y, StringComparisonType.InvariantCultureIgnoreCase).Should().Be(expected);
-#endif
     }
 }

@@ -2,9 +2,6 @@
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Xunit;
-#if NETCOREAPP1_1
-using System.Reflection;
-#endif
 
 namespace Light.GuardClauses.Tests.CommonAssertions
 {
@@ -43,11 +40,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void GetAllEnumValues()
         {
-#if !NETCOREAPP1_1
             var enumFields = typeof(SampleEnum).GetFields();
-#else
-            var enumFields = typeof(SampleEnum).GetTypeInfo().GetFields();
-#endif
             var actualValues = new SampleEnum[enumFields.Length - 1];
             for (var i = 1; i < enumFields.Length; ++i)
             {

@@ -24,9 +24,7 @@ namespace Light.GuardClauses
         /// <param name=""parameterName""></param>
         /// <param name=""message"">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref=""ArgumentNullException"">Thrown when <paramref name=""parameter"" /> is null.</exception>
-#if !(NET40 || NET35 || NET35_CF)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static T MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null)
         {
             if (parameter == null)
@@ -51,9 +49,7 @@ namespace Light.GuardClauses
         /// <param name=""parameterName"">The name of the parameter (optional).</param>
         /// <param name=""message"">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref=""ArgumentNullException"">Thrown when <paramref name=""parameter"" /> is null.</exception>
-#if !(NET40 || NET35 || NET35_CF)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static T MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null)
         {
             if (parameter == null)
@@ -96,9 +92,7 @@ namespace Light.GuardClauses
         /// <param name=""parameterName"">The name of the parameter (optional).</param>
         /// <param name=""message""></param>
         /// <exception cref=""ArgumentNullException"">Thrown when <paramref name=""parameter"" /> is null.</exception>
-#if !(NET40 || NET35 || NET35_CF)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static T MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null)
         {
             if (parameter == null)
@@ -123,9 +117,7 @@ namespace Light.GuardClauses
         /// <param name=""parameterName"">The name of the parameter (optional).</param>
         /// <param name=""message"">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref=""ArgumentNullException"">Thrown when <paramref name=""parameter"" /> is null.</exception>
-#if !(NET40 || NET35 || NET35_CF)
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
         public static T MustNotBeNull<T>(this T parameter, string parameterName = null, string message = null)
         {
             if (parameter == null)

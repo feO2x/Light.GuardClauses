@@ -1,16 +1,12 @@
 ﻿using System;
-#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NET45 || NET40 || NET35)
 using System.Runtime.Serialization;
-#endif
 
 namespace Light.GuardClauses.Exceptions
 {
     /// <summary>
     /// This exception indicates that a value cannot be cast to another type.
     /// </summary>
-#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NET45 || NET40)
     [Serializable]
-#endif
     public class TypeCastException : ArgumentException
     {
         /// <summary>
@@ -20,9 +16,7 @@ namespace Light.GuardClauses.Exceptions
         /// <param name="message">The message of the exception (optional).</param>
         public TypeCastException(string? parameterName = null, string? message = null) : base(message, parameterName) { }
 
-#if (NETCOREAPP3_0 || NETSTANDARD2_0 || NET45 || NET40 || NET35)
         /// <inheritdoc />
         protected TypeCastException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-#endif
     }
 }
