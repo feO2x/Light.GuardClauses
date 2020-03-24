@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 
 namespace Light.GuardClauses.SourceCodeTransformation
 {
@@ -10,25 +9,22 @@ namespace Light.GuardClauses.SourceCodeTransformation
                                       bool changePublicTypesToInternalTypes,
                                       string baseNamespace,
                                       bool includeJetBrainsAnnotations, 
-                                      bool removePreprocessorDirectives,
-                                      IReadOnlyList<string> definedPreprocessorSymbols,
                                       bool removeContractAnnotations, 
                                       bool includeJetBrainsAnnotationsUsing, 
                                       bool includeVersionComment, 
-                                      bool removeOverloadsWithExceptionFactory)
+                                      bool removeOverloadsWithExceptionFactory,
+                                      bool includeCodeAnalysisNullableAttributes)
         {
             SourceFolder = sourceFolder.MustNotBeNullOrWhiteSpace(nameof(sourceFolder));
             TargetFile = targetFile.MustNotBeNullOrWhiteSpace(nameof(targetFile));
             ChangePublicTypesToInternalTypes = changePublicTypesToInternalTypes;
             BaseNamespace = baseNamespace.MustNotBeNullOrWhiteSpace(nameof(baseNamespace));
             IncludeJetBrainsAnnotations = includeJetBrainsAnnotations;
-            RemovePreprocessorDirectives = removePreprocessorDirectives;
-            if (removePreprocessorDirectives)
-                DefinedPreprocessorSymbols = definedPreprocessorSymbols.MustNotBeNull(nameof(definedPreprocessorSymbols));
             RemoveContractAnnotations = removeContractAnnotations;
             IncludeJetBrainsAnnotationsUsing = includeJetBrainsAnnotationsUsing;
             IncludeVersionComment = includeVersionComment;
             RemoveOverloadsWithExceptionFactory = removeOverloadsWithExceptionFactory;
+            IncludeCodeAnalysisNullableAttributes = includeCodeAnalysisNullableAttributes;
         }
 
         public string SourceFolder { get; }
@@ -41,10 +37,6 @@ namespace Light.GuardClauses.SourceCodeTransformation
 
         public bool IncludeJetBrainsAnnotations { get; }
 
-        public bool RemovePreprocessorDirectives { get; }
-
-        public IReadOnlyList<string> DefinedPreprocessorSymbols { get; }
-
         public bool RemoveContractAnnotations { get; }
 
         public bool IncludeJetBrainsAnnotationsUsing { get; }
@@ -52,6 +44,8 @@ namespace Light.GuardClauses.SourceCodeTransformation
         public bool IncludeVersionComment { get; }
 
         public bool RemoveOverloadsWithExceptionFactory { get; }
+
+        public bool IncludeCodeAnalysisNullableAttributes { get; }
 
         public sealed class Builder
         {
@@ -81,11 +75,6 @@ namespace Light.GuardClauses.SourceCodeTransformation
 
             public string BaseNamespace { get; set; } = "Light.GuardClauses";
 
-
-            public bool RemovePreprocessorDirectives { get; set; } = true;
-
-            public List<string> DefinedPreprocessorSymbols { get; set; } = new List<string> { "NETSTANDARD2_0" };
-
             public bool RemoveContractAnnotations { get; set; } = false;
 
             public bool IncludeJetBrainsAnnotations { get; set; } = true;
@@ -96,6 +85,7 @@ namespace Light.GuardClauses.SourceCodeTransformation
 
             public bool RemoveOverloadsWithExceptionFactory { get; set; } = false;
 
+            public bool IncludeCodeAnalysisNullableAttributes { get; set; } = true;
 
             public SourceFileMergeOptions Build() =>
                 new SourceFileMergeOptions(
@@ -104,12 +94,11 @@ namespace Light.GuardClauses.SourceCodeTransformation
                     ChangePublicTypesToInternalTypes,
                     BaseNamespace,
                     IncludeJetBrainsAnnotations,
-                    RemovePreprocessorDirectives,
-                    DefinedPreprocessorSymbols,
                     RemoveContractAnnotations,
                     IncludeJetBrainsAnnotationsUsing,
                     IncludeVersionComment,
-                    RemoveOverloadsWithExceptionFactory);
+                    RemoveOverloadsWithExceptionFactory,
+                    IncludeCodeAnalysisNullableAttributes);
         }
     }
 }

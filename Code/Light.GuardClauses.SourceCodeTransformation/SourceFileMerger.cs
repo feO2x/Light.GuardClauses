@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Light.GuardClauses.FrameworkExtensions;
-using Light.Undefine;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -39,7 +38,7 @@ namespace Light.GuardClauses.SourceCodeTransformation
                          .AppendLine($@"License information for Light.GuardClauses
 
 The MIT License (MIT)
-Copyright (c) 2016, 2019 Kenny Pflug mailto:kenny.pflug@live.de
+Copyright (c) 2016, 2020 Kenny Pflug mailto:kenny.pflug@live.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the ""Software""), to deal
@@ -64,21 +63,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-#if !NET35_CF
 using System.Linq.Expressions;
-#endif
 using System.Reflection;
-#if (NETSTANDARD2_0 || NETSTANDARD1_0 || NET45 || SILVERLIGHT)
 using System.Runtime.CompilerServices;
-#endif
-#if (NETSTANDARD2_0 || NET45 || NET40 || NET35)
 using System.Runtime.Serialization;
-#endif
 using System.Text;
 using System.Text.RegularExpressions;
 {(_options.IncludeJetBrainsAnnotationsUsing ? "using JetBrains.Annotations;" + Environment.NewLine : string.Empty)}using {_options.BaseNamespace}.Exceptions;
 using {_options.BaseNamespace}.FrameworkExtensions;
+
+#nullable enable annotations
 
 namespace {_options.BaseNamespace}
 {{
@@ -123,7 +119,187 @@ namespace JetBrains.Annotations
 }");
             }
 
-            var csharpParseOptions = new CSharpParseOptions(LanguageVersion.CSharp7_3, preprocessorSymbols: _options.DefinedPreprocessorSymbols);
+            if (_options.IncludeCodeAnalysisNullableAttributes)
+            {
+                stringBuilder.AppendLine().AppendLine(@"
+namespace System.Diagnostics.CodeAnalysis
+{
+    /// <summary>
+    /// Specifies that <see langword=""null""/> is allowed as an input even if the
+    /// corresponding type disallows it.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, Inherited = false)]
+    internal sealed class AllowNullAttribute : Attribute
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref=""AllowNullAttribute""/> class.
+        /// </summary>
+        public AllowNullAttribute() { }
+    }
+
+    /// <summary>
+    /// Specifies that <see langword=""null""/> is disallowed as an input even if the
+    /// corresponding type allows it.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, Inherited = false)]
+    internal sealed class DisallowNullAttribute : Attribute
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref=""DisallowNullAttribute""/> class.
+        /// </summary>
+        public DisallowNullAttribute() { }
+    }
+
+    /// <summary>
+    /// Specifies that a method that will never return under any circumstance.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method, Inherited = false)]
+    internal sealed class DoesNotReturnAttribute : Attribute
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref=""DoesNotReturnAttribute""/> class.
+        /// </summary>
+        public DoesNotReturnAttribute() { }
+    }
+
+    /// <summary>
+    /// Specifies that the method will not return if the associated <see cref=""Boolean""/>
+    /// parameter is passed the specified value.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
+    internal sealed class DoesNotReturnIfAttribute : Attribute
+    {
+        /// <summary>
+        /// Gets the condition parameter value.
+        /// Code after the method is considered unreachable by diagnostics if the argument
+        /// to the associated parameter matches this value.
+        /// </summary>
+        public bool ParameterValue { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref=""DoesNotReturnIfAttribute""/>
+        /// class with the specified parameter value.
+        /// </summary>
+        /// <param name=""parameterValue"">
+        /// The condition parameter value.
+        /// Code after the method is considered unreachable by diagnostics if the argument
+        /// to the associated parameter matches this value.
+        /// </param>
+        public DoesNotReturnIfAttribute(bool parameterValue)
+        {
+            ParameterValue = parameterValue;
+        }
+    }
+
+    /// <summary>
+    /// Specifies that an output may be <see langword=""null""/> even if the
+    /// corresponding type disallows it.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, Inherited = false)]
+    internal sealed class MaybeNullAttribute : Attribute
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref=""MaybeNullAttribute""/> class.
+        /// </summary>
+        public MaybeNullAttribute() { }
+    }
+
+    /// <summary>
+    /// Specifies that when a method returns <see cref=""ReturnValue""/>, 
+    /// the parameter may be <see langword=""null""/> even if the corresponding type disallows it.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
+    internal sealed class MaybeNullWhenAttribute : Attribute
+    {
+        /// <summary>
+        /// Gets the return value condition.
+        /// If the method returns this value, the associated parameter may be <see langword=""null""/>.
+        /// </summary>
+        public bool ReturnValue { get; }
+
+        /// <summary>
+        /// Initializes the attribute with the specified return value condition.
+        /// </summary>
+        /// <param name=""returnValue"">
+        /// The return value condition.
+        /// If the method returns this value, the associated parameter may be <see langword=""null""/>.
+        /// </param>
+        public MaybeNullWhenAttribute(bool returnValue)
+        {
+            ReturnValue = returnValue;
+        }
+    }
+
+    /// <summary>
+    /// Specifies that an output is not <see langword=""null""/> even if the
+    /// corresponding type allows it.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, Inherited = false)]
+    internal sealed class NotNullAttribute : Attribute
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref=""NotNullAttribute""/> class.
+        /// </summary>
+        public NotNullAttribute() { }
+    }
+
+    /// <summary>
+    /// Specifies that the output will be non-<see langword=""null""/> if the
+    /// named parameter is non-<see langword=""null""/>.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, AllowMultiple = true, Inherited = false)]
+    internal sealed class NotNullIfNotNullAttribute : Attribute
+    {
+        /// <summary>
+        /// Gets the associated parameter name.
+        /// The output will be non-<see langword=""null""/> if the argument to the
+        /// parameter specified is non-<see langword=""null""/>.
+        /// </summary>
+        public string ParameterName { get; }
+
+        /// <summary>
+        /// Initializes the attribute with the associated parameter name.
+        /// </summary>
+        /// <param name=""parameterName"">
+        /// The associated parameter name.
+        /// The output will be non-<see langword=""null""/> if the argument to the
+        /// parameter specified is non-<see langword=""null""/>.
+        /// </param>
+        public NotNullIfNotNullAttribute(string parameterName)
+        {
+            ParameterName = parameterName;
+        }
+    }
+
+    /// <summary>
+    /// Specifies that when a method returns <see cref=""ReturnValue""/>,
+    /// the parameter will not be <see langword=""null""/> even if the corresponding type allows it.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
+    internal sealed class NotNullWhenAttribute : Attribute
+    {
+        /// <summary>
+        /// Gets the return value condition.
+        /// If the method returns this value, the associated parameter will not be <see langword=""null""/>.
+        /// </summary>
+        public bool ReturnValue { get; }
+
+        /// <summary>
+        /// Initializes the attribute with the specified return value condition.
+        /// </summary>
+        /// <param name=""returnValue"">
+        /// The return value condition.
+        /// If the method returns this value, the associated parameter will not be <see langword=""null""/>.
+        /// </param>
+        public NotNullWhenAttribute(bool returnValue)
+        {
+            ReturnValue = returnValue;
+        }
+    }
+}");
+            }
+
+            var csharpParseOptions = new CSharpParseOptions(LanguageVersion.CSharp8);
             var targetSyntaxTree = CSharpSyntaxTree.ParseText(stringBuilder.ToString(), csharpParseOptions);
 
             var targetRoot = (CompilationUnitSyntax) targetSyntaxTree.GetRoot();
@@ -136,11 +312,11 @@ namespace JetBrains.Annotations
             var extensionsNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == $"{_options.BaseNamespace}.FrameworkExtensions");
             var jetBrainsNamespace = namespaces.FirstOrDefault(@namespace => @namespace.Name.ToString() == "JetBrains.Annotations");
             var replacedNodes = new Dictionary<NamespaceDeclarationSyntax, NamespaceDeclarationSyntax>
-            {
-                [defaultNamespace] = defaultNamespace,
-                [exceptionsNamespace] = exceptionsNamespace,
-                [extensionsNamespace] = extensionsNamespace
-            };
+                                {
+                                    [defaultNamespace] = defaultNamespace,
+                                    [exceptionsNamespace] = exceptionsNamespace,
+                                    [extensionsNamespace] = extensionsNamespace
+                                };
             if (_options.IncludeJetBrainsAnnotations)
                 replacedNodes.Add(jetBrainsNamespace, jetBrainsNamespace);
 
@@ -193,16 +369,10 @@ namespace JetBrains.Annotations
 
                 var membersToAdd = ((NamespaceDeclarationSyntax) sourceCompilationUnit.Members[0]).Members;
 
-                // The ExpressionExtensions.cs file needs to be adjusted as it cannot be compiled for .NET 3.5 Compact Framework
-                if (currentFile.Name == "ExpressionExtensions.cs")
-                {
-                    membersToAdd = NormalizeExpressionExtensions(membersToAdd);
-                }
-
                 var currentlyEditedNamespace = replacedNodes[originalNamespace];
                 replacedNodes[originalNamespace] = currentlyEditedNamespace
                    .WithMembers(
-                        currentlyEditedNamespace.Members.AddRange(membersToAdd));
+                                currentlyEditedNamespace.Members.AddRange(membersToAdd));
             }
 
             // After the Check class declaration is finished, insert it into the default namespace
@@ -227,8 +397,8 @@ namespace JetBrains.Annotations
                     {
                         var publicModifier = typeDeclarationSyntax.Modifiers[0];
                         var adjustedModifiers = typeDeclarationSyntax.Modifiers
-                                                               .RemoveAt(0)
-                                                               .Insert(0, Token(SyntaxKind.InternalKeyword).WithTriviaFrom(publicModifier));
+                                                                     .RemoveAt(0)
+                                                                     .Insert(0, Token(SyntaxKind.InternalKeyword).WithTriviaFrom(publicModifier));
 
                         if (typeDeclarationSyntax is ClassDeclarationSyntax classDeclaration)
                             changedTypeDeclarations[classDeclaration] = classDeclaration.WithModifiers(adjustedModifiers);
@@ -280,13 +450,7 @@ namespace JetBrains.Annotations
                 targetRoot = targetRoot.ReplaceNode(throwClass, throwClass.WithMembers(new SyntaxList<MemberDeclarationSyntax>(membersWithoutExceptionFactory)));
             }
 
-            // Remove preprocessor directives if necessary
             var targetFileContent = targetRoot.ToFullString();
-            if (_options.RemovePreprocessorDirectives)
-            {
-                Console.WriteLine("Preprocessor directives are removed...");
-                targetFileContent = new UndefineTransformation().Undefine(targetFileContent, _options.DefinedPreprocessorSymbols).ToString();
-            }
 
             Console.WriteLine("File is cleaned up...");
             targetFileContent = CleanupStep.Cleanup(targetFileContent, _options.RemoveContractAnnotations).ToString();
@@ -294,33 +458,6 @@ namespace JetBrains.Annotations
             // Write the target file 
             Console.WriteLine("File is written to disk...");
             await File.WriteAllTextAsync(_options.TargetFile, targetFileContent);
-        }
-
-        private static SyntaxList<MemberDeclarationSyntax> NormalizeExpressionExtensions(SyntaxList<MemberDeclarationSyntax> membersToAdd)
-        {
-            var expressionExtensionsClass = (ClassDeclarationSyntax) membersToAdd[0];
-            expressionExtensionsClass =
-                expressionExtensionsClass
-                   .WithLeadingTrivia(
-                        TriviaList(
-                                Trivia(
-                                    IfDirectiveTrivia(
-                                        PrefixUnaryExpression(
-                                            SyntaxKind.LogicalNotExpression,
-                                            IdentifierName("NET35_CF")),
-                                        true,
-                                        true,
-                                        true)))
-                           .AddRange(
-                                expressionExtensionsClass.GetLeadingTrivia()))
-                   .WithTrailingTrivia(
-                        TriviaList(
-                            Trivia(
-                                EndIfDirectiveTrivia(true))))
-                   .NormalizeWhitespace();
-
-            membersToAdd = List<MemberDeclarationSyntax>(new[] { expressionExtensionsClass });
-            return membersToAdd;
         }
     }
 }
