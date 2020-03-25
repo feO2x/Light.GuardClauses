@@ -21,7 +21,6 @@
 --------------------------------
 - added support for Nullable Reference Types
 
-
 Breaking Changes: 
 --------------------------------
 - Removed support for older frameworks (.NET Standard 2.0 and .NET Core App 3.0 are supported)
