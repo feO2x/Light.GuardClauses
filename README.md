@@ -2,8 +2,8 @@
 **A lightweight .NET library for expressive Guard Clauses.** 
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/blob/master/LICENSE)
-[![NuGet](https://img.shields.io/badge/NuGet-7.0.0-blue.svg?style=for-the-badge)](https://www.nuget.org/packages/Light.GuardClauses/)
-[![Source Code](https://img.shields.io/badge/Source%20Code-7.0.0-blue.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/blob/master/Light.GuardClauses.SingleFile.cs)
+[![NuGet](https://img.shields.io/badge/NuGet-8.0.0-blue.svg?style=for-the-badge)](https://www.nuget.org/packages/Light.GuardClauses/)
+[![Source Code](https://img.shields.io/badge/Source%20Code-8.0.0-blue.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/blob/master/Light.GuardClauses.SingleFile.cs)
 [![Documentation](https://img.shields.io/badge/Docs-Wiki-yellowgreen.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/wiki)
 [![Documentation](https://img.shields.io/badge/Docs-Changelog-yellowgreen.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/releases)
 
@@ -20,7 +20,7 @@ public class Foo
 {
     private readonly IBar _bar;
     
-    public Foo(IBar bar)
+    public Foo(IBar? bar)
     {
         if (bar == null)
             throw new ArgumentNullException(nameof(bar));
@@ -37,7 +37,7 @@ public class Foo
 {
     private readonly IBar _bar;
     
-    public Foo(IBar bar)
+    public Foo(IBar? bar)
     {
         _bar = bar.MustNotBeNull(nameof(bar));
     }
@@ -73,7 +73,7 @@ public class WebGateway
     private readonly HttpClient _httpClient;
     private readonly Uri _targetUrl;
 
-    public WebGateway(HttpClient httpClient, Uri targetUrl)
+    public WebGateway(HttpClient? httpClient, Uri? targetUrl)
     {
         _httpClient = httpClient.MustNotBeNull(nameof(httpClient));
         _targetUrl = targetUrl.MustBeHttpOrHttpsUrl(nameof(targetUrl));
@@ -92,25 +92,27 @@ Every assertion is well-documented - explore them using IntelliSense or check ou
 
 ## Light.GuardClauses is optimized
 
-Since version 4.x, **Light.GuardClauses** is optimized for performance (measured in .NET 4.7.x and .NET Core 2.x). With the incredible help of [@redknightlois](https://github.com/redknightlois) and the awesome tool [Benchmark.NET](https://github.com/dotnet/BenchmarkDotNet), most assertions are as fast as your imperative code would be.
+Since version 4.x, **Light.GuardClauses** is optimized for performance (measured in .NET 4.8 and .NET Core 3.x). With the incredible help of [@redknightlois](https://github.com/redknightlois) and the awesome tool [Benchmark.NET](https://github.com/dotnet/BenchmarkDotNet), most assertions are as fast as your imperative code would be.
 
 Furthermore, **Light.GuardClauses** has support for ReSharper since version 4.x. Via [Contract Annotations](https://www.jetbrains.com/help/resharper/Contract_Annotations.html), R# knows when assertions do not return a null value and thus removes squiggly lines indicating a possible `NullReferenceException`.
+
+**Light.GuardClauses** supports C#8 Nullable Reference Types since version 8.0.
 
 And, of course, the functional correctness of **Light.GuardClauses** is covered by a vast suite of automated tests.
 
 ## Supported Platforms
 
-Since version 4.x, **Light.GuardClauses** supports the following platforms:
-- .NET Standard 1.0 and 2.0
-- .NET 4.5, .NET 4.0, .NET 3.5, .NET 3.5 Compact Framework (it's called WinCE for a reason)
-- Silverlight 5
+**Light.GuardClauses** supports the following platforms:
+- .NET Standard 2.0
+- .NET Core 3.0
 
 ## How to Install
 
 Light.GuardClauses is available as a [NuGet package](https://www.nuget.org/packages/Light.GuardClauses/).
 
 - **dotnet CLI**: `dotnet add package Light.GuardClauses`
-- **Visual Studio Package Manager Console**: `Install-Package Light.GuardClauses` 
+- **Visual Studio Package Manager Console**: `Install-Package Light.GuardClauses`
+- **Package Reference in csproj**: `<PackageReference Include="Light.GuardClauses" Version="8.0.0" />`
 
 Also, you can incorporate Light.GuardClauses as a **single source file** where the API is changed to `internal`. This is especially interesting for framework / library developers that do not want to have a dependency on the Light.GuardClauses DLL. You can grab the default .NET Standard 2.0 version in [Light.GuardClauses.SingleFile.cs](https://github.com/feO2x/Light.GuardClauses/blob/master/Light.GuardClauses.SingleFile.cs) or you can use the [Light.GuardClauses.SourceCodeTransformation](https://github.com/feO2x/Light.GuardClauses/tree/master/Code/Light.GuardClauses.SourceCodeTransformation) project to create your custom file. You can learn more about it  [here](https://github.com/feO2x/Light.GuardClauses/wiki/Including-Light.GuardClauses-as-source-code).
 
