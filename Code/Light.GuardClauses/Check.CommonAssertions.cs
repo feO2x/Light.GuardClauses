@@ -63,7 +63,9 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
+#pragma warning disable CS8604 // Cannot be null here
             if (EqualityComparer<T>.Default.Equals(parameter, default))
+#pragma warning restore CS8604
                 Throw.ArgumentDefault(parameterName, message);
             return parameter;
 #pragma warning restore CS8653
@@ -87,7 +89,9 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
+#pragma warning disable CS8604 // Default cannot be null here
             if (EqualityComparer<T>.Default.Equals(parameter, default))
+#pragma warning restore CS8604
                 Throw.CustomException(exceptionFactory);
             return parameter;
 #pragma warning restore CS8653
