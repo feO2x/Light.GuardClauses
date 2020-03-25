@@ -11,9 +11,9 @@
     <Nullable>enable</Nullable>
     <Copyright>Copyright © Kenny Pflug 2016 - 2020</Copyright>
     <LangVersion>8.0</LangVersion>
-    <PackageIconUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/Images/light_logo.png</PackageIconUrl>
+    <PackageIcon>light-logo.png</PackageIcon>
     <PackageProjectUrl>https://github.com/feO2x/Light.GuardClauses</PackageProjectUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>Assertions;Preconditions;GuardClauses;DesignByContract;DbC</PackageTags>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
@@ -38,6 +38,10 @@ Breaking Changes:
 
   <ItemGroup>
     <Analyzer Include="..\Light.GuardClauses.InternalRoslynAnalyzers\bin\$(Configuration)\netstandard2.0\Light.GuardClauses.InternalRoslynAnalyzers.dll" Condition="Exists('..\Light.GuardClauses.InternalRoslynAnalyzers\bin\$(Configuration)\netstandard2.0\Light.GuardClauses.InternalRoslynAnalyzers.dll')" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="light-logo.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
