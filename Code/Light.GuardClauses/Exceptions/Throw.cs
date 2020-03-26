@@ -177,7 +177,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SameObjectReference<T>(T parameter, string? parameterName = null, string? message = null) where T : class =>
+        public static void SameObjectReference<T>(T? parameter, string? parameterName = null, string? message = null) where T : class =>
             throw new SameObjectReferenceException(parameterName, message ?? $"{parameterName ?? "The reference"} must not point to object \"{parameter}\", but it actually does.");
 
         /// <summary>

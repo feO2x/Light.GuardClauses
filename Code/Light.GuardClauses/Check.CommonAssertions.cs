@@ -375,7 +375,7 @@ namespace Light.GuardClauses
         // ReSharper disable StringLiteralTypo
         [ContractAnnotation("parameter:notNull => true, other:notnull; parameter:notNull => false, other:canbenull; other:notnull => true, parameter:notnull; other:notnull => false, parameter:canbenull")]
         // ReSharper restore StringLiteralTypo
-        public static bool IsSameAs<T>(this T parameter, T other) where T : class =>
+        public static bool IsSameAs<T>(this T? parameter, T? other) where T : class =>
             ReferenceEquals(parameter, other);
 
         /// <summary>
@@ -388,7 +388,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="SameObjectReferenceException">Thrown when both <paramref name="parameter" /> and <paramref name="other" /> point to the same object.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustNotBeSameAs<T>(this T parameter, T other, string? parameterName = null, string? message = null) where T : class
+        public static T? MustNotBeSameAs<T>(this T? parameter, T? other, string? parameterName = null, string? message = null) where T : class
         {
             if (ReferenceEquals(parameter, other))
                 Throw.SameObjectReference(parameter, parameterName, message);

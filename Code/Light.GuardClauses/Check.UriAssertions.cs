@@ -143,7 +143,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpsUrl(this Uri parameter, string? parameterName = null, string? message = null) => parameter.MustHaveScheme("https", parameterName, message);
+        public static Uri MustBeHttpsUrl(this Uri? parameter, string? parameterName = null, string? message = null) => parameter.MustHaveScheme("https", parameterName, message);
 
         /// <summary>
         /// Ensures that the specified URI has the "https" scheme, or otherwise throws your custom exception.
@@ -170,7 +170,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpUrl(this Uri parameter, string? parameterName = null, string? message = null) => parameter.MustHaveScheme("http", parameterName, message);
+        public static Uri MustBeHttpUrl(this Uri? parameter, string? parameterName = null, string? message = null) => parameter.MustHaveScheme("http", parameterName, message);
 
         /// <summary>
         /// Ensures that the specified URI has the "http" scheme, or otherwise throws your custom exception.
@@ -197,7 +197,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpOrHttpsUrl(this Uri parameter, string? parameterName = null, string? message = null)
+        public static Uri MustBeHttpOrHttpsUrl(this Uri? parameter, string? parameterName = null, string? message = null)
         {
             if (parameter.MustBeAbsoluteUri(parameterName, message).Scheme.Equals("https") == false && parameter.Scheme.Equals("http") == false)
                 Throw.UriMustHaveOneSchemeOf(parameter, new[] { "https", "http" }, parameterName, message);
