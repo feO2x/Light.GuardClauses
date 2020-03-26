@@ -1,5 +1,5 @@
 /* ------------------------------
-   Light.GuardClauses 8.0.0
+   Light.GuardClauses 8.0.1
    ------------------------------
 
 License information for Light.GuardClauses
@@ -418,7 +418,7 @@ namespace Light.GuardClauses
         // ReSharper disable StringLiteralTypo
         [ContractAnnotation("parameter:notNull => true, other:notnull; parameter:notNull => false, other:canbenull; other:notnull => true, parameter:notnull; other:notnull => false, parameter:canbenull")]
         // ReSharper restore StringLiteralTypo
-        public static bool IsSameAs<T>(this T parameter, T other)
+        public static bool IsSameAs<T>(this T? parameter, T? other)
             where T : class => ReferenceEquals(parameter, other);
         /// <summary>
         /// Ensures that <paramref name = "parameter"/> and <paramref name = "other"/> do not point to the same object instance, or otherwise
@@ -430,7 +430,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "SameObjectReferenceException">Thrown when both <paramref name = "parameter"/> and <paramref name = "other"/> point to the same object.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustNotBeSameAs<T>(this T parameter, T other, string? parameterName = null, string? message = null)
+        public static T? MustNotBeSameAs<T>(this T? parameter, T? other, string? parameterName = null, string? message = null)
             where T : class
         {
             if (ReferenceEquals(parameter, other))
@@ -3082,7 +3082,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Throw when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpsUrl(this Uri parameter, string? parameterName = null, string? message = null) => parameter.MustHaveScheme("https", parameterName, message);
+        public static Uri MustBeHttpsUrl(this Uri? parameter, string? parameterName = null, string? message = null) => parameter.MustHaveScheme("https", parameterName, message);
         /// <summary>
         /// Ensures that the specified URI has the "https" scheme, or otherwise throws your custom exception.
         /// </summary>
@@ -3107,7 +3107,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Throw when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpUrl(this Uri parameter, string? parameterName = null, string? message = null) => parameter.MustHaveScheme("http", parameterName, message);
+        public static Uri MustBeHttpUrl(this Uri? parameter, string? parameterName = null, string? message = null) => parameter.MustHaveScheme("http", parameterName, message);
         /// <summary>
         /// Ensures that the specified URI has the "http" scheme, or otherwise throws your custom exception.
         /// </summary>
@@ -3132,7 +3132,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Throw when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpOrHttpsUrl(this Uri parameter, string? parameterName = null, string? message = null)
+        public static Uri MustBeHttpOrHttpsUrl(this Uri? parameter, string? parameterName = null, string? message = null)
         {
             if (parameter.MustBeAbsoluteUri(parameterName, message).Scheme.Equals("https") == false && parameter.Scheme.Equals("http") == false)
                 Throw.UriMustHaveOneSchemeOf(parameter, new[]{"https", "http"}, parameterName, message);
@@ -4298,7 +4298,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SameObjectReference<T>(T parameter, string? parameterName = null, string? message = null)
+        public static void SameObjectReference<T>(T? parameter, string? parameterName = null, string? message = null)
             where T : class => throw new SameObjectReferenceException(parameterName, message ?? $"{parameterName ?? "The reference"} must not point to object \"{parameter}\", but it actually does.");
         /// <summary>
         /// Throws the default <see cref = "EmptyStringException"/> indicating that a string is empty, using the optional parameter name and message.
