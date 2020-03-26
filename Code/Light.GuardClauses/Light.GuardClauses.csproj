@@ -17,13 +17,9 @@
     <RepositoryType>Git</RepositoryType>
     <PackageTags>Assertions;Preconditions;GuardClauses;DesignByContract;DbC</PackageTags>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-    <PackageReleaseNotes>Light.GuardClauses 8.0.0
+    <PackageReleaseNotes>Light.GuardClauses 8.0.1
 --------------------------------
-- added support for Nullable Reference Types
-
-Breaking Changes: 
---------------------------------
-- Removed support for older frameworks (.NET Standard 2.0 and .NET Core App 3.0 are supported)
+- fixed missing NullableReferenceType indicators in URI assertions and IsSameAs / MustNotBeSameAs, as well as Throw.SameObjectReference
     </PackageReleaseNotes>
   </PropertyGroup>
 
