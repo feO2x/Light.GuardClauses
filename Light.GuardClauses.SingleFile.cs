@@ -3134,9 +3134,9 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static Uri MustBeHttpOrHttpsUrl(this Uri? parameter, string? parameterName = null, string? message = null)
         {
-            if (parameter.MustBeAbsoluteUri(parameterName, message).Scheme.Equals("https") == false && parameter.Scheme.Equals("http") == false)
+            if (parameter.MustBeAbsoluteUri(parameterName, message).Scheme.Equals("https") == false && parameter!.Scheme.Equals("http") == false)
                 Throw.UriMustHaveOneSchemeOf(parameter, new[]{"https", "http"}, parameterName, message);
-            return parameter;
+            return parameter!;
         }
 
         /// <summary>
