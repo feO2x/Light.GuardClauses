@@ -65,7 +65,7 @@ namespace Light.GuardClauses.SourceCodeTransformation
             }
         }
 
-        private ref struct LineOfCode
+        private readonly ref struct LineOfCode
         {
             public readonly LineOfCodeType Type;
             public readonly ReadOnlySpan<char> Span;

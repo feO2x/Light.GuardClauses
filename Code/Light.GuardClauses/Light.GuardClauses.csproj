@@ -17,9 +17,10 @@
     <RepositoryType>Git</RepositoryType>
     <PackageTags>Assertions;Preconditions;GuardClauses;DesignByContract;DbC</PackageTags>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-    <PackageReleaseNotes>Light.GuardClauses 8.0.1
+    <PackageReleaseNotes>Light.GuardClauses 8.1.0
 --------------------------------
-- fixed missing NullableReferenceType indicators in URI assertions and IsSameAs / MustNotBeSameAs, as well as Throw.SameObjectReference
+- added is IsNewLine and MustBeNewLine
+- fixed warnings about incorrect NRT use in IEqualityComparer&lt;T&gt; implementations
     </PackageReleaseNotes>
   </PropertyGroup>
 

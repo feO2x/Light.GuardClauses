@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
 namespace Light.GuardClauses.SourceCodeTransformation
 {
     public static class Program
     {
-        public static async Task<int> Main(string[] args)
+        public static int Main(string[] args)
         {
             Console.WriteLine("Creating configuration...");
             var configuration =
@@ -17,11 +16,10 @@ namespace Light.GuardClauses.SourceCodeTransformation
 
             var mergeOptionsBuilder = new SourceFileMergeOptions.Builder();
             configuration.Bind(mergeOptionsBuilder);
-            var merger = new SourceFileMerger(mergeOptionsBuilder.Build());
             try
             {
                 Console.WriteLine("Merging source files...");
-                await merger.CreateSingleSourceFileAsync();
+                SourceFileMerger.CreateSingleSourceFile(mergeOptionsBuilder.Build());
                 Console.WriteLine("Source file export completed successfully.");
                 return 0;
             }

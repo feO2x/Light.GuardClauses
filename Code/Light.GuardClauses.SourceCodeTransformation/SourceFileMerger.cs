@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Light.GuardClauses.FrameworkExtensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -12,19 +11,16 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Light.GuardClauses.SourceCodeTransformation
 {
-    public sealed class SourceFileMerger
+    public static class SourceFileMerger
     {
-        private readonly SourceFileMergeOptions _options;
-
-        public SourceFileMerger(SourceFileMergeOptions options) =>
-            _options = options.MustNotBeNull(nameof(options));
-
-        public async Task CreateSingleSourceFileAsync()
+        public static void CreateSingleSourceFile(SourceFileMergeOptions options)
         {
+            options.MustNotBeNull(nameof(options));
+
             // Prepare the target syntax
             var stringBuilder = new StringBuilder();
 
-            if (_options.IncludeVersionComment)
+            if (options.IncludeVersionComment)
             {
                 Console.WriteLine("Appending version header...");
                 stringBuilder.AppendLine("/* ------------------------------")
@@ -34,7 +30,7 @@ namespace Light.GuardClauses.SourceCodeTransformation
             }
 
             Console.WriteLine("Creating default file layout...");
-            stringBuilder.AppendLineIf(!_options.IncludeVersionComment, "/*")
+            stringBuilder.AppendLineIf(!options.IncludeVersionComment, "/*")
                          .AppendLine($@"License information for Light.GuardClauses
 
 The MIT License (MIT)
@@ -71,24 +67,24 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
-{(_options.IncludeJetBrainsAnnotationsUsing ? "using JetBrains.Annotations;" + Environment.NewLine : string.Empty)}using {_options.BaseNamespace}.Exceptions;
-using {_options.BaseNamespace}.FrameworkExtensions;
+{(options.IncludeJetBrainsAnnotationsUsing ? "using JetBrains.Annotations;" + Environment.NewLine : string.Empty)}using {options.BaseNamespace}.Exceptions;
+using {options.BaseNamespace}.FrameworkExtensions;
 
 #nullable enable annotations
 
-namespace {_options.BaseNamespace}
+namespace {options.BaseNamespace}
 {{
     
 }}
 
-namespace {_options.BaseNamespace}.Exceptions
+namespace {options.BaseNamespace}.Exceptions
 {{
 }}
 
-namespace {_options.BaseNamespace}.FrameworkExtensions
+namespace {options.BaseNamespace}.FrameworkExtensions
 {{
 }}");
-            if (_options.IncludeJetBrainsAnnotations)
+            if (options.IncludeJetBrainsAnnotations)
             {
                 stringBuilder.AppendLine().AppendLine(@"/* 
 License information for JetBrains.Annotations
@@ -119,7 +115,7 @@ namespace JetBrains.Annotations
 }");
             }
 
-            if (_options.IncludeCodeAnalysisNullableAttributes)
+            if (options.IncludeCodeAnalysisNullableAttributes)
             {
                 stringBuilder.AppendLine().AppendLine(@"
 namespace System.Diagnostics.CodeAnalysis
@@ -307,29 +303,29 @@ namespace System.Diagnostics.CodeAnalysis
             var namespaces = targetRoot.Members
                                        .OfType<NamespaceDeclarationSyntax>()
                                        .ToList();
-            var defaultNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == $"{_options.BaseNamespace}");
-            var exceptionsNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == $"{_options.BaseNamespace}.Exceptions");
-            var extensionsNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == $"{_options.BaseNamespace}.FrameworkExtensions");
+            var defaultNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == $"{options.BaseNamespace}");
+            var exceptionsNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == $"{options.BaseNamespace}.Exceptions");
+            var extensionsNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == $"{options.BaseNamespace}.FrameworkExtensions");
             var jetBrainsNamespace = namespaces.FirstOrDefault(@namespace => @namespace.Name.ToString() == "JetBrains.Annotations");
             var replacedNodes = new Dictionary<NamespaceDeclarationSyntax, NamespaceDeclarationSyntax>
-                                {
-                                    [defaultNamespace] = defaultNamespace,
-                                    [exceptionsNamespace] = exceptionsNamespace,
-                                    [extensionsNamespace] = extensionsNamespace
-                                };
-            if (_options.IncludeJetBrainsAnnotations)
+            {
+                [defaultNamespace] = defaultNamespace,
+                [exceptionsNamespace] = exceptionsNamespace,
+                [extensionsNamespace] = extensionsNamespace
+            };
+            if (options.IncludeJetBrainsAnnotations)
                 replacedNodes.Add(jetBrainsNamespace, jetBrainsNamespace);
 
-            var allSourceFiles = new DirectoryInfo(_options.SourceFolder).GetFiles("*.cs", SearchOption.AllDirectories)
-                                                                         .Where(f => !f.FullName.Contains("obj") &&
-                                                                                     !f.FullName.Contains("bin"))
-                                                                         .ToDictionary(f => f.Name);
+            var allSourceFiles = new DirectoryInfo(options.SourceFolder).GetFiles("*.cs", SearchOption.AllDirectories)
+                                                                        .Where(f => !f.FullName.Contains("obj") &&
+                                                                                    !f.FullName.Contains("bin"))
+                                                                        .ToDictionary(f => f.Name);
 
             // Start with Check.CommonAssertions before all other files to prepare the Check class
             Console.WriteLine("Merging source files of the Check class...");
             var currentFile = allSourceFiles["Check.CommonAssertions.cs"];
 
-            var sourceSyntaxTree = CSharpSyntaxTree.ParseText(await currentFile.ReadContentAsync(), csharpParseOptions);
+            var sourceSyntaxTree = CSharpSyntaxTree.ParseText(currentFile.ReadContent(), csharpParseOptions);
             var checkClassDeclaration = (ClassDeclarationSyntax) sourceSyntaxTree.GetRoot()
                                                                                  .DescendantNodes()
                                                                                  .First(node => node.Kind() == SyntaxKind.ClassDeclaration);
@@ -343,13 +339,13 @@ namespace System.Diagnostics.CodeAnalysis
                     continue;
 
                 currentFile = allSourceFiles[fileName];
-                sourceSyntaxTree = CSharpSyntaxTree.ParseText(await currentFile.ReadContentAsync(), csharpParseOptions);
+                sourceSyntaxTree = CSharpSyntaxTree.ParseText(currentFile.ReadContent(), csharpParseOptions);
                 var originalNamespace = defaultNamespace;
                 if (currentFile.Directory?.Name == "FrameworkExtensions")
                     originalNamespace = extensionsNamespace;
                 else if (currentFile.Directory?.Name == "Exceptions")
                     originalNamespace = exceptionsNamespace;
-                else if (_options.IncludeJetBrainsAnnotations && currentFile.Name == "ReSharperAnnotations.cs")
+                else if (options.IncludeJetBrainsAnnotations && currentFile.Name == "ReSharperAnnotations.cs")
                     originalNamespace = jetBrainsNamespace;
 
                 // If the file contains assertions, add it to the existing Check class declaration
@@ -372,7 +368,7 @@ namespace System.Diagnostics.CodeAnalysis
                 var currentlyEditedNamespace = replacedNodes[originalNamespace];
                 replacedNodes[originalNamespace] = currentlyEditedNamespace
                    .WithMembers(
-                                currentlyEditedNamespace.Members.AddRange(membersToAdd));
+                        currentlyEditedNamespace.Members.AddRange(membersToAdd));
             }
 
             // After the Check class declaration is finished, insert it into the default namespace
@@ -383,7 +379,7 @@ namespace System.Diagnostics.CodeAnalysis
             targetRoot = targetRoot.ReplaceNodes(replacedNodes.Keys, (originalNode, _) => replacedNodes[originalNode]).NormalizeWhitespace();
 
             // Make types internal if necessary
-            if (_options.ChangePublicTypesToInternalTypes)
+            if (options.ChangePublicTypesToInternalTypes)
             {
                 Console.WriteLine("Types are changed from public to internal...");
                 var changedTypeDeclarations = new Dictionary<MemberDeclarationSyntax, MemberDeclarationSyntax>();
@@ -417,14 +413,13 @@ namespace System.Diagnostics.CodeAnalysis
                                                                    .Insert(0, Token(SyntaxKind.InternalKeyword).WithTriviaFrom(publicModifier));
                         changedTypeDeclarations[delegateDeclaration] = delegateDeclaration.WithModifiers(adjustedModifiers);
                     }
-
                 }
 
                 targetRoot = targetRoot.ReplaceNodes(changedTypeDeclarations.Keys, (originalNode, _) => changedTypeDeclarations[originalNode]);
             }
 
             // Remove assertion overloads that incorporate an exception factory if necessary
-            if (_options.RemoveOverloadsWithExceptionFactory)
+            if (options.RemoveOverloadsWithExceptionFactory)
             {
                 Console.WriteLine("Removing overloads with exception factory...");
 
@@ -453,11 +448,11 @@ namespace System.Diagnostics.CodeAnalysis
             var targetFileContent = targetRoot.ToFullString();
 
             Console.WriteLine("File is cleaned up...");
-            targetFileContent = CleanupStep.Cleanup(targetFileContent, _options.RemoveContractAnnotations).ToString();
+            targetFileContent = CleanupStep.Cleanup(targetFileContent, options.RemoveContractAnnotations).ToString();
 
             // Write the target file 
             Console.WriteLine("File is written to disk...");
-            await File.WriteAllTextAsync(_options.TargetFile, targetFileContent);
+            File.WriteAllText(options.TargetFile, targetFileContent);
         }
     }
 }
