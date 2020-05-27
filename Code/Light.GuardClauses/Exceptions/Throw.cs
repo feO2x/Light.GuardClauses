@@ -315,6 +315,15 @@ namespace Light.GuardClauses.Exceptions
         [DoesNotReturn]
         public static void StringLengthNotInRange(string parameter, Range<int> range, string? parameterName = null, string? message = null) =>
             throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must have its length in between {range.CreateRangeDescriptionText("and")}, but it actually has length {parameter.Length}.");
+
+        /// <summary>
+        /// Throws the default <see cref="StringException"/> indicating that a string is not equal to "\n" or "\r\n".
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void NotNewLine(string? parameter, string? parameterName, string? message) =>
+            throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must be either \"\\n\" or \"\\r\\n\", but it actually is {parameter.ToStringOrNull()}.");
+
         /// <summary>
         /// Throws the default <see cref="ValuesNotEqualException" /> indicating that two values are not equal, using the optional parameter name and message.
         /// </summary>
@@ -601,5 +610,7 @@ namespace Light.GuardClauses.Exceptions
         [DoesNotReturn]
         public static void CustomSpanException<TItem, T>(ReadOnlySpanExceptionFactory<TItem, T> exceptionFactory, in ReadOnlySpan<TItem> span, T value) =>
             throw exceptionFactory.MustNotBeNull(nameof(exceptionFactory))(span, value);
+
+
     }
 }

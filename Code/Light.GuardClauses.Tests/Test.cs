@@ -4,6 +4,8 @@ using FluentAssertions.Specialized;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
+#nullable enable
+
 namespace Light.GuardClauses.Tests
 {
     public static class Test
