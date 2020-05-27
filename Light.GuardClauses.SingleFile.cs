@@ -1,5 +1,5 @@
 /* ------------------------------
-   Light.GuardClauses 8.0.1
+   Light.GuardClauses 8.1.0
    ------------------------------
 
 License information for Light.GuardClauses
@@ -2741,6 +2741,45 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Checks if the string is either "\n" or "\r\n". This is done independently of the current value of <see cref = "Environment.NewLine"/>.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("=> false, parameter:canbenull; => true, parameter:notnull")]
+        public static bool IsNewLine([NotNullWhen(true)] this string? parameter) => parameter == "\n" || parameter == "\r\n";
+        /// <summary>
+        /// Ensures that the string is either "\n" or "\r\n", or otherwise throws a <see cref = "StringException"/>. This is done independently of the current value of <see cref = "Environment.NewLine"/>.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "StringException">Thrown when <paramref name = "parameter"/> is not equal to "\n" or "\r\n".</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeNewLine(this string? parameter, string? parameterName = null, string? message = null)
+        {
+            if (!parameter.MustNotBeNull(parameterName, message).IsNewLine())
+                Throw.NotNewLine(parameter!, parameterName, message);
+            return parameter!;
+        }
+
+        /// <summary>
+        /// Ensures that the string is either "\n" or "\r\n", or otherwise throws your custom exception. This is done independently of the current value of <see cref = "Environment.NewLine"/>.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is not equal to "\n" or "\r\n".</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeNewLine(this string? parameter, Func<string?, Exception> exceptionFactory)
+        {
+            if (!parameter.IsNewLine())
+                Throw.CustomException(exceptionFactory, parameter);
+            return parameter!;
+        }
+
+        /// <summary>
         /// Checks if the two specified types are equivalent. This is true when both types are equal or
         /// when one type is a constructed generic type and the other type is the corresponding generic type definition.
         /// </summary>
@@ -2751,7 +2790,7 @@ namespace Light.GuardClauses
         /// is a constructed generic type and the other one is the corresponding generic type definition, else false.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsEquivalentTypeTo(this Type type, Type other) => ReferenceEquals(type, other) || !(type is null) && !(other is null) && (type == other || type.IsConstructedGenericType != other.IsConstructedGenericType && CheckTypeEquivalency(type, other));
+        public static bool IsEquivalentTypeTo(this Type? type, Type? other) => ReferenceEquals(type, other) || !(type is null) && !(other is null) && (type == other || type.IsConstructedGenericType != other.IsConstructedGenericType && CheckTypeEquivalency(type, other));
         private static bool CheckTypeEquivalency(Type type, Type other)
         {
             if (type.IsConstructedGenericType)
@@ -3335,7 +3374,7 @@ namespace Light.GuardClauses
         /// <param name = "x">The first type.</param>
         /// <param name = "y">The second type.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(Type x, Type y) => x.IsEquivalentTypeTo(y);
+        public bool Equals(Type? x, Type? y) => x.IsEquivalentTypeTo(y);
         /// <summary>
         /// Returns the hash code of the given type. When the specified type is a constructed generic type,
         /// the hash code of the generic type definition is returned instead.
@@ -3357,7 +3396,7 @@ namespace Light.GuardClauses
         /// the white space of the provided strings.
         /// </summary>
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "x"/> or <paramref name = "y"/> are null.</exception>
-        public bool Equals(string x, string y)
+        public bool Equals(string? x, string? y)
         {
             x.MustNotBeNull(nameof(x));
             y.MustNotBeNull(nameof(y));
@@ -3394,7 +3433,7 @@ namespace Light.GuardClauses
         /// of the provided strings.
         /// </summary>
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "x"/> or <paramref name = "y"/> are null.</exception>
-        public bool Equals(string x, string y)
+        public bool Equals(string? x, string? y)
         {
             x.MustNotBeNull(nameof(x));
             y.MustNotBeNull(nameof(y));
@@ -4402,6 +4441,12 @@ namespace Light.GuardClauses.Exceptions
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void StringLengthNotInRange(string parameter, Range<int> range, string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must have its length in between {range.CreateRangeDescriptionText("and")}, but it actually has length {parameter.Length}.");
+        /// <summary>
+        /// Throws the default <see cref = "StringException"/> indicating that a string is not equal to "\n" or "\r\n".
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void NotNewLine(string? parameter, string? parameterName, string? message) => throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must be either \"\\n\" or \"\\r\\n\", but it actually is {parameter.ToStringOrNull()}.");
         /// <summary>
         /// Throws the default <see cref = "ValuesNotEqualException"/> indicating that two values are not equal, using the optional parameter name and message.
         /// </summary>
