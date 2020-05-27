@@ -18,7 +18,7 @@ namespace Light.GuardClauses
         /// is a constructed generic type and the other one is the corresponding generic type definition, else false.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsEquivalentTypeTo(this Type type, Type other) =>
+        public static bool IsEquivalentTypeTo(this Type? type, Type? other) =>
             ReferenceEquals(type, other) ||
             !(type is null) &&
             !(other is null) &&

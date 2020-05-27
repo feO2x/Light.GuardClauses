@@ -15,7 +15,7 @@ namespace Light.GuardClauses
         /// of the provided strings.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="x"/> or <paramref name="y"/> are null.</exception>
-        public bool Equals(string x, string y)
+        public bool Equals(string? x, string? y)
         {
             x.MustNotBeNull(nameof(x));
             y.MustNotBeNull(nameof(y));

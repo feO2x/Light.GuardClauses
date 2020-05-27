@@ -26,7 +26,7 @@ namespace Light.GuardClauses
         /// <param name="x">The first type.</param>
         /// <param name="y">The second type.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Equals(Type x, Type y) => x.IsEquivalentTypeTo(y);
+        public bool Equals(Type? x, Type? y) => x.IsEquivalentTypeTo(y);
 
         /// <summary>
         /// Returns the hash code of the given type. When the specified type is a constructed generic type,
