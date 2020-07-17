@@ -7,7 +7,7 @@
 [![Documentation](https://img.shields.io/badge/Docs-Wiki-yellowgreen.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/wiki)
 [![Documentation](https://img.shields.io/badge/Docs-Changelog-yellowgreen.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/releases)
 
-[![Video introduction to Light.GuardClauses](https://raw.githubusercontent.com/feO2x/Light.GuardClauses/master/Images/version2-video-logo.png)](https://youtu.be/wTDY_Gt46vU) 
+[![Video introduction to Light.GuardClauses](Images/version2-video-logo.png)](https://youtu.be/wTDY_Gt46vU)
 
 ## Light.GuardClauses - easy precondition checks in C# / .NET
 
