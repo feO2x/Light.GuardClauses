@@ -103,8 +103,8 @@ And, of course, the functional correctness of **Light.GuardClauses** is covered 
 ## Supported Platforms
 
 **Light.GuardClauses** supports the following platforms:
-- .NET Standard 2.0
-- .NET Core 3.0
+- .NET Standard 2.0 or higher
+- .NET Core 3.0 or higher
 
 ## How to Install
 
