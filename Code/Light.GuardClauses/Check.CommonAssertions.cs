@@ -20,7 +20,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeNull<T>(this T? parameter, string? parameterName = null, string? message = null) where T : class
+        public static T MustNotBeNull<T>([ValidatedNotNull] this T? parameter, string? parameterName = null, string? message = null) where T : class
         {
             if (parameter == null)
                 Throw.ArgumentNull(parameterName, message);
@@ -35,7 +35,7 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeNull<T>(this T? parameter, Func<Exception> exceptionFactory) where T : class
+        public static T MustNotBeNull<T>([ValidatedNotNull] this T? parameter, Func<Exception> exceptionFactory) where T : class
         {
             if (parameter == null)
                 Throw.CustomException(exceptionFactory);
@@ -53,9 +53,8 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentDefaultException">Thrown when <paramref name="parameter" /> is a value type and the default value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeDefault<T>(this T parameter, string? parameterName = null, string? message = null)
+        public static T MustNotBeDefault<T>([ValidatedNotNull] this T parameter, string? parameterName = null, string? message = null)
         {
-#pragma warning disable CS8653 // It's ok if T is resolved to a reference type. This method is usually used in generic contexts.
             if (default(T) == null)
             {
                 if (parameter == null)
@@ -63,12 +62,9 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-#pragma warning disable CS8604 // Cannot be null here
             if (EqualityComparer<T>.Default.Equals(parameter, default))
-#pragma warning restore CS8604
                 Throw.ArgumentDefault(parameterName, message);
             return parameter;
-#pragma warning restore CS8653
         }
 
         /// <summary>
@@ -79,9 +75,8 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is the default value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeDefault<T>(this T parameter, Func<Exception> exceptionFactory)
+        public static T MustNotBeDefault<T>([ValidatedNotNull] this T parameter, Func<Exception> exceptionFactory)
         {
-#pragma warning disable CS8653 // It's ok if T is resolved to a reference type. This method is usually used in generic contexts.
             if (default(T) == null)
             {
                 if (parameter == null)
@@ -89,12 +84,9 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-#pragma warning disable CS8604 // Default cannot be null here
             if (EqualityComparer<T>.Default.Equals(parameter, default))
-#pragma warning restore CS8604
                 Throw.CustomException(exceptionFactory);
             return parameter;
-#pragma warning restore CS8653
 
         }
 
@@ -109,11 +101,9 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <typeparamref name="T" /> is a reference type and <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeNullReference<T>(this T parameter, string? parameterName = null, string? message = null)
+        public static T MustNotBeNullReference<T>([ValidatedNotNull] this T parameter, string? parameterName = null, string? message = null)
         {
-#pragma warning disable CS8653 // It's ok if T is resolved to a reference type. This method is usually used in generic contexts.
             if (default(T) != null)
-#pragma warning restore CS8653
                 return parameter;
 
             if (parameter == null)
@@ -131,11 +121,9 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when <typeparamref name="T" /> is a reference type and <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeNullReference<T>(this T parameter, Func<Exception> exceptionFactory)
+        public static T MustNotBeNullReference<T>([ValidatedNotNull] this T parameter, Func<Exception> exceptionFactory)
         {
-#pragma warning disable CS8653 // It's ok if T is resolved to a reference type. This method is usually used in generic contexts.
             if (default(T) != null)
-#pragma warning restore CS8653
                 return parameter;
 
             if (parameter == null)
@@ -153,15 +141,13 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeOfType<T>(this object? parameter, string? parameterName = null, string? message = null)
+        public static T MustBeOfType<T>([ValidatedNotNull] this object? parameter, string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message) is T castValue)
                 return castValue;
 
             Throw.InvalidTypeCast(parameter, typeof(T), parameterName, message);
-#pragma warning disable CS8653 // This line of code is never reached
             return default;
-#pragma warning restore CS8653
         }
 
         /// <summary>
@@ -172,15 +158,13 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> cannot be cast to <typeparamref name="T" />.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustBeOfType<T>(this object? parameter, Func<object?, Exception> exceptionFactory)
+        public static T MustBeOfType<T>([ValidatedNotNull] this object? parameter, Func<object?, Exception> exceptionFactory)
         {
             if (parameter is T castValue)
                 return castValue;
 
             Throw.CustomException(exceptionFactory, parameter);
-#pragma warning disable CS8653 // This line of code is never reached
             return default;
-#pragma warning restore CS8653
         }
 
         /// <summary>
@@ -473,7 +457,8 @@ namespace Light.GuardClauses
         [ContractAnnotation("equalityComparer:null => halt")]
         public static T MustBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, Func<T, T, IEqualityComparer<T>, Exception> exceptionFactory)
         {
-            if (equalityComparer == null || !equalityComparer.Equals(parameter, other))
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            if (equalityComparer is null || !equalityComparer.Equals(parameter, other))
                 Throw.CustomException(exceptionFactory, parameter, other, equalityComparer!);
             return parameter;
         }
@@ -540,7 +525,8 @@ namespace Light.GuardClauses
         [ContractAnnotation("equalityComparer:null => halt")]
         public static T MustNotBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, Func<T, T, IEqualityComparer<T>, Exception> exceptionFactory)
         {
-            if (equalityComparer == null || equalityComparer.Equals(parameter, other))
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            if (equalityComparer is null || equalityComparer.Equals(parameter, other))
                 Throw.CustomException(exceptionFactory, parameter, other, equalityComparer!);
             return parameter;
         }
