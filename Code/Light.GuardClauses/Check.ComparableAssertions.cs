@@ -24,7 +24,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeLessThan<T>(this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustNotBeLessThan<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) < 0)
                 Throw.MustNotBeLessThan(parameter, other, parameterName, message);
@@ -40,10 +40,11 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when the specified <paramref name="parameter" /> is less than <paramref name="other" />, or when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeLessThan<T>(this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
+        public static T MustNotBeLessThan<T>([ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
         {
-            if (parameter == null || parameter.CompareTo(other) < 0)
-                Throw.CustomException(exceptionFactory, parameter, other);
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            if (parameter is null || parameter.CompareTo(other) < 0)
+                Throw.CustomException(exceptionFactory, parameter!, other);
             return parameter;
         }
 
@@ -58,7 +59,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeGreaterThanOrEqualTo<T>(this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustBeGreaterThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) < 0)
                 Throw.MustBeGreaterThanOrEqualTo(parameter, other, parameterName, message);
@@ -74,10 +75,11 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when the specified <paramref name="parameter" /> is less than <paramref name="other" />, or when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustBeGreaterThanOrEqualTo<T>(this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
+        public static T MustBeGreaterThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
         {
-            if (parameter == null || parameter.CompareTo(other) < 0)
-                Throw.CustomException(exceptionFactory, parameter, other);
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            if (parameter is null || parameter.CompareTo(other) < 0)
+                Throw.CustomException(exceptionFactory, parameter!, other);
             return parameter;
         }
 
@@ -98,7 +100,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeLessThan<T>(this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustBeLessThan<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) >= 0)
                 Throw.MustBeLessThan(parameter, other, parameterName, message);
@@ -114,10 +116,11 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when the specified <paramref name="parameter" /> is not less than <paramref name="other" />, or when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustBeLessThan<T>(this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
+        public static T MustBeLessThan<T>([ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
         {
-            if (parameter == null || parameter.CompareTo(other) >= 0)
-                Throw.CustomException(exceptionFactory, parameter, other);
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            if (parameter is null || parameter.CompareTo(other) >= 0)
+                Throw.CustomException(exceptionFactory, parameter!, other);
             return parameter;
         }
 
@@ -132,7 +135,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeGreaterThanOrEqualTo<T>(this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustNotBeGreaterThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) >= 0)
                 Throw.MustNotBeGreaterThanOrEqualTo(parameter, other, parameterName, message);
@@ -148,10 +151,11 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when the specified <paramref name="parameter" /> is not less than <paramref name="other" />, or when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeGreaterThanOrEqualTo<T>(this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
+        public static T MustNotBeGreaterThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
         {
-            if (parameter == null || parameter.CompareTo(other) >= 0)
-                Throw.CustomException(exceptionFactory, parameter, other);
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            if (parameter is null || parameter.CompareTo(other) >= 0)
+                Throw.CustomException(exceptionFactory, parameter!, other);
             return parameter;
         }
 
@@ -172,7 +176,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeGreaterThan<T>(this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) <= 0)
                 Throw.MustBeGreaterThan(parameter, other, parameterName, message);
@@ -188,10 +192,11 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when the specified <paramref name="parameter" /> is less than or equal to <paramref name="other" />, or when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustBeGreaterThan<T>(this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
+        public static T MustBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
         {
-            if (parameter == null || parameter.CompareTo(other) <= 0)
-                Throw.CustomException(exceptionFactory, parameter, other);
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            if (parameter is null || parameter.CompareTo(other) <= 0)
+                Throw.CustomException(exceptionFactory, parameter!, other);
             return parameter;
         }
 
@@ -206,7 +211,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeLessThanOrEqualTo<T>(this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustNotBeLessThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) <= 0)
                 Throw.MustNotBeLessThanOrEqualTo(parameter, other, parameterName, message);
@@ -222,10 +227,11 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when the specified <paramref name="parameter" /> is less than or equal to <paramref name="other" />, or when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeLessThanOrEqualTo<T>(this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
+        public static T MustNotBeLessThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
         {
-            if (parameter == null || parameter.CompareTo(other) <= 0)
-                Throw.CustomException(exceptionFactory, parameter, other);
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            if (parameter is null || parameter.CompareTo(other) <= 0)
+                Throw.CustomException(exceptionFactory, parameter!, other);
             return parameter;
         }
 
@@ -246,7 +252,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeGreaterThan<T>(this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustNotBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) > 0)
                 Throw.MustNotBeGreaterThan(parameter, other, parameterName, message);
@@ -262,10 +268,11 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when the specified <paramref name="parameter" /> is greater than <paramref name="other" />, or when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeGreaterThan<T>(this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
+        public static T MustNotBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
         {
-            if (parameter == null || parameter.CompareTo(other) > 0)
-                Throw.CustomException(exceptionFactory, parameter, other);
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            if (parameter is null || parameter.CompareTo(other) > 0)
+                Throw.CustomException(exceptionFactory, parameter!, other);
             return parameter;
         }
 
@@ -280,7 +287,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeLessThanOrEqualTo<T>(this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustBeLessThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) > 0)
                 Throw.MustBeLessThanOrEqualTo(parameter, other, parameterName, message);
@@ -296,10 +303,11 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when the specified <paramref name="parameter" /> is greater than <paramref name="other" />, or when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustBeLessThanOrEqualTo<T>(this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
+        public static T MustBeLessThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
         {
-            if (parameter == null || parameter.CompareTo(other) > 0)
-                Throw.CustomException(exceptionFactory, parameter, other);
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            if (parameter is null || parameter.CompareTo(other) > 0)
+                Throw.CustomException(exceptionFactory, parameter!, other);
             return parameter;
         }
 
@@ -316,7 +324,7 @@ namespace Light.GuardClauses
         /// <returns>True if the parameter is within the specified range, else false.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsIn<T>(this T parameter, Range<T> range) where T : IComparable<T> => range.IsValueWithinRange(parameter);
+        public static bool IsIn<T>([ValidatedNotNull] this T parameter, Range<T> range) where T : IComparable<T> => range.IsValueWithinRange(parameter);
 
         /// <summary>
         /// Checks if the value is not within the specified range.
@@ -326,7 +334,7 @@ namespace Light.GuardClauses
         /// <returns>True if the parameter is not within the specified range, else false.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsNotIn<T>(this T parameter, Range<T> range) where T : IComparable<T> => !range.IsValueWithinRange(parameter);
+        public static bool IsNotIn<T>([ValidatedNotNull] this T parameter, Range<T> range) where T : IComparable<T> => !range.IsValueWithinRange(parameter);
 
         /// <summary>
         /// Ensures that <paramref name="parameter" /> is within the specified range, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
@@ -340,7 +348,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeIn<T>(this T parameter, Range<T> range, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustBeIn<T>([ValidatedNotNull] this T parameter, Range<T> range, string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (!range.IsValueWithinRange(parameter.MustNotBeNullReference(parameterName, message)))
                 Throw.MustBeInRange(parameter, range, parameterName, message);
@@ -356,10 +364,11 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is not within <paramref name="range" />, or when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustBeIn<T>(this T parameter, Range<T> range, Func<T, Range<T>, Exception> exceptionFactory) where T : IComparable<T>
+        public static T MustBeIn<T>([ValidatedNotNull] this T parameter, Range<T> range, Func<T, Range<T>, Exception> exceptionFactory) where T : IComparable<T>
         {
-            if (parameter == null || !range.IsValueWithinRange(parameter))
-                Throw.CustomException(exceptionFactory, parameter, range);
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            if (parameter is null || !range.IsValueWithinRange(parameter))
+                Throw.CustomException(exceptionFactory, parameter!, range);
             return parameter;
         }
 
@@ -375,7 +384,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeIn<T>(this T parameter, Range<T> range, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustNotBeIn<T>([ValidatedNotNull] this T parameter, Range<T> range, string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (range.IsValueWithinRange(parameter.MustNotBeNullReference(parameterName, message)))
                 Throw.MustNotBeInRange(parameter, range, parameterName, message);
@@ -391,10 +400,11 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is within <paramref name="range" />, or when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeIn<T>(this T parameter, Range<T> range, Func<T, Range<T>, Exception> exceptionFactory) where T : IComparable<T>
+        public static T MustNotBeIn<T>([ValidatedNotNull] this T parameter, Range<T> range, Func<T, Range<T>, Exception> exceptionFactory) where T : IComparable<T>
         {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
             if (parameter == null || range.IsValueWithinRange(parameter))
-                Throw.CustomException(exceptionFactory, parameter, range);
+                Throw.CustomException(exceptionFactory, parameter!, range);
             return parameter;
         }
     }
