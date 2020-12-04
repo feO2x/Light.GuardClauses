@@ -41,7 +41,7 @@ namespace Light.GuardClauses
         /// <param name="interfaceType">The interface type that <paramref name="type" /> should implement.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="interfaceType" /> is null.</exception>
         [ContractAnnotation("type:null => halt; interfaceType:null => halt")]
-        public static bool Implements(this Type type, Type interfaceType)
+        public static bool Implements([ValidatedNotNull] this Type type, [ValidatedNotNull] Type interfaceType)
         {
             interfaceType.MustNotBeNull(nameof(interfaceType));
             var implementedInterfaces = type.MustNotBeNull(nameof(type)).GetInterfaces();
@@ -64,7 +64,7 @@ namespace Light.GuardClauses
         /// <param name="typeComparer">The equality comparer used to compare the interface types.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="interfaceType" />, or <paramref name="typeComparer" /> is null.</exception>
         [ContractAnnotation("type:null => halt; interfaceType:null => halt; typeComparer:null => halt")]
-        public static bool Implements(this Type type, Type interfaceType, IEqualityComparer<Type> typeComparer)
+        public static bool Implements([ValidatedNotNull] this Type type, [ValidatedNotNull] Type interfaceType, [ValidatedNotNull] IEqualityComparer<Type> typeComparer)
         {
             interfaceType.MustNotBeNull(nameof(interfaceType));
             typeComparer.MustNotBeNull(nameof(typeComparer));
@@ -88,7 +88,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("type:null => halt; otherType:null => halt")]
-        public static bool IsOrImplements(this Type type, Type otherType) =>
+        public static bool IsOrImplements([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType) =>
             type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.Implements(otherType);
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("type:null => halt; otherType:null => halt")]
-        public static bool IsOrImplements(this Type type, Type otherType, IEqualityComparer<Type> typeComparer) =>
+        public static bool IsOrImplements([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType, [ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
             typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type.MustNotBeNull(nameof(type)), otherType.MustNotBeNull(nameof(otherType))) || type.Implements(otherType, typeComparer);
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Light.GuardClauses
         /// <param name="baseClass">The base class that <paramref name="type" /> should derive from.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="baseClass" /> is null.</exception>
         [ContractAnnotation("type:null => halt; baseClass:null => halt")]
-        public static bool DerivesFrom(this Type type, Type baseClass)
+        public static bool DerivesFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type baseClass)
         {
             baseClass.MustNotBeNull(nameof(baseClass));
 
@@ -138,7 +138,7 @@ namespace Light.GuardClauses
         /// <param name="typeComparer">The equality comparer used to compare the types.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="baseClass" />, or <paramref name="typeComparer" /> is null.</exception>
         [ContractAnnotation("type:null => halt; baseClass:null => halt; typeComparer:null => halt")]
-        public static bool DerivesFrom(this Type type, Type baseClass, IEqualityComparer<Type> typeComparer)
+        public static bool DerivesFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type baseClass, [ValidatedNotNull] IEqualityComparer<Type> typeComparer)
         {
             baseClass.MustNotBeNull(nameof(baseClass));
             typeComparer.MustNotBeNull(nameof(typeComparer));
@@ -164,7 +164,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("type:null => halt; otherType:null => halt")]
-        public static bool IsOrDerivesFrom(this Type type, Type otherType) =>
+        public static bool IsOrDerivesFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType) =>
             type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.DerivesFrom(otherType);
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="otherType" />, or <paramref name="typeComparer" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("type:null => halt; otherType:null => halt; typeComparer:null => halt")]
-        public static bool IsOrDerivesFrom(this Type type, Type otherType, IEqualityComparer<Type> typeComparer) =>
+        public static bool IsOrDerivesFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType, [ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
             typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type, otherType.MustNotBeNull(nameof(otherType))) || type.DerivesFrom(otherType, typeComparer);
 
 
@@ -190,7 +190,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="baseClassOrInterfaceType" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt")]
-        public static bool InheritsFrom(this Type type, Type baseClassOrInterfaceType) =>
+        public static bool InheritsFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type baseClassOrInterfaceType) =>
             baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType))
                                     .IsInterface
                 ? type.Implements(baseClassOrInterfaceType)
@@ -206,7 +206,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="baseClassOrInterfaceType" />, or <paramref name="typeComparer" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt; typeComparer:null => halt")]
-        public static bool InheritsFrom(this Type type, Type baseClassOrInterfaceType, IEqualityComparer<Type> typeComparer) =>
+        public static bool InheritsFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type baseClassOrInterfaceType, [ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
             baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType))
                                     .IsInterface
                 ? type.Implements(baseClassOrInterfaceType, typeComparer)
@@ -222,7 +222,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("type:null => halt; otherType:null => halt")]
-        public static bool IsOrInheritsFrom(this Type type, Type otherType) =>
+        public static bool IsOrInheritsFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType) =>
             type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType);
 
 
@@ -236,7 +236,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("type:null => halt; otherType:null => halt; typeComparer:null => halt")]
-        public static bool IsOrInheritsFrom(this Type type, Type otherType, IEqualityComparer<Type> typeComparer) =>
+        public static bool IsOrInheritsFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType, [ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
             typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type, otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType, typeComparer);
 
 
@@ -248,11 +248,9 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("type:null => halt")]
-        public static bool IsOpenConstructedGenericType(this Type type)
-        {
-            return type.MustNotBeNull(nameof(type)).IsGenericType &&
-                   type.ContainsGenericParameters &&
-                   type.IsGenericTypeDefinition == false;
-        }
+        public static bool IsOpenConstructedGenericType([ValidatedNotNull] this Type type) =>
+            type.MustNotBeNull(nameof(type)).IsGenericType &&
+            type.ContainsGenericParameters &&
+            type.IsGenericTypeDefinition == false;
     }
 }
