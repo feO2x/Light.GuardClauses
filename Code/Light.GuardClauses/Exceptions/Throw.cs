@@ -449,7 +449,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void EmptyCollection(IEnumerable parameter, string? parameterName = null, string? message = null) =>
+        public static void EmptyCollection(string? parameterName = null, string? message = null) =>
             throw new EmptyCollectionException(parameterName, message ?? $"{parameterName ?? "The collection"} must not be an empty collection, but it actually is.");
 
         /// <summary>

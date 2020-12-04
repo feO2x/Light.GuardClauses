@@ -68,8 +68,8 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static TCollection MustNotBeNullOrEmpty<TCollection>([ValidatedNotNull] this TCollection? parameter, string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
         {
-            if (parameter!.Count(parameterName, message) == 0)
-                Throw.EmptyCollection(parameter!, parameterName, message);
+            if (parameter.Count(parameterName, message) == 0)
+                Throw.EmptyCollection(parameterName, message);
             return parameter!;
         }
 
