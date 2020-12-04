@@ -23,7 +23,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("source:null => halt; source:notnull => notnull")]
-        public static IList<T> AsList<T>(this IEnumerable<T> source) => 
+        public static IList<T> AsList<T>([ValidatedNotNull] this IEnumerable<T> source) => 
             source as IList<T> ?? source.ToList();
 
         /// <summary>
@@ -37,11 +37,11 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> or <paramref name="createCollection" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("source:null => halt; source:notnull => notnull; createCollection:null => halt")]
-        public static IList<T> AsList<T>(this IEnumerable<T> source, Func<IEnumerable<T>, IList<T>> createCollection) => 
+        public static IList<T> AsList<T>([ValidatedNotNull] this IEnumerable<T> source, Func<IEnumerable<T>, IList<T>> createCollection) => 
             source as IList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(source.MustNotBeNull(nameof(source)));
 
         /// <summary>
-        /// Tries to downcast the specified enumerable to an array, or creates a new collection
+        /// Tries to downcast the specified enumerable to an array, or creates a new array with the specified items.
         /// </summary>
         /// <typeparam name="T">The item type of the collection.</typeparam>
         /// <param name="source">The enumerable that will be converted to an array.</param>
@@ -49,7 +49,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("source:null => halt; source:notnull => notnull")]
-        public static T[] AsArray<T>(this IEnumerable<T> source) => source as T[] ?? source.ToArray();
+        public static T[] AsArray<T>([ValidatedNotNull] this IEnumerable<T> source) => source as T[] ?? source.ToArray();
 
         /// <summary>
         /// Performs the action on each item of the specified enumerable.
@@ -60,7 +60,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <param name="throwWhenItemIsNull">The value indicating whether this method should throw a <see cref="CollectionException" /> when any of the items is null (optional). Defaults to true.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> or <paramref name="action" /> is null.</exception>
         /// <exception cref="CollectionException">Thrown when <paramref name="enumerable" /> contains a value that is null and <paramref name="throwWhenItemIsNull" /> is set to true.</exception>
-        public static IEnumerable<T> ForEach<T>(this IEnumerable<T> enumerable, Action<T> action, bool throwWhenItemIsNull = true)
+        public static IEnumerable<T> ForEach<T>([ValidatedNotNull] this IEnumerable<T> enumerable, Action<T> action, bool throwWhenItemIsNull = true)
         {
             // ReSharper disable PossibleMultipleEnumeration
             action.MustNotBeNull(nameof(action));
@@ -106,7 +106,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("source:null => halt; source:notnull => notnull")]
-        public static IReadOnlyList<T> AsReadOnlyList<T>(this IEnumerable<T> source) =>
+        public static IReadOnlyList<T> AsReadOnlyList<T>([ValidatedNotNull] this IEnumerable<T> source) =>
             source as IReadOnlyList<T> ?? source.ToList();
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> or <paramref name="createCollection" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("source:null => halt; source:notnull => notnull; createCollection:null => halt")]
-        public static IReadOnlyList<T> AsReadOnlyList<T>(this IEnumerable<T> source, Func<IEnumerable<T>, IReadOnlyList<T>> createCollection) =>
+        public static IReadOnlyList<T> AsReadOnlyList<T>([ValidatedNotNull] this IEnumerable<T> source, Func<IEnumerable<T>, IReadOnlyList<T>> createCollection) =>
             source as IReadOnlyList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(source.MustNotBeNull(nameof(source)));
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("enumerable:null => halt")]
-        public static int Count(this IEnumerable enumerable)
+        public static int Count([ValidatedNotNull] this IEnumerable enumerable)
         {
             if (enumerable is ICollection collection)
                 return collection.Count;
@@ -149,7 +149,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("enumerable:null => halt")]
-        public static int Count(this IEnumerable enumerable, string? parameterName, string? message)
+        public static int Count([ValidatedNotNull] this IEnumerable? enumerable, string? parameterName, string? message)
         {
             if (enumerable is ICollection collection)
                 return collection.Count;
@@ -159,7 +159,7 @@ namespace Light.GuardClauses.FrameworkExtensions
             return DetermineCountViaEnumerating(enumerable, parameterName, message);
         }
 
-        private static int DetermineCountViaEnumerating(IEnumerable enumerable)
+        private static int DetermineCountViaEnumerating(IEnumerable? enumerable)
         {
             var count = 0;
             var enumerator = enumerable.MustNotBeNull(nameof(enumerable)).GetEnumerator();
@@ -168,7 +168,7 @@ namespace Light.GuardClauses.FrameworkExtensions
             return count;
         }
 
-        private static int DetermineCountViaEnumerating(IEnumerable enumerable, string? parameterName, string? message)
+        private static int DetermineCountViaEnumerating(IEnumerable? enumerable, string? parameterName, string? message)
         {
             var count = 0;
             var enumerator = enumerable.MustNotBeNull(parameterName, message).GetEnumerator();
@@ -187,7 +187,6 @@ namespace Light.GuardClauses.FrameworkExtensions
             }
 
             return false;
-            // ReSharper restore PossibleMultipleEnumeration
         }
     }
 }
