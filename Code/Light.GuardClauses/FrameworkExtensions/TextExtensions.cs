@@ -37,6 +37,36 @@ namespace Light.GuardClauses.FrameworkExtensions
                 typeof(float)
             });
 
+        private static bool IsUnquotedType<T>()
+        {
+            if (typeof(T) == typeof(int))
+                return true;
+            if (typeof(T) == typeof(long))
+                return true;
+            if (typeof(T) == typeof(short))
+                return true;
+            if (typeof(T) == typeof(sbyte))
+                return true;
+            if (typeof(T) == typeof(uint))
+                return true;
+            if (typeof(T) == typeof(ulong))
+                return true;
+            if (typeof(T) == typeof(ushort))
+                return true;
+            if (typeof(T) == typeof(byte))
+                return true;
+            if (typeof(T) == typeof(bool))
+                return true;
+            if (typeof(T) == typeof(double))
+                return true;
+            if (typeof(T) == typeof(decimal))
+                return true;
+            if (typeof(T) == typeof(float))
+                return true;
+
+            return false;
+        }
+
         /// <summary>
         /// Returns the string representation of <paramref name="value" />, or <paramref name="nullText" /> if <paramref name="value" /> is null.
         /// If the type of <paramref name="value" /> is not one of <see cref="UnquotedTypes" />, then quotation marks will be put around the string representation.
@@ -53,16 +83,27 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// </summary>
         /// <param name="value">The value whose string representation is requested.</param>
         [ContractAnnotation("value:null => halt; value:notnull => notnull")]
-        public static string? ToStringRepresentation<T>(this T value)
+        public static string? ToStringRepresentation<T>([ValidatedNotNull] this T value)
         {
             value.MustNotBeNullReference(nameof(value));
 
             var content = value!.ToString();
-            if (UnquotedTypes.Contains(value.GetType()) || content == null)
+            if (IsUnquotedType<T>() || content.IsNullOrEmpty())
                 return content;
 
+            // ReSharper disable UseIndexFromEndExpression -- not possible in netstandard2.0
+            if (content.Length <= 126)
+            {
+                Span<char> span = stackalloc char[content.Length + 2];
+                span[0] = span[span.Length -1] = '"';
+                content.AsSpan().CopyTo(span.Slice(1, content.Length));
+                return span.ToString();
+            }
+
             var contentWithQuotationMarks = new char[content.Length + 2];
+
             contentWithQuotationMarks[0] = contentWithQuotationMarks[contentWithQuotationMarks.Length - 1] = '"';
+            // ReSharper restore UseIndexFromEndExpression
             content.CopyTo(0, contentWithQuotationMarks, 1, content.Length);
             return new string(contentWithQuotationMarks);
         }
@@ -79,7 +120,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> or <paramref name="items" />is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("stringBuilder:null => halt; items:null => halt; stringBuilder:notnull => notnull")]
-        public static StringBuilder AppendCollectionContent<T>(this StringBuilder stringBuilder, IEnumerable<T> items, string headerLine = "Content of the collection:", bool finishWithNewLine = true) =>
+        public static StringBuilder AppendCollectionContent<T>([ValidatedNotNull] this StringBuilder stringBuilder, [ValidatedNotNull] IEnumerable<T> items, string headerLine = "Content of the collection:", bool finishWithNewLine = true) =>
             stringBuilder.MustNotBeNull(nameof(stringBuilder))
                          .AppendLine(headerLine)
                          .AppendItemsWithNewLine(items, finishWithNewLine: finishWithNewLine);
@@ -93,7 +134,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <param name="emptyCollectionText">The text that is appended to the string builder when <paramref name="items" /> is empty. Defaults to "empty collection".</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> or <paramref name="items" /> is null.</exception>
         [ContractAnnotation("stringBuilder:null => halt; items:null => halt; stringBuilder:notnull => notnull")]
-        public static StringBuilder AppendItems<T>(this StringBuilder stringBuilder, IEnumerable<T> items, string itemSeparator = ", ", string emptyCollectionText = "empty collection")
+        public static StringBuilder AppendItems<T>([ValidatedNotNull] this StringBuilder stringBuilder, [ValidatedNotNull] IEnumerable<T> items, string itemSeparator = ", ", string emptyCollectionText = "empty collection")
         {
             stringBuilder.MustNotBeNull(nameof(stringBuilder));
             var list = items.MustNotBeNull(nameof(items)).AsList();
@@ -121,10 +162,10 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <param name="items">The items to be appended.</param>
         /// <param name="emptyCollectionText">The text that is appended to the string builder when <paramref name="items" /> is empty. Defaults to "empty collection".</param>
         /// <param name="finishWithNewLine">The value indicating if a new line is added after the last item. This value defaults to true.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder"/> or <paramref name="items"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> or <paramref name="items" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("stringBuilder:null => halt; items:null => halt; stringBuilder:notnull => notnull")]
-        public static StringBuilder AppendItemsWithNewLine<T>(this StringBuilder stringBuilder, IEnumerable<T> items, string emptyCollectionText = "empty collection", bool finishWithNewLine = true) =>
+        public static StringBuilder AppendItemsWithNewLine<T>([ValidatedNotNull] this StringBuilder stringBuilder, [ValidatedNotNull] IEnumerable<T> items, string emptyCollectionText = "empty collection", bool finishWithNewLine = true) =>
             stringBuilder.AppendItems(items, DefaultNewLineSeparator, emptyCollectionText)
                          .AppendLineIf(finishWithNewLine);
 
@@ -137,7 +178,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("stringBuilder:null => halt; stringBuilder:notnull => notnull")]
-        public static StringBuilder AppendIf(this StringBuilder stringBuilder, bool condition, string value)
+        public static StringBuilder AppendIf([ValidatedNotNull] this StringBuilder stringBuilder, bool condition, string value)
         {
             if (condition)
                 stringBuilder.MustNotBeNull(nameof(stringBuilder)).Append(value);
@@ -153,7 +194,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("stringBuilder:null => halt; stringBuilder:notnull => notnull")]
-        public static StringBuilder AppendLineIf(this StringBuilder stringBuilder, bool condition, string value = "")
+        public static StringBuilder AppendLineIf([ValidatedNotNull] this StringBuilder stringBuilder, bool condition, string value = "")
         {
             if (condition)
                 stringBuilder.MustNotBeNull(nameof(stringBuilder)).AppendLine(value);
@@ -165,7 +206,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// specified <paramref name="stringBuilder" />.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
-        public static StringBuilder AppendExceptionMessages(this StringBuilder stringBuilder, Exception exception)
+        public static StringBuilder AppendExceptionMessages([ValidatedNotNull] this StringBuilder stringBuilder, [ValidatedNotNull] Exception exception)
         {
             stringBuilder.MustNotBeNull(nameof(stringBuilder));
             exception.MustNotBeNull(nameof(exception));
@@ -187,7 +228,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// a single string.
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="exception" /> is null.</exception>
-        public static string GetAllExceptionMessages(this Exception exception) => 
+        public static string GetAllExceptionMessages([ValidatedNotNull] this Exception exception) =>
             new StringBuilder().AppendExceptionMessages(exception).ToString();
 
         /// <summary>
@@ -213,7 +254,7 @@ namespace Light.GuardClauses.FrameworkExtensions
             // y.TryAdvanceToNextNonWhiteSpaceCharacter must be called even though it already returned
             // false on x. Otherwise the 'wasXSuccessful == wasYSuccessful' comparison would not return
             // the desired result.
-            while ((wasXSuccessful = x.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexX)) & 
+            while ((wasXSuccessful = x.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexX)) &
                    (wasYSuccessful = y.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexY)))
             {
                 if (x[indexX++] != y[indexY++])
