@@ -19,7 +19,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeAbsoluteUri(this Uri? parameter, string? parameterName = null, string? message = null)
+        public static Uri MustBeAbsoluteUri([ValidatedNotNull] this Uri? parameter, string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).IsAbsoluteUri == false)
                 Throw.MustBeAbsoluteUri(parameter!, parameterName, message);
@@ -34,7 +34,7 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is not an absolute URI, or when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeAbsoluteUri(this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
+        public static Uri MustBeAbsoluteUri([ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
         {
             if (parameter == null || parameter.IsAbsoluteUri == false)
                 Throw.CustomException(exceptionFactory, parameter);
@@ -51,7 +51,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeRelativeUri(this Uri? parameter, string? parameterName = null, string? message = null)
+        public static Uri MustBeRelativeUri([ValidatedNotNull] this Uri? parameter, string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).IsAbsoluteUri)
                 Throw.MustBeRelativeUri(parameter!, parameterName, message);
@@ -66,7 +66,7 @@ namespace Light.GuardClauses
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is an absolute URI, or when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeRelativeUri(this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
+        public static Uri MustBeRelativeUri([ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
         {
             if (parameter == null || parameter.IsAbsoluteUri)
                 Throw.CustomException(exceptionFactory, parameter);
@@ -85,7 +85,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustHaveScheme(this Uri? parameter, string scheme, string? parameterName = null, string? message = null)
+        public static Uri MustHaveScheme([ValidatedNotNull] this Uri? parameter, string scheme, string? parameterName = null, string? message = null)
         {
             if (string.Equals(parameter.MustBeAbsoluteUri(parameterName, message).Scheme, scheme) == false)
                 Throw.UriMustHaveScheme(parameter!, scheme, parameterName, message);
@@ -105,7 +105,7 @@ namespace Light.GuardClauses
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustHaveScheme(this Uri? parameter, string scheme, Func<Uri?, Exception> exceptionFactory)
+        public static Uri MustHaveScheme([ValidatedNotNull] this Uri? parameter, string scheme, Func<Uri?, Exception> exceptionFactory)
         {
             if (string.Equals(parameter.MustBeAbsoluteUri(exceptionFactory).Scheme, scheme) == false)
                 Throw.CustomException(exceptionFactory, parameter);
@@ -125,7 +125,7 @@ namespace Light.GuardClauses
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustHaveScheme(this Uri? parameter, string scheme, Func<Uri?, string, Exception> exceptionFactory)
+        public static Uri MustHaveScheme([ValidatedNotNull] this Uri? parameter, string scheme, Func<Uri?, string, Exception> exceptionFactory)
         {
             if (parameter == null || !parameter.IsAbsoluteUri || parameter.Scheme.Equals(scheme) == false)
                 Throw.CustomException(exceptionFactory, parameter, scheme);
@@ -143,7 +143,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpsUrl(this Uri? parameter, string? parameterName = null, string? message = null) => parameter.MustHaveScheme("https", parameterName, message);
+        public static Uri MustBeHttpsUrl([ValidatedNotNull] this Uri? parameter, string? parameterName = null, string? message = null) => parameter.MustHaveScheme("https", parameterName, message);
 
         /// <summary>
         /// Ensures that the specified URI has the "https" scheme, or otherwise throws your custom exception.
@@ -157,7 +157,7 @@ namespace Light.GuardClauses
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpsUrl(this Uri? parameter, Func<Uri?, Exception> exceptionFactory) => parameter.MustHaveScheme("https", exceptionFactory);
+        public static Uri MustBeHttpsUrl([ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory) => parameter.MustHaveScheme("https", exceptionFactory);
 
         /// <summary>
         /// Ensures that the specified URI has the "http" scheme, or otherwise throws an <see cref="InvalidUriSchemeException" />.
@@ -170,7 +170,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpUrl(this Uri? parameter, string? parameterName = null, string? message = null) => parameter.MustHaveScheme("http", parameterName, message);
+        public static Uri MustBeHttpUrl([ValidatedNotNull] this Uri? parameter, string? parameterName = null, string? message = null) => parameter.MustHaveScheme("http", parameterName, message);
 
         /// <summary>
         /// Ensures that the specified URI has the "http" scheme, or otherwise throws your custom exception.
@@ -184,7 +184,7 @@ namespace Light.GuardClauses
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpUrl(this Uri? parameter, Func<Uri?, Exception> exceptionFactory) => parameter.MustHaveScheme("http", exceptionFactory);
+        public static Uri MustBeHttpUrl([ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory) => parameter.MustHaveScheme("http", exceptionFactory);
 
         /// <summary>
         /// Ensures that the specified URI has the "http" or "https" scheme, or otherwise throws an <see cref="InvalidUriSchemeException" />.
@@ -197,7 +197,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpOrHttpsUrl(this Uri? parameter, string? parameterName = null, string? message = null)
+        public static Uri MustBeHttpOrHttpsUrl([ValidatedNotNull] this Uri? parameter, string? parameterName = null, string? message = null)
         {
             if (parameter.MustBeAbsoluteUri(parameterName, message).Scheme.Equals("https") == false && parameter!.Scheme.Equals("http") == false)
                 Throw.UriMustHaveOneSchemeOf(parameter, new[] { "https", "http" }, parameterName, message);
@@ -216,7 +216,7 @@ namespace Light.GuardClauses
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpOrHttpsUrl(this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
+        public static Uri MustBeHttpOrHttpsUrl([ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
         {
             if (parameter.MustBeAbsoluteUri(exceptionFactory).Scheme.Equals("https") == false && parameter!.Scheme.Equals("http") == false)
                 Throw.CustomException(exceptionFactory, parameter);
@@ -235,7 +235,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> or <paramref name="schemes"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; schemes:null => halt")]
-        public static Uri MustHaveOneSchemeOf(this Uri? parameter, IEnumerable<string> schemes, string? parameterName = null, string? message = null)
+        public static Uri MustHaveOneSchemeOf([ValidatedNotNull] this Uri? parameter, IEnumerable<string> schemes, string? parameterName = null, string? message = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustBeAbsoluteUri(parameterName, message);
@@ -267,9 +267,9 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Throw when <paramref name="schemes" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustHaveOneSchemeOf<TCollection>(this Uri? parameter, TCollection schemes, Func<Uri?, TCollection, Exception> exceptionFactory) where TCollection : class, IEnumerable<string>
+        public static Uri MustHaveOneSchemeOf<TCollection>([ValidatedNotNull] this Uri? parameter, TCollection schemes, Func<Uri?, TCollection, Exception> exceptionFactory) where TCollection : class, IEnumerable<string>
         {
-            if (parameter == null || !parameter.IsAbsoluteUri)
+            if (parameter is null || !parameter.IsAbsoluteUri)
                 Throw.CustomException(exceptionFactory, parameter, schemes);
 
             if (schemes is ICollection<string> collection)
@@ -279,7 +279,8 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            if (schemes == null || !schemes.Contains(parameter!.Scheme))
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            if (schemes is null || !schemes.Contains(parameter!.Scheme))
                 Throw.CustomException(exceptionFactory, parameter, schemes!);
             return parameter!;
         }
