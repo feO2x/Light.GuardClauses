@@ -83,9 +83,7 @@ namespace Light.GuardClauses
             }
 
             Throw.WhiteSpaceString(parameter, parameterName, message);
-#pragma warning disable CS8603 // This code cannot be reached
             return null;
-#pragma warning restore CS8603
         }
 
         /// <summary>
