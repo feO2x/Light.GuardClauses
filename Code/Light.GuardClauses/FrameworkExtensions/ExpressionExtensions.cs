@@ -20,7 +20,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentException">
         /// Throw when the <paramref name="expression" /> is not of the shape "object => object.Property".
         /// </exception>
-        public static PropertyInfo ExtractProperty<T, TProperty>(this Expression<Func<T, TProperty>> expression)
+        public static PropertyInfo ExtractProperty<T, TProperty>([ValidatedNotNull] this Expression<Func<T, TProperty>> expression)
         {
             expression.MustNotBeNull(nameof(expression));
 
@@ -41,7 +41,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref="ArgumentException">
         /// Throw when the <paramref name="expression" /> is not of the shape "object => object.Field".
         /// </exception>
-        public static FieldInfo ExtractField<T, TField>(this Expression<Func<T, TField>> expression)
+        public static FieldInfo ExtractField<T, TField>([ValidatedNotNull] this Expression<Func<T, TField>> expression)
         {
             expression.MustNotBeNull(nameof(expression));
 
