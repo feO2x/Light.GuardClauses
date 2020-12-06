@@ -17,10 +17,10 @@
     <RepositoryType>Git</RepositoryType>
     <PackageTags>Assertions;Preconditions;GuardClauses;DesignByContract;DbC</PackageTags>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-    <PackageReleaseNotes>Light.GuardClauses 8.1.0
+    <PackageReleaseNotes>Light.GuardClauses 9.0.0
 --------------------------------
-- added is IsNewLine and MustBeNewLine
-- fixed warnings about incorrect NRT use in IEqualityComparer&lt;T&gt; implementations
+- added support for .NET Analyzers / FxCopAnalyzers via ValidatedNotNullAttribute.
+- Breaking change: simplified parameterlist of Throw.EmptyCollection
     </PackageReleaseNotes>
   </PropertyGroup>
 
