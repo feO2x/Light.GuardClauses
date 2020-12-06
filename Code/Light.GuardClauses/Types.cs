@@ -11,6 +11,5 @@ namespace Light.GuardClauses
         /// Gets the <see cref="FlagsAttribute" /> type.
         /// </summary>
         public static readonly Type FlagsAttributeType = typeof(FlagsAttribute);
-
     }
 }
