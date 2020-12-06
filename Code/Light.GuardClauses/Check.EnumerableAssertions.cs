@@ -41,7 +41,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static TCollection MustHaveCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, Func<TCollection?, int, Exception> exceptionFactory) where TCollection : class, IEnumerable
         {
-            if (parameter == null || parameter.Count() != count)
+            if (parameter is null || parameter.Count() != count)
                 Throw.CustomException(exceptionFactory, parameter, count);
             return parameter!;
         }
@@ -54,7 +54,7 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("=> true, collection:canbenull; => false, collection:notnull")]
         public static bool IsNullOrEmpty([NotNullWhen(false)] this IEnumerable? collection) =>
-            collection == null || collection.Count() == 0;
+            collection is null || collection.Count() == 0;
 
         /// <summary>
         /// Ensures that the collection is not null or empty, or otherwise throws an <see cref="EmptyCollectionException"/>.
@@ -83,7 +83,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static TCollection MustNotBeNullOrEmpty<TCollection>([ValidatedNotNull] this TCollection? parameter, Func<TCollection?, Exception> exceptionFactory) where TCollection : class, IEnumerable
         {
-            if (parameter == null || parameter.Count() == 0)
+            if (parameter is null || parameter.Count() == 0)
                 Throw.CustomException(exceptionFactory, parameter);
             return parameter!;
         }
@@ -131,7 +131,7 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            if (parameter == null || !parameter.Contains(item))
+            if (parameter is null || !parameter.Contains(item))
                 Throw.CustomException(exceptionFactory, parameter, item);
             return parameter!;
         }
@@ -179,7 +179,7 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            if (parameter == null || parameter.Contains(item))
+            if (parameter is null || parameter.Contains(item))
                 Throw.CustomException(exceptionFactory, parameter, item);
             return parameter!;
         }
@@ -306,7 +306,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static TCollection MustHaveMinimumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, Func<TCollection?, int, Exception> exceptionFactory) where TCollection : class, IEnumerable
         {
-            if (parameter == null || parameter.Count() < count)
+            if (parameter is null || parameter.Count() < count)
                 Throw.CustomException(exceptionFactory, parameter, count);
             return parameter!;
         }
@@ -340,7 +340,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static TCollection MustHaveMaximumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, Func<TCollection?, int, Exception> exceptionFactory) where TCollection : class, IEnumerable
         {
-            if (parameter == null || parameter.Count() > count)
+            if (parameter is null || parameter.Count() > count)
                 Throw.CustomException(exceptionFactory, parameter, count);
             return parameter!;
         }

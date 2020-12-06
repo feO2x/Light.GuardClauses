@@ -30,7 +30,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustNotBeNullOrEmpty([ValidatedNotNull] this string? parameter, string? parameterName = null, string? message = null)
         {
-            if (parameter == null)
+            if (parameter is null)
                 Throw.ArgumentNull(parameterName, message);
             if (parameter!.Length == 0)
                 Throw.EmptyString(parameterName, message);
@@ -483,7 +483,7 @@ namespace Light.GuardClauses
         public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
-            if (parameter == null || value == null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) >= 0)
+            if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) >= 0)
                 Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
             return parameter!;
         }
@@ -815,7 +815,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustBeShorterThan([ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
         {
-            if (parameter == null || parameter.Length >= length)
+            if (parameter is null || parameter.Length >= length)
                 Throw.CustomException(exceptionFactory, parameter, length);
             return parameter!;
         }
@@ -849,7 +849,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustBeShorterThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
         {
-            if (parameter == null || parameter.Length > length)
+            if (parameter is null || parameter.Length > length)
                 Throw.CustomException(exceptionFactory, parameter, length);
             return parameter!;
         }
@@ -883,7 +883,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustHaveLength([ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
         {
-            if (parameter == null || parameter.Length != length)
+            if (parameter is null || parameter.Length != length)
                 Throw.CustomException(exceptionFactory, parameter, length);
             return parameter!;
         }
@@ -917,7 +917,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustBeLongerThan([ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
         {
-            if (parameter == null || parameter.Length <= length)
+            if (parameter is null || parameter.Length <= length)
                 Throw.CustomException(exceptionFactory, parameter, length);
             return parameter!;
         }
@@ -951,7 +951,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustBeLongerThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
         {
-            if (parameter == null || parameter.Length < length)
+            if (parameter is null || parameter.Length < length)
                 Throw.CustomException(exceptionFactory, parameter, length);
             return parameter!;
         }
@@ -985,7 +985,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustHaveLengthIn([ValidatedNotNull] this string? parameter, Range<int> range, Func<string?, Range<int>, Exception> exceptionFactory)
         {
-            if (parameter == null || !range.IsValueWithinRange(parameter.Length))
+            if (parameter is null || !range.IsValueWithinRange(parameter.Length))
                 Throw.CustomException(exceptionFactory, parameter, range);
             return parameter!;
         }

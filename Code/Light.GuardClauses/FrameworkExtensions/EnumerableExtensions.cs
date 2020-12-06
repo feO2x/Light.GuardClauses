@@ -67,10 +67,11 @@ namespace Light.GuardClauses.FrameworkExtensions
 
             var i = 0;
             if (enumerable is IList<T> list)
+            {
                 for (; i < list.Count; i++)
                 {
                     var item = list[i];
-                    if (item == null)
+                    if (item is null)
                     {
                         if (throwWhenItemIsNull) throw new CollectionException(nameof(enumerable), $"The collection contains null at index {i}.");
                         continue;
@@ -78,10 +79,12 @@ namespace Light.GuardClauses.FrameworkExtensions
 
                     action(item);
                 }
+            }
             else
+            {
                 foreach (var item in enumerable.MustNotBeNull(nameof(enumerable)))
                 {
-                    if (item == null)
+                    if (item is null)
                     {
                         if (throwWhenItemIsNull) throw new CollectionException(nameof(enumerable), $"The collection contains null at index {i}.");
                         ++i;
@@ -91,6 +94,7 @@ namespace Light.GuardClauses.FrameworkExtensions
                     action(item);
                     ++i;
                 }
+            }
 
             return enumerable;
             // ReSharper restore PossibleMultipleEnumeration

@@ -403,7 +403,7 @@ namespace Light.GuardClauses
         public static T MustNotBeIn<T>([ValidatedNotNull] this T parameter, Range<T> range, Func<T, Range<T>, Exception> exceptionFactory) where T : IComparable<T>
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
-            if (parameter == null || range.IsValueWithinRange(parameter))
+            if (parameter is null || range.IsValueWithinRange(parameter))
                 Throw.CustomException(exceptionFactory, parameter!, range);
             return parameter;
         }

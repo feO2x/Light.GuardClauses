@@ -22,7 +22,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static T MustNotBeNull<T>([ValidatedNotNull] this T? parameter, string? parameterName = null, string? message = null) where T : class
         {
-            if (parameter == null)
+            if (parameter is null)
                 Throw.ArgumentNull(parameterName, message);
             return parameter!;
         }
@@ -37,7 +37,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
         public static T MustNotBeNull<T>([ValidatedNotNull] this T? parameter, Func<Exception> exceptionFactory) where T : class
         {
-            if (parameter == null)
+            if (parameter is null)
                 Throw.CustomException(exceptionFactory);
             return parameter!;
         }
@@ -55,9 +55,9 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static T MustNotBeDefault<T>([ValidatedNotNull] this T parameter, string? parameterName = null, string? message = null)
         {
-            if (default(T) == null)
+            if (default(T) is null)
             {
-                if (parameter == null)
+                if (parameter is null)
                     Throw.ArgumentNull(parameterName, message);
                 return parameter;
             }
@@ -77,9 +77,9 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
         public static T MustNotBeDefault<T>([ValidatedNotNull] this T parameter, Func<Exception> exceptionFactory)
         {
-            if (default(T) == null)
+            if (default(T) is null)
             {
-                if (parameter == null)
+                if (parameter is null)
                     Throw.CustomException(exceptionFactory);
                 return parameter;
             }
@@ -106,7 +106,7 @@ namespace Light.GuardClauses
             if (default(T) != null)
                 return parameter;
 
-            if (parameter == null)
+            if (parameter is null)
                 Throw.ArgumentNull(parameterName, message);
             return parameter;
         }
@@ -126,7 +126,7 @@ namespace Light.GuardClauses
             if (default(T) != null)
                 return parameter;
 
-            if (parameter == null)
+            if (parameter is null)
                 Throw.CustomException(exceptionFactory);
             return parameter;
         }

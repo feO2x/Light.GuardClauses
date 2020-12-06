@@ -215,7 +215,7 @@ namespace Light.GuardClauses.FrameworkExtensions
             {
                 // ReSharper disable once PossibleNullReferenceException
                 stringBuilder.AppendLine(exception.Message);
-                if (exception.InnerException == null)
+                if (exception.InnerException is null)
                     return stringBuilder;
 
                 stringBuilder.AppendLine();
@@ -240,7 +240,7 @@ namespace Light.GuardClauses.FrameworkExtensions
             if (ReferenceEquals(x, y))
                 return true;
 
-            if (x == null || y == null)
+            if (x is null || y is null)
                 return false;
 
             if (x.Length == 0)
@@ -273,7 +273,7 @@ namespace Light.GuardClauses.FrameworkExtensions
             if (ReferenceEquals(x, y))
                 return true;
 
-            if (x == null || y == null)
+            if (x is null || y is null)
                 return false;
 
             if (x.Length == 0)

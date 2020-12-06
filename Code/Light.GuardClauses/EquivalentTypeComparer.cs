@@ -36,7 +36,7 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetHashCode(Type type) =>
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            type == null                  ? 0 :
+            type is null                  ? 0 :
             type.IsConstructedGenericType ? type.GetGenericTypeDefinition().GetHashCode() :
                                             type.GetHashCode();
     }

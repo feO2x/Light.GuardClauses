@@ -36,7 +36,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static Uri MustBeAbsoluteUri([ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
         {
-            if (parameter == null || parameter.IsAbsoluteUri == false)
+            if (parameter is null || parameter.IsAbsoluteUri == false)
                 Throw.CustomException(exceptionFactory, parameter);
             return parameter!;
         }
@@ -68,7 +68,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static Uri MustBeRelativeUri([ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
         {
-            if (parameter == null || parameter.IsAbsoluteUri)
+            if (parameter is null || parameter.IsAbsoluteUri)
                 Throw.CustomException(exceptionFactory, parameter);
             return parameter!;
         }
@@ -127,7 +127,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static Uri MustHaveScheme([ValidatedNotNull] this Uri? parameter, string scheme, Func<Uri?, string, Exception> exceptionFactory)
         {
-            if (parameter == null || !parameter.IsAbsoluteUri || parameter.Scheme.Equals(scheme) == false)
+            if (parameter is null || !parameter.IsAbsoluteUri || parameter.Scheme.Equals(scheme) == false)
                 Throw.CustomException(exceptionFactory, parameter, scheme);
             return parameter!;
         }
