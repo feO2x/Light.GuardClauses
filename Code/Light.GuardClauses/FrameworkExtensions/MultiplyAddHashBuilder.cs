@@ -6,7 +6,7 @@ namespace Light.GuardClauses.FrameworkExtensions
     /// Represents a builder for the <see cref="MultiplyAddHash"/> algorithm that does not allocate.
     /// Should only be used in cases where the overload for sixteen values is not enough or a dedicated
     /// initial hash must be provided (e.g. for test reasons).
-    /// Instantiate the builder with the <see cref="Create"/> method. You have to instantiate a builder
+    /// Instantiate the builder with the <see cref="Create"/> method. You have to instantiate a new builder
     /// for each hash code that you want to calculate.
     /// </summary>
     public struct MultiplyAddHashBuilder

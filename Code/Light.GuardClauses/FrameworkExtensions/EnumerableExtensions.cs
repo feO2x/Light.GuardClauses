@@ -52,7 +52,8 @@ namespace Light.GuardClauses.FrameworkExtensions
         public static T[] AsArray<T>([ValidatedNotNull] this IEnumerable<T> source) => source as T[] ?? source.ToArray();
 
         /// <summary>
-        /// Performs the action on each item of the specified enumerable.
+        /// Performs the action on each item of the specified enumerable. If the enumerable contains items that are null, this
+        /// method can either throw an exception or ignore the value (your delegate will not be called in this case).
         /// </summary>
         /// <typeparam name="T">The item type of the enumerable.</typeparam>
         /// <param name="enumerable">The collection containing the items that will be passed to the action.</param>
