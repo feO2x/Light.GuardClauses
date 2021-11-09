@@ -1,22 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Light.GuardClauses.InternalRoslynAnalyzers\Light.GuardClauses.InternalRoslynAnalyzers.csproj" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
-    <PackageReference Include="fluentAssertions" Version="5.10.2" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Light.GuardClauses.InternalRoslynAnalyzers\Light.GuardClauses.InternalRoslynAnalyzers.csproj" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+        <PackageReference Include="xunit" Version="2.4.1" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
+        <PackageReference Include="FluentAssertions" Version="6.2.0" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Include="Throw.cs" Link="Throw.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <None Include="Throw.cs" Link="Throw.cs">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
 </Project>
-

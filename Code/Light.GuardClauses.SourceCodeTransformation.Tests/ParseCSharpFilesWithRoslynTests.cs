@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.Design.Serialization;
 using System.IO;
 using FluentAssertions;
 using Microsoft.CodeAnalysis.CSharp;
@@ -31,7 +30,7 @@ namespace Light.GuardClauses.SourceCodeTransformation.Tests
         public static void ParseSpanDelegatesFile()
         {
             var fileInfo = GetLightGuardClausesFile("SpanDelegates.cs");
-            var syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(fileInfo.FullName), new CSharpParseOptions(LanguageVersion.CSharp7_3, preprocessorSymbols: new [] { "NETSTANDARD2_0" }));
+            var syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(fileInfo.FullName), new CSharpParseOptions(LanguageVersion.CSharp7_3, preprocessorSymbols: new[] { "NETSTANDARD2_0" }));
             var root = (CompilationUnitSyntax) syntaxTree.GetRoot();
 
             root.Members.Should().NotBeEmpty();

@@ -25,11 +25,23 @@ namespace Light.GuardClauses.Tests.CommonAssertions
             Test.CustomException(exceptionFactory => ((string) null).MustNotBeNull(exceptionFactory));
 
         [Fact]
-        public static void CustomExceptionParamterNotNull() => 
+        public static void CustomExceptionParameterNotNull() => 
             Metasyntactic.Foo.MustNotBeNull(() => null).Should().BeSameAs(Metasyntactic.Foo);
 
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<ArgumentNullException>(message => ((object) null).MustNotBeNull(message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var someParameter = (string) null;
+
+            // ReSharper disable once ExpressionIsAlwaysNull -- I want someParameter to be the implicit parameterName
+            Action act = () => someParameter.MustNotBeNull();
+
+            act.Should().Throw<ArgumentNullException>()
+               .And.ParamName.Should().Be(nameof(someParameter));
+        }
     }
 }

@@ -10,7 +10,7 @@
     <DebugType>Portable</DebugType>
     <Nullable>enable</Nullable>
     <Copyright>Copyright © Kenny Pflug 2016 - 2021</Copyright>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>10.0</LangVersion>
     <PackageIcon>light-logo.png</PackageIcon>
     <PackageProjectUrl>https://github.com/feO2x/Light.GuardClauses</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

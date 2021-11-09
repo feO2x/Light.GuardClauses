@@ -20,7 +20,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeNull<T>([ValidatedNotNull] this T? parameter, string? parameterName = null, string? message = null) where T : class
+        public static T MustNotBeNull<T>([ValidatedNotNull] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : class
         {
             if (parameter is null)
                 Throw.ArgumentNull(parameterName, message);
