@@ -28,7 +28,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotBeNullOrEmpty([ValidatedNotNull] this string? parameter, string? parameterName = null, string? message = null)
+        public static string MustNotBeNullOrEmpty([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter is null)
                 Throw.ArgumentNull(parameterName, message);
@@ -72,7 +72,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotBeNullOrWhiteSpace([ValidatedNotNull] this string? parameter, string? parameterName = null, string? message = null)
+        public static string MustNotBeNullOrWhiteSpace([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             parameter.MustNotBeNullOrEmpty(parameterName, message);
 
@@ -136,7 +136,7 @@ namespace Light.GuardClauses
         /// <exception cref="ValuesNotEqualException">Thrown when <paramref name="parameter" /> is not equal to <paramref name="other" />.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string? MustBe(this string? parameter, string? other, StringComparison comparisonType, string? parameterName = null, string? message = null)
+        public static string? MustBe(this string? parameter, string? other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!string.Equals(parameter, other, comparisonType))
                 Throw.ValuesNotEqual(parameter, other, parameterName, message);
@@ -171,7 +171,7 @@ namespace Light.GuardClauses
         /// <exception cref="ValuesNotEqualException">Thrown when <paramref name="parameter" /> is not equal to <paramref name="other" />.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string? MustBe(this string? parameter, string? other, StringComparisonType comparisonType, string? parameterName = null, string? message = null)
+        public static string? MustBe(this string? parameter, string? other, StringComparisonType comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.Equals(other, comparisonType))
                 Throw.ValuesNotEqual(parameter, other, parameterName, message);
@@ -205,7 +205,7 @@ namespace Light.GuardClauses
         /// <exception cref="ValuesEqualException">Thrown when <paramref name="parameter" /> is equal to <paramref name="other" />.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string? MustNotBe(this string? parameter, string? other, StringComparison comparisonType, string? parameterName = null, string? message = null)
+        public static string? MustNotBe(this string? parameter, string? other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (string.Equals(parameter, other, comparisonType))
                 Throw.ValuesEqual(parameter, other, parameterName, message);
@@ -240,7 +240,7 @@ namespace Light.GuardClauses
         /// <exception cref="ValuesEqualException">Thrown when <paramref name="parameter" /> is equal to <paramref name="other" />.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string? MustNotBe(this string? parameter, string? other, StringComparisonType comparisonType, string? parameterName = null, string? message = null)
+        public static string? MustNotBe(this string? parameter, string? other, StringComparisonType comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Equals(other, comparisonType))
                 Throw.ValuesEqual(parameter, other, parameterName, message);
@@ -275,7 +275,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="regex" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; regex:null => halt")]
-        public static string MustMatch([ValidatedNotNull] this string? parameter, Regex regex, string? parameterName = null, string? message = null)
+        public static string MustMatch([ValidatedNotNull] this string? parameter, Regex regex, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!regex.MustNotBeNull(nameof(regex), message).IsMatch(parameter.MustNotBeNull(parameterName, message)))
                 Throw.StringDoesNotMatch(parameter!, regex, parameterName, message);
@@ -335,7 +335,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustContain([ValidatedNotNull] this string? parameter, string? value, string? parameterName = null, string? message = null)
+        public static string MustContain([ValidatedNotNull] this string? parameter, string? value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.MustNotBeNull(parameterName, message).Contains(value.MustNotBeNull(nameof(value), message)))
                 Throw.StringDoesNotContain(parameter!, value!, parameterName, message);
@@ -376,7 +376,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, string? parameterName = null, string? message = null)
+        public static string MustContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).IndexOf(value.MustNotBeNull(nameof(value), message), comparisonType) < 0)
                 Throw.StringDoesNotContain(parameter!, value, comparisonType, parameterName, message);
@@ -417,7 +417,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, string? parameterName = null, string? message = null)
+        public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Contains(value.MustNotBeNull(nameof(value), message)))
                 Throw.StringContains(parameter!, value, parameterName, message);
@@ -458,7 +458,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, string? parameterName = null, string? message = null)
+        public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).IndexOf(value.MustNotBeNull(nameof(value), message), comparisonType) >= 0)
                 Throw.StringContains(parameter!, value, comparisonType, parameterName, message);
@@ -540,7 +540,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, string? parameterName = null, string? message = null)
+        public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!value.MustNotBeNull(nameof(value), message).Contains(parameter.MustNotBeNull(parameterName, message)))
                 Throw.NotSubstring(parameter!, value, parameterName, message);
@@ -581,7 +581,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, string? parameterName = null, string? message = null)
+        public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (value.MustNotBeNull(nameof(value), message).IndexOf(parameter.MustNotBeNull(parameterName, message), comparisonType) == -1)
                 Throw.NotSubstring(parameter!, value, comparisonType, parameterName, message);
@@ -622,7 +622,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, string? parameterName = null, string? message = null)
+        public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (value.MustNotBeNull(nameof(value), message).Contains(parameter.MustNotBeNull(parameterName, message)))
                 Throw.Substring(parameter!, value, parameterName, message);
@@ -664,7 +664,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, string? parameterName = null, string? message = null)
+        public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (value.MustNotBeNull(nameof(value), message).IndexOf(parameter.MustNotBeNull(parameterName, message), comparisonType) != -1)
                 Throw.Substring(parameter!, value, comparisonType, parameterName, message);
@@ -726,7 +726,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, string? parameterName = null, string? message = null)
+        public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.MustNotBeNull(parameterName, message).IsEmailAddress())
                 Throw.InvalidEmailAddress(parameter!, parameterName, message);
@@ -761,7 +761,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; emailAddressPattern:null => halt")]
-        public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, Regex emailAddressPattern, string? parameterName = null, string? message = null)
+        public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, Regex emailAddressPattern, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.MustNotBeNull(parameterName, message).IsEmailAddress(emailAddressPattern))
                 Throw.InvalidEmailAddress(parameter!, parameterName, message);
@@ -797,7 +797,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeShorterThan([ValidatedNotNull] this string? parameter, int length, string? parameterName = null, string? message = null)
+        public static string MustBeShorterThan([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Length >= length)
                 Throw.StringNotShorterThan(parameter!, length, parameterName, message);
@@ -831,7 +831,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeShorterThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, string? parameterName = null, string? message = null)
+        public static string MustBeShorterThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Length > length)
                 Throw.StringNotShorterThanOrEqualTo(parameter!, length, parameterName, message);
@@ -865,7 +865,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustHaveLength([ValidatedNotNull] this string? parameter, int length, string? parameterName = null, string? message = null)
+        public static string MustHaveLength([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Length != length)
                 Throw.StringLengthNotEqualTo(parameter!, length, parameterName, message);
@@ -899,7 +899,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeLongerThan([ValidatedNotNull] this string? parameter, int length, string? parameterName = null, string? message = null)
+        public static string MustBeLongerThan([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Length <= length)
                 Throw.StringNotLongerThan(parameter!, length, parameterName, message);
@@ -933,7 +933,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeLongerThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, string? parameterName = null, string? message = null)
+        public static string MustBeLongerThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Length < length)
                 Throw.StringNotLongerThanOrEqualTo(parameter!, length, parameterName, message);
@@ -967,7 +967,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustHaveLengthIn([ValidatedNotNull] this string? parameter, Range<int> range, string? parameterName = null, string? message = null)
+        public static string MustHaveLengthIn([ValidatedNotNull] this string? parameter, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!range.IsValueWithinRange(parameter.MustNotBeNull(parameterName, message).Length))
                 Throw.StringLengthNotInRange(parameter!, range, parameterName, message);
@@ -1008,7 +1008,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeNewLine([ValidatedNotNull] this string? parameter, string? parameterName = null, string? message = null)
+        public static string MustBeNewLine([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.MustNotBeNull(parameterName, message).IsNewLine())
                 Throw.NotNewLine(parameter!, parameterName, message);

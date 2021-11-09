@@ -15,7 +15,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidDateTimeException">Thrown when <paramref name="parameter"/> does not use <see cref="DateTimeKind.Utc"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime MustBeUtc(this DateTime parameter, string? parameterName = null, string? message = null)
+        public static DateTime MustBeUtc(this DateTime parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Kind != DateTimeKind.Utc)
                 Throw.MustBeUtcDateTime(parameter, parameterName, message);
@@ -45,7 +45,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidDateTimeException">Thrown when <paramref name="parameter"/> does not use <see cref="DateTimeKind.Local"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime MustBeLocal(this DateTime parameter, string? parameterName = null, string? message = null)
+        public static DateTime MustBeLocal(this DateTime parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Kind != DateTimeKind.Local)
                 Throw.MustBeLocalDateTime(parameter, parameterName, message);
@@ -75,7 +75,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidDateTimeException">Thrown when <paramref name="parameter"/> does not use <see cref="DateTimeKind.Unspecified"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime MustBeUnspecified(this DateTime parameter, string? parameterName = null, string? message = null)
+        public static DateTime MustBeUnspecified(this DateTime parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Kind != DateTimeKind.Unspecified)
                 Throw.MustBeUnspecifiedDateTime(parameter, parameterName, message);

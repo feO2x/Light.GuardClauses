@@ -24,7 +24,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeLessThan<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustNotBeLessThan<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) < 0)
                 Throw.MustNotBeLessThan(parameter, other, parameterName, message);
@@ -59,7 +59,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeGreaterThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustBeGreaterThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) < 0)
                 Throw.MustBeGreaterThanOrEqualTo(parameter, other, parameterName, message);
@@ -100,7 +100,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeLessThan<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustBeLessThan<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) >= 0)
                 Throw.MustBeLessThan(parameter, other, parameterName, message);
@@ -135,7 +135,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeGreaterThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustNotBeGreaterThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) >= 0)
                 Throw.MustNotBeGreaterThanOrEqualTo(parameter, other, parameterName, message);
@@ -176,7 +176,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) <= 0)
                 Throw.MustBeGreaterThan(parameter, other, parameterName, message);
@@ -211,7 +211,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeLessThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustNotBeLessThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) <= 0)
                 Throw.MustNotBeLessThanOrEqualTo(parameter, other, parameterName, message);
@@ -252,7 +252,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustNotBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) > 0)
                 Throw.MustNotBeGreaterThan(parameter, other, parameterName, message);
@@ -287,7 +287,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeLessThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustBeLessThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) > 0)
                 Throw.MustBeLessThanOrEqualTo(parameter, other, parameterName, message);
@@ -348,7 +348,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeIn<T>([ValidatedNotNull] this T parameter, Range<T> range, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustBeIn<T>([ValidatedNotNull] this T parameter, Range<T> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (!range.IsValueWithinRange(parameter.MustNotBeNullReference(parameterName, message)))
                 Throw.MustBeInRange(parameter, range, parameterName, message);
@@ -384,7 +384,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeIn<T>([ValidatedNotNull] this T parameter, Range<T> range, string? parameterName = null, string? message = null) where T : IComparable<T>
+        public static T MustNotBeIn<T>([ValidatedNotNull] this T parameter, Range<T> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T>
         {
             if (range.IsValueWithinRange(parameter.MustNotBeNullReference(parameterName, message)))
                 Throw.MustNotBeInRange(parameter, range, parameterName, message);

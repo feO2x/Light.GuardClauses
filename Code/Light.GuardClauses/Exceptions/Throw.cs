@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
@@ -35,7 +36,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void InvalidTypeCast(object? parameter, Type targetType, string? parameterName = null, string? message = null) =>
+        public static void InvalidTypeCast(object? parameter, Type targetType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new TypeCastException(parameterName, message ?? $"{parameterName ?? "The value"} {parameter.ToStringOrNull()} cannot be cast to \"{targetType}\".");
 
         /// <summary>
@@ -43,7 +44,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void EnumValueNotDefined<T>(T parameter, string? parameterName = null, string? message = null) where T : Enum =>
+        public static void EnumValueNotDefined<T>(T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : Enum =>
             throw new EnumValueNotDefinedException(parameterName, message ?? $"{parameterName ?? "The value"} \"{parameter}\" must be one of the defined constants of enum \"{parameter.GetType()}\", but it actually is not.");
 
         /// <summary>
@@ -81,8 +82,8 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void InvalidEmailAddress(string emailAddress, string? parameterName = null, string? message = null) =>
-            throw new InvalidEmailAddressException(parameterName, message ?? $"{parameterName ?? "The string"} must be a valid email address, but it actually is \"{emailAddress}\".");
+        public static void InvalidEmailAddress(string parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
+            throw new InvalidEmailAddressException(parameterName, message ?? $"{parameterName ?? "The string"} must be a valid email address, but it actually is \"{parameter}\".");
 
         /// <summary>
         /// Throws the default <see cref="NullableHasNoValueException" /> indicating that a <see cref="Nullable{T}" /> has no value, using the optional parameter name and message.
@@ -97,7 +98,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustNotBeLessThan<T>(T parameter, T boundary, string? parameterName = null, string? message = null) where T : IComparable<T> =>
+        public static void MustNotBeLessThan<T>(T parameter, T boundary, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T> =>
             throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be less than {boundary}, but it actually is {parameter}.");
 
         /// <summary>
@@ -105,7 +106,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeLessThan<T>(T parameter, T boundary, string? parameterName = null, string? message = null) where T : IComparable<T> =>
+        public static void MustBeLessThan<T>(T parameter, T boundary, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T> =>
             throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be less than {boundary}, but it actually is {parameter}.");
 
         /// <summary>
@@ -113,7 +114,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustNotBeLessThanOrEqualTo<T>(T parameter, T boundary, string? parameterName = null, string? message = null) where T : IComparable<T> =>
+        public static void MustNotBeLessThanOrEqualTo<T>(T parameter, T boundary, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T> =>
             throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be less than or equal to {boundary}, but it actually is {parameter}.");
 
         /// <summary>
@@ -121,7 +122,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustNotBeGreaterThanOrEqualTo<T>(T parameter, T boundary, string? parameterName = null, string? message = null) where T : IComparable<T> =>
+        public static void MustNotBeGreaterThanOrEqualTo<T>(T parameter, T boundary, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T> =>
             throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be greater than or equal to {boundary}, but it actually is {parameter}.");
 
         /// <summary>
@@ -129,7 +130,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeGreaterThanOrEqualTo<T>(T parameter, T boundary, string? parameterName = null, string? message = null) where T : IComparable<T> =>
+        public static void MustBeGreaterThanOrEqualTo<T>(T parameter, T boundary, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T> =>
             throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be greater than or equal to {boundary}, but it actually is {parameter}.");
 
         /// <summary>
@@ -137,7 +138,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeGreaterThan<T>(T parameter, T boundary, string? parameterName = null, string? message = null) where T : IComparable<T> =>
+        public static void MustBeGreaterThan<T>(T parameter, T boundary, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T> =>
             throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be greater than {boundary}, but it actually is {parameter}.");
 
         /// <summary>
@@ -145,7 +146,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustNotBeGreaterThan<T>(T parameter, T boundary, string? parameterName = null, string? message = null) where T : IComparable<T> =>
+        public static void MustNotBeGreaterThan<T>(T parameter, T boundary, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T> =>
             throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be greater than {boundary}, but it actually is {parameter}.");
 
         /// <summary>
@@ -153,7 +154,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeLessThanOrEqualTo<T>(T parameter, T boundary, string? parameterName = null, string? message = null) where T : IComparable<T> =>
+        public static void MustBeLessThanOrEqualTo<T>(T parameter, T boundary, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T> =>
             throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be less than or equal to {boundary}, but it actually is {parameter}.");
 
         /// <summary>
@@ -161,7 +162,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeInRange<T>(T parameter, Range<T> range, string? parameterName = null, string? message = null) where T : IComparable<T> =>
+        public static void MustBeInRange<T>(T parameter, Range<T> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T> =>
             throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be between {range.CreateRangeDescriptionText("and")}, but it actually is {parameter}.");
 
         /// <summary>
@@ -169,7 +170,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustNotBeInRange<T>(T parameter, Range<T> range, string? parameterName = null, string? message = null) where T : IComparable<T> =>
+        public static void MustNotBeInRange<T>(T parameter, Range<T> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T> =>
             throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be between {range.CreateRangeDescriptionText("and")}, but it actually is {parameter}.");
 
         /// <summary>
@@ -177,7 +178,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SameObjectReference<T>(T? parameter, string? parameterName = null, string? message = null) where T : class =>
+        public static void SameObjectReference<T>(T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : class =>
             throw new SameObjectReferenceException(parameterName, message ?? $"{parameterName ?? "The reference"} must not point to object \"{parameter}\", but it actually does.");
 
         /// <summary>
@@ -193,7 +194,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void WhiteSpaceString(string parameter, string? parameterName = null, string? message = null) =>
+        public static void WhiteSpaceString(string parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new WhiteSpaceStringException(parameterName, message ?? $"{parameterName ?? "The string"} must not contain only white space, but it actually is \"{parameter}\".");
 
         /// <summary>
@@ -201,7 +202,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringDoesNotMatch(string parameter, Regex regex, string? parameterName = null, string? message = null) =>
+        public static void StringDoesNotMatch(string parameter, Regex regex, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new StringDoesNotMatchException(parameterName, message ?? $"{parameterName ?? "The string"} must match the regular expression \"{regex}\", but it actually is \"{parameter}\".");
 
         /// <summary>
@@ -209,7 +210,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringDoesNotContain(string parameter, string substring, string? parameterName = null, string? message = null) =>
+        public static void StringDoesNotContain(string parameter, string substring, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must contain {substring.ToStringOrNull()}, but it actually is {parameter.ToStringOrNull()}.");
 
         /// <summary>
@@ -217,7 +218,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringDoesNotContain(string parameter, string substring, StringComparison comparisonType, string? parameterName = null, string? message = null) =>
+        public static void StringDoesNotContain(string parameter, string substring, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must contain {substring.ToStringOrNull()} ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
 
         /// <summary>
@@ -225,7 +226,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringContains(string parameter, string substring, string? parameterName = null, string? message = null) =>
+        public static void StringContains(string parameter, string substring, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not contain {substring.ToStringOrNull()} as a substring, but it actually is {parameter.ToStringOrNull()}.");
 
         /// <summary>
@@ -233,7 +234,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringContains(string parameter, string substring, StringComparison comparisonType, string? parameterName = null, string? message = null) =>
+        public static void StringContains(string parameter, string substring, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not contain {substring.ToStringOrNull()} as a substring ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
 
         /// <summary>
@@ -241,7 +242,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void NotSubstring(string parameter, string other, string? parameterName = null, string? message = null) =>
+        public static void NotSubstring(string parameter, string other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must be a substring of \"{other}\", but it actually is {parameter.ToStringOrNull()}.");
 
         /// <summary>
@@ -249,7 +250,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void NotSubstring(string parameter, string other, StringComparison comparisonType, string? parameterName = null, string? message = null) =>
+        public static void NotSubstring(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must be a substring of \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
 
         /// <summary>
@@ -257,7 +258,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void Substring(string parameter, string other, string? parameterName = null, string? message = null) =>
+        public static void Substring(string parameter, string other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be a substring of \"{other}\", but it actually is {parameter.ToStringOrNull()}.");
 
         /// <summary>
@@ -265,7 +266,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void Substring(string parameter, string other, StringComparison comparisonType, string? parameterName = null, string? message = null) =>
+        public static void Substring(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be a substring of \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
 
         /// <summary>
@@ -273,7 +274,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringNotShorterThan(string parameter, int length, string? parameterName = null, string? message = null) =>
+        public static void StringNotShorterThan(string parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be shorter than {length}, but it actually has length {parameter.Length}.");
 
         /// <summary>
@@ -281,7 +282,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringNotShorterThanOrEqualTo(string parameter, int length, string? parameterName = null, string? message = null) =>
+        public static void StringNotShorterThanOrEqualTo(string parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be shorter or equal to {length}, but it actually has length {parameter.Length}.");
 
         /// <summary>
@@ -289,7 +290,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringLengthNotEqualTo(string parameter, int length, string? parameterName = null, string? message = null) =>
+        public static void StringLengthNotEqualTo(string parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must have length {length}, but it actually has length {parameter.Length}.");
 
         /// <summary>
@@ -297,7 +298,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringNotLongerThan(string parameter, int length, string? parameterName = null, string? message = null) =>
+        public static void StringNotLongerThan(string parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be longer than {length}, but it actually has length {parameter.Length}.");
 
         /// <summary>
@@ -305,7 +306,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringNotLongerThanOrEqualTo(string parameter, int length, string? parameterName = null, string? message = null) =>
+        public static void StringNotLongerThanOrEqualTo(string parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be longer than or equal to {length}, but it actually has length {parameter.Length}.");
 
         /// <summary>
@@ -313,7 +314,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringLengthNotInRange(string parameter, Range<int> range, string? parameterName = null, string? message = null) =>
+        public static void StringLengthNotInRange(string parameter, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must have its length in between {range.CreateRangeDescriptionText("and")}, but it actually has length {parameter.Length}.");
 
         /// <summary>
@@ -329,7 +330,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void ValuesNotEqual<T>(T parameter, T other, string? parameterName = null, string? message = null) =>
+        public static void ValuesNotEqual<T>(T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new ValuesNotEqualException(parameterName, message ?? $"{parameterName ?? "The value"} must be equal to {other.ToStringOrNull()}, but it actually is {parameter.ToStringOrNull()}.");
 
         /// <summary>
@@ -337,7 +338,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void ValuesEqual<T>(T parameter, T other, string? parameterName = null, string? message = null) =>
+        public static void ValuesEqual<T>(T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new ValuesEqualException(parameterName, message ?? $"{parameterName ?? "The value"} must not be equal to {other.ToStringOrNull()}, but it actually is {parameter.ToStringOrNull()}.");
 
         /// <summary>
@@ -345,7 +346,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void InvalidCollectionCount(IEnumerable parameter, int count, string? parameterName = null, string? message = null) =>
+        public static void InvalidCollectionCount(IEnumerable parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have count {count}, but it actually has count {parameter.Count()}.");
 
         /// <summary>
@@ -353,7 +354,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void InvalidSpanLength<T>(in Span<T> parameter, int length, string? parameterName = null, string? message = null) =>
+        public static void InvalidSpanLength<T>(in Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must have length {length}, but it actually has length {parameter.Length}.");
 
         /// <summary>
@@ -361,7 +362,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void InvalidSpanLength<T>(in ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null) =>
+        public static void InvalidSpanLength<T>(in ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The read-only span"} must have length {length}, but it actually has length {parameter.Length}.");
 
         /// <summary>
@@ -369,7 +370,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void InvalidMinimumCollectionCount(IEnumerable parameter, int count, string? parameterName = null, string? message = null) =>
+        public static void InvalidMinimumCollectionCount(IEnumerable parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have at least count {count}, but it actually has count {parameter.Count()}.");
 
         /// <summary>
@@ -377,7 +378,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SpanMustBeLongerThan<T>(in Span<T> parameter, int length, string? parameterName = null, string? message = null) =>
+        public static void SpanMustBeLongerThan<T>(in Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be longer than {length}, but it actually has length {parameter.Length}.");
 
         /// <summary>
@@ -385,7 +386,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SpanMustBeLongerThan<T>(in ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null) =>
+        public static void SpanMustBeLongerThan<T>(in ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be longer than {length}, but it actually has length {parameter.Length}.");
 
         /// <summary>
@@ -393,7 +394,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SpanMustBeLongerThanOrEqualTo<T>(in Span<T> parameter, int length, string? parameterName = null, string? message = null) =>
+        public static void SpanMustBeLongerThanOrEqualTo<T>(in Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be longer than or equal to {length}, but it actually has length {parameter.Length}.");
 
         /// <summary>
@@ -401,7 +402,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SpanMustBeLongerThanOrEqualTo<T>(in ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null) =>
+        public static void SpanMustBeLongerThanOrEqualTo<T>(in ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be longer than or equal to {length}, but it actually has length {parameter.Length}.");
 
         /// <summary>
@@ -409,7 +410,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SpanMustBeShorterThan<T>(in Span<T> parameter, int length, string? parameterName = null, string? message = null) =>
+        public static void SpanMustBeShorterThan<T>(in Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be shorter than {length}, but it actually has length {parameter.Length}.");
 
         /// <summary>
@@ -417,7 +418,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SpanMustBeShorterThanOrEqualTo<T>(in Span<T> parameter, int length, string? parameterName = null, string? message = null) =>
+        public static void SpanMustBeShorterThanOrEqualTo<T>(in Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be shorter than or equal to {length}, but it actually has length {parameter.Length}.");
 
         /// <summary>
@@ -425,7 +426,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SpanMustBeShorterThanOrEqualTo<T>(in ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null) =>
+        public static void SpanMustBeShorterThanOrEqualTo<T>(in ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be shorter than or equal to {length}, but it actually has length {parameter.Length}.");
 
         /// <summary>
@@ -433,7 +434,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SpanMustBeShorterThan<T>(in ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null) =>
+        public static void SpanMustBeShorterThan<T>(in ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be shorter than {length}, but it actually has length {parameter.Length}.");
 
         /// <summary>
@@ -441,7 +442,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void InvalidMaximumCollectionCount(IEnumerable parameter, int count, string? parameterName = null, string? message = null) =>
+        public static void InvalidMaximumCollectionCount(IEnumerable parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have at most count {count}, but it actually has count {parameter.Count()}.");
 
         /// <summary>
@@ -457,7 +458,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MissingItem<TItem>(IEnumerable<TItem> parameter, TItem item, string? parameterName = null, string? message = null) =>
+        public static void MissingItem<TItem>(IEnumerable<TItem> parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new MissingItemException(parameterName,
                                            message ??
                                            new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain {item.ToStringOrNull()}, but it actually does not.")
@@ -469,7 +470,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void ExistingItem<TItem>(IEnumerable<TItem> parameter, TItem item, string? parameterName = null, string? message = null) =>
+        public static void ExistingItem<TItem>(IEnumerable<TItem> parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new ExistingItemException(parameterName,
                                             message ??
                                             new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not contain {item.ToStringOrNull()}, but it actually does.")
@@ -481,7 +482,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void ValueNotOneOf<TItem>(TItem parameter, IEnumerable<TItem> items, string? parameterName = null, string? message = null) =>
+        public static void ValueNotOneOf<TItem>(TItem parameter, IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new ValueIsNotOneOfException(parameterName,
                                                message ??
                                                new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be one of the following items")
@@ -494,7 +495,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void ValueIsOneOf<TItem>(TItem parameter, IEnumerable<TItem> items, string? parameterName = null, string? message = null) =>
+        public static void ValueIsOneOf<TItem>(TItem parameter, IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new ValueIsOneOfException(parameterName,
                                             message ??
                                             new StringBuilder().AppendLine($"{parameterName ?? "The value"} must not be one of the following items")
@@ -507,7 +508,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeAbsoluteUri(Uri parameter, string? parameterName = null, string? message = null) =>
+        public static void MustBeAbsoluteUri(Uri parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new RelativeUriException(parameterName, message ?? $"{parameterName ?? "The URI"} must be an absolute URI, but it actually is \"{parameter}\".");
 
         /// <summary>
@@ -515,7 +516,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeRelativeUri(Uri parameter, string? parameterName = null, string? message = null) =>
+        public static void MustBeRelativeUri(Uri parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new AbsoluteUriException(parameterName, message ?? $"{parameterName ?? "The URI"} must be a relative URI, but it actually is \"{parameter}\".");
 
         /// <summary>
@@ -523,20 +524,20 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void UriMustHaveScheme(Uri uri, string scheme, string? parameterName = null, string? message = null) =>
-            throw new InvalidUriSchemeException(parameterName, message ?? $"{parameterName ?? "The URI"} must use the scheme \"{scheme}\", but it actually is \"{uri}\".");
+        public static void UriMustHaveScheme(Uri parameter, string scheme, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
+            throw new InvalidUriSchemeException(parameterName, message ?? $"{parameterName ?? "The URI"} must use the scheme \"{scheme}\", but it actually is \"{parameter}\".");
 
         /// <summary>
         /// Throws the default <see cref="InvalidUriSchemeException" /> indicating that a URI does not use one of a set of expected schemes, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void UriMustHaveOneSchemeOf(Uri uri, IEnumerable<string> schemes, string? parameterName = null, string? message = null) =>
+        public static void UriMustHaveOneSchemeOf(Uri parameter, IEnumerable<string> schemes, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new InvalidUriSchemeException(parameterName,
                                                 message ??
                                                 new StringBuilder().AppendLine($"{parameterName ?? "The URI"} must use one of the following schemes")
                                                                    .AppendItemsWithNewLine(schemes)
-                                                                   .AppendLine($"but it actually is \"{uri}\".")
+                                                                   .AppendLine($"but it actually is \"{parameter}\".")
                                                                    .ToString());
 
         /// <summary>
@@ -544,7 +545,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeUtcDateTime(DateTime parameter, string? parameterName = null, string? message = null) =>
+        public static void MustBeUtcDateTime(DateTime parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new InvalidDateTimeException(parameterName, message ?? $"{parameterName ?? "The date time"} must use kind \"{DateTimeKind.Utc}\", but it actually uses \"{parameter.Kind}\" and is \"{parameter:O}\".");
 
         /// <summary>
@@ -552,7 +553,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeLocalDateTime(DateTime parameter, string? parameterName = null, string? message = null) =>
+        public static void MustBeLocalDateTime(DateTime parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new InvalidDateTimeException(parameterName, message ?? $"{parameterName ?? "The date time"} must use kind \"{DateTimeKind.Local}\", but it actually uses \"{parameter.Kind}\" and is \"{parameter:O}\".");
 
         /// <summary>
@@ -560,7 +561,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeUnspecifiedDateTime(DateTime parameter, string? parameterName = null, string? message = null) =>
+        public static void MustBeUnspecifiedDateTime(DateTime parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
             throw new InvalidDateTimeException(parameterName, message ?? $"{parameterName ?? "The date time"} must use kind \"{DateTimeKind.Unspecified}\", but it actually uses \"{parameter.Kind}\" and is \"{parameter:O}\".");
 
         /// <summary>

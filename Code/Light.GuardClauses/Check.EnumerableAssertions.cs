@@ -23,7 +23,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustHaveCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
+        public static TCollection MustHaveCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
         {
             if (parameter!.Count(parameterName, message) != count)
                 Throw.InvalidCollectionCount(parameter!, count, parameterName, message);
@@ -43,7 +43,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null || parameter.Count() != count)
                 Throw.CustomException(exceptionFactory, parameter, count);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustNotBeNullOrEmpty<TCollection>([ValidatedNotNull] this TCollection? parameter, string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
+        public static TCollection MustNotBeNullOrEmpty<TCollection>([ValidatedNotNull] this TCollection? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
         {
             if (parameter.Count(parameterName, message) == 0)
                 Throw.EmptyCollection(parameterName, message);
@@ -85,7 +85,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null || parameter.Count() == 0)
                 Throw.CustomException(exceptionFactory, parameter);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustContain<TCollection, TItem>([ValidatedNotNull] this TCollection? parameter, TItem item, string? parameterName = null, string? message = null) where TCollection : class, IEnumerable<TItem>
+        public static TCollection MustContain<TCollection, TItem>([ValidatedNotNull] this TCollection? parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable<TItem>
         {
             if (parameter is ICollection<TItem> collection)
             {
@@ -133,7 +133,7 @@ namespace Light.GuardClauses
 
             if (parameter is null || !parameter.Contains(item))
                 Throw.CustomException(exceptionFactory, parameter, item);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustNotContain<TCollection, TItem>([ValidatedNotNull] this TCollection? parameter, TItem item, string? parameterName = null, string? message = null) where TCollection : class, IEnumerable<TItem>
+        public static TCollection MustNotContain<TCollection, TItem>([ValidatedNotNull] this TCollection? parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable<TItem>
         {
             if (parameter is ICollection<TItem> collection)
             {
@@ -181,7 +181,7 @@ namespace Light.GuardClauses
 
             if (parameter is null || parameter.Contains(item))
                 Throw.CustomException(exceptionFactory, parameter, item);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="items"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("items:null => halt")]
-        public static TItem MustBeOneOf<TItem>(this TItem parameter, [ValidatedNotNull] IEnumerable<TItem> items, string? parameterName = null, string? message = null)
+        public static TItem MustBeOneOf<TItem>(this TItem parameter, [ValidatedNotNull] IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             if (!parameter.IsOneOf(items.MustNotBeNull(nameof(items), message)))
@@ -251,7 +251,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="items"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("items:null => halt")]
-        public static TItem MustNotBeOneOf<TItem>(this TItem parameter, [ValidatedNotNull] IEnumerable<TItem> items, string? parameterName = null, string? message = null)
+        public static TItem MustNotBeOneOf<TItem>(this TItem parameter, [ValidatedNotNull] IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             if (parameter.IsOneOf(items.MustNotBeNull(nameof(items), message)))
@@ -288,7 +288,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustHaveMinimumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
+        public static TCollection MustHaveMinimumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
         {
             if (parameter.Count(parameterName, message) < count)
                 Throw.InvalidMinimumCollectionCount(parameter!, count, parameterName, message);
@@ -308,7 +308,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null || parameter.Count() < count)
                 Throw.CustomException(exceptionFactory, parameter, count);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -322,7 +322,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustHaveMaximumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
+        public static TCollection MustHaveMaximumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
         {
             if (parameter.Count(parameterName, message) > count)
                 Throw.InvalidMaximumCollectionCount(parameter!, count, parameterName, message);
@@ -342,7 +342,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null || parameter.Count() > count)
                 Throw.CustomException(exceptionFactory, parameter, count);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -354,7 +354,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidCollectionCountException">Thrown when <paramref name="parameter"/> does not have the specified length.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<T> MustHaveLength<T>(this Span<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static Span<T> MustHaveLength<T>(this Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length != length)
                 Throw.InvalidSpanLength(parameter, length, parameterName, message);
@@ -385,7 +385,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> does not have the specified length.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<T> MustHaveLength<T>(this ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static ReadOnlySpan<T> MustHaveLength<T>(this ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length != length)
                 Throw.InvalidSpanLength(parameter, length, parameterName, message);
@@ -416,7 +416,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidCollectionCountException">Thrown when <paramref name="parameter"/> is shorter than or equal to <paramref name="length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<T> MustBeLongerThan<T>(this Span<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static Span<T> MustBeLongerThan<T>(this Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length <= length)
                 Throw.SpanMustBeLongerThan(parameter, length, parameterName, message);
@@ -447,7 +447,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidCollectionCountException">Thrown when <paramref name="parameter"/> is shorter than or equal to <paramref name="length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<T> MustBeLongerThan<T>(this ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static ReadOnlySpan<T> MustBeLongerThan<T>(this ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length <= length)
                 Throw.SpanMustBeLongerThan(parameter, length, parameterName, message);
@@ -478,7 +478,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidCollectionCountException">Thrown when <paramref name="parameter"/> is shorter than <paramref name="length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<T> MustBeLongerThanOrEqualTo<T>(this Span<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static Span<T> MustBeLongerThanOrEqualTo<T>(this Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length < length)
                 Throw.SpanMustBeLongerThanOrEqualTo(parameter, length, parameterName, message);
@@ -509,7 +509,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidCollectionCountException">Thrown when <paramref name="parameter"/> is shorter than <paramref name="length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<T> MustBeLongerThanOrEqualTo<T>(this ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static ReadOnlySpan<T> MustBeLongerThanOrEqualTo<T>(this ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length < length)
                 Throw.SpanMustBeLongerThanOrEqualTo(parameter, length, parameterName, message);
@@ -540,7 +540,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidCollectionCountException">Thrown when <paramref name="parameter"/> is longer than or equal to <paramref name="length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<T> MustBeShorterThan<T>(this Span<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static Span<T> MustBeShorterThan<T>(this Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length >= length)
                 Throw.SpanMustBeShorterThan(parameter, length, parameterName, message);
@@ -571,7 +571,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidCollectionCountException">Thrown when <paramref name="parameter"/> is longer than or equal to <paramref name="length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<T> MustBeShorterThan<T>(this ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static ReadOnlySpan<T> MustBeShorterThan<T>(this ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length >= length)
                 Throw.SpanMustBeShorterThan(parameter, length, parameterName, message);
@@ -602,7 +602,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidCollectionCountException">Thrown when <paramref name="parameter"/> is longer than <paramref name="length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<T> MustBeShorterThanOrEqualTo<T>(this Span<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static Span<T> MustBeShorterThanOrEqualTo<T>(this Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length > length)
                 Throw.SpanMustBeShorterThanOrEqualTo(parameter, length, parameterName, message);
@@ -633,7 +633,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="InvalidCollectionCountException">Thrown when <paramref name="parameter"/> is longer than <paramref name="length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<T> MustBeShorterThanOrEqualTo<T>(this ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static ReadOnlySpan<T> MustBeShorterThanOrEqualTo<T>(this ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length > length)
                 Throw.SpanMustBeShorterThanOrEqualTo(parameter, length, parameterName, message);

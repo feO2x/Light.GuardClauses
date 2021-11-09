@@ -24,7 +24,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null)
                 Throw.ArgumentNull(parameterName, message);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null)
                 Throw.CustomException(exceptionFactory);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentDefaultException">Thrown when <paramref name="parameter" /> is a value type and the default value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeDefault<T>([ValidatedNotNull] this T parameter, string? parameterName = null, string? message = null)
+        public static T MustNotBeDefault<T>([ValidatedNotNull] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (default(T) is null)
             {
@@ -101,7 +101,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <typeparamref name="T" /> is a reference type and <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeNullReference<T>([ValidatedNotNull] this T parameter, string? parameterName = null, string? message = null)
+        public static T MustNotBeNullReference<T>([ValidatedNotNull] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (default(T) != null)
                 return parameter;
@@ -141,7 +141,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeOfType<T>([ValidatedNotNull] this object? parameter, string? parameterName = null, string? message = null)
+        public static T MustBeOfType<T>([ValidatedNotNull] this object? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message) is T castValue)
                 return castValue;
@@ -189,7 +189,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="EnumValueNotDefinedException">Thrown when <paramref name="parameter" /> is no valid enum value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustBeValidEnumValue<T>(this T parameter, string? parameterName = null, string? message = null) where T : Enum
+        public static T MustBeValidEnumValue<T>(this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : Enum
         {
             if (!EnumInfo<T>.IsValidEnumValue(parameter))
                 Throw.EnumValueNotDefined(parameter, parameterName, message);
@@ -229,7 +229,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="EmptyGuidException">Thrown when <paramref name="parameter" /> is an empty GUID.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Guid MustNotBeEmpty(this Guid parameter, string? parameterName = null, string? message = null)
+        public static Guid MustNotBeEmpty(this Guid parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter == Guid.Empty)
                 Throw.EmptyGuid(parameterName, message);
@@ -285,7 +285,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the <see cref="ArgumentException" /> (optional).</param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="condition" /> is true.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void InvalidArgument(bool condition, string? parameterName = null, string? message = null)
+        public static void InvalidArgument(bool condition, [CallerArgumentExpression("condition")] string? parameterName = null, string? message = null)
         {
             if (condition)
                 Throw.Argument(parameterName, message);
@@ -328,12 +328,12 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="NullableHasNoValueException">Thrown when <paramref name="parameter" /> has no value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustHaveValue<T>(this T? parameter, string? parameterName = null, string? message = null) where T : struct
+        public static T MustHaveValue<T>(this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : struct
         {
             if (!parameter.HasValue)
                 Throw.NullableHasNoValue(parameterName, message);
 
-            return parameter!.Value;
+            return parameter.Value;
         }
 
         /// <summary>
@@ -349,7 +349,7 @@ namespace Light.GuardClauses
             if (!parameter.HasValue)
                 Throw.CustomException(exceptionFactory);
 
-            return parameter!.Value;
+            return parameter.Value;
         }
 
         /// <summary>
@@ -372,7 +372,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="SameObjectReferenceException">Thrown when both <paramref name="parameter" /> and <paramref name="other" /> point to the same object.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T? MustNotBeSameAs<T>(this T? parameter, T? other, string? parameterName = null, string? message = null) where T : class
+        public static T? MustNotBeSameAs<T>(this T? parameter, T? other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : class
         {
             if (ReferenceEquals(parameter, other))
                 Throw.SameObjectReference(parameter, parameterName, message);
@@ -404,7 +404,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ValuesNotEqualException">Thrown when <paramref name="parameter" /> and <paramref name="other" /> are not equal.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustBe<T>(this T parameter, T other, string? parameterName = null, string? message = null)
+        public static T MustBe<T>(this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!EqualityComparer<T>.Default.Equals(parameter, other))
                 Throw.ValuesNotEqual(parameter, other, parameterName, message);
@@ -438,7 +438,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="equalityComparer" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("equalityComparer:null => halt")]
-        public static T MustBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, string? parameterName = null, string? message = null)
+        public static T MustBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!equalityComparer.MustNotBeNull(nameof(equalityComparer), message).Equals(parameter, other))
                 Throw.ValuesNotEqual(parameter, other, parameterName, message);
@@ -472,7 +472,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref="ValuesEqualException">Thrown when <paramref name="parameter" /> and <paramref name="other" /> are equal.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustNotBe<T>(this T parameter, T other, string? parameterName = null, string? message = null)
+        public static T MustNotBe<T>(this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (EqualityComparer<T>.Default.Equals(parameter, other))
                 Throw.ValuesEqual(parameter, other, parameterName, message);
@@ -506,7 +506,7 @@ namespace Light.GuardClauses
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="equalityComparer" /> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("equalityComparer:null => halt")]
-        public static T MustNotBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, string? parameterName = null, string? message = null)
+        public static T MustNotBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (equalityComparer.MustNotBeNull(nameof(equalityComparer), message).Equals(parameter, other))
                 Throw.ValuesEqual(parameter, other, parameterName, message);

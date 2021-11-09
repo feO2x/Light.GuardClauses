@@ -11,10 +11,9 @@ namespace Light.GuardClauses.Performance
         private static IConfig DefaultConfiguration =>
             DefaultConfig
                .Instance
-               .With(Job.Default.With(ClrRuntime.Net48))
-               .With(Job.Default.With(CoreRuntime.Core31))
-               .With(MemoryDiagnoser.Default)
-               .With(DisassemblyDiagnoser.Create(DisassemblyDiagnoserConfig.Asm));
+               .AddJob(Job.Default.WithRuntime(CoreRuntime.Core60))
+               .AddJob(Job.Default.WithRuntime(ClrRuntime.Net48))
+               .AddDiagnoser(MemoryDiagnoser.Default, new DisassemblyDiagnoser(new DisassemblyDiagnoserConfig()));
 
         public static void Main(string[] arguments) =>
             BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(arguments, DefaultConfiguration);
