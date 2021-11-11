@@ -86,5 +86,16 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         public static void CustomMessageForValueType() =>
             Test.CustomMessage<ArgumentDefaultException>(message => default(TypeCode).MustNotBeDefault(message: message));
 
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var someParameter = 0;
+
+            Action act = () => someParameter.MustNotBeDefault();
+
+            act.Should().Throw<ArgumentDefaultException>()
+               .And.ParamName.Should().Be(nameof(someParameter));
+        }
+
     }
 }
