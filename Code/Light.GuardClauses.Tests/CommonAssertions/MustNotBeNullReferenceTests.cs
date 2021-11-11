@@ -53,5 +53,17 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<ArgumentNullException>(message => ((object) null).MustNotBeNullReference(message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var someParameter = (object) null;
+
+            // ReSharper disable once ExpressionIsAlwaysNull -- I want to check the CallerArgumentExpressionAttribute here
+            Action act = () => someParameter.MustNotBeNullReference();
+
+            act.Should().Throw<ArgumentNullException>()
+               .And.ParamName.Should().Be(nameof(someParameter));
+        }
     }
 }
