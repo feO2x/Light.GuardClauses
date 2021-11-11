@@ -63,5 +63,28 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void CustomMessageArgumentNull() =>
             Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustBeOfType<Array>(message: message));
+
+        [Fact]
+        public static void CallerArgumentExpressionForTypeCastException()
+        {
+            var someValue = (object) "Foo";
+
+            Action act = () => someValue.MustBeOfType<Exception>();
+
+            act.Should().Throw<TypeCastException>()
+               .And.ParamName.Should().Be(nameof(someValue));
+        }
+
+        [Fact]
+        public static void CallerArgumentExpressionForArgumentNullException()
+        {
+            var myValue = (object) null;
+
+            // ReSharper disable once ExpressionIsAlwaysNull
+            Action act = () => myValue.MustBeOfType<string>();
+
+            act.Should().Throw<ArgumentNullException>()
+               .And.ParamName.Should().Be(nameof(myValue));
+        }
     }
 }
