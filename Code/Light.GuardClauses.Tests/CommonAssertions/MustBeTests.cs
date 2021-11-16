@@ -34,7 +34,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomExceptionValuesEqual() => 
-            87.MustBe(87, (x, y) => new Exception()).MustBe(87);
+            87.MustBe(87, (_, _) => new Exception()).MustBe(87);
 
         [Fact]
         public static void CustomMessage() =>
@@ -43,10 +43,12 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void ValuesNotEqualCustomEqualityComparer()
         {
-            Action act = () => Metasyntactic.Foo.MustBe(Metasyntactic.Bar, new EqualityComparerStub<string>(false));
+            var myString = "Foo";
+
+            Action act = () => myString.MustBe("Bar", new EqualityComparerStub<string>(false));
 
             act.Should().Throw<ValuesNotEqualException>()
-               .And.Message.Should().Contain($"The value must be equal to {Metasyntactic.Bar.ToStringOrNull()}, but it actually is {Metasyntactic.Foo.ToStringOrNull()}.");
+               .And.Message.Should().Contain($"myString must be equal to {"Bar".ToStringOrNull()}, but it actually is {"Foo".ToStringOrNull()}.");
         }
 
         [Fact]
@@ -72,6 +74,29 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomMessageEqualityComparerNull() => 
+            // ReSharper disable once AssignNullToNotNullAttribute
             Test.CustomMessage<ArgumentNullException>(message => 42.MustBe(42, (IEqualityComparer<int>) null, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var five = 5;
+
+            Action act = () => five.MustBe(4);
+
+            act.Should().Throw<ValuesNotEqualException>()
+               .And.ParamName.Should().Be(nameof(five));
+        }
+
+        [Fact]
+        public static void CallerArgumentExpressionForEqualityComparerOverload()
+        {
+            var seven = 7;
+
+            Action act = () => seven.MustBe(1, new EqualityComparerStub<int>(false));
+
+            act.Should().Throw<ValuesNotEqualException>()
+               .And.ParamName.Should().Be(nameof(seven));
+        }
     }
 }
