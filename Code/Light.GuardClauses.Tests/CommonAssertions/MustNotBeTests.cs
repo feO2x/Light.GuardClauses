@@ -34,7 +34,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomExceptionNotEqual() => 
-            42.MustNotBe(43, (x, y) => null).Should().Be(42);
+            42.MustNotBe(43, (_, _) => null).Should().Be(42);
 
         [Fact]
         public static void CustomMessage() =>
@@ -43,10 +43,12 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void ValuesNotEqualCustomEqualityComparer()
         {
-            Action act = () => Metasyntactic.Foo.MustNotBe(Metasyntactic.Foo, new EqualityComparerStub<string>(true));
+            var myString = "Foo";
+
+            Action act = () => myString.MustNotBe("Foo", new EqualityComparerStub<string>(true));
 
             act.Should().Throw<ValuesEqualException>()
-               .And.Message.Should().Contain($"The value must not be equal to {Metasyntactic.Foo.ToStringOrNull()}, but it actually is {Metasyntactic.Foo.ToStringOrNull()}.");
+               .And.Message.Should().Contain($"myString must not be equal to {"Foo".ToStringOrNull()}, but it actually is {"Foo".ToStringOrNull()}.");
         }
 
         [Fact]
@@ -61,7 +63,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomExceptionCustomComparerNotEqual() => 
-            Metasyntactic.Foo.MustNotBe(Metasyntactic.Bar, new EqualityComparerStub<string>(false), (x, y, c) => null).Should().BeSameAs(Metasyntactic.Foo);
+            Metasyntactic.Foo.MustNotBe(Metasyntactic.Bar, new EqualityComparerStub<string>(false), (_, _, _) => null).Should().BeSameAs(Metasyntactic.Foo);
 
         [Fact]
         public static void CustomMessageEqualityComparer() =>
@@ -69,6 +71,29 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomMessageComparerNull() => 
+            // ReSharper disable once AssignNullToNotNullAttribute
             Test.CustomMessage<ArgumentNullException>(message => 42.MustNotBe(89, (IEqualityComparer<int>) null, message: message));
+        
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var eight = 8;
+
+            Action act = () => eight.MustNotBe(8);
+
+            act.Should().Throw<ValuesEqualException>()
+               .And.ParamName.Should().Be(nameof(eight));
+        }
+
+        [Fact]
+        public static void CallerArgumentExpressionForEqualityComparerOverload()
+        {
+            var foo = "Foo";
+
+            Action act = () => foo.MustNotBe("Foo", new EqualityComparerStub<string>(true));
+
+            act.Should().Throw<ValuesEqualException>()
+               .And.ParamName.Should().Be(nameof(foo));
+        }
     }
 }
