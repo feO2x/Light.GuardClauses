@@ -27,6 +27,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
         [Fact]
         public static void ParameterNull()
         {
+            // ReSharper disable once ExplicitCallerInfoArgument
             Action act = () => ((string) null).MustNotBeLessThan(Metasyntactic.Foo, Metasyntactic.Bar);
 
             act.Should().Throw<ArgumentNullException>()
@@ -41,19 +42,30 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
             Test.CustomException(99, 100, (x, y, exceptionFactory) => x.MustNotBeLessThan(y, exceptionFactory));
 
         [Fact]
-        public static void CustomExceptionParameterNull() => 
+        public static void CustomExceptionParameterNull() =>
             Test.CustomException<string, string>(null, "abc", (x, y, exceptionFactory) => x.MustNotBeLessThan(y, exceptionFactory));
 
         [Fact]
-        public static void CustomExceptionParameterValid() => 
-            42.MustNotBeLessThan(40, (x, y) => null).Should().Be(42);
+        public static void CustomExceptionParameterValid() =>
+            42.MustNotBeLessThan(40, (_, _) => null).Should().Be(42);
 
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<ArgumentOutOfRangeException>(message => 'a'.MustNotBeLessThan('b', message: message));
 
         [Fact]
-        public static void CustomMessageParameterNull() => 
+        public static void CustomMessageParameterNull() =>
             Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustNotBeLessThan("a", message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var seventeen = 17;
+
+            Action act = () => seventeen.MustNotBeLessThan(20);
+
+            act.Should().Throw<ArgumentOutOfRangeException>()
+               .And.ParamName.Should().Be(nameof(seventeen));
+        }
     }
 }
