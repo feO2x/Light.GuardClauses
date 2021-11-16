@@ -32,5 +32,17 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<NullableHasNoValueException>(message => new short?().MustHaveValue(message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var nullable = default(int?);
+
+            // ReSharper disable once ExpressionIsAlwaysNull
+            Action act = () => nullable.MustHaveValue();
+
+            act.Should().Throw<NullableHasNoValueException>()
+               .And.ParamName.Should().Be(nameof(nullable));
+        }
     }
 }
