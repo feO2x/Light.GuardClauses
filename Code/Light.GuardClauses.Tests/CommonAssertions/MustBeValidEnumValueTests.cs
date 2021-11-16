@@ -44,12 +44,23 @@ namespace Light.GuardClauses.Tests.CommonAssertions
             var actualValues = new SampleEnum[enumFields.Length - 1];
             for (var i = 1; i < enumFields.Length; ++i)
             {
-                actualValues[i - 1] = (SampleEnum) enumFields[i].GetValue(null);
+                actualValues[i - 1] = (SampleEnum) enumFields[i].GetValue(null)!;
             }
 
             var expectedValues = (SampleEnum[]) Enum.GetValues(typeof(SampleEnum));
 
             actualValues.Should().Equal(expectedValues);
+        }
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var someValue = (SampleEnum) 3;
+
+            Action act = () => someValue.MustBeValidEnumValue();
+
+            act.Should().Throw<EnumValueNotDefinedException>()
+               .And.ParamName.Should().Be(nameof(someValue));
         }
     }
 
