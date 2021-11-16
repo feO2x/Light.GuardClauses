@@ -38,7 +38,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
                                  (x, y, exceptionFactory) => x.MustBeLessThan(y, exceptionFactory));
 
         [Fact]
-        public static void NoCustomExceptionThrown() => 5m.MustBeLessThan(5.1m, (v, b) => null).Should().Be(5m);
+        public static void NoCustomExceptionThrown() => 5m.MustBeLessThan(5.1m, (_, _) => null).Should().Be(5m);
 
         [Fact]
         public static void CustomMessage() =>
@@ -47,5 +47,16 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
         [Fact]
         public static void CustomMessageParameterNull() => 
             Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustBeLessThan(Metasyntactic.Bar, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var ten = 10;
+
+            Action act = () => ten.MustBeLessThan(7);
+
+            act.Should().Throw<ArgumentOutOfRangeException>()
+               .And.ParamName.Should().Be(nameof(ten));
+        }
     }
 }
