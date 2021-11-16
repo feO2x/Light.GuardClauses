@@ -29,20 +29,31 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
             Test.CustomException('A', 'G', (a, g, exceptionFactory) => a.MustBeGreaterThanOrEqualTo(g, exceptionFactory));
 
         [Fact]
-        public static void CustomExceptionParameterNull() => 
+        public static void CustomExceptionParameterNull() =>
             Test.CustomException((string) null,
                                  Metasyntactic.Foo,
                                  (x, y, exceptionFactory) => x.MustBeGreaterThanOrEqualTo(y, exceptionFactory));
 
         [Fact]
-        public static void NoCustomExceptionThrown() => 5m.MustNotBeGreaterThanOrEqualTo(5.1m, (v, b) => null).Should().Be(5m);
+        public static void NoCustomExceptionThrown() => 5m.MustNotBeGreaterThanOrEqualTo(5.1m, (_, _) => null).Should().Be(5m);
 
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<ArgumentOutOfRangeException>(message => 99.MustBeGreaterThanOrEqualTo(100, message: message));
 
         [Fact]
-        public static void CustomMessageParamterNull() => 
+        public static void CustomMessageParameterNull() =>
             Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustBeGreaterThanOrEqualTo(Metasyntactic.Bar, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var threePointThree = 3.3;
+
+            Action act = () => threePointThree.MustBeGreaterThanOrEqualTo(5.0);
+
+            act.Should().Throw<ArgumentOutOfRangeException>()
+               .And.ParamName.Should().Be(nameof(threePointThree));
+        }
     }
 }
