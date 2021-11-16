@@ -35,14 +35,25 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
                                  (x, y, exceptionFactory) => x.MustNotBeGreaterThanOrEqualTo(y, exceptionFactory));
 
         [Fact]
-        public static void NoCustomExceptionThrown() => 5m.MustNotBeGreaterThanOrEqualTo(5.1m, (v, b) => null).Should().Be(5m);
+        public static void NoCustomExceptionThrown() => 5m.MustNotBeGreaterThanOrEqualTo(5.1m, (_, _) => null).Should().Be(5m);
 
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<ArgumentOutOfRangeException>(message => 300.MustNotBeGreaterThanOrEqualTo(300, message: message));
 
         [Fact]
-        public static void CustomMessageParamterNull() => 
+        public static void CustomMessageParameterNull() => 
             Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustNotBeGreaterThanOrEqualTo(Metasyntactic.Bar, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var four = 4;
+
+            Action act = () => four.MustNotBeGreaterThanOrEqualTo(4);
+
+            act.Should().Throw<ArgumentOutOfRangeException>()
+               .And.ParamName.Should().Be(nameof(four));
+        }
     }
 }
