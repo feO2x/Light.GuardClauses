@@ -36,5 +36,15 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         public static void CustomMessage() =>
             Test.CustomMessage<EmptyGuidException>(message => Guid.Empty.MustNotBeEmpty(message: message));
 
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var emptyGuid = Guid.Empty;
+
+            Action act = () => emptyGuid.MustNotBeEmpty();
+
+            act.Should().Throw<EmptyGuidException>()
+               .And.ParamName.Should().Be(nameof(emptyGuid));
+        }
     }
 }
