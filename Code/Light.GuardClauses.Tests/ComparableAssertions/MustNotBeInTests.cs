@@ -57,21 +57,32 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
             Test.CustomException(12, new Range<int>(10, 15), (x, range, exceptionFactory) => x.MustNotBeIn(range, exceptionFactory));
 
         [Fact]
-        public static void CustomExceptionParameterNull() => 
+        public static void CustomExceptionParameterNull() =>
             Test.CustomException((string) null,
                                  Range<string>.FromInclusive("a").ToInclusive("m"),
                                  (s, range, exceptionFactory) => s.MustNotBeIn(range, exceptionFactory));
 
         [Fact]
         public static void NoCustomExceptionThrown() =>
-            (-15400.8m).MustNotBeIn(Range<decimal>.FromInclusive(0m).ToExclusive(100m), (v, b) => null).Should().Be(-15400.8m);
+            (-15400.8m).MustNotBeIn(Range<decimal>.FromInclusive(0m).ToExclusive(100m), (_, _) => null).Should().Be(-15400.8m);
 
         [Fact]
-        public static void CustomMessage() => 
+        public static void CustomMessage() =>
             Test.CustomMessage<ArgumentOutOfRangeException>(message => 42.MustNotBeIn(new Range<int>(20, 60), message: message));
 
         [Fact]
-        public static void CustomMessageParameterNull() => 
+        public static void CustomMessageParameterNull() =>
             Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustNotBeIn(new Range<string>("a", "z"), message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var two = 2;
+
+            Action act = () => two.MustNotBeIn(Range.FromInclusive(1).ToInclusive(5));
+
+            act.Should().Throw<ArgumentOutOfRangeException>()
+               .And.ParamName.Should().Be(nameof(two));
+        }
     }
 }
