@@ -61,14 +61,25 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
 
         [Fact]
         public static void NoCustomExceptionThrown() =>
-            5.6m.MustBeIn(Range<decimal>.FromInclusive(0m).ToExclusive(100m), (v, b) => null).Should().Be(5.6m);
+            5.6m.MustBeIn(Range<decimal>.FromInclusive(0m).ToExclusive(100m), (_, _) => null).Should().Be(5.6m);
 
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<ArgumentOutOfRangeException>(message => 'A'.MustBeIn(Range<char>.FromInclusive('a').ToInclusive('z'), message: message));
 
         [Fact]
-        public static void CustomMessageParameterNull() => 
+        public static void CustomMessageParameterNull() =>
             Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustBeIn(Range<string>.FromInclusive("A").ToExclusive("Z"), message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var twenty = 20;
+
+            Action act = () => twenty.MustBeIn(Range.FromInclusive(10).ToInclusive(15));
+
+            act.Should().Throw<ArgumentOutOfRangeException>()
+               .And.ParamName.Should().Be(nameof(twenty));
+        }
     }
 }
