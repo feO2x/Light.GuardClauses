@@ -36,5 +36,16 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<SameObjectReferenceException>(message => Metasyntactic.Qux.MustNotBeSameAs(Metasyntactic.Qux, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var object1 = new object();
+
+            Action act = () => object1.MustNotBeSameAs(object1);
+
+            act.Should().Throw<SameObjectReferenceException>()
+               .And.ParamName.Should().Be(nameof(object1));
+        }
     }
 }
