@@ -31,20 +31,31 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
             Test.CustomException(40, 50, (x, y, exceptionFactory) => x.MustBeGreaterThan(y, exceptionFactory));
 
         [Fact]
-        public static void CustomExceptionParameterNull() => 
+        public static void CustomExceptionParameterNull() =>
             Test.CustomException((string) null,
                                  Metasyntactic.Foo,
                                  (x, y, exceptionFactory) => x.MustBeGreaterThan(y, exceptionFactory));
 
         [Fact]
-        public static void NoCustomExceptionThrown() => 5.6m.MustBeGreaterThan(5.1m, (v, b) => null).Should().Be(5.6m);
+        public static void NoCustomExceptionThrown() => 5.6m.MustBeGreaterThan(5.1m, (_, _) => null).Should().Be(5.6m);
 
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<ArgumentOutOfRangeException>(message => 100.MustBeGreaterThan(100, message: message));
 
         [Fact]
-        public static void CustomMessageParameterNull() => 
+        public static void CustomMessageParameterNull() =>
             Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustBeGreaterThan(Metasyntactic.Bar, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var fifteen = 15;
+
+            Action act = () => fifteen.MustBeGreaterThan(20);
+
+            act.Should().Throw<ArgumentOutOfRangeException>()
+               .And.ParamName.Should().Be(nameof(fifteen));
+        }
     }
 }
