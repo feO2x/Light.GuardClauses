@@ -23,7 +23,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
         [InlineData(5L, 4L)]
         [InlineData(100L, 1L)]
         [InlineData(-87L, -90L)]
-        public static void ParamterAboveBoundary(long value, long boundary)
+        public static void ParameterAboveBoundary(long value, long boundary)
         {
             var result = value.MustNotBeLessThanOrEqualTo(boundary, nameof(value));
 
@@ -41,14 +41,25 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
                                  (x, y, exceptionFactory) => x.MustNotBeLessThanOrEqualTo(y, exceptionFactory));
 
         [Fact]
-        public static void NoCustomExceptionThrown() => 5.6m.MustNotBeLessThanOrEqualTo(5.1m, (v, b) => null).Should().Be(5.6m);
+        public static void NoCustomExceptionThrown() => 5.6m.MustNotBeLessThanOrEqualTo(5.1m, (_, _) => null).Should().Be(5.6m);
 
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<ArgumentOutOfRangeException>(message => 15.MustNotBeLessThanOrEqualTo(15, message: message));
 
         [Fact]
-        public static void CustomMessageParameterNull() => 
+        public static void CustomMessageParameterNull() =>
             Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustNotBeLessThanOrEqualTo(Metasyntactic.Bar, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var nine = 9;
+
+            Action act = () => nine.MustNotBeLessThanOrEqualTo(12);
+
+            act.Should().Throw<ArgumentOutOfRangeException>()
+               .And.ParamName.Should().Be(nameof(nine));
+        }
     }
 }
