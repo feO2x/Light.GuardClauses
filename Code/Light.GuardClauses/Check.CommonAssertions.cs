@@ -285,7 +285,7 @@ namespace Light.GuardClauses
         /// <param name="message">The message that will be passed to the <see cref="ArgumentException" /> (optional).</param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="condition" /> is true.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void InvalidArgument(bool condition, [CallerArgumentExpression("condition")] string? parameterName = null, string? message = null)
+        public static void InvalidArgument(bool condition, string? parameterName = null, string? message = null)
         {
             if (condition)
                 Throw.Argument(parameterName, message);
