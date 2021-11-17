@@ -58,5 +58,16 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void CustomMessageCollectionNull() => 
             Test.CustomMessage<ArgumentNullException>(message => ((ObservableCollection<string>) null).MustContain(Metasyntactic.Foo, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var array = new [] { "Foo", "Bar" };
+
+            var act = () => array.MustContain("Baz");
+
+            act.Should().Throw<MissingItemException>()
+               .And.ParamName.Should().Be(nameof(array));
+        }
     }
 }
