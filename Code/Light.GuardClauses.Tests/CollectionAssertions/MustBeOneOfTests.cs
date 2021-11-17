@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
@@ -59,5 +60,16 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void CustomMessageCollectionNull() => 
             Test.CustomMessage<ArgumentNullException>(message => long.MaxValue.MustBeOneOf(null, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            const int myNumber = 50;
+
+            Action act = () => myNumber.MustBeOneOf(Enumerable.Range(1, 10));
+
+            act.Should().Throw<ValueIsNotOneOfException>()
+               .And.ParamName.Should().Be(nameof(myNumber));
+        }
     }
 }
