@@ -33,7 +33,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void CollectionNull()
         {
-            Action act = () => ((ObservableCollection<object>) null).MustNotContain(new object());
+            Action act = () => ((ObservableCollection<object>)null).MustNotContain(new object());
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -46,7 +46,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
 
         [Fact]
         public static void CustomExceptionCollectionNull() =>
-            Test.CustomException((Collection<int>) null,
+            Test.CustomException((Collection<int>)null,
                                  42,
                                  (collection, i, exceptionFactory) => collection.MustNotContain(i, exceptionFactory));
 
@@ -54,7 +54,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         public static void NoCustomExceptionThrown()
         {
             var collection = new[] { 1, 2 };
-            collection.MustNotContain(3, (c, i) => new Exception()).Should().BeSameAs(collection);
+            collection.MustNotContain(3, (_, _) => new Exception()).Should().BeSameAs(collection);
         }
 
         [Fact]
@@ -63,6 +63,17 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
 
         [Fact]
         public static void CustomMessageCollectionNull() =>
-            Test.CustomMessage<ArgumentNullException>(message => ((List<bool>) null).MustNotContain(false, message: message));
+            Test.CustomMessage<ArgumentNullException>(message => ((List<bool>)null).MustNotContain(false, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var array = new[] { 1, 2, 3 };
+
+            Action act = () => array.MustNotContain(3);
+
+            act.Should().Throw<ExistingItemException>()
+               .And.ParamName.Should().Be(nameof(array));
+        }
     }
 }
