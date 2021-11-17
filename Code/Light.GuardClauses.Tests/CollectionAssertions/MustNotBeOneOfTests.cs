@@ -34,7 +34,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void ItemsNull()
         {
-            Action act = () => Metasyntactic.Foo.MustNotBeOneOf(null);
+            Action act = () => Metasyntactic.Foo.MustNotBeOneOf(null!);
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -49,7 +49,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
 
         [Fact]
         public static void NoCustomExceptionThrown() =>
-            42.MustNotBeOneOf(new[] { 1, 2, 3 }, (i, c) => new Exception()).Should().Be(42);
+            42.MustNotBeOneOf(new[] { 1, 2, 3 }, (_, _) => new Exception()).Should().Be(42);
 
         [Fact]
         public static void CustomMessage() =>
@@ -57,6 +57,17 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
 
         [Fact]
         public static void CustomMessageCollectionNull() =>
-            Test.CustomMessage<ArgumentNullException>(message => true.MustNotBeOneOf(null, message: message));
+            Test.CustomMessage<ArgumentNullException>(message => true.MustNotBeOneOf(null!, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var fortyTwo = 42;
+
+            Action act = () => fortyTwo.MustNotBeOneOf(new[] { 42 });
+
+            act.Should().Throw<ValueIsOneOfException>()
+               .And.ParamName.Should().Be(nameof(fortyTwo));
+        }
     }
 }
