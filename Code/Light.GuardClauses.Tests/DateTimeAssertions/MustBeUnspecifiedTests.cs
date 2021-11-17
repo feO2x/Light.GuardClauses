@@ -38,7 +38,7 @@ namespace Light.GuardClauses.Tests.DateTimeAssertions
         {
             var value = new DateTime(2000, 9, 10, 15, 32, 47, DateTimeKind.Unspecified);
 
-            var result = value.MustBeUnspecified(dt => null);
+            var result = value.MustBeUnspecified(_ => null);
 
             result.Should().Be(value);
         }
@@ -46,5 +46,16 @@ namespace Light.GuardClauses.Tests.DateTimeAssertions
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<InvalidDateTimeException>(message => DateTime.UtcNow.MustBeUnspecified(message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var invalidDateTime = new DateTime(2021, 11, 17, 20, 30, 0, DateTimeKind.Local);
+
+            Action act = () => invalidDateTime.MustBeUnspecified();
+
+            act.Should().Throw<InvalidDateTimeException>()
+               .And.ParamName.Should().Be(nameof(invalidDateTime));
+        }
     }
 }
