@@ -27,7 +27,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [InlineData(7, 7)]
         public static void SpanLongerOrEqual(int spanLength, int expectedLength)
         {
-            Action act = () =>
+            var act = () =>
             {
                 var array = new char[15];
                 var span = new ReadOnlySpan<char>(array, 0, spanLength);
@@ -43,10 +43,10 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         {
             var exception = new Exception();
 
-            Action act = () =>
+            var act = () =>
             {
                 var span = new ReadOnlySpan<byte>();
-                span.MustBeShorterThan(0, (s, l) => exception);
+                span.MustBeShorterThan(0, (_, _) => exception);
             };
 
             act.Should().Throw<Exception>().Which.Should().BeSameAs(exception);
@@ -57,7 +57,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         {
             var span = new ReadOnlySpan<char>();
 
-            var returnValue = span.MustBeShorterThan(5, null);
+            var returnValue = span.MustBeShorterThan(5, null!);
 
             (returnValue == span).Should().BeTrue("the assertion returns a copy of the passed-in span");
         }
@@ -65,13 +65,26 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void CustomMessage()
         {
-            Action act = () =>
+            var act = () =>
             {
                 var span = new ReadOnlySpan<byte>();
-                span.MustBeShorterThan(0, message: "Custom exception message");
+                span.MustBeShorterThan(0, null, "Custom exception message");
             };
 
             act.Should().Throw<InvalidCollectionCountException>().And.Message.Should().Be("Custom exception message");
+        }
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var act = () =>
+            {
+                ReadOnlySpan<byte> ultraSpan = stackalloc byte[5];
+                ultraSpan.MustBeShorterThan(5);
+            };
+
+            act.Should().Throw<InvalidCollectionCountException>()
+               .And.ParamName.Should().Be("ultraSpan");
         }
     }
 }
