@@ -45,7 +45,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
             Action act = () =>
             {
                 var span = new ReadOnlySpan<byte>();
-                span.MustBeLongerThan(2, (s, l) => exception);
+                span.MustBeLongerThan(2, (_, _) => exception);
             };
 
             act.Should().Throw<Exception>().Which.Should().BeSameAs(exception);
@@ -57,7 +57,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
             var array = new int[4];
             var span = new ReadOnlySpan<int>(array);
 
-            var returnValue = span.MustBeLongerThan(3, null);
+            var returnValue = span.MustBeLongerThan(3, null!);
 
             (returnValue == span).Should().BeTrue("the assertion returns a copy of the original span.");
         }
@@ -65,14 +65,27 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void CustomMessage()
         {
-            Action act = () =>
+            var act = () =>
             {
                 var span = new ReadOnlySpan<byte>();
-                span.MustBeLongerThan(5, message: "Custom exception message");
+                span.MustBeLongerThan(5, null, "Custom exception message");
             };
 
             act.Should().Throw<InvalidCollectionCountException>()
                .And.Message.Should().Be("Custom exception message");
+        }
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var act = () =>
+            {
+                var mySpan = new ReadOnlySpan<char>();
+                mySpan.MustBeLongerThan(2);
+            };
+
+            act.Should().Throw<InvalidCollectionCountException>()
+               .And.ParamName.Should().Be("mySpan");
         }
     }
 }
