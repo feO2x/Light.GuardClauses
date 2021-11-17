@@ -11,10 +11,11 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void CollectionNull()
         {
-            Action act = () => ((object[]) null).MustNotBeNullOrEmpty(Metasyntactic.Foo);
+            // ReSharper disable once ExplicitCallerInfoArgument
+            Action act = () => ((object[]) null).MustNotBeNullOrEmpty("Foo");
 
             act.Should().Throw<ArgumentNullException>()
-               .And.ParamName.Should().Be(Metasyntactic.Foo);
+               .And.ParamName.Should().Be("Foo");
         }
 
         [Fact]
@@ -58,5 +59,28 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void CustomMessageCollectionNull() => 
             Test.CustomMessage<ArgumentNullException>(message => ((List<int>) null).MustNotBeNullOrEmpty(message: message));
+
+        [Fact]
+        public static void CallerArgumentExpressionForEmptyCollection()
+        {
+            var emptyArray = Array.Empty<int>();
+
+            Action act = () => emptyArray.MustNotBeNullOrEmpty();
+
+            act.Should().Throw<EmptyCollectionException>()
+               .And.ParamName.Should().Be(nameof(emptyArray));
+        }
+
+        [Fact]
+        public static void CallerArgumentExpressionForNull()
+        {
+            var nullArray = default(int[]);
+
+            // ReSharper disable once ExpressionIsAlwaysNull
+            Action act = () => nullArray.MustNotBeNullOrEmpty();
+
+            act.Should().Throw<ArgumentNullException>()
+               .And.ParamName.Should().Be(nameof(nullArray));
+        }
     }
 }
