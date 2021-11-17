@@ -46,5 +46,16 @@ namespace Light.GuardClauses.Tests.DateTimeAssertions
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<InvalidDateTimeException>(message => DateTime.Now.MustBeUtc(message:message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var invalidDateTime = new DateTime(2021, 11, 17, 18, 30, 0, DateTimeKind.Local);
+
+            Action act = () => invalidDateTime.MustBeUtc();
+
+            act.Should().Throw<InvalidDateTimeException>()
+               .And.ParamName.Should().Be(nameof(invalidDateTime));
+        }
     }
 }
