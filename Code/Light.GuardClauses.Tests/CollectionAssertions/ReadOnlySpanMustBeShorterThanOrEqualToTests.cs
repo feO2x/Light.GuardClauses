@@ -28,7 +28,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [InlineData(1, 0)]
         public static void LongerThan(int spanLength, int expectedLength)
         {
-            Action act = () =>
+            var act = () =>
             {
                 var array = new int[10];
                 var span = new ReadOnlySpan<int>(array, 0, spanLength);
@@ -44,10 +44,10 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         {
             var exception = new Exception();
 
-            Action act = () =>
+            var act = () =>
             {
                 var span = new ReadOnlySpan<byte>(new byte[10]);
-                span.MustBeShorterThanOrEqualTo(5, (s, l) => exception);
+                span.MustBeShorterThanOrEqualTo(5, (_, _) => exception);
             };
 
             act.Should().Throw<Exception>().Which.Should().BeSameAs(exception);
@@ -58,7 +58,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         {
             var span = new ReadOnlySpan<char>(new char[4]);
 
-            var returnValue = span.MustBeShorterThanOrEqualTo(5, null);
+            var returnValue = span.MustBeShorterThanOrEqualTo(5, null!);
 
             (returnValue == span).Should().BeTrue("the assertion returns a copy of the passed-in span");
         }
@@ -66,14 +66,27 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void CustomMessage()
         {
-            Action act = () =>
+            var act = () =>
             {
                 var span = new ReadOnlySpan<int>(new int[10]);
-                span.MustBeShorterThanOrEqualTo(5, message: "Custom exception message");
+                span.MustBeShorterThanOrEqualTo(5, null, "Custom exception message");
             };
 
             act.Should().Throw<InvalidCollectionCountException>()
                .And.Message.Should().Be("Custom exception message");
+        }
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var act = () =>
+            {
+                var span = new ReadOnlySpan<char>(new char[2]);
+                span.MustBeShorterThanOrEqualTo(1);
+            };
+
+            act.Should().Throw<InvalidCollectionCountException>()
+               .And.ParamName.Should().Be("span");
         }
     }
 }
