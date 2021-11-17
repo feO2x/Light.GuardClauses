@@ -49,7 +49,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         public static void CustomExceptionNotThrown()
         {
             var collection = new List<short>{1, -2, 3};
-            collection.MustHaveCount(3, (c, i) => new Exception()).Should().BeSameAs(collection);
+            collection.MustHaveCount(3, (_, _) => new Exception()).Should().BeSameAs(collection);
         }
 
         [Fact]
@@ -59,5 +59,16 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void CustomMessageCollectionNull() => 
             Test.CustomMessage<ArgumentNullException>(message => ((List<string>) null).MustHaveCount(42, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var collection = new List<int> { 1, 2, 3 };
+
+            Action act = () => collection.MustHaveCount(5);
+
+            act.Should().Throw<InvalidCollectionCountException>()
+               .And.ParamName.Should().Be(nameof(collection));
+        }
     }
 }
