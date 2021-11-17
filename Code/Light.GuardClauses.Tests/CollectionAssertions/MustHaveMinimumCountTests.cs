@@ -34,7 +34,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void CollectionNull()
         {
-            Action act = () => ((ISet<object>) null).MustHaveMinimumCount(42);
+            Action act = () => ((ISet<object>)null).MustHaveMinimumCount(42);
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -51,7 +51,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         public static void NoCustomExceptionThrown()
         {
             var set = new HashSet<string> { Metasyntactic.Foo, Metasyntactic.Bar, Metasyntactic.Baz };
-            set.MustHaveMinimumCount(2, (s, i) => new Exception()).Should().BeSameAs(set);
+            set.MustHaveMinimumCount(2, (_, _) => new Exception()).Should().BeSameAs(set);
         }
 
         [Fact]
@@ -59,7 +59,18 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
             Test.CustomMessage<InvalidCollectionCountException>(message => new ObservableCollection<bool> { true }.MustHaveMinimumCount(2, message: message));
 
         [Fact]
-        public static void CustomMessageCollectionNull() => 
-            Test.CustomMessage<ArgumentNullException>(message => ((ObservableCollection<string>) null).MustHaveMinimumCount(42, message: message));
+        public static void CustomMessageCollectionNull() =>
+            Test.CustomMessage<ArgumentNullException>(message => ((ObservableCollection<string>)null).MustHaveMinimumCount(42, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var myCollection = new List<int> { 1, 2, 3 };
+
+            Action act = () => myCollection.MustHaveMinimumCount(5);
+
+            act.Should().Throw<InvalidCollectionCountException>()
+               .And.ParamName.Should().Be(nameof(myCollection));
+        }
     }
 }
