@@ -1,7 +1,6 @@
 ﻿using System;
 
-namespace Light.GuardClauses
-{
-    [AttributeUsage(AttributeTargets.Parameter)]
-    internal sealed class ValidatedNotNullAttribute : Attribute { }
-}
+namespace Light.GuardClauses;
+
+[AttributeUsage(AttributeTargets.Parameter)]
+internal sealed class ValidatedNotNullAttribute : Attribute { }
