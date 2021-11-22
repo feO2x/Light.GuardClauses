@@ -28,7 +28,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [InlineData(0, 6)]
         public static void ShorterThan(int spanLength, int expectedLength)
         {
-            Action act = () =>
+            var act = () =>
             {
                 var array = new int[10];
                 var span = new Span<int>(array, 0, spanLength);
@@ -44,11 +44,11 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         {
             var exception = new Exception();
 
-            Action act = () =>
+            var act = () =>
             {
                 var array = new char[5];
                 var span = new Span<char>(array, 1, 3);
-                span.MustBeLongerThanOrEqualTo(10, (s, l) => exception);
+                span.MustBeLongerThanOrEqualTo(10, (_, _) => exception);
             };
 
             act.Should().Throw<Exception>().Which.Should().BeSameAs(exception);
@@ -59,7 +59,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         {
             var span = new Span<byte>();
 
-            var returnValue = span.MustBeLongerThanOrEqualTo(0, null);
+            var returnValue = span.MustBeLongerThanOrEqualTo(0, null!);
 
             (returnValue == span).Should().BeTrue("the assertion returns a copy of the passed-in span");
         }
@@ -67,16 +67,29 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void CustomMessage()
         {
-            Action act = () =>
+            var act = () =>
             {
                 var span = new Span<int>();
 
-                span.MustBeLongerThanOrEqualTo(15, message: "Custom exception message");
+                span.MustBeLongerThanOrEqualTo(15, null, "Custom exception message");
             };
 
 
             act.Should().Throw<InvalidCollectionCountException>()
                .And.Message.Should().Be("Custom exception message");
+        }
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var act = () =>
+            {
+                var mySpan = new Span<char>();
+                mySpan.MustBeLongerThanOrEqualTo(15);
+            };
+
+            act.Should().Throw<InvalidCollectionCountException>()
+               .And.ParamName.Should().Be("mySpan");
         }
     }
 }
