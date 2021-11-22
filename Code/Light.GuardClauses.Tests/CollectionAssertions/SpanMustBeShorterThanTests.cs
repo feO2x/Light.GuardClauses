@@ -27,7 +27,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [InlineData(5, 5)]
         public static void SpanLongerOrEqual(int spanLength, int expectedLength)
         {
-            Action act = () =>
+            var act = () =>
             {
                 var array = new char[15];
                 var span = new Span<char>(array, 0, spanLength);
@@ -43,10 +43,10 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         {
             var exception = new Exception();
 
-            Action act = () =>
+            var act = () =>
             {
                 var span = new Span<byte>();
-                span.MustBeShorterThan(0, (s, l) => exception);
+                span.MustBeShorterThan(0, (_, _) => exception);
             };
 
             act.Should().Throw<Exception>().Which.Should().BeSameAs(exception);
@@ -57,7 +57,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         {
             var span = new Span<char>();
 
-            var returnValue = span.MustBeShorterThan(5, null);
+            var returnValue = span.MustBeShorterThan(5, null!);
 
             (returnValue == span).Should().BeTrue("the assertion returns a copy of the passed-in span");
         }
@@ -65,7 +65,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void CustomMessage()
         {
-            Action act = () =>
+            var act = () =>
             {
                 var span = new Span<byte>();
                 span.MustBeShorterThan(0, message: "Custom exception message");

@@ -10,7 +10,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [MetasyntacticVariablesData]
         public static void ConditionTrue(string parameterName)
         {
-            Action act = () => Check.InvalidArgument(true, parameterName);
+            var act = () => Check.InvalidArgument(true, parameterName);
 
             var exceptionAssertion = act.Should().Throw<ArgumentException>().And;
             exceptionAssertion.ParamName.Should().BeSameAs(parameterName);
@@ -51,7 +51,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void DefaultMessage()
         {
-            Action act = () => Check.InvalidArgument(true);
+            var act = () => Check.InvalidArgument(true);
 
             act.Should().Throw<ArgumentException>()
                .And.Message.Should().Be("The value is invalid.");

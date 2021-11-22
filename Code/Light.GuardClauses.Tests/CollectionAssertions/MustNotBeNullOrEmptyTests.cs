@@ -43,13 +43,13 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [InlineData(null)]
         public static void CustomException(int[] collection) =>
             Test.CustomException(collection, 
-                                 (c, exceptionFactory) => collection.MustNotBeNullOrEmpty(exceptionFactory));
+                                 (_, exceptionFactory) => collection.MustNotBeNullOrEmpty(exceptionFactory));
 
         [Fact]
         public static void NoCustomExceptionThrown()
         {
             var collection = new List<int>{42};
-            collection.MustNotBeNullOrEmpty(c => new Exception()).Should().BeSameAs(collection);
+            collection.MustNotBeNullOrEmpty(_ => new Exception()).Should().BeSameAs(collection);
         }
 
         [Fact]

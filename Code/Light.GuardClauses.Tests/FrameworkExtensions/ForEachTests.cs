@@ -24,7 +24,7 @@ namespace Light.GuardClauses.Tests.FrameworkExtensions
         }
 
         public static readonly TheoryData<IEnumerable<string>> PerformOnEachElementData =
-            new TheoryData<IEnumerable<string>>
+            new()
             {
                 new[] { "Foo", "Bar", "Baz" },
                 new[] { "Foo" },
@@ -43,7 +43,7 @@ namespace Light.GuardClauses.Tests.FrameworkExtensions
         [MemberData(nameof(ItemNullData))]
         public static void ItemNullException(IEnumerable<object> collection)
         {
-            Action act = () => collection.ForEach(item => { });
+            Action act = () => collection.ForEach(_ => { });
 
             act.Should().Throw<CollectionException>();
         }
@@ -55,14 +55,14 @@ namespace Light.GuardClauses.Tests.FrameworkExtensions
             // ReSharper disable PossibleMultipleEnumeration
             var callCount = 0;
 
-            collection.ForEach(item => callCount++, false);
+            collection.ForEach(_ => callCount++, false);
 
             callCount.Should().Be(collection.Count(item => item != null));
             // ReSharper restore PossibleMultipleEnumeration
         }
 
         public static readonly TheoryData<IEnumerable<object>> ItemNullData =
-            new TheoryData<IEnumerable<object>>
+            new()
             {
                 new[] { new object(), new object(), null },
                 LazyObjectEnumerableWithNull()
@@ -86,9 +86,9 @@ namespace Light.GuardClauses.Tests.FrameworkExtensions
         }
 
         public static readonly TheoryData<IEnumerable<int>, Action<int>> ArgumentNullData =
-            new TheoryData<IEnumerable<int>, Action<int>>
+            new()
             {
-                { null, item => { } },
+                { null, _ => { } },
                 { new[] { 1, 2, 3 }, null }
             };
     }

@@ -38,7 +38,7 @@ namespace Light.GuardClauses.Tests.DateTimeAssertions
         {
             var value = new DateTime(2016, 5, 31, 10, 0, 0, DateTimeKind.Utc);
 
-            var result = value.MustBeUtc(dt => null);
+            var result = value.MustBeUtc(_ => null);
 
             result.Should().Be(value);
         }

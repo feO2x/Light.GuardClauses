@@ -51,7 +51,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
 
         [Fact]
         public static void NoCustomExceptionThrown() => 
-            42.MustBeOneOf(new[] { 42, 43 }, (i, c) => new Exception()).Should().Be(42);
+            42.MustBeOneOf(new[] { 42, 43 }, (_, _) => new Exception()).Should().Be(42);
 
         [Fact]
         public static void CustomMessage() =>

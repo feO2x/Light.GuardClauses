@@ -21,7 +21,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
             Action act = () => emailAddress.MustBeEmailAddress();
 
             act.Should().Throw<InvalidEmailAddressException>()
-               .And.Message.Should().Contain($"The string must be a valid email address, but it actually is \"{emailAddress}\".");
+               .And.Message.Should().Contain($"emailAddress must be a valid email address, but it actually is \"{emailAddress}\".");
         }
 
         [Theory]
@@ -48,7 +48,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
                .And.Message.Should().Contain(customMessage);
         }
 
-        private static readonly Regex CustomRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+        private static readonly Regex CustomRegex = new (@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
 
         [Fact]
         public static void InvalidEmailCustomRegex()
@@ -79,7 +79,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         }
 
         public static readonly TheoryData<string, Regex> NullData =
-            new TheoryData<string, Regex>
+            new()
             {
                 { null, CustomRegex },
                 { "invalidEmailAddress", null }

@@ -18,7 +18,7 @@ namespace Light.GuardClauses.Tests.UriAssertions
         }
 
         public static readonly TheoryData<Uri> AbsoluteUris =
-            new TheoryData<Uri>
+            new()
             {
                 new Uri("https://www.microsoft.com"),
                 new Uri("https://xunit.github.io/")
@@ -30,7 +30,7 @@ namespace Light.GuardClauses.Tests.UriAssertions
             relativeUri.MustBeRelativeUri().Should().BeSameAs(relativeUri);
 
         public static readonly TheoryData<Uri> RelativeUris =
-            new TheoryData<Uri>
+            new()
             {
                 new Uri("api/login", UriKind.Relative),
                 new Uri("/home", UriKind.Relative)

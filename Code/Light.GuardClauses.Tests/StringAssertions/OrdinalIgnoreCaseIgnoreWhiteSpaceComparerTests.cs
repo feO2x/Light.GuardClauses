@@ -7,7 +7,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
 {
     public sealed class OrdinalIgnoreCaseIgnoreWhiteSpaceComparerTests
     {
-        private static readonly OrdinalIgnoreCaseIgnoreWhiteSpaceComparer Comparer = new OrdinalIgnoreCaseIgnoreWhiteSpaceComparer();
+        private static readonly OrdinalIgnoreCaseIgnoreWhiteSpaceComparer Comparer = new ();
         private readonly ITestOutputHelper _output;
 
         public OrdinalIgnoreCaseIgnoreWhiteSpaceComparerTests(ITestOutputHelper output) => _output = output.MustNotBeNull(nameof(output));
@@ -45,7 +45,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         public void GetHashCodeStringNull()
         {
             // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-            Action act = () => Comparer.GetHashCode(null);
+            Action act = () => Comparer.GetHashCode(null!);
 
             act.Should().Throw<ArgumentNullException>().WriteExceptionTo(_output);
         }

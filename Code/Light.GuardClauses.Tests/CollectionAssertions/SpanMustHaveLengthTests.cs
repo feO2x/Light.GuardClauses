@@ -14,7 +14,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [InlineData(10, 11)]
         public static void InvalidLength(int spanLength, int expectedLength)
         {
-            Action act = () =>
+            var act = () =>
             {
                 var array = new int[10];
                 var span = new Span<int>(array, 0, spanLength);
@@ -43,11 +43,11 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         {
             var exception = new Exception();
 
-            Action act = () =>
+            var act = () =>
             {
                 var array = new char[5];
                 var span = new Span<char>(array, 0, 3);
-                span.MustHaveLength(4, (s, l) => exception);
+                span.MustHaveLength(4, (_, _) => exception);
             };
 
             act.Should().Throw<Exception>().Which.Should().BeSameAs(exception);
@@ -59,7 +59,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
             var array = new int[4];
             var span = new Span<int>(array);
 
-            var result = span.MustHaveLength(4, (s, l) => null);
+            var result = span.MustHaveLength(4, (_, _) => null);
 
             (result == span).Should().BeTrue("The returned span must be a copy of the passed-in instance.");
         }
@@ -67,7 +67,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void CustomMessage()
         {
-            Action act = () =>
+            var act = () =>
             {
                 var span = new Span<string>();
                 span.MustHaveLength(1, message: "Foo");

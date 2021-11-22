@@ -72,11 +72,9 @@ namespace Light.GuardClauses.Tests.TypeAssertions
 
         public class SubTypeB : GenericType<string> { }
 
-        public static Dictionary<TKey, TValue> CreateDictionaryA<TKey, TValue>() => 
-            new Dictionary<TKey, TValue>();
+        public static Dictionary<TKey, TValue> CreateDictionaryA<TKey, TValue>() => new ();
 
-        public static Dictionary<TKey, object> CreateDictionaryB<TKey>() => 
-            new Dictionary<TKey, object>();
+        public static Dictionary<TKey, object> CreateDictionaryB<TKey>() => new ();
 
         private static readonly MethodInfo CreateDictionaryOfTKeyTValue;
         private static readonly MethodInfo CreateDictionaryOfTKey;

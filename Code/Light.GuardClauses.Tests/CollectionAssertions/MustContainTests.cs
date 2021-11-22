@@ -48,7 +48,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         public static void CustomExceptionNotThrown()
         {
             var collection = new List<int> { 1, 2, 3 };
-            collection.MustContain(2, (c, i) => new Exception()).Should().BeSameAs(collection);
+            collection.MustContain(2, (_, _) => new Exception()).Should().BeSameAs(collection);
         }
 
         [Fact]

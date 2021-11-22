@@ -73,11 +73,11 @@ namespace Light.GuardClauses.Tests.StringAssertions
 
         [Fact]
         public static void NoCustomExceptionThrown() =>
-            Metasyntactic.Foo.MustNotContain(Metasyntactic.Bar, (x, y) => new Exception()).Should().BeSameAs(Metasyntactic.Foo);
+            Metasyntactic.Foo.MustNotContain(Metasyntactic.Bar, (_, _) => new Exception()).Should().BeSameAs(Metasyntactic.Foo);
 
         [Fact]
         public static void NoCustomExceptionThrownOnCustomSearch() => 
-            "Foo".MustNotContain("FOO", StringComparison.CurrentCulture, (x, y, ct) => new Exception()).Should().BeSameAs("Foo");
+            "Foo".MustNotContain("FOO", StringComparison.CurrentCulture, (_, _, _) => new Exception()).Should().BeSameAs("Foo");
 
         [Fact]
         public static void CustomMessage() =>
@@ -97,10 +97,10 @@ namespace Light.GuardClauses.Tests.StringAssertions
 
         [Fact]
         public static void CustomMessageValueNull() =>
-            Test.CustomMessage<ArgumentNullException>(message => Metasyntactic.Foo.MustNotContain(null, message: message));
+            Test.CustomMessage<ArgumentNullException>(message => Metasyntactic.Foo.MustNotContain(null!, message: message));
 
         [Fact]
         public static void CustomMessageCustomSearchValueNull() =>
-            Test.CustomMessage<ArgumentNullException>(message => Metasyntactic.Foo.MustNotContain(null, StringComparison.Ordinal, message: message));
+            Test.CustomMessage<ArgumentNullException>(message => Metasyntactic.Foo.MustNotContain(null!, StringComparison.Ordinal, message: message));
     }
 }

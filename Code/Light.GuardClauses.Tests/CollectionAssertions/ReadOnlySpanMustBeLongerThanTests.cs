@@ -27,7 +27,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [InlineData(6, 6)]
         public static void SpanShorterOrEqual(int spanLength, int expectedLength)
         {
-            Action act = () =>
+            var act = () =>
             {
                 var array = new[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g' };
                 var span = new ReadOnlySpan<char>(array, 0, spanLength);
@@ -42,7 +42,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         public static void CustomException()
         {
             var exception = new Exception();
-            Action act = () =>
+            var act = () =>
             {
                 var span = new ReadOnlySpan<byte>();
                 span.MustBeLongerThan(2, (_, _) => exception);

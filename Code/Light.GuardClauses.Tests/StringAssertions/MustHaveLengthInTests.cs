@@ -13,7 +13,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
             @string.MustHaveLengthIn(range).Should().BeSameAs(@string);
 
         public static readonly TheoryData<string, Range<int>> LengthInRangeData =
-            new TheoryData<string, Range<int>>
+            new()
             {
                 { "Foo", Range.FromInclusive(0).ToExclusive(10) },
                 { "Bar", Range.FromInclusive(3).ToInclusive(5) },
@@ -32,7 +32,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         }
 
         public static readonly TheoryData<string, Range<int>> LengthNotInRangeData =
-            new TheoryData<string, Range<int>>
+            new()
             {
                 { "Baz", Range.FromInclusive(10).ToInclusive(20) },
                 { "Qux", Range.FromExclusive(3).ToExclusive(10) },

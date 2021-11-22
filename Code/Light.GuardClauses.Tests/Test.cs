@@ -10,7 +10,7 @@ namespace Light.GuardClauses.Tests
 {
     public static class Test
     {
-        private static readonly ExceptionDummy Exception = new ExceptionDummy();
+        private static readonly ExceptionDummy Exception = new ();
         private static readonly Func<Exception> ExceptionFactory = () => Exception;
 
         public static void CustomException(Action<Func<Exception>> executeAssertion)
@@ -28,7 +28,7 @@ namespace Light.GuardClauses.Tests
 
         public static void CustomException<T>(T invalidValue, Action<T, Func<T, Exception>> executeAssertion)
         {
-            T capturedParameter = default;
+            T? capturedParameter = default;
 
             Exception ExceptionFactory(T parameter)
             {
@@ -50,8 +50,8 @@ namespace Light.GuardClauses.Tests
 
         public static void CustomException<T1, T2>(T1 first, T2 second, Action<T1, T2, Func<T1, T2, Exception>> executeAssertion)
         {
-            T1 capturedFirst = default;
-            T2 capturedSecond = default;
+            T1? capturedFirst = default;
+            T2? capturedSecond = default;
 
             Exception ExceptionFactory(T1 x, T2 y)
             {
@@ -75,9 +75,9 @@ namespace Light.GuardClauses.Tests
 
         public static void CustomException<T1, T2, T3>(T1 first, T2 second, T3 third, Action<T1, T2, T3, Func<T1, T2, T3, Exception>> executeAssertion)
         {
-            T1 capturedFirst = default;
-            T2 capturedSecond = default;
-            T3 capturedThird = default;
+            T1? capturedFirst = default;
+            T2? capturedSecond = default;
+            T3? capturedThird = default;
 
             Exception ExceptionFactory(T1 x, T2 y, T3 z)
             {

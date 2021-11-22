@@ -11,8 +11,8 @@ namespace Light.GuardClauses.Tests.FrameworkExtensions
     public static class AsReadOnlyListTests
     {
         [Theory]
-        [MemberData(nameof(ReturnsCastedInstanceIfPossibleData))]
-        public static void ReturnsCastedInstanceIfPossible(IEnumerable<string> enumerable)
+        [MemberData(nameof(ReturnsCastInstanceIfPossibleData))]
+        public static void ReturnsCastInstanceIfPossible(IEnumerable<string> enumerable)
         {
             // ReSharper disable PossibleMultipleEnumeration
             var readOnlyList = enumerable.AsReadOnlyList();
@@ -22,8 +22,8 @@ namespace Light.GuardClauses.Tests.FrameworkExtensions
         }
 
         [Theory]
-        [MemberData(nameof(ReturnsCastedInstanceIfPossibleData))]
-        public static void ReturnsCastedInstanceIfPossibleWithCustomFactory(IEnumerable<string> enumerable)
+        [MemberData(nameof(ReturnsCastInstanceIfPossibleData))]
+        public static void ReturnsCastInstanceIfPossibleWithCustomFactory(IEnumerable<string> enumerable)
         {
             // ReSharper disable PossibleMultipleEnumeration
             var readOnlyList = enumerable.AsReadOnlyList(items => new ObservableCollection<string>(items));
@@ -32,8 +32,8 @@ namespace Light.GuardClauses.Tests.FrameworkExtensions
             // ReSharper restore PossibleMultipleEnumeration
         }
 
-        public static readonly TheoryData<IEnumerable<string>> ReturnsCastedInstanceIfPossibleData =
-            new TheoryData<IEnumerable<string>>
+        public static readonly TheoryData<IEnumerable<string>> ReturnsCastInstanceIfPossibleData =
+            new()
             {
                 new List<string> { "Foo", "Bar" },
                 new[] { "Foo", "Bar", "Baz" },
@@ -57,7 +57,7 @@ namespace Light.GuardClauses.Tests.FrameworkExtensions
         [Fact]
         public static void EnumerableNull()
         {
-            Action act = () => ((IEnumerable<string>) null).AsReadOnlyList();
+            Action act = () => ((IEnumerable<string>) null)!.AsReadOnlyList();
 
             act.Should().Throw<ArgumentNullException>()
                .And.ParamName.Should().Be("source");

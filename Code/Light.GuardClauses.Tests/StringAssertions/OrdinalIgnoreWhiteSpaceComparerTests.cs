@@ -7,7 +7,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
 {
     public sealed class OrdinalIgnoreWhiteSpaceComparerTests
     {
-        private static readonly OrdinalIgnoreWhiteSpaceComparer Comparer = new OrdinalIgnoreWhiteSpaceComparer();
+        private static readonly OrdinalIgnoreWhiteSpaceComparer Comparer = new ();
         private readonly ITestOutputHelper _output;
 
         public OrdinalIgnoreWhiteSpaceComparerTests(ITestOutputHelper output) => _output = output.MustNotBeNull(nameof(output));

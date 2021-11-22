@@ -10,7 +10,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [MetasyntacticVariablesData]
         public static void ConditionTrue(string message)
         {
-            Action act = () => Check.InvalidOperation(true, message);
+            var act = () => Check.InvalidOperation(true, message);
 
             act.Should().Throw<InvalidOperationException>()
                .And.Message.Should().Be(message);

@@ -17,7 +17,7 @@ namespace Light.GuardClauses.Tests.UriAssertions
         }
 
         public static readonly TheoryData<Uri> AbsoluteUriData =
-            new TheoryData<Uri>
+            new()
             {
                 new Uri("http://localhost:8080/api/contacts/"),
                 new Uri("https://my.service.com/contacts/new"),
@@ -35,7 +35,7 @@ namespace Light.GuardClauses.Tests.UriAssertions
         }
 
         public static readonly TheoryData<Uri> RelativeUriData =
-            new TheoryData<Uri>
+            new()
             {
                 new Uri("/api/orders", UriKind.Relative),
                 new Uri("/contacts/new", UriKind.Relative)

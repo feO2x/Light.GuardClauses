@@ -36,7 +36,7 @@ namespace Light.GuardClauses.Tests.DateTimeAssertions
         {
             var value = new DateTime(1989, 2, 5, 3, 32, 21, DateTimeKind.Local);
 
-            var result = value.MustBeLocal(dt => null);
+            var result = value.MustBeLocal(_ => null);
 
             result.Should().Be(value);
         }

@@ -48,7 +48,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
                                  (@string, regex, exceptionFactory) => @string.MustMatch(regex, exceptionFactory));
 
         public static readonly TheoryData<string, Regex> CustomExceptionData =
-            new TheoryData<string, Regex>
+            new()
             {
                 { "ab", new Regex(@"\w{3}") },
                 { null, new Regex(@"\W{6}") },
@@ -57,7 +57,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
 
         [Fact]
         public static void NoCustomExceptionThrown() => 
-            Metasyntactic.Foo.MustMatch(new Regex("\\w{3}"), (s, r) => new Exception()).Should().BeSameAs(Metasyntactic.Foo);
+            Metasyntactic.Foo.MustMatch(new Regex("\\w{3}"), (_, _) => new Exception()).Should().BeSameAs(Metasyntactic.Foo);
 
 
         [Fact]

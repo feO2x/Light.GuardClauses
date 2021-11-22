@@ -59,7 +59,7 @@ namespace Light.GuardClauses.Tests.UriAssertions
                                  (uri, schemes, exceptionFactory) => uri.MustHaveOneSchemeOf(schemes, exceptionFactory));
 
         public static readonly TheoryData<Uri, List<string>> CustomExceptionData =
-            new TheoryData<Uri, List<string>>
+            new()
             {
                 { new Uri("https://www.microsoft.com"), new List<string> { "http", "fttp" } },
                 { null, new List<string>{"http", "https"} },

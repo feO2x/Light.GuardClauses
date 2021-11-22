@@ -18,7 +18,7 @@ namespace Light.GuardClauses.Tests.UriAssertions
         }
 
         public static readonly TheoryData<Uri, string> InvalidSchemeData =
-            new TheoryData<Uri, string>
+            new()
             {
                 { new Uri("http://localhost:8080"), "https" },
                 { new Uri("http://my.service.com/upload"), "ftp" }
@@ -34,7 +34,7 @@ namespace Light.GuardClauses.Tests.UriAssertions
         }
 
         public static readonly TheoryData<Uri, string> ValidSchemeData =
-            new TheoryData<Uri, string>
+            new()
             {
                 { new Uri("https://www.google.com"), "https" },
                 { new Uri("ftps://192.168.177.2"), "ftps" }
@@ -64,7 +64,7 @@ namespace Light.GuardClauses.Tests.UriAssertions
                                  (url, scheme, exceptionFactory) => url.MustHaveScheme(scheme, exceptionFactory));
 
         public static readonly TheoryData<Uri, string> CustomExceptionData =
-            new TheoryData<Uri, string>
+            new()
             {
                 { new Uri("https://www.microsoft.com"), "http" },
                 { null, "ftp" },
@@ -80,14 +80,14 @@ namespace Light.GuardClauses.Tests.UriAssertions
         public static void CustomExceptionNoSchemeUriValid()
         {
             var url = new Uri("https://www.hbo.com/westworld");
-            url.MustHaveScheme("https", u => new Exception()).Should().BeSameAs(url);
+            url.MustHaveScheme("https", _ => new Exception()).Should().BeSameAs(url);
         }
 
         [Fact]
         public static void CustomExceptionSchemeIsValid()
         {
             var uri = new Uri("https://github.com/feO2x/Light.GuardClauses");
-            uri.MustHaveScheme("https", (u, s) => null).Should().BeSameAs(uri);
+            uri.MustHaveScheme("https", (_, _) => null).Should().BeSameAs(uri);
         }
 
         [Fact]

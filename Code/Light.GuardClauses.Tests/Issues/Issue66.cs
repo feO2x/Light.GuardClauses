@@ -39,7 +39,7 @@ namespace Light.GuardClauses.Tests.Issues
     {
         public string Id { get; set; }
 
-        public static Entity CreateDefault() => new Entity { Id = "Foo" };
+        public static Entity CreateDefault() => new() { Id = "Foo" };
     }
 
     public interface ISomeRepository : IDisposable
@@ -57,17 +57,15 @@ namespace Light.GuardClauses.Tests.Issues
 
         public async Task<Entity> GetIt()
         {
-            using (var repo = _createRepo())
+            using var repo = _createRepo();
+            var instance = await repo.GetInstanceAsync();
+            if (instance == null)
             {
-                var instance = await repo.GetInstanceAsync();
-                if (instance == null)
-                {
-                    instance = Entity.CreateDefault();
-                    await repo.SaveInstanceAsync(instance);
-                }
-
-                return instance;
+                instance = Entity.CreateDefault();
+                await repo.SaveInstanceAsync(instance);
             }
+
+            return instance;
         }
     }
 

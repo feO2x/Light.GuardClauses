@@ -40,7 +40,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         public static void CustomException() =>
             Test.CustomException("Meh",
                                  2,
-                                 (s, l, exceptionFactory) => s.MustBeShorterThanOrEqualTo(2, exceptionFactory));
+                                 (s, _, exceptionFactory) => s.MustBeShorterThanOrEqualTo(2, exceptionFactory));
 
         [Fact]
         public static void CustomMessage() =>

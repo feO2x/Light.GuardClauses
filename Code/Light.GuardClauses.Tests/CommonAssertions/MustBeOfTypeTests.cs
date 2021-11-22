@@ -53,7 +53,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         public static void CustomExceptionDowncastValid()
         {
             var encoding = Encoding.UTF8;
-            encoding.MustBeOfType<UTF8Encoding>(e => null).Should().BeSameAs(encoding);
+            encoding.MustBeOfType<UTF8Encoding>(_ => null).Should().BeSameAs(encoding);
         }
 
         [Fact]

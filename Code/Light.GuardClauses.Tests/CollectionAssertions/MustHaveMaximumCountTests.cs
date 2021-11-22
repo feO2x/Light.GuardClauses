@@ -50,7 +50,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         public static void NoCustomExceptionThrown()
         {
             var collection = new HashSet<string> { "Foo", "Bar" };
-            collection.MustHaveMaximumCount(2, (set, i) => new Exception()).Should().BeSameAs(collection);
+            collection.MustHaveMaximumCount(2, (_, _) => new Exception()).Should().BeSameAs(collection);
         }
 
         [Fact]

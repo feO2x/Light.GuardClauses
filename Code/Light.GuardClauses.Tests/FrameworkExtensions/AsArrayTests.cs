@@ -36,13 +36,13 @@ namespace Light.GuardClauses.Tests.FrameworkExtensions
         [Fact]
         public static void EnumerableNull()
         {
-            Action act = () => ((ObservableCollection<string>) null).AsArray();
+            Action act = () => ((ObservableCollection<string>) null)!.AsArray();
 
             act.Should().Throw<ArgumentNullException>();
         }
 
         public static readonly TheoryData<IEnumerable<string>> NotArrayData =
-            new TheoryData<IEnumerable<string>>
+            new()
             {
                 new List<string> { "Foo", "Bar", "Baz" },
                 new ObservableCollection<string>(),

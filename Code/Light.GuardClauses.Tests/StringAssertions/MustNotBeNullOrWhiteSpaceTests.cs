@@ -38,7 +38,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         }
 
         public static readonly TheoryData<string> WhiteSpaceData =
-            new TheoryData<string>
+            new()
             {
                 Environment.NewLine,
                 " ",
