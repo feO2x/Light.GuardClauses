@@ -68,10 +68,23 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
             var act = () =>
             {
                 var span = new Span<byte>();
-                span.MustBeShorterThan(0, message: "Custom exception message");
+                span.MustBeShorterThan(0, null, "Custom exception message");
             };
 
             act.Should().Throw<InvalidCollectionCountException>().And.Message.Should().Be("Custom exception message");
+        }
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var act = () =>
+            {
+                var span = new Span<byte>(new byte[3]);
+                span.MustBeShorterThan(2);
+            };
+
+            act.Should().Throw<InvalidCollectionCountException>()
+               .And.ParamName.Should().Be("span");
         }
     }
 }
