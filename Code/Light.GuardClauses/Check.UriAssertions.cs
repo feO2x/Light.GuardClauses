@@ -38,7 +38,7 @@ public static partial class Check
     {
         if (parameter is null || parameter.IsAbsoluteUri == false)
             Throw.CustomException(exceptionFactory, parameter);
-        return parameter!;
+        return parameter;
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ public static partial class Check
     {
         if (parameter is null || parameter.IsAbsoluteUri)
             Throw.CustomException(exceptionFactory, parameter);
-        return parameter!;
+        return parameter;
     }
 
     /// <summary>
@@ -129,7 +129,7 @@ public static partial class Check
     {
         if (parameter is null || !parameter.IsAbsoluteUri || parameter.Scheme.Equals(scheme) == false)
             Throw.CustomException(exceptionFactory, parameter, scheme);
-        return parameter!;
+        return parameter;
     }
 
     /// <summary>
@@ -274,14 +274,14 @@ public static partial class Check
 
         if (schemes is ICollection<string> collection)
         {
-            if (!collection.Contains(parameter!.Scheme))
+            if (!collection.Contains(parameter.Scheme))
                 Throw.CustomException(exceptionFactory, parameter, schemes);
             return parameter;
         }
 
         // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
-        if (schemes is null || !schemes.Contains(parameter!.Scheme))
+        if (schemes is null || !schemes.Contains(parameter.Scheme))
             Throw.CustomException(exceptionFactory, parameter, schemes!);
-        return parameter!;
+        return parameter;
     }
 }
