@@ -97,5 +97,16 @@ namespace Light.GuardClauses.Tests.UriAssertions
         [Fact]
         public static void CustomMessageUriNull() => 
             Test.CustomMessage<ArgumentNullException>(message => ((Uri) null).MustHaveScheme("http", message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var myUrl = new Uri("https://microsoft.com", UriKind.Absolute);
+
+            var act = () => myUrl.MustHaveScheme("ftps");
+
+            act.Should().Throw<InvalidUriSchemeException>()
+               .And.ParamName.Should().Be(nameof(myUrl));
+        }
     }
 }
