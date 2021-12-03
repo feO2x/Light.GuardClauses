@@ -60,5 +60,16 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void CustomMessageCollectionNull() =>
             Test.CustomMessage<ArgumentNullException>(message => ((ObservableCollection<int>) null).MustHaveMaximumCount(3, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var myCollection = new List<int> { 1, 2, 3 };
+
+            var act = () => myCollection.MustHaveMaximumCount(2);
+
+            act.Should().Throw<InvalidCollectionCountException>()
+               .And.ParamName.Should().Be(nameof(myCollection));
+        }
     }
 }
