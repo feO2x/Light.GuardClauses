@@ -63,5 +63,16 @@ namespace Light.GuardClauses.Tests.UriAssertions
         [Fact]
         public static void CustomMessageUriNull() =>
             Test.CustomMessage<ArgumentNullException>(message => ((Uri) null).MustBeRelativeUri(message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var absoluteUri = new Uri("https://www.duckduckgo.com", UriKind.Absolute);
+
+            var act = () => absoluteUri.MustBeRelativeUri();
+
+            act.Should().Throw<AbsoluteUriException>()
+               .And.ParamName.Should().Be(nameof(absoluteUri));
+        }
     }
 }
