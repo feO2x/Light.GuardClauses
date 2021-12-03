@@ -76,5 +76,18 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
             act.Should().Throw<InvalidCollectionCountException>()
                .And.Message.Should().Contain("Foo");
         }
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var act = () =>
+            {
+                var mySpan = new Span<char>();
+                mySpan.MustHaveLength(10);
+            };
+
+            act.Should().Throw<InvalidCollectionCountException>()
+               .And.ParamName.Should().Be("mySpan");
+        }
     }
 }
