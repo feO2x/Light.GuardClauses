@@ -9,7 +9,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
     public static class MustNotBeTests
     {
         [Theory]
-        [InlineData(Metasyntactic.Foo, Metasyntactic.Foo, StringComparison.Ordinal)]
+        [InlineData("Foo", "Foo", StringComparison.Ordinal)]
         [InlineData("Bar", "bar", StringComparison.OrdinalIgnoreCase)]
         [InlineData(null, null, StringComparison.CurrentCulture)]
         public static void ValuesEqual(string x, string y, StringComparison comparisonType)
@@ -21,10 +21,10 @@ namespace Light.GuardClauses.Tests.StringAssertions
         }
 
         [Theory]
-        [InlineData(Metasyntactic.Foo, Metasyntactic.Bar, StringComparison.CurrentCultureIgnoreCase)]
+        [InlineData("Foo", "Bar", StringComparison.CurrentCultureIgnoreCase)]
         [InlineData("Baz", "BAZ", StringComparison.CurrentCulture)]
-        [InlineData(null, Metasyntactic.Qux, StringComparison.Ordinal)]
-        [InlineData(Metasyntactic.Quux, null, StringComparison.OrdinalIgnoreCase)]
+        [InlineData(null, "Qux", StringComparison.Ordinal)]
+        [InlineData("Quux", null, StringComparison.OrdinalIgnoreCase)]
         public static void ValuesNotEqual(string x, string y, StringComparison comparisonType) => x.MustNotBe(y, comparisonType).Should().Be(x);
 
         [Theory]
@@ -48,8 +48,8 @@ namespace Light.GuardClauses.Tests.StringAssertions
 
         [Fact]
         public static void CustomException() =>
-            Test.CustomException(Metasyntactic.Foo,
-                                 Metasyntactic.Foo,
+            Test.CustomException("Foo",
+                                 "Foo",
                                  (x, y, exceptionFactory) => x.MustNotBe(y, StringComparison.CurrentCulture, exceptionFactory));
 
         [Fact]
@@ -60,7 +60,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
 
         [Fact]
         public static void CustomMessage() =>
-            Test.CustomMessage<ValuesEqualException>(message => Metasyntactic.Foo.MustNotBe(Metasyntactic.Foo, StringComparison.CurrentCulture, message: message));
+            Test.CustomMessage<ValuesEqualException>(message => "Foo".MustNotBe("Foo", StringComparison.CurrentCulture, message: message));
 
         [Fact]
         public static void CustomMessageIgnoreWhiteSpace() => 

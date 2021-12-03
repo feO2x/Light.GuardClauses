@@ -8,7 +8,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
     public static class InvalidStateTests
     {
         [Theory]
-        [MetasyntacticVariablesData]
+        [DefaultVariablesData]
         public static void ConditionTrue(string message)
         {
             var act = () => Check.InvalidState(true, message);

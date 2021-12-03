@@ -9,8 +9,8 @@ namespace Light.GuardClauses.Tests.StringAssertions
     public static class MustBeSubstringOfTests
     {
         [Theory]
-        [InlineData(Metasyntactic.Foo, Metasyntactic.Bar)]
-        [InlineData("FO", Metasyntactic.Foo)]
+        [InlineData("Foo", "Bar")]
+        [InlineData("FO", "Foo")]
         [InlineData("Hey, you over there!", "Where is the pigeon pie?")]
         public static void NotSubstring(string @string, string other)
         {
@@ -31,8 +31,8 @@ namespace Light.GuardClauses.Tests.StringAssertions
             substring.MustBeSubstringOf(other).Should().BeSameAs(substring);
 
         [Theory]
-        [InlineData(Metasyntactic.Foo, Metasyntactic.Bar, StringComparison.OrdinalIgnoreCase)]
-        [InlineData(Metasyntactic.Baz, Metasyntactic.Qux, StringComparison.CurrentCulture)]
+        [InlineData("Foo", "Bar", StringComparison.OrdinalIgnoreCase)]
+        [InlineData("Baz", "Qux", StringComparison.CurrentCulture)]
         public static void NotSubstringCustomComparisonType(string first, string second, StringComparison comparisonType)
         {
             Action act = () => first.MustBeSubstringOf(second, comparisonType, nameof(first));
@@ -52,7 +52,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void ParameterNull()
         {
-            Action act = () => ((string) null).MustBeSubstringOf(Metasyntactic.Foo);
+            Action act = () => ((string) null).MustBeSubstringOf("Foo");
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -60,7 +60,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void OtherNull()
         {
-            Action act = () => Metasyntactic.Foo.MustBeSubstringOf(null!);
+            Action act = () => "Foo".MustBeSubstringOf(null!);
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -68,7 +68,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void ParameterNullCustomComparisonType()
         {
-            Action act = () => ((string) null).MustBeSubstringOf(Metasyntactic.Bar, StringComparison.Ordinal);
+            Action act = () => ((string) null).MustBeSubstringOf("Bar", StringComparison.Ordinal);
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -76,7 +76,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void OtherNullCustomComparisonType()
         {
-            Action act = () => Metasyntactic.Baz.MustBeSubstringOf(null!, StringComparison.CurrentCultureIgnoreCase);
+            Action act = () => "Baz".MustBeSubstringOf(null!, StringComparison.CurrentCultureIgnoreCase);
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -103,7 +103,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
 
         [Fact]
         public static void NoCustomExceptionThrown() =>
-            Metasyntactic.Foo.MustBeSubstringOf("Food", (_, _) => new Exception()).Should().BeSameAs(Metasyntactic.Foo);
+            "Foo".MustBeSubstringOf("Food", (_, _) => new Exception()).Should().BeSameAs("Foo");
 
         [Fact]
         public static void NoCustomExceptionThrownWithCustomComparisonType() =>
@@ -111,7 +111,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
 
         [Fact]
         public static void CustomMessage() =>
-            Test.CustomMessage<SubstringException>(message => Metasyntactic.Baz.MustBeSubstringOf(Metasyntactic.Qux, message: message));
+            Test.CustomMessage<SubstringException>(message => "Baz".MustBeSubstringOf("Qux", message: message));
 
         [Fact]
         public static void CustomMessageParameterNull() =>

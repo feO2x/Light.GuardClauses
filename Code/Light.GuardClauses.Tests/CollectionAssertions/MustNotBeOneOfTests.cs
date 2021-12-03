@@ -11,8 +11,8 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
     public static class MustNotBeOneOfTests
     {
         [Theory]
-        [InlineData(Metasyntactic.Foo, new[] { Metasyntactic.Foo, Metasyntactic.Bar })]
-        [InlineData(null, new[] { Metasyntactic.Foo, Metasyntactic.Bar, null, Metasyntactic.Qux })]
+        [InlineData("Foo", new[] { "Foo", "Bar" })]
+        [InlineData(null, new[] { "Foo", "Bar", null, "Qux" })]
         public static void ValueExists(string value, string[] items)
         {
             Action act = () => value.MustNotBeOneOf(items, nameof(value));
@@ -34,7 +34,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void ItemsNull()
         {
-            Action act = () => Metasyntactic.Foo.MustNotBeOneOf(null!);
+            Action act = () => "Foo".MustNotBeOneOf(null!);
 
             act.Should().Throw<ArgumentNullException>();
         }

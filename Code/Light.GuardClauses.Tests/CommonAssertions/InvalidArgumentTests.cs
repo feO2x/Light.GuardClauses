@@ -7,7 +7,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
     public static class InvalidArgumentTests
     {
         [Theory]
-        [MetasyntacticVariablesData]
+        [DefaultVariablesData]
         public static void ConditionTrue(string parameterName)
         {
             var act = () => Check.InvalidArgument(true, parameterName);

@@ -10,7 +10,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void ReferenceIsNull()
         {
-            const string paramterName = Metasyntactic.Foo;
+            const string paramterName = "Foo";
             Action act = () => ((string) null).MustNotBeDefault(paramterName);
 
             var exceptionAssertion = act.Should().Throw<ArgumentNullException>().Which;
@@ -44,8 +44,8 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         }
 
         [Theory]
-        [InlineData(Metasyntactic.Foo)]
-        [InlineData(Metasyntactic.Bar)]
+        [InlineData("Foo")]
+        [InlineData("Bar")]
         public static void ReferenceIsNotNull(string reference) => reference.MustNotBeDefault().Should().BeSameAs(reference);
 
         [Theory]
@@ -72,7 +72,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomExceptionNotNull() =>
-            Metasyntactic.Foo.MustNotBeDefault(() => null).Should().BeSameAs(Metasyntactic.Foo);
+            "Foo".MustNotBeDefault(() => null).Should().BeSameAs("Foo");
 
         [Fact]
         public static void CustomExceptionNotDefault() =>

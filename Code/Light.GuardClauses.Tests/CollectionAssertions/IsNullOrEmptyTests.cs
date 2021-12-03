@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
 
@@ -21,7 +22,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void CollectionEmpty()
         {
-            var emptyCollection = new int[0];
+            var emptyCollection = Array.Empty<int>();
 
             var result = emptyCollection.IsNullOrEmpty();
 

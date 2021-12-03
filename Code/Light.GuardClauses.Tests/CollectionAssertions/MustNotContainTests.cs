@@ -11,9 +11,9 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
     public static class MustNotContainTests
     {
         [Theory]
-        [InlineData(new[] { Metasyntactic.Foo, Metasyntactic.Bar }, Metasyntactic.Foo)]
-        [InlineData(new[] { Metasyntactic.Baz, Metasyntactic.Qux, Metasyntactic.Quux }, Metasyntactic.Qux)]
-        [InlineData(new[] { Metasyntactic.Corge, Metasyntactic.Grault, null }, null)]
+        [InlineData(new[] { "Foo", "Bar" }, "Foo")]
+        [InlineData(new[] { "Baz", "Qux", "Quux" }, "Qux")]
+        [InlineData(new[] { "Corge", "Grault", null }, null)]
         public static void ItemExists(string[] collection, string item)
         {
             Action act = () => collection.MustNotContain(item, nameof(collection));
@@ -40,8 +40,8 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
 
         [Fact]
         public static void CustomException() =>
-            Test.CustomException(new List<string> { Metasyntactic.Foo },
-                                 Metasyntactic.Foo,
+            Test.CustomException(new List<string> { "Foo" },
+                                 "Foo",
                                  (collection, value, exceptionFactory) => collection.MustNotContain(value, exceptionFactory));
 
         [Fact]

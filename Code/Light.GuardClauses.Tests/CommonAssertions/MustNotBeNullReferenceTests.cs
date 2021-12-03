@@ -33,8 +33,8 @@ namespace Light.GuardClauses.Tests.CommonAssertions
             value.MustNotBeNullReference().Should().Be(value);
 
         [Theory]
-        [InlineData(Metasyntactic.Foo)]
-        [InlineData(Metasyntactic.Bar)]
+        [InlineData("Foo")]
+        [InlineData("Bar")]
         public static void ReferenceNotNull(string reference) =>
             reference.MustNotBeNullReference().Should().BeSameAs(reference);
 
@@ -44,7 +44,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomExceptionNotNull() => 
-            Metasyntactic.Foo.MustNotBeNullReference(() => null).Should().BeSameAs(Metasyntactic.Foo);
+            "Foo".MustNotBeNullReference(() => null).Should().BeSameAs("Foo");
 
         [Fact]
         public static void CustomExceptionValueType() => 

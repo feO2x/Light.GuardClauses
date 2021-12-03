@@ -13,7 +13,7 @@ namespace Light.GuardClauses.Tests.FrameworkExtensions
         public static void UnquotedValue(int value) => value.ToStringRepresentation().Should().Be(value.ToString());
 
         [Theory]
-        [MetasyntacticVariablesData]
+        [DefaultVariablesData]
         public static void QuotedValues(string value) => value.ToStringRepresentation().Should().Be($"\"{value}\"");
     }
 }

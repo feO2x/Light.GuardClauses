@@ -7,7 +7,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
     public static class InvalidOperationTests
     {
         [Theory]
-        [MetasyntacticVariablesData]
+        [DefaultVariablesData]
         public static void ConditionTrue(string message)
         {
             var act = () => Check.InvalidOperation(true, message);

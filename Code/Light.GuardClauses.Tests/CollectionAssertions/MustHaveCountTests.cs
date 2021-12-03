@@ -11,7 +11,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void CountDifferent()
         {
-            var collection = new List<string> { Metasyntactic.Foo, Metasyntactic.Bar, Metasyntactic.Baz };
+            var collection = new List<string> { "Foo", "Bar", "Baz" };
 
             Action act = () => collection.MustHaveCount(10, nameof(collection));
 

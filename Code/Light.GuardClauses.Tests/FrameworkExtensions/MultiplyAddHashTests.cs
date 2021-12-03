@@ -7,8 +7,8 @@ namespace Light.GuardClauses.Tests.FrameworkExtensions
     public static class MultiplyAddHashTests
     {
         [Theory]
-        [InlineData(Metasyntactic.Foo, 42)]
-        [InlineData(Metasyntactic.Bar, -177422)]
+        [InlineData("Foo", 42)]
+        [InlineData("Bar", -177422)]
         [InlineData(null, 0)]
         public static void TwoParameters(string value1, int value2)
         {
@@ -22,8 +22,8 @@ namespace Light.GuardClauses.Tests.FrameworkExtensions
         }
 
         [Theory]
-        [InlineData(Metasyntactic.Foo, 42, 'a')]
-        [InlineData(Metasyntactic.Bar, -177422, 'Y')]
+        [InlineData("Foo", 42, 'a')]
+        [InlineData("Bar", -177422, 'Y')]
         [InlineData(null, 0, default(char))]
         public static void ThreeParameters(string value1, int value2, char value3)
         {
@@ -38,8 +38,8 @@ namespace Light.GuardClauses.Tests.FrameworkExtensions
         }
 
         [Theory]
-        [InlineData(Metasyntactic.Foo, 42, 'a', 87.73665)]
-        [InlineData(Metasyntactic.Bar, -177422, 'Y', -15.25)]
+        [InlineData("Foo", 42, 'a', 87.73665)]
+        [InlineData("Bar", -177422, 'Y', -15.25)]
         [InlineData(null, 0, default(char), 0.0)]
         public static void FourParameters(string value1, int value2, char value3, double value4)
         {

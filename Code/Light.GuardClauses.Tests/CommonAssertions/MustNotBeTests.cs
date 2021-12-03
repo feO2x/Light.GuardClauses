@@ -10,8 +10,8 @@ namespace Light.GuardClauses.Tests.CommonAssertions
     public static class MustNotBeTests
     {
         [Theory]
-        [InlineData(Metasyntactic.Qux)]
-        [InlineData(Metasyntactic.Foo)]
+        [InlineData("Qux")]
+        [InlineData("Foo")]
         public static void ValuesEqual(string value)
         {
             Action act = () => value.MustNotBe(value, nameof(value));
@@ -28,8 +28,8 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomException() =>
-            Test.CustomException(Metasyntactic.Foo,
-                                 Metasyntactic.Foo,
+            Test.CustomException("Foo",
+                                 "Foo",
                                  (x, y, exceptionFactory) => x.MustNotBe(y, exceptionFactory));
 
         [Fact]
@@ -56,14 +56,14 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomExceptionEqualityComparer() =>
-            Test.CustomException(Metasyntactic.Foo,
-                                 Metasyntactic.Bar,
+            Test.CustomException("Foo",
+                                 "Bar",
                                  (IEqualityComparer<string>) new EqualityComparerStub<string>(true),
                                  (x, y, comparer, exceptionFactory) => x.MustNotBe(y, comparer, exceptionFactory));
 
         [Fact]
         public static void CustomExceptionCustomComparerNotEqual() => 
-            Metasyntactic.Foo.MustNotBe(Metasyntactic.Bar, new EqualityComparerStub<string>(false), (_, _, _) => null).Should().BeSameAs(Metasyntactic.Foo);
+            "Foo".MustNotBe("Bar", new EqualityComparerStub<string>(false), (_, _, _) => null).Should().BeSameAs("Foo");
 
         [Fact]
         public static void CustomMessageEqualityComparer() =>

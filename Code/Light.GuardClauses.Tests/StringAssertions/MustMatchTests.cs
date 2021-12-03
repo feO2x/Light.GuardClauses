@@ -52,12 +52,12 @@ namespace Light.GuardClauses.Tests.StringAssertions
             {
                 { "ab", new Regex(@"\w{3}") },
                 { null, new Regex(@"\W{6}") },
-                { Metasyntactic.Foo, null }
+                { "Foo", null }
             };
 
         [Fact]
         public static void NoCustomExceptionThrown() => 
-            Metasyntactic.Foo.MustMatch(new Regex("\\w{3}"), (_, _) => new Exception()).Should().BeSameAs(Metasyntactic.Foo);
+            "Foo".MustMatch(new Regex("\\w{3}"), (_, _) => new Exception()).Should().BeSameAs("Foo");
 
 
         [Fact]
@@ -70,6 +70,6 @@ namespace Light.GuardClauses.Tests.StringAssertions
 
         [Fact]
         public static void CustomMessageRegexNull() =>
-            Test.CustomMessage<ArgumentNullException>(message => Metasyntactic.Foo.MustMatch(null, message: message));
+            Test.CustomMessage<ArgumentNullException>(message => "Foo".MustMatch(null, message: message));
     }
 }

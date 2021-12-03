@@ -12,7 +12,7 @@ namespace Light.GuardClauses.Tests.CommonAssertions
         [Fact]
         public static void CastNotPossible()
         {
-            object reference = Metasyntactic.Foo;
+            object reference = "Foo";
 
             Action act = () => reference.MustBeOfType<Array>(nameof(reference));
 
@@ -23,24 +23,24 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void Downcast() =>
-            Metasyntactic.Bar.MustBeOfType<string>().Should().BeSameAs(Metasyntactic.Bar);
+            "Bar".MustBeOfType<string>().Should().BeSameAs("Bar");
 
         [Fact]
         public static void Cast() =>
-            Metasyntactic.Baz.MustBeOfType<IConvertible>().Should().BeSameAs(Metasyntactic.Baz);
+            "Baz".MustBeOfType<IConvertible>().Should().BeSameAs("Baz");
 
         [Fact]
         public static void ReferenceIsNull()
         {
-            Action act = () => ((object) null).MustBeOfType<string>(Metasyntactic.Foo);
+            Action act = () => ((object) null).MustBeOfType<string>("Foo");
 
             act.Should().Throw<ArgumentNullException>()
-               .And.ParamName.Should().Be(Metasyntactic.Foo);
+               .And.ParamName.Should().Be("Foo");
         }
 
         [Fact]
         public static void CustomException() =>
-            Test.CustomException<object>(Metasyntactic.Foo,
+            Test.CustomException<object>("Foo",
                                          (value, exceptionFactory) => value.MustBeOfType<Encoding>(exceptionFactory));
 
 

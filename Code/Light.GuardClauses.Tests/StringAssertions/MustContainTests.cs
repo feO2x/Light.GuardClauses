@@ -53,7 +53,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void StringNull()
         {
-            Action act = () => ((string) null).MustContain(Metasyntactic.Foo);
+            Action act = () => ((string) null).MustContain("Foo");
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -61,15 +61,15 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void StringNullCustomSearch()
         {
-            Action act = () => ((string)null).MustContain(Metasyntactic.Foo, StringComparison.Ordinal);
+            Action act = () => ((string)null).MustContain("Foo", StringComparison.Ordinal);
 
             act.Should().Throw<ArgumentNullException>();
         }
 
         [Theory]
-        [InlineData(Metasyntactic.Foo, Metasyntactic.Bar)]
-        [InlineData(Metasyntactic.Baz, null)]
-        [InlineData(null, Metasyntactic.Qux)]
+        [InlineData("Foo", "Bar")]
+        [InlineData("Baz", null)]
+        [InlineData(null, "Qux")]
         public static void CustomException(string first, string second) => 
             Test.CustomException(first,
                                  second,
@@ -88,26 +88,26 @@ namespace Light.GuardClauses.Tests.StringAssertions
 
         [Fact]
         public static void CustomMessage() => 
-            Test.CustomMessage<SubstringException>(message => Metasyntactic.Foo.MustContain(Metasyntactic.Bar, message: message));
+            Test.CustomMessage<SubstringException>(message => "Foo".MustContain("Bar", message: message));
 
         [Fact]
         public static void CustomMessageParameterNull() => 
-            Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustContain(Metasyntactic.Foo, message: message));
+            Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustContain("Foo", message: message));
 
         [Fact]
         public static void CustomMessageValueNull() => 
-            Test.CustomMessage<ArgumentNullException>(message => Metasyntactic.Foo.MustContain(null, message: message));
+            Test.CustomMessage<ArgumentNullException>(message => "Foo".MustContain(null, message: message));
 
         [Fact]
         public static void CustomMessageCustomSearch() => 
-            Test.CustomMessage<SubstringException>(message => Metasyntactic.Baz.MustContain(Metasyntactic.Qux, StringComparison.OrdinalIgnoreCase, message: message));
+            Test.CustomMessage<SubstringException>(message => "Baz".MustContain("Qux", StringComparison.OrdinalIgnoreCase, message: message));
 
         [Fact]
         public static void CustomMessageCustomSearchParameterNull() => 
-            Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustContain(Metasyntactic.Foo, message: message));
+            Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustContain("Foo", message: message));
 
         [Fact]
         public static void CustomMessageCustomSearchValueNull() => 
-            Test.CustomMessage<ArgumentNullException>(message => Metasyntactic.Bar.MustContain(null, message: message));
+            Test.CustomMessage<ArgumentNullException>(message => "Bar".MustContain(null, message: message));
     }
 }

@@ -37,7 +37,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
         [Fact]
         public static void CustomExceptionParameterNull() =>
             Test.CustomException((string) null,
-                                 Metasyntactic.Foo,
+                                 "Foo",
                                  (x, y, exceptionFactory) => x.MustNotBeLessThanOrEqualTo(y, exceptionFactory));
 
         [Fact]
@@ -49,7 +49,7 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
 
         [Fact]
         public static void CustomMessageParameterNull() =>
-            Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustNotBeLessThanOrEqualTo(Metasyntactic.Bar, message: message));
+            Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustNotBeLessThanOrEqualTo("Bar", message: message));
 
         [Fact]
         public static void CallerArgumentExpression()

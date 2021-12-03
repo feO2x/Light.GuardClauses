@@ -23,9 +23,9 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         }
 
         [Theory]
-        [InlineData(new[] { Metasyntactic.Foo }, 1)]
-        [InlineData(new[] { Metasyntactic.Bar }, 2)]
-        [InlineData(new[] { Metasyntactic.Baz, Metasyntactic.Qux, Metasyntactic.Quux }, 5)]
+        [InlineData(new[] { "Foo" }, 1)]
+        [InlineData(new[] { "Bar" }, 2)]
+        [InlineData(new[] { "Baz", "Qux", "Quux" }, 5)]
         public static void LessOrEqualItems(string[] items, int count) =>
             items.MustHaveMaximumCount(count).Should().BeSameAs(items);
 

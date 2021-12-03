@@ -27,16 +27,16 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         }
 
         [Theory]
-        [InlineData(Metasyntactic.Foo, new[] { Metasyntactic.Foo, Metasyntactic.Bar })]
-        [InlineData(Metasyntactic.Qux, new[] { Metasyntactic.Baz, Metasyntactic.Qux, Metasyntactic.Quux })]
-        [InlineData(null, new[] { Metasyntactic.Foo, Metasyntactic.Bar, null })]
+        [InlineData("Foo", new[] { "Foo", "Bar" })]
+        [InlineData("Qux", new[] { "Baz", "Qux", "Quux" })]
+        [InlineData(null, new[] { "Foo", "Bar", null })]
         public static void OneOf(string item, string[] items) =>
             item.MustBeOneOf(items).Should().BeSameAs(item);
 
         [Fact]
         public static void ItemsNull()
         {
-            Action act = () => Metasyntactic.Foo.MustBeOneOf(null);
+            Action act = () => "Foo".MustBeOneOf(null!);
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -59,7 +59,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
 
         [Fact]
         public static void CustomMessageCollectionNull() => 
-            Test.CustomMessage<ArgumentNullException>(message => long.MaxValue.MustBeOneOf(null, message: message));
+            Test.CustomMessage<ArgumentNullException>(message => long.MaxValue.MustBeOneOf(null!, message: message));
 
         [Fact]
         public static void CallerArgumentExpression()

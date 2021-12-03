@@ -21,10 +21,10 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         }
 
         [Theory]
-        [InlineData(new[] { Metasyntactic.Foo, Metasyntactic.Bar }, Metasyntactic.Foo)]
-        [InlineData(new[] { Metasyntactic.Foo, Metasyntactic.Bar, Metasyntactic.Foo }, Metasyntactic.Foo)]
-        [InlineData(new[] { Metasyntactic.Qux }, Metasyntactic.Qux)]
-        [InlineData(new[] { Metasyntactic.Qux, null }, null)]
+        [InlineData(new[] { "Foo", "Bar" }, "Foo")]
+        [InlineData(new[] { "Foo", "Bar", "Foo" }, "Foo")]
+        [InlineData(new[] { "Qux" }, "Qux")]
+        [InlineData(new[] { "Qux", null }, null)]
         public static void ItemPartOf(string[] collection, string item) =>
             collection.MustContain(item).Should().BeSameAs(collection);
 
@@ -53,11 +53,11 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
 
         [Fact]
         public static void CustomMessage() =>
-            Test.CustomMessage<MissingItemException>(message => new List<string>().MustContain(Metasyntactic.Foo, message: message));
+            Test.CustomMessage<MissingItemException>(message => new List<string>().MustContain("Foo", message: message));
 
         [Fact]
         public static void CustomMessageCollectionNull() => 
-            Test.CustomMessage<ArgumentNullException>(message => ((ObservableCollection<string>) null).MustContain(Metasyntactic.Foo, message: message));
+            Test.CustomMessage<ArgumentNullException>(message => ((ObservableCollection<string>) null).MustContain("Foo", message: message));
 
         [Fact]
         public static void CallerArgumentExpression()

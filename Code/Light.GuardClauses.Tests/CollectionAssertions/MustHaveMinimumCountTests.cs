@@ -12,7 +12,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
     public static class MustHaveMinimumCountTests
     {
         [Theory]
-        [InlineData(new[] { Metasyntactic.Foo, Metasyntactic.Bar }, 4)]
+        [InlineData(new[] { "Foo", "Bar" }, 4)]
         [InlineData(new[] { 1, 2, 3, 4 }, 40)]
         [InlineData(new bool[] { }, 1)]
         public static void LessItems(IEnumerable collection, int minimumCount)
@@ -25,8 +25,8 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         }
 
         [Theory]
-        [InlineData(new[] { Metasyntactic.Foo, Metasyntactic.Bar, Metasyntactic.Baz }, 3)]
-        [InlineData(new[] { Metasyntactic.Qux, Metasyntactic.Quux, Metasyntactic.Corge }, 2)]
+        [InlineData(new[] { "Foo", "Bar", "Baz" }, 3)]
+        [InlineData(new[] { "Qux", "Quux", "Corge" }, 2)]
         [InlineData(new string[] { }, 0)]
         public static void EqualOrMoreItems(string[] collection, int minimumCount) =>
             collection.MustHaveMinimumCount(minimumCount).Should().BeSameAs(collection);
@@ -50,7 +50,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void NoCustomExceptionThrown()
         {
-            var set = new HashSet<string> { Metasyntactic.Foo, Metasyntactic.Bar, Metasyntactic.Baz };
+            var set = new HashSet<string> { "Foo", "Bar", "Baz" };
             set.MustHaveMinimumCount(2, (_, _) => new Exception()).Should().BeSameAs(set);
         }
 

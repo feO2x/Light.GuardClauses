@@ -33,7 +33,7 @@ namespace Light.GuardClauses.Tests.CollectionAssertions
         [Fact]
         public static void CollectionNotEmpty()
         {
-            var collection = new HashSet<string> { Metasyntactic.Baz, Metasyntactic.Qux, Metasyntactic.Corge };
+            var collection = new HashSet<string> { "Baz", "Qux", "Corge" };
 
             collection.MustNotBeNullOrEmpty().Should().BeSameAs(collection);
         }

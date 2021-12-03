@@ -28,10 +28,10 @@ namespace Light.GuardClauses.Tests.ComparableAssertions
         public static void ParameterNull()
         {
             // ReSharper disable once ExplicitCallerInfoArgument
-            Action act = () => ((string) null).MustNotBeLessThan(Metasyntactic.Foo, Metasyntactic.Bar);
+            Action act = () => ((string) null).MustNotBeLessThan("Foo", "Bar");
 
             act.Should().Throw<ArgumentNullException>()
-               .And.ParamName.Should().BeSameAs(Metasyntactic.Bar);
+               .And.ParamName.Should().BeSameAs("Bar");
         }
 
         [Fact]

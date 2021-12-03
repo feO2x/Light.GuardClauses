@@ -10,8 +10,8 @@ namespace Light.GuardClauses.Tests.CommonAssertions
     public static class MustBeTests
     {
         [Theory]
-        [InlineData(Metasyntactic.Foo, Metasyntactic.Bar)]
-        [InlineData(Metasyntactic.Baz, Metasyntactic.Qux)]
+        [InlineData("Foo", "Bar")]
+        [InlineData("Baz", "Qux")]
         public static void ValuesNotEqual(string x, string y)
         {
             Action act = () => x.MustBe(y, nameof(x));
@@ -28,8 +28,8 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomException() =>
-            Test.CustomException(Metasyntactic.Foo,
-                                 Metasyntactic.Bar,
+            Test.CustomException("Foo",
+                                 "Bar",
                                  (x, y, exceptionFactory) => x.MustBe(y, exceptionFactory));
 
         [Fact]
@@ -56,8 +56,8 @@ namespace Light.GuardClauses.Tests.CommonAssertions
 
         [Fact]
         public static void CustomExceptionEqualityComparer() =>
-            Test.CustomException(Metasyntactic.Foo,
-                                 Metasyntactic.Bar,
+            Test.CustomException("Foo",
+                                 "Bar",
                                  (IEqualityComparer<string>) new EqualityComparerStub<string>(false),
                                  (x, y, comparer, exceptionFactory) => x.MustBe(y, comparer, exceptionFactory));
 
