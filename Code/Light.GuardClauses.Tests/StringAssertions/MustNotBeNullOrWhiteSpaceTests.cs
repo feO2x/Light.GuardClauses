@@ -70,5 +70,16 @@ namespace Light.GuardClauses.Tests.StringAssertions
         public static void CustomExceptionWhiteSpace(string whiteSpaceString) =>
             Test.CustomException(whiteSpaceString,
                                  (@string, exceptionFactory) => @string.MustNotBeNullOrWhiteSpace(exceptionFactory));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            const string whiteSpaceString = "\t";
+
+            var act = () => whiteSpaceString.MustNotBeNullOrWhiteSpace();
+
+            act.Should().Throw<WhiteSpaceStringException>()
+               .And.ParamName.Should().Be(nameof(whiteSpaceString));
+        }
     }
 }
