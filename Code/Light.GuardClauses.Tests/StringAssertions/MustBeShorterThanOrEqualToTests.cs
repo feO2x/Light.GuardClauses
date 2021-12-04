@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Xunit;
@@ -22,7 +20,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [InlineData("You told me to do nothing before and I listened to you. I’m not doing nothing again", 2)]
         public static void LongerThan(string @string, int length)
         {
-            Action act = () => @string.MustBeShorterThanOrEqualTo(length, nameof(@string));
+            var act = () => @string.MustBeShorterThanOrEqualTo(length, nameof(@string));
 
             act.Should().Throw<StringLengthException>()
                .And.Message.Should().Contain($"string must be shorter or equal to {length}, but it actually has length {@string.Length}.");
@@ -31,7 +29,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void StringNull()
         {
-            Action act = () => ((string) null).MustBeShorterThanOrEqualTo(42);
+            var act = () => ((string) null).MustBeShorterThanOrEqualTo(42);
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -45,5 +43,16 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<StringLengthException>(message => "foo".MustBeShorterThanOrEqualTo(1, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            const string message = "My God, this is already short";
+
+            var act = () => message.MustBeShorterThanOrEqualTo(5);
+
+            act.Should().Throw<StringLengthException>()
+               .And.ParamName.Should().Be(nameof(message));
+        }
     }
 }
