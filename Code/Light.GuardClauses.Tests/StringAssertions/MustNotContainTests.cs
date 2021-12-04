@@ -76,7 +76,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
             "Foo".MustNotContain("Bar", (_, _) => new Exception()).Should().BeSameAs("Foo");
 
         [Fact]
-        public static void NoCustomExceptionThrownOnCustomSearch() => 
+        public static void NoCustomExceptionThrownOnCustomSearch() =>
             "Foo".MustNotContain("FOO", StringComparison.CurrentCulture, (_, _, _) => new Exception()).Should().BeSameAs("Foo");
 
         [Fact]
@@ -93,7 +93,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
 
         [Fact]
         public static void CustomMessageCustomSearchParameterNull() =>
-            Test.CustomMessage<ArgumentNullException>(message => ((string)null).MustNotContain("Foo", StringComparison.Ordinal, message: message));
+            Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustNotContain("Foo", StringComparison.Ordinal, message: message));
 
         [Fact]
         public static void CustomMessageValueNull() =>
@@ -102,5 +102,16 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void CustomMessageCustomSearchValueNull() =>
             Test.CustomMessage<ArgumentNullException>(message => "Foo".MustNotContain(null!, StringComparison.Ordinal, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            const string bar = "Bar";
+
+            var act = () => bar.MustNotContain("ar");
+
+            act.Should().Throw<SubstringException>()
+               .And.ParamName.Should().Be(nameof(bar));
+        }
     }
 }
