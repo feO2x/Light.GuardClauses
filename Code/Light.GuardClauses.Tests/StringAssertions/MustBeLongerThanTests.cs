@@ -19,10 +19,12 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [InlineData("Bar", 3)]
         [InlineData("Baz", 4)]
         [InlineData("", 0)]
+        // ReSharper disable StringLiteralTypo
         [InlineData("Hush, Hodor. No more Hodor-ing!", 100)]
+        // ReSharper restore StringLiteralTypo
         public static void NotLongerThan(string @string, int length)
         {
-            Action act = () => @string.MustBeLongerThan(length, nameof(@string));
+            var act = () => @string.MustBeLongerThan(length, nameof(@string));
 
             act.Should().Throw<StringLengthException>()
                .And.Message.Should().Contain($"string must be longer than {length}, but it actually has length {@string.Length}.");
@@ -31,7 +33,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void StringNull()
         {
-            Action act = () => ((string) null).MustBeLongerThan(42);
+            var act = () => ((string) null).MustBeLongerThan(42);
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -45,5 +47,16 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<StringLengthException>(message => "Foo".MustBeLongerThan(10, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            const string @short = "It's short";
+
+            var act = () => @short.MustBeLongerThan(10);
+
+            act.Should().Throw<StringLengthException>()
+               .And.ParamName.Should().Be("@short");
+        }
     }
 }
