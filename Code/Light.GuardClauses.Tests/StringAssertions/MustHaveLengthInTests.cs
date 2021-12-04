@@ -13,7 +13,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
             @string.MustHaveLengthIn(range).Should().BeSameAs(@string);
 
         public static readonly TheoryData<string, Range<int>> LengthInRangeData =
-            new()
+            new ()
             {
                 { "Foo", Range.FromInclusive(0).ToExclusive(10) },
                 { "Bar", Range.FromInclusive(3).ToInclusive(5) },
@@ -25,14 +25,14 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [MemberData(nameof(LengthNotInRangeData))]
         public static void LengthNotInRange(string @string, Range<int> range)
         {
-            Action act = () => @string.MustHaveLengthIn(range, nameof(@string));
+            var act = () => @string.MustHaveLengthIn(range, nameof(@string));
 
             act.Should().Throw<StringLengthException>()
                .And.Message.Should().Contain($"string must have its length in between {range.CreateRangeDescriptionText("and")}, but it actually has length {@string.Length}.");
         }
 
         public static readonly TheoryData<string, Range<int>> LengthNotInRangeData =
-            new()
+            new ()
             {
                 { "Baz", Range.FromInclusive(10).ToInclusive(20) },
                 { "Qux", Range.FromExclusive(3).ToExclusive(10) },
@@ -43,7 +43,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void StringNull()
         {
-            Action act = () => ((string) null).MustHaveLengthIn(new Range<int>());
+            var act = () => ((string) null).MustHaveLengthIn(new Range<int>());
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -57,5 +57,16 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<StringLengthException>(message => "Foo".MustHaveLengthIn(Range.FromInclusive(42).ToInclusive(50), message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            const string message = "God rest ye merry, gentlemen";
+
+            var act = () => message.MustHaveLengthIn(Range.FromInclusive(3).ToExclusive(10));
+
+            act.Should().Throw<StringLengthException>()
+               .And.ParamName.Should().Be(nameof(message));
+        }
     }
 }
