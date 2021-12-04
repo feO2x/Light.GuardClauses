@@ -14,7 +14,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         public static void ValidEmailAddress(string emailAddress) => emailAddress.MustBeEmailAddress().Should().BeSameAs(emailAddress);
 
         [Theory]
-        [InlineData("plainaddress")]
+        [InlineData("plainAddress")]
         [InlineData("Joe Smith <email@domain.com>")]
         public static void InvalidEmailAddress(string emailAddress)
         {
@@ -79,7 +79,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         }
 
         public static readonly TheoryData<string, Regex> NullData =
-            new()
+            new ()
             {
                 { null, CustomRegex },
                 { "invalidEmailAddress", null }
@@ -103,5 +103,16 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void CustomMessageCustomRegex() =>
             Test.CustomMessage<InvalidEmailAddressException>(message => "invalidEmailAddress".MustBeEmailAddress(CustomRegex, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            const string email = "This is not an email address";
+
+            var act = () => email.MustBeEmailAddress();
+
+            act.Should().Throw<InvalidEmailAddressException>()
+               .And.ParamName.Should().Be(nameof(email));
+        }
     }
 }
