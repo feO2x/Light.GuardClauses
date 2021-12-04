@@ -47,7 +47,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Theory]
         [InlineData("Foo", "foo", StringComparison.OrdinalIgnoreCase)]
         [InlineData("I suppose I'll have to kill the Mountain myself. Won't that make for a great song.", "KILL", StringComparison.OrdinalIgnoreCase)]
-        public static void StringContainsCustomSearch(string @string, string substring, StringComparison comparisonType) => 
+        public static void StringContainsCustomSearch(string @string, string substring, StringComparison comparisonType) =>
             @string.MustContain(substring, comparisonType).Should().BeSameAs(@string);
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void StringNullCustomSearch()
         {
-            Action act = () => ((string)null).MustContain("Foo", StringComparison.Ordinal);
+            Action act = () => ((string) null).MustContain("Foo", StringComparison.Ordinal);
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -70,7 +70,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [InlineData("Foo", "Bar")]
         [InlineData("Baz", null)]
         [InlineData(null, "Qux")]
-        public static void CustomException(string first, string second) => 
+        public static void CustomException(string first, string second) =>
             Test.CustomException(first,
                                  second,
                                  (@string, other, exceptionFactory) => @string.MustContain(other, exceptionFactory));
@@ -80,34 +80,45 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [InlineData(null, "Bar", StringComparison.OrdinalIgnoreCase)]
         [InlineData("Baz", null, StringComparison.CurrentCulture)]
         [InlineData("Qux", "Qux", (StringComparison) 42)]
-        public static void CustomExceptionCustomSearch(string x, string y, StringComparison comparison) => 
+        public static void CustomExceptionCustomSearch(string x, string y, StringComparison comparison) =>
             Test.CustomException(x,
                                  y,
                                  comparison,
                                  (@string, other, comparisonType, exceptionFactory) => @string.MustContain(other, comparisonType, exceptionFactory));
 
         [Fact]
-        public static void CustomMessage() => 
+        public static void CustomMessage() =>
             Test.CustomMessage<SubstringException>(message => "Foo".MustContain("Bar", message: message));
 
         [Fact]
-        public static void CustomMessageParameterNull() => 
+        public static void CustomMessageParameterNull() =>
             Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustContain("Foo", message: message));
 
         [Fact]
-        public static void CustomMessageValueNull() => 
+        public static void CustomMessageValueNull() =>
             Test.CustomMessage<ArgumentNullException>(message => "Foo".MustContain(null, message: message));
 
         [Fact]
-        public static void CustomMessageCustomSearch() => 
+        public static void CustomMessageCustomSearch() =>
             Test.CustomMessage<SubstringException>(message => "Baz".MustContain("Qux", StringComparison.OrdinalIgnoreCase, message: message));
 
         [Fact]
-        public static void CustomMessageCustomSearchParameterNull() => 
+        public static void CustomMessageCustomSearchParameterNull() =>
             Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustContain("Foo", message: message));
 
         [Fact]
-        public static void CustomMessageCustomSearchValueNull() => 
+        public static void CustomMessageCustomSearchValueNull() =>
             Test.CustomMessage<ArgumentNullException>(message => "Bar".MustContain(null, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            const string foo = "Foo";
+
+            var act = () => foo.MustContain("Bar");
+
+            act.Should().Throw<SubstringException>()
+               .And.ParamName.Should().Be(nameof(foo));
+        }
     }
 }
