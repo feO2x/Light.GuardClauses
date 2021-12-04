@@ -48,5 +48,17 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void CustomMessageStringEmpty() =>
             Test.CustomMessage<EmptyStringException>(message => string.Empty.MustNotBeNullOrEmpty(message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            var nullString = default(string);
+
+            // ReSharper disable once ExpressionIsAlwaysNull
+            var act = () => nullString.MustNotBeNullOrEmpty();
+
+            act.Should().Throw<ArgumentNullException>()
+               .And.ParamName.Should().Be(nameof(nullString));
+        }
     }
 }
