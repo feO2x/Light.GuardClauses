@@ -22,7 +22,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [InlineData("We have 200,000 reasons to take the city.", 931)]
         public static void LengthNotEqual(string @string, int length)
         {
-            Action act = () => @string.MustHaveLength(length, nameof(@string));
+            var act = () => @string.MustHaveLength(length, nameof(@string));
 
             act.Should().Throw<StringLengthException>()
                .And.Message.Should().Contain($"string must have length {length}, but it actually has length {@string.Length}.");
@@ -31,7 +31,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void StringNull()
         {
-            Action act = () => ((string) null).MustHaveLength(42);
+            var act = () => ((string) null).MustHaveLength(42);
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -45,5 +45,16 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<StringLengthException>(message => "Foo".MustHaveLength(42, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            const string foo = "Foo";
+
+            var act = () => foo.MustHaveLength(4);
+
+            act.Should().Throw<StringLengthException>()
+               .And.ParamName.Should().Be(nameof(foo));
+        }
     }
 }
