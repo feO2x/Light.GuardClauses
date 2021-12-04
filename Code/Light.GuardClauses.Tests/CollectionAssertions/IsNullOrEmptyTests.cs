@@ -3,40 +3,39 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
 
-namespace Light.GuardClauses.Tests.CollectionAssertions
+namespace Light.GuardClauses.Tests.CollectionAssertions;
+
+public static class IsNullOrEmptyTests
 {
-    public static class IsNullOrEmptyTests
+    [Fact]
+    public static void CollectionNull()
     {
-        [Fact]
-        public static void CollectionNull()
-        {
-            var collection = (IEnumerable<int>) null;
+        var collection = (IEnumerable<int>) null;
 
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            var result = collection.IsNullOrEmpty();
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        var result = collection.IsNullOrEmpty();
 
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            result.Should().BeTrue();
-        }
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        result.Should().BeTrue();
+    }
 
-        [Fact]
-        public static void CollectionEmpty()
-        {
-            var emptyCollection = Array.Empty<int>();
+    [Fact]
+    public static void CollectionEmpty()
+    {
+        var emptyCollection = Array.Empty<int>();
 
-            var result = emptyCollection.IsNullOrEmpty();
+        var result = emptyCollection.IsNullOrEmpty();
 
-            result.Should().BeTrue();
-        }
+        result.Should().BeTrue();
+    }
 
-        [Fact]
-        public static void CollectionNotEmpty()
-        {
-            var collection = new[] { "Foo", "Bar" };
+    [Fact]
+    public static void CollectionNotEmpty()
+    {
+        var collection = new[] { "Foo", "Bar" };
 
-            var result = collection.IsNullOrEmpty();
+        var result = collection.IsNullOrEmpty();
 
-            result.Should().BeFalse();
-        }
+        result.Should().BeFalse();
     }
 }

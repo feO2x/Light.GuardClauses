@@ -5,71 +5,70 @@ using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Xunit;
 
-namespace Light.GuardClauses.Tests.CollectionAssertions
+namespace Light.GuardClauses.Tests.CollectionAssertions;
+
+public static class MustHaveMaximumCountTests
 {
-    public static class MustHaveMaximumCountTests
+    [Theory]
+    [InlineData(new[] { 1, 2, 3, 4 }, 3)]
+    [InlineData(new[] { 1, 2 }, 1)]
+    [InlineData(new[] { 500 }, 0)]
+    public static void MoreItems(int[] items, int count)
     {
-        [Theory]
-        [InlineData(new[] { 1, 2, 3, 4 }, 3)]
-        [InlineData(new[] { 1, 2 }, 1)]
-        [InlineData(new[] { 500 }, 0)]
-        public static void MoreItems(int[] items, int count)
-        {
-            Action act = () => items.MustHaveMaximumCount(count, nameof(items));
+        Action act = () => items.MustHaveMaximumCount(count, nameof(items));
 
-            var assertion = act.Should().Throw<InvalidCollectionCountException>().Which;
-            assertion.Message.Should().Contain($"{nameof(items)} must have at most count {count}, but it actually has count {items.Length}.");
-            assertion.ParamName.Should().BeSameAs(nameof(items));
-        }
+        var assertion = act.Should().Throw<InvalidCollectionCountException>().Which;
+        assertion.Message.Should().Contain($"{nameof(items)} must have at most count {count}, but it actually has count {items.Length}.");
+        assertion.ParamName.Should().BeSameAs(nameof(items));
+    }
 
-        [Theory]
-        [InlineData(new[] { "Foo" }, 1)]
-        [InlineData(new[] { "Bar" }, 2)]
-        [InlineData(new[] { "Baz", "Qux", "Quux" }, 5)]
-        public static void LessOrEqualItems(string[] items, int count) =>
-            items.MustHaveMaximumCount(count).Should().BeSameAs(items);
+    [Theory]
+    [InlineData(new[] { "Foo" }, 1)]
+    [InlineData(new[] { "Bar" }, 2)]
+    [InlineData(new[] { "Baz", "Qux", "Quux" }, 5)]
+    public static void LessOrEqualItems(string[] items, int count) =>
+        items.MustHaveMaximumCount(count).Should().BeSameAs(items);
 
-        [Fact]
-        public static void CollectionNull()
-        {
-            Action act = () => ((ObservableCollection<object>) null).MustHaveMaximumCount(42);
+    [Fact]
+    public static void CollectionNull()
+    {
+        Action act = () => ((ObservableCollection<object>) null).MustHaveMaximumCount(42);
 
-            act.Should().Throw<ArgumentNullException>();
-        }
+        act.Should().Throw<ArgumentNullException>();
+    }
 
-        [Theory]
-        [InlineData(new[] { 87, 89, 99 }, 1)]
-        [InlineData(null, 5)]
-        [InlineData(new[] { 1, 2, 3 }, -30)]
-        public static void CustomException(int[] collection, int maximumCount) =>
-            Test.CustomException(collection,
-                                 maximumCount,
-                                 (c, count, exceptionFactory) => c.MustHaveMaximumCount(count, exceptionFactory));
+    [Theory]
+    [InlineData(new[] { 87, 89, 99 }, 1)]
+    [InlineData(null, 5)]
+    [InlineData(new[] { 1, 2, 3 }, -30)]
+    public static void CustomException(int[] collection, int maximumCount) =>
+        Test.CustomException(collection,
+                             maximumCount,
+                             (c, count, exceptionFactory) => c.MustHaveMaximumCount(count, exceptionFactory));
 
-        [Fact]
-        public static void NoCustomExceptionThrown()
-        {
-            var collection = new HashSet<string> { "Foo", "Bar" };
-            collection.MustHaveMaximumCount(2, (_, _) => new Exception()).Should().BeSameAs(collection);
-        }
+    [Fact]
+    public static void NoCustomExceptionThrown()
+    {
+        var collection = new HashSet<string> { "Foo", "Bar" };
+        collection.MustHaveMaximumCount(2, (_, _) => new Exception()).Should().BeSameAs(collection);
+    }
 
-        [Fact]
-        public static void CustomMessage() =>
-            Test.CustomMessage<InvalidCollectionCountException>(message => new List<short> { 1, 2, 3 }.MustHaveMaximumCount(2, message: message));
+    [Fact]
+    public static void CustomMessage() =>
+        Test.CustomMessage<InvalidCollectionCountException>(message => new List<short> { 1, 2, 3 }.MustHaveMaximumCount(2, message: message));
 
-        [Fact]
-        public static void CustomMessageCollectionNull() =>
-            Test.CustomMessage<ArgumentNullException>(message => ((ObservableCollection<int>) null).MustHaveMaximumCount(3, message: message));
+    [Fact]
+    public static void CustomMessageCollectionNull() =>
+        Test.CustomMessage<ArgumentNullException>(message => ((ObservableCollection<int>) null).MustHaveMaximumCount(3, message: message));
 
-        [Fact]
-        public static void CallerArgumentExpression()
-        {
-            var myCollection = new List<int> { 1, 2, 3 };
+    [Fact]
+    public static void CallerArgumentExpression()
+    {
+        var myCollection = new List<int> { 1, 2, 3 };
 
-            var act = () => myCollection.MustHaveMaximumCount(2);
+        var act = () => myCollection.MustHaveMaximumCount(2);
 
-            act.Should().Throw<InvalidCollectionCountException>()
-               .And.ParamName.Should().Be(nameof(myCollection));
-        }
+        act.Should().Throw<InvalidCollectionCountException>()
+           .And.ParamName.Should().Be(nameof(myCollection));
     }
 }
