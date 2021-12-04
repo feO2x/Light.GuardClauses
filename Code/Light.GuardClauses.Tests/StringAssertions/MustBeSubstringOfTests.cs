@@ -132,5 +132,16 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void CustomMessageCustomComparisonTypeValueNull() =>
             Test.CustomMessage<ArgumentNullException>(message => "Foo".MustBeSubstringOf(null!, StringComparison.Ordinal, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            const string foo = "Foo";
+
+            var act = () => foo.MustBeSubstringOf("Bar");
+
+            act.Should().Throw<SubstringException>()
+               .And.ParamName.Should().Be(nameof(foo));
+        }
     }
 }

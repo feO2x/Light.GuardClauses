@@ -528,7 +528,6 @@ public static partial class Check
     public static bool IsSubstringOf(this string value, string other, StringComparison comparisonType) =>
         other.MustNotBeNull(nameof(other)).IndexOf(value, comparisonType) != -1;
 
-
     /// <summary>
     /// Ensures that the string is a substring of the specified other string, or otherwise throws a <see cref="SubstringException" />.
     /// </summary>
