@@ -25,6 +25,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         public static void StringMatches()
         {
             var pattern = new Regex(@"\w{5}");
+            // ReSharper disable once StringLiteralTypo
             const string @string = "abcde";
 
             var result = @string.MustMatch(pattern, nameof(@string));
@@ -62,6 +63,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
 
         [Fact]
         public static void CustomMessage() =>
+            // ReSharper disable once StringLiteralTypo
             Test.CustomMessage<StringDoesNotMatchException>(message => "abcde".MustMatch(new Regex("Foo"), message:message));
 
         [Fact]
@@ -70,6 +72,17 @@ namespace Light.GuardClauses.Tests.StringAssertions
 
         [Fact]
         public static void CustomMessageRegexNull() =>
-            Test.CustomMessage<ArgumentNullException>(message => "Foo".MustMatch(null, message: message));
+            Test.CustomMessage<ArgumentNullException>(message => "Foo".MustMatch(null!, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            const string email = "This is not really an email";
+
+            var act = () => email.MustMatch(RegularExpressions.EmailRegex);
+
+            act.Should().Throw<StringDoesNotMatchException>()
+               .And.ParamName.Should().Be(nameof(email));
+        }
     }
 }
