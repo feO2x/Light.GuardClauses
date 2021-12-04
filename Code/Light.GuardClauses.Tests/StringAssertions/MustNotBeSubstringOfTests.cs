@@ -9,7 +9,9 @@ namespace Light.GuardClauses.Tests.StringAssertions
     {
         [Theory]
         [InlineData("123", " 12345 ")]
+        // ReSharper disable StringLiteralTypo
         [InlineData("friend", "Say herro to my littre friend")]
+        // ReSharper restore StringLiteralTypo
         public static void Substring(string x, string y)
         {
             Action act = () => x.MustNotBeSubstringOf(y, nameof(x));
@@ -40,6 +42,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
 
         [Theory]
         [InlineData("light", "Where is the LIGHT?", StringComparison.Ordinal)]
+        // ReSharper disable once StringLiteralTypo
         [InlineData("Pawned", "Pwnd", StringComparison.CurrentCulture)]
         [InlineData("drink", "Let's go to the mall", StringComparison.CurrentCultureIgnoreCase)]
         public static void NotSubstringCustomComparison(string a, string b, StringComparison comparisonType) => 
@@ -56,7 +59,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void ValueNull()
         {
-            Action act = () => "Bar".MustNotBeSubstringOf(null);
+            Action act = () => "Bar".MustNotBeSubstringOf(null!);
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -72,7 +75,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void ValueNullCustomComparison()
         {
-            Action act = () => "Baz".MustNotBeSubstringOf(null, StringComparison.CurrentCulture);
+            Action act = () => "Baz".MustNotBeSubstringOf(null!, StringComparison.CurrentCulture);
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -107,7 +110,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
 
         [Fact]
         public static void CustomMessageValueNull() => 
-            Test.CustomMessage<ArgumentNullException>(message => "Foo".MustNotBeSubstringOf(null, message: message));
+            Test.CustomMessage<ArgumentNullException>(message => "Foo".MustNotBeSubstringOf(null!, message: message));
 
         [Fact]
         public static void CustomMessageCustomComparison() => 
@@ -119,6 +122,17 @@ namespace Light.GuardClauses.Tests.StringAssertions
 
         [Fact]
         public static void CustomMessageCustomComparisonValueNull() =>
-            Test.CustomMessage<ArgumentNullException>(message => "Foo".MustNotBeSubstringOf(null, StringComparison.CurrentCulture, message: message));
+            Test.CustomMessage<ArgumentNullException>(message => "Foo".MustNotBeSubstringOf(null!, StringComparison.CurrentCulture, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            const string message = "Foo";
+
+            var act = () => message.MustNotBeSubstringOf("Foobar");
+
+            act.Should().Throw<SubstringException>()
+               .And.ParamName.Should().Be(nameof(message));
+        }
     }
 }
