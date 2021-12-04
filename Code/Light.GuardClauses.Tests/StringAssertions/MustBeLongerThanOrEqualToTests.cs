@@ -22,7 +22,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [InlineData("He was no dragon. Fire cannot kill a dragon.", 75)]
         public static void Shorter(string @string, int length)
         {
-            Action act = () => @string.MustBeLongerThanOrEqualTo(length, nameof(@string));
+            var act = () => @string.MustBeLongerThanOrEqualTo(length, nameof(@string));
 
             act.Should().Throw<StringLengthException>()
                .And.Message.Should().Contain($"string must be longer than or equal to {length}, but it actually has length {@string.Length}.");
@@ -31,7 +31,7 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void StringNull()
         {
-            Action act = () => ((string) null).MustBeLongerThanOrEqualTo(42);
+            var act = () => ((string) null).MustBeLongerThanOrEqualTo(42);
 
             act.Should().Throw<ArgumentNullException>();
         }
@@ -45,5 +45,16 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<StringLengthException>(message => "Bar".MustBeLongerThanOrEqualTo(10, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            const string foo = "Foo";
+
+            var act = () => foo.MustBeLongerThanOrEqualTo(4);
+
+            act.Should().Throw<StringLengthException>()
+               .And.ParamName.Should().Be(nameof(foo));
+        }
     }
 }
