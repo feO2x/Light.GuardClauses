@@ -511,7 +511,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="value" /> or <paramref name="other" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("value:null => halt; other:null => halt")]
-    public static bool IsSubstringOf(this string value, string other) =>
+    public static bool IsSubstringOf([ValidatedNotNull] this string value, [ValidatedNotNull] string other) =>
         other.MustNotBeNull(nameof(other)).Contains(value);
 
     /// <summary>
