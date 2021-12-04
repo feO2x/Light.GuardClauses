@@ -65,5 +65,16 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void CustomMessageIgnoreWhiteSpace() => 
             Test.CustomMessage<ValuesEqualException>(message => "Bar".MustNotBe("bar  ", StringComparisonType.OrdinalIgnoreCaseIgnoreWhiteSpace, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            const string message = "Foo";
+
+            var act = () => message.MustNotBe("Foo");
+
+            act.Should().Throw<ValuesEqualException>()
+               .And.ParamName.Should().Be(nameof(message));
+        }
     }
 }
