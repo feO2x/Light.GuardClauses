@@ -43,5 +43,16 @@ namespace Light.GuardClauses.Tests.StringAssertions
         [Fact]
         public static void CustomMessage() =>
             Test.CustomMessage<StringLengthException>(message => "Foo".MustBeShorterThan(1, message: message));
+
+        [Fact]
+        public static void CallerArgumentExpression()
+        {
+            const string message = "The messenger will be hanged later when the message is really long. But why do you want to hang him in the first place?";
+
+            var act = () => message.MustBeShorterThan(10);
+
+            act.Should().Throw<StringLengthException>()
+               .And.ParamName.Should().Be(nameof(message));
+        }
     }
 }
