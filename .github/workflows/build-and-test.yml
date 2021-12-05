@@ -1,0 +1,27 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  build-and-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore ./Code/Light.GuardClauses.AllProjects.sln
+    - name: Build Analyzer
+      run: dotnet build ./Code/Light.GuardClauses.InternalRoslynAnalyzers/Light.GuardClauses.InternalRoslynAnalyzers.csproj -c Release --no-restore
+    - name: Build
+      run: dotnet build ./Code/Light.GuardClauses.AllProjects.sln -c Release --no-restore
+    - name: Test
+      run: dotnet test ./Code/Light.GuardClauses.Tests/Light.GuardClauses.Tests.csproj -c Release --no-build --verbosity normal
