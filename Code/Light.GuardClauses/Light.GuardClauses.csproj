@@ -11,6 +11,7 @@
         <Nullable>enable</Nullable>
         <Copyright>Copyright © Kenny Pflug 2016 - 2021</Copyright>
         <LangVersion>10.0</LangVersion>
+        <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
         <IsPackable>true</IsPackable>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageIcon>light-logo.png</PackageIcon>
