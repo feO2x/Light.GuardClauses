@@ -50,7 +50,7 @@ public static partial class Check
     {
         if (string.IsNullOrEmpty(parameter))
             Throw.CustomException(exceptionFactory, parameter);
-        return parameter;
+        return parameter!;
     }
 
     /// <summary>
