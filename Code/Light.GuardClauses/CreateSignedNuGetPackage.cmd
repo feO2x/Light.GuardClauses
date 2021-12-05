@@ -1,1 +1,1 @@
-msbuild Light.GuardClauses.csproj /t:restore;clean;build;pack /p:Configuration=Release /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=bin\Light.GuardClauses.snk /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg
+dotnet pack Light.GuardClauses.csproj -c Release /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=bin/Light.GuardClauses.snk /p:ContinuousIntegrationBuild=true

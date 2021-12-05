@@ -11,10 +11,16 @@
         <Nullable>enable</Nullable>
         <Copyright>Copyright © Kenny Pflug 2016 - 2021</Copyright>
         <LangVersion>10.0</LangVersion>
+        <IsPackable>true</IsPackable>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageIcon>light-logo.png</PackageIcon>
         <PackageProjectUrl>https://github.com/feO2x/Light.GuardClauses</PackageProjectUrl>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <RepositoryType>Git</RepositoryType>
+        <RepositoryUrl>https://github.com/feO2x/Light.GuardClauses.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <PackageTags>Assertions;Preconditions;GuardClauses;DesignByContract;DbC</PackageTags>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageReleaseNotes>
