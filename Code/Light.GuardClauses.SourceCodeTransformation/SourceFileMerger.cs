@@ -295,7 +295,25 @@ namespace System.Diagnostics.CodeAnalysis
 }");
         }
 
-        var csharpParseOptions = new CSharpParseOptions(LanguageVersion.CSharp8);
+        if (options.IncludeCallerArgumentExpressionAttribute)
+        {
+            stringBuilder.AppendLine().AppendLine(@"
+namespace System.Runtime.CompilerServices
+{
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
+    internal sealed class CallerArgumentExpressionAttribute : Attribute
+    {
+        public CallerArgumentExpressionAttribute(string parameterName)
+        {
+            ParameterName = parameterName;
+        }
+    
+        public string ParameterName { get; }
+    }
+}");
+        }
+
+        var csharpParseOptions = new CSharpParseOptions(LanguageVersion.CSharp10);
         var targetSyntaxTree = CSharpSyntaxTree.ParseText(stringBuilder.ToString(), csharpParseOptions);
 
         var targetRoot = (CompilationUnitSyntax) targetSyntaxTree.GetRoot();
@@ -363,12 +381,13 @@ namespace System.Diagnostics.CodeAnalysis
             if (sourceCompilationUnit.Members.IsNullOrEmpty())
                 continue;
 
-            var membersToAdd = ((NamespaceDeclarationSyntax) sourceCompilationUnit.Members[0]).Members;
+            var membersToAdd = ((FileScopedNamespaceDeclarationSyntax) sourceCompilationUnit.Members[0]).Members;
 
             var currentlyEditedNamespace = replacedNodes[originalNamespace];
-            replacedNodes[originalNamespace] = currentlyEditedNamespace
-               .WithMembers(
-                    currentlyEditedNamespace.Members.AddRange(membersToAdd));
+            replacedNodes[originalNamespace] =
+                currentlyEditedNamespace
+                   .WithMembers(
+                        currentlyEditedNamespace.Members.AddRange(membersToAdd));
         }
 
         // After the Check class declaration is finished, insert it into the default namespace
