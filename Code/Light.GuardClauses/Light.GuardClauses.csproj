@@ -26,8 +26,8 @@ Light.GuardClauses 9.0.0
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.0" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
-        <PackageReference Include="System.Memory" Version="4.5.3" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
+        <PackageReference Include="System.Memory" Version="4.5.4" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
         <PackageReference Include="Nullable" Version="1.2.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

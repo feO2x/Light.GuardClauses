@@ -1,107 +1,106 @@
 ﻿using System;
 
-namespace Light.GuardClauses.SourceCodeTransformation
+namespace Light.GuardClauses.SourceCodeTransformation;
+
+public static class CleanupStep
 {
-    public static class CleanupStep
+    public static Memory<char> Cleanup(in ReadOnlySpan<char> sourceCode, bool removeContractAnnotations)
     {
-        public static Memory<char> Cleanup(in ReadOnlySpan<char> sourceCode, bool removeContractAnnotations)
+        var sink = new ArrayTextSink(new char[sourceCode.Length]);
+        var parser = new LineOfCodeParser(sourceCode);
+
+        LineOfCode previousLineOfCode = default;
+        while (parser.TryGetNext(out var currentLineOfCode))
         {
-            var sink = new ArrayTextSink(new char[sourceCode.Length]);
-            var parser = new LineOfCodeParser(sourceCode);
+            var isEmptyLineAfterXmlComment = previousLineOfCode.Type == LineOfCodeType.XmlComment && currentLineOfCode.Type == LineOfCodeType.WhiteSpace;
+            var isContractAnnotationThatShouldBeRemoved = removeContractAnnotations && currentLineOfCode.Type == LineOfCodeType.ContractAnnotation;
 
-            LineOfCode previousLineOfCode = default;
-            while (parser.TryGetNext(out var currentLineOfCode))
+            if (isEmptyLineAfterXmlComment)
             {
-                var isEmptyLineAfterXmlComment = previousLineOfCode.Type == LineOfCodeType.XmlComment && currentLineOfCode.Type == LineOfCodeType.WhiteSpace;
-                var isContractAnnotationThatShouldBeRemoved = removeContractAnnotations && currentLineOfCode.Type == LineOfCodeType.ContractAnnotation;
-
-                if (isEmptyLineAfterXmlComment)
-                {
-                    // Break point parking spot
-                }
-
-                if (!isEmptyLineAfterXmlComment && !isContractAnnotationThatShouldBeRemoved)
-                    sink.Append(currentLineOfCode.Span);
-
-                previousLineOfCode = currentLineOfCode;
+                // Break point parking spot
             }
 
-            return sink.ToMemory();
+            if (!isEmptyLineAfterXmlComment && !isContractAnnotationThatShouldBeRemoved)
+                sink.Append(currentLineOfCode.Span);
+
+            previousLineOfCode = currentLineOfCode;
         }
 
-        private ref struct LineOfCodeParser
+        return sink.ToMemory();
+    }
+
+    private ref struct LineOfCodeParser
+    {
+        private readonly ReadOnlySpan<char> _sourceCode;
+        private int _currentIndex;
+
+        public LineOfCodeParser(ReadOnlySpan<char> sourceCode)
         {
-            private readonly ReadOnlySpan<char> _sourceCode;
-            private int _currentIndex;
-
-            public LineOfCodeParser(ReadOnlySpan<char> sourceCode)
-            {
-                _sourceCode = sourceCode;
-                _currentIndex = 0;
-            }
-
-            public bool TryGetNext(out LineOfCode lineOfCode)
-            {
-                if (!_sourceCode.TryGetNextLine(_currentIndex, out var currentLineSpan))
-                {
-                    lineOfCode = default;
-                    return false;
-                }
-
-                _currentIndex += currentLineSpan.Length;
-
-                var leftTrimmedSpan = currentLineSpan.TrimStart();
-                if (leftTrimmedSpan.StartsWith("///"))
-                    lineOfCode = new LineOfCode(LineOfCodeType.XmlComment, currentLineSpan);
-                else if (leftTrimmedSpan.StartsWith("[ContractAnnotation("))
-                    lineOfCode = new LineOfCode(LineOfCodeType.ContractAnnotation, currentLineSpan);
-                else if (leftTrimmedSpan.IsEmpty)
-                    lineOfCode = new LineOfCode(LineOfCodeType.WhiteSpace, currentLineSpan);
-                else
-                    lineOfCode = new LineOfCode(LineOfCodeType.Other, currentLineSpan);
-
-                return true;
-
-            }
+            _sourceCode = sourceCode;
+            _currentIndex = 0;
         }
 
-        private readonly ref struct LineOfCode
+        public bool TryGetNext(out LineOfCode lineOfCode)
         {
-            public readonly LineOfCodeType Type;
-            public readonly ReadOnlySpan<char> Span;
-
-            public LineOfCode(LineOfCodeType type, ReadOnlySpan<char> span)
+            if (!_sourceCode.TryGetNextLine(_currentIndex, out var currentLineSpan))
             {
-                Type = type;
-                Span = span;
-            }
-
-            public override string ToString() => Span.ToString();
-        }
-
-        private enum LineOfCodeType
-        {
-            Other,
-            XmlComment,
-            WhiteSpace,
-            ContractAnnotation
-        }
-
-        public static bool TryGetNextLine(this in ReadOnlySpan<char> text, int startIndex, out ReadOnlySpan<char> nextLine)
-        {
-            if (startIndex >= text.Length)
-            {
-                nextLine = default;
+                lineOfCode = default;
                 return false;
             }
 
-            nextLine = text.Slice(startIndex);
-            var newLineIndex = nextLine.IndexOf(Environment.NewLine);
-            if (newLineIndex == -1)
-                return true;
+            _currentIndex += currentLineSpan.Length;
 
-            nextLine = nextLine.Slice(0, newLineIndex + Environment.NewLine.Length);
+            var leftTrimmedSpan = currentLineSpan.TrimStart();
+            if (leftTrimmedSpan.StartsWith("///"))
+                lineOfCode = new LineOfCode(LineOfCodeType.XmlComment, currentLineSpan);
+            else if (leftTrimmedSpan.StartsWith("[ContractAnnotation("))
+                lineOfCode = new LineOfCode(LineOfCodeType.ContractAnnotation, currentLineSpan);
+            else if (leftTrimmedSpan.IsEmpty)
+                lineOfCode = new LineOfCode(LineOfCodeType.WhiteSpace, currentLineSpan);
+            else
+                lineOfCode = new LineOfCode(LineOfCodeType.Other, currentLineSpan);
+
             return true;
+
         }
+    }
+
+    private readonly ref struct LineOfCode
+    {
+        public readonly LineOfCodeType Type;
+        public readonly ReadOnlySpan<char> Span;
+
+        public LineOfCode(LineOfCodeType type, ReadOnlySpan<char> span)
+        {
+            Type = type;
+            Span = span;
+        }
+
+        public override string ToString() => Span.ToString();
+    }
+
+    private enum LineOfCodeType
+    {
+        Other,
+        XmlComment,
+        WhiteSpace,
+        ContractAnnotation
+    }
+
+    public static bool TryGetNextLine(this in ReadOnlySpan<char> text, int startIndex, out ReadOnlySpan<char> nextLine)
+    {
+        if (startIndex >= text.Length)
+        {
+            nextLine = default;
+            return false;
+        }
+
+        nextLine = text.Slice(startIndex);
+        var newLineIndex = nextLine.IndexOf(Environment.NewLine);
+        if (newLineIndex == -1)
+            return true;
+
+        nextLine = nextLine.Slice(0, newLineIndex + Environment.NewLine.Length);
+        return true;
     }
 }
