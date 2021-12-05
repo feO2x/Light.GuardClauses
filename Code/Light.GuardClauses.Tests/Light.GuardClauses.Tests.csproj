@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+    <Import Project="TargetFrameworks.props" Condition="Exists('TargetFrameworks.props')" />
+
     <PropertyGroup>
-        <TargetFrameworks>net6.0;net48</TargetFrameworks>
+        <TargetFrameworks Condition="'$(TargetFrameworks)' == ''">net6.0</TargetFrameworks>
         <IsPackable>false</IsPackable>
         <LangVersion>10.0</LangVersion>
     </PropertyGroup>
