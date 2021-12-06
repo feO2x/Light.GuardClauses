@@ -464,7 +464,7 @@ namespace System.Runtime.CompilerServices
         var targetFileContent = targetRoot.ToFullString();
 
         Console.WriteLine("File is cleaned up...");
-        targetFileContent = CleanupStep.Cleanup(targetFileContent, options.RemoveContractAnnotations).ToString();
+        targetFileContent = CleanupStep.Cleanup(targetFileContent, options).ToString();
 
         // Write the target file 
         Console.WriteLine("File is written to disk...");
@@ -474,7 +474,8 @@ namespace System.Runtime.CompilerServices
     private static bool CheckIfFileShouldBeProcessed(SourceFileMergeOptions options, string fileName) =>
         fileName != "Check.CommonAssertions.cs" &&
         fileName != "CallerArgumentExpressionAttribute.cs" &&
-        (fileName != "ReSharperAnnotations.cs" || options.IncludeJetBrainsAnnotations);
+        (fileName != "ReSharperAnnotations.cs" || options.IncludeJetBrainsAnnotations) &&
+        (fileName != "ValidatedNotNullAttribute.cs" || options.IncludeValidatedNotNullAttribute);
 
     private static NamespaceDeclarationSyntax DetermineOriginalNamespace(SourceFileMergeOptions options,
                                                                          NamespaceDeclarationSyntax defaultNamespace,
