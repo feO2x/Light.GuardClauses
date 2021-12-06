@@ -7,7 +7,6 @@
         <Description>A lightweight .NET library for expressive Guard Clauses.</Description>
         <Authors>Kenny Pflug</Authors>
         <Company>Kenny Pflug</Company>
-        <DebugType>Portable</DebugType>
         <Nullable>enable</Nullable>
         <Copyright>Copyright © Kenny Pflug 2016, 2021</Copyright>
         <LangVersion>10.0</LangVersion>
@@ -36,6 +35,7 @@ Light.GuardClauses 10.0.0
         <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
         <PackageReference Include="System.Memory" Version="4.5.4" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
         <PackageReference Include="Nullable" Version="1.3.0" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>
