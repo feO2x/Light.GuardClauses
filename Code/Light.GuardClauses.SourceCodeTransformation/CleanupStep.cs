@@ -4,8 +4,18 @@ namespace Light.GuardClauses.SourceCodeTransformation;
 
 public static class CleanupStep
 {
-    public static Memory<char> Cleanup(in ReadOnlySpan<char> sourceCode, bool removeContractAnnotations)
+    public static Memory<char> Cleanup(string sourceCode, SourceFileMergeOptions options)
     {
+        if (options.RemoveCallerArgumentExpressions)
+            sourceCode = sourceCode.Replace("[CallerArgumentExpression(\"parameter\")] ", string.Empty);
+        if (options.RemoveValidatedNotNull)
+            sourceCode = sourceCode.Replace("[ValidatedNotNull] ", string.Empty);
+        if (options.RemoveNotNullWhen)
+        {
+            sourceCode = sourceCode.Replace("[NotNullWhen(true)] ", string.Empty);
+            sourceCode = sourceCode.Replace("[NotNullWhen(false)] ", string.Empty);
+        }
+
         var sink = new ArrayTextSink(new char[sourceCode.Length]);
         var parser = new LineOfCodeParser(sourceCode);
 
@@ -13,14 +23,15 @@ public static class CleanupStep
         while (parser.TryGetNext(out var currentLineOfCode))
         {
             var isEmptyLineAfterXmlComment = previousLineOfCode.Type == LineOfCodeType.XmlComment && currentLineOfCode.Type == LineOfCodeType.WhiteSpace;
-            var isContractAnnotationThatShouldBeRemoved = removeContractAnnotations && currentLineOfCode.Type == LineOfCodeType.ContractAnnotation;
+            var isContractAnnotationThatShouldBeRemoved = options.RemoveContractAnnotations && currentLineOfCode.Type == LineOfCodeType.ContractAnnotation;
+            var isDoesNotReturnThatShouldBeRemoved = options.RemoveDoesNotReturn && currentLineOfCode.Type == LineOfCodeType.DoesNotReturnAnnotation;
 
             if (isEmptyLineAfterXmlComment)
             {
                 // Break point parking spot
             }
 
-            if (!isEmptyLineAfterXmlComment && !isContractAnnotationThatShouldBeRemoved)
+            if (!isEmptyLineAfterXmlComment && !isContractAnnotationThatShouldBeRemoved && !isDoesNotReturnThatShouldBeRemoved)
                 sink.Append(currentLineOfCode.Span);
 
             previousLineOfCode = currentLineOfCode;
@@ -55,6 +66,8 @@ public static class CleanupStep
                 lineOfCode = new LineOfCode(LineOfCodeType.XmlComment, currentLineSpan);
             else if (leftTrimmedSpan.StartsWith("[ContractAnnotation("))
                 lineOfCode = new LineOfCode(LineOfCodeType.ContractAnnotation, currentLineSpan);
+            else if (leftTrimmedSpan.StartsWith("[DoesNotReturn]"))
+                lineOfCode = new LineOfCode(LineOfCodeType.DoesNotReturnAnnotation, currentLineSpan);
             else if (leftTrimmedSpan.IsEmpty)
                 lineOfCode = new LineOfCode(LineOfCodeType.WhiteSpace, currentLineSpan);
             else
@@ -84,7 +97,8 @@ public static class CleanupStep
         Other,
         XmlComment,
         WhiteSpace,
-        ContractAnnotation
+        ContractAnnotation,
+        DoesNotReturnAnnotation
     }
 
     public static bool TryGetNextLine(this in ReadOnlySpan<char> text, int startIndex, out ReadOnlySpan<char> nextLine)

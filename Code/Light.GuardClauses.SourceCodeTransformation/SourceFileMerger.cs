@@ -340,7 +340,7 @@ namespace System.Runtime.CompilerServices
                                                                     .ToDictionary(f => f.Name);
 
         // Start with Check.CommonAssertions before all other files to prepare the Check class
-        Console.WriteLine("Merging source files of the Check class...");
+        Console.WriteLine("Merging CommonAssertions of the Check class...");
         var currentFile = allSourceFiles["Check.CommonAssertions.cs"];
 
         var sourceSyntaxTree = CSharpSyntaxTree.ParseText(currentFile.ReadContent(), csharpParseOptions);
@@ -353,18 +353,17 @@ namespace System.Runtime.CompilerServices
         Console.WriteLine("Merging remaining files...");
         foreach (var fileName in allSourceFiles.Keys)
         {
-            if (fileName == "Check.CommonAssertions.cs")
+            if (!CheckIfFileShouldBeProcessed(options, fileName))
                 continue;
 
             currentFile = allSourceFiles[fileName];
             sourceSyntaxTree = CSharpSyntaxTree.ParseText(currentFile.ReadContent(), csharpParseOptions);
-            var originalNamespace = defaultNamespace;
-            if (currentFile.Directory?.Name == "FrameworkExtensions")
-                originalNamespace = extensionsNamespace;
-            else if (currentFile.Directory?.Name == "Exceptions")
-                originalNamespace = exceptionsNamespace;
-            else if (options.IncludeJetBrainsAnnotations && currentFile.Name == "ReSharperAnnotations.cs")
-                originalNamespace = jetBrainsNamespace!;
+            var originalNamespace = DetermineOriginalNamespace(options,
+                                                               defaultNamespace,
+                                                               currentFile,
+                                                               extensionsNamespace,
+                                                               exceptionsNamespace,
+                                                               jetBrainsNamespace);
 
             // If the file contains assertions, add it to the existing Check class declaration
             if (originalNamespace == defaultNamespace && currentFile.Name.StartsWith("Check."))
@@ -448,7 +447,7 @@ namespace System.Runtime.CompilerServices
 
             var membersWithoutExceptionFactory =
                 checkClass.Members
-                          .Where(member => !(member is MethodDeclarationSyntax method) || method.ParameterList.Parameters.All(parameter => parameter.Identifier.Text != "exceptionFactory"));
+                          .Where(member => member is not MethodDeclarationSyntax method || method.ParameterList.Parameters.All(parameter => parameter.Identifier.Text != "exceptionFactory"));
             targetRoot = targetRoot.ReplaceNode(checkClass, checkClass.WithMembers(new SyntaxList<MemberDeclarationSyntax>(membersWithoutExceptionFactory)));
 
             // Remove members from Throw class that use exception factories
@@ -458,17 +457,50 @@ namespace System.Runtime.CompilerServices
 
             membersWithoutExceptionFactory =
                 throwClass.Members
-                          .Where(member => !(member is MethodDeclarationSyntax method) || method.ParameterList.Parameters.All(parameter => parameter.Identifier.Text != "exceptionFactory"));
+                          .Where(member => member is not MethodDeclarationSyntax method || method.ParameterList.Parameters.All(parameter => parameter.Identifier.Text != "exceptionFactory"));
             targetRoot = targetRoot.ReplaceNode(throwClass, throwClass.WithMembers(new SyntaxList<MemberDeclarationSyntax>(membersWithoutExceptionFactory)));
         }
 
         var targetFileContent = targetRoot.ToFullString();
 
         Console.WriteLine("File is cleaned up...");
-        targetFileContent = CleanupStep.Cleanup(targetFileContent, options.RemoveContractAnnotations).ToString();
+        targetFileContent = CleanupStep.Cleanup(targetFileContent, options).ToString();
 
         // Write the target file 
         Console.WriteLine("File is written to disk...");
         File.WriteAllText(options.TargetFile, targetFileContent);
+    }
+
+    private static bool CheckIfFileShouldBeProcessed(SourceFileMergeOptions options, string fileName) =>
+        fileName != "Check.CommonAssertions.cs" &&
+        fileName != "CallerArgumentExpressionAttribute.cs" &&
+        (fileName != "ReSharperAnnotations.cs" || options.IncludeJetBrainsAnnotations) &&
+        (fileName != "ValidatedNotNullAttribute.cs" || options.IncludeValidatedNotNullAttribute);
+
+    private static NamespaceDeclarationSyntax DetermineOriginalNamespace(SourceFileMergeOptions options,
+                                                                         NamespaceDeclarationSyntax defaultNamespace,
+                                                                         FileInfo currentFile,
+                                                                         NamespaceDeclarationSyntax extensionsNamespace,
+                                                                         NamespaceDeclarationSyntax exceptionsNamespace,
+                                                                         NamespaceDeclarationSyntax? jetBrainsNamespace)
+    {
+        var originalNamespace = defaultNamespace;
+        switch (currentFile.Directory?.Name)
+        {
+            case "FrameworkExtensions":
+                originalNamespace = extensionsNamespace;
+                break;
+            case "Exceptions":
+                originalNamespace = exceptionsNamespace;
+                break;
+            default:
+            {
+                if (options.IncludeJetBrainsAnnotations && currentFile.Name == "ReSharperAnnotations.cs")
+                    originalNamespace = jetBrainsNamespace!;
+                break;
+            }
+        }
+
+        return originalNamespace;
     }
 }

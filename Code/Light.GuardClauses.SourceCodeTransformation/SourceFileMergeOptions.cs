@@ -22,25 +22,35 @@ public sealed record SourceFileMergeOptions
         catch { }
     }
 
-    public string SourceFolder { get; set; } = string.Empty;
+    public string SourceFolder { get; init; } = string.Empty;
 
-    public string TargetFile { get; set; } = string.Empty;
+    public string TargetFile { get; init; } = string.Empty;
 
-    public bool ChangePublicTypesToInternalTypes { get; set; } = true;
+    public bool ChangePublicTypesToInternalTypes { get; init; } = true;
 
-    public string BaseNamespace { get; set; } = "Light.GuardClauses";
+    public string BaseNamespace { get; init; } = "Light.GuardClauses";
 
-    public bool RemoveContractAnnotations { get; set; } = false;
+    public bool RemoveContractAnnotations { get; init; } = false;
 
-    public bool IncludeJetBrainsAnnotations { get; set; } = true;
+    public bool IncludeJetBrainsAnnotations { get; init; } = true;
 
-    public bool IncludeJetBrainsAnnotationsUsing { get; set; } = true;
+    public bool IncludeJetBrainsAnnotationsUsing { get; init; } = true;
 
-    public bool IncludeVersionComment { get; set; } = true;
+    public bool IncludeVersionComment { get; init; } = true;
 
-    public bool RemoveOverloadsWithExceptionFactory { get; set; } = false;
+    public bool RemoveOverloadsWithExceptionFactory { get; init; } = false;
 
-    public bool IncludeCodeAnalysisNullableAttributes { get; set; } = true;
+    public bool IncludeCodeAnalysisNullableAttributes { get; init; } = true;
 
-    public bool IncludeCallerArgumentExpressionAttribute { get; set; } = true;
+    public bool IncludeValidatedNotNullAttribute { get; init; } = true;
+
+    public bool RemoveValidatedNotNull { get; init; } = false;
+
+    public bool RemoveDoesNotReturn { get; init; } = false;
+
+    public bool RemoveNotNullWhen { get; init; } = false;
+
+    public bool IncludeCallerArgumentExpressionAttribute { get; init; } = true;
+
+    public bool RemoveCallerArgumentExpressions { get; init; } = false;
 }
