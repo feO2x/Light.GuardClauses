@@ -1,11 +1,11 @@
 /* ------------------------------
-   Light.GuardClauses 9.0.0
+   Light.GuardClauses 10.0.0
    ------------------------------
 
 License information for Light.GuardClauses
 
 The MIT License (MIT)
-Copyright (c) 2016, 2020 Kenny Pflug mailto:kenny.pflug@live.de
+Copyright (c) 2016, 2021 Kenny Pflug mailto:kenny.pflug@live.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -58,12 +58,12 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeNull<T>([ValidatedNotNull] this T? parameter, string? parameterName = null, string? message = null)
+        public static T MustNotBeNull<T>([ValidatedNotNull] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : class
         {
             if (parameter is null)
                 Throw.ArgumentNull(parameterName, message);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null)
                 Throw.CustomException(exceptionFactory);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentDefaultException">Thrown when <paramref name = "parameter"/> is a value type and the default value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeDefault<T>([ValidatedNotNull] this T parameter, string? parameterName = null, string? message = null)
+        public static T MustNotBeDefault<T>([ValidatedNotNull] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (default(T)is null)
             {
@@ -140,7 +140,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <typeparamref name = "T"/> is a reference type and <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeNullReference<T>([ValidatedNotNull] this T parameter, string? parameterName = null, string? message = null)
+        public static T MustNotBeNullReference<T>([ValidatedNotNull] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (default(T) != null)
                 return parameter;
@@ -178,7 +178,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeOfType<T>([ValidatedNotNull] this object? parameter, string? parameterName = null, string? message = null)
+        public static T MustBeOfType<T>([ValidatedNotNull] this object? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message)is T castValue)
                 return castValue;
@@ -223,7 +223,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "EnumValueNotDefinedException">Thrown when <paramref name = "parameter"/> is no valid enum value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustBeValidEnumValue<T>(this T parameter, string? parameterName = null, string? message = null)
+        public static T MustBeValidEnumValue<T>(this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : Enum
         {
             if (!EnumInfo<T>.IsValidEnumValue(parameter))
@@ -264,7 +264,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "EmptyGuidException">Thrown when <paramref name = "parameter"/> is an empty GUID.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Guid MustNotBeEmpty(this Guid parameter, string? parameterName = null, string? message = null)
+        public static Guid MustNotBeEmpty(this Guid parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter == Guid.Empty)
                 Throw.EmptyGuid(parameterName, message);
@@ -363,12 +363,12 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "NullableHasNoValueException">Thrown when <paramref name = "parameter"/> has no value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustHaveValue<T>(this T? parameter, string? parameterName = null, string? message = null)
+        public static T MustHaveValue<T>(this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : struct
         {
             if (!parameter.HasValue)
                 Throw.NullableHasNoValue(parameterName, message);
-            return parameter!.Value;
+            return parameter.Value;
         }
 
         /// <summary>
@@ -384,7 +384,7 @@ namespace Light.GuardClauses
         {
             if (!parameter.HasValue)
                 Throw.CustomException(exceptionFactory);
-            return parameter!.Value;
+            return parameter.Value;
         }
 
         /// <summary>
@@ -406,7 +406,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "SameObjectReferenceException">Thrown when both <paramref name = "parameter"/> and <paramref name = "other"/> point to the same object.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T? MustNotBeSameAs<T>(this T? parameter, T? other, string? parameterName = null, string? message = null)
+        public static T? MustNotBeSameAs<T>(this T? parameter, T? other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : class
         {
             if (ReferenceEquals(parameter, other))
@@ -440,7 +440,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "ValuesNotEqualException">Thrown when <paramref name = "parameter"/> and <paramref name = "other"/> are not equal.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustBe<T>(this T parameter, T other, string? parameterName = null, string? message = null)
+        public static T MustBe<T>(this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!EqualityComparer<T>.Default.Equals(parameter, other))
                 Throw.ValuesNotEqual(parameter, other, parameterName, message);
@@ -474,7 +474,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "equalityComparer"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("equalityComparer:null => halt")]
-        public static T MustBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, string? parameterName = null, string? message = null)
+        public static T MustBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!equalityComparer.MustNotBeNull(nameof(equalityComparer), message).Equals(parameter, other))
                 Throw.ValuesNotEqual(parameter, other, parameterName, message);
@@ -508,7 +508,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "ValuesEqualException">Thrown when <paramref name = "parameter"/> and <paramref name = "other"/> are equal.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustNotBe<T>(this T parameter, T other, string? parameterName = null, string? message = null)
+        public static T MustNotBe<T>(this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (EqualityComparer<T>.Default.Equals(parameter, other))
                 Throw.ValuesEqual(parameter, other, parameterName, message);
@@ -542,7 +542,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "equalityComparer"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("equalityComparer:null => halt")]
-        public static T MustNotBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, string? parameterName = null, string? message = null)
+        public static T MustNotBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (equalityComparer.MustNotBeNull(nameof(equalityComparer), message).Equals(parameter, other))
                 Throw.ValuesEqual(parameter, other, parameterName, message);
@@ -614,11 +614,11 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsApproximately(this float value, float other) => Math.Abs(value - other) < 0.0001f;
         /*
-         * -------------------------------------
-         * Must Not Be Less Than
-         * Must Be Greater Than or Equal To
-         * -------------------------------------
-         */
+     * -------------------------------------
+     * Must Not Be Less Than
+     * Must Be Greater Than or Equal To
+     * -------------------------------------
+     */
         /// <summary>
         /// Ensures that the specified <paramref name = "parameter"/> is not less than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
         /// </summary>
@@ -630,7 +630,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeLessThan<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null)
+        public static T MustNotBeLessThan<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) < 0)
@@ -667,7 +667,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeGreaterThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null)
+        public static T MustBeGreaterThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) < 0)
@@ -694,11 +694,11 @@ namespace Light.GuardClauses
         }
 
         /*
-         * -------------------------------------
-         * Must Be Less Than
-         * Must Not Be Greater Than or Equal To
-         * -------------------------------------
-         */
+     * -------------------------------------
+     * Must Be Less Than
+     * Must Not Be Greater Than or Equal To
+     * -------------------------------------
+     */
         /// <summary>
         /// Ensures that the specified <paramref name = "parameter"/> is less than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
         /// </summary>
@@ -710,7 +710,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeLessThan<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null)
+        public static T MustBeLessThan<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) >= 0)
@@ -747,7 +747,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeGreaterThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null)
+        public static T MustNotBeGreaterThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) >= 0)
@@ -774,11 +774,11 @@ namespace Light.GuardClauses
         }
 
         /*
-         * -------------------------------------
-         * Must Be Greater Than
-         * Must Not Be Less Than or Equal To
-         * -------------------------------------
-         */
+     * -------------------------------------
+     * Must Be Greater Than
+     * Must Not Be Less Than or Equal To
+     * -------------------------------------
+     */
         /// <summary>
         /// Ensures that the specified <paramref name = "parameter"/> is greater than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
         /// </summary>
@@ -790,7 +790,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null)
+        public static T MustBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) <= 0)
@@ -827,7 +827,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeLessThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null)
+        public static T MustNotBeLessThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) <= 0)
@@ -854,11 +854,11 @@ namespace Light.GuardClauses
         }
 
         /*
-         * -------------------------------------
-         * Must Not Be Greater Than
-         * Must Be Less Than or Equal To
-         * -------------------------------------
-         */
+     * -------------------------------------
+     * Must Not Be Greater Than
+     * Must Be Less Than or Equal To
+     * -------------------------------------
+     */
         /// <summary>
         /// Ensures that the specified <paramref name = "parameter"/> is not greater than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
         /// </summary>
@@ -870,7 +870,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null)
+        public static T MustNotBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) > 0)
@@ -907,7 +907,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeLessThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, string? parameterName = null, string? message = null)
+        public static T MustBeLessThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T>
         {
             if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) > 0)
@@ -934,10 +934,10 @@ namespace Light.GuardClauses
         }
 
         /*
-         * -------------------------------------
-         * Ranges
-         * -------------------------------------
-         */
+     * -------------------------------------
+     * Ranges
+     * -------------------------------------
+     */
         /// <summary>
         /// Checks if the value is within the specified range.
         /// </summary>
@@ -970,7 +970,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeIn<T>([ValidatedNotNull] this T parameter, Range<T> range, string? parameterName = null, string? message = null)
+        public static T MustBeIn<T>([ValidatedNotNull] this T parameter, Range<T> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T>
         {
             if (!range.IsValueWithinRange(parameter.MustNotBeNullReference(parameterName, message)))
@@ -1008,7 +1008,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeIn<T>([ValidatedNotNull] this T parameter, Range<T> range, string? parameterName = null, string? message = null)
+        public static T MustNotBeIn<T>([ValidatedNotNull] this T parameter, Range<T> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T>
         {
             if (range.IsValueWithinRange(parameter.MustNotBeNullReference(parameterName, message)))
@@ -1042,7 +1042,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "InvalidDateTimeException">Thrown when <paramref name = "parameter"/> does not use <see cref = "DateTimeKind.Utc"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime MustBeUtc(this DateTime parameter, string? parameterName = null, string? message = null)
+        public static DateTime MustBeUtc(this DateTime parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Kind != DateTimeKind.Utc)
                 Throw.MustBeUtcDateTime(parameter, parameterName, message);
@@ -1072,7 +1072,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "InvalidDateTimeException">Thrown when <paramref name = "parameter"/> does not use <see cref = "DateTimeKind.Local"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime MustBeLocal(this DateTime parameter, string? parameterName = null, string? message = null)
+        public static DateTime MustBeLocal(this DateTime parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Kind != DateTimeKind.Local)
                 Throw.MustBeLocalDateTime(parameter, parameterName, message);
@@ -1102,7 +1102,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "InvalidDateTimeException">Thrown when <paramref name = "parameter"/> does not use <see cref = "DateTimeKind.Unspecified"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime MustBeUnspecified(this DateTime parameter, string? parameterName = null, string? message = null)
+        public static DateTime MustBeUnspecified(this DateTime parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Kind != DateTimeKind.Unspecified)
                 Throw.MustBeUnspecifiedDateTime(parameter, parameterName, message);
@@ -1135,7 +1135,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustHaveCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, string? parameterName = null, string? message = null)
+        public static TCollection MustHaveCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where TCollection : class, IEnumerable
         {
             if (parameter!.Count(parameterName, message) != count)
@@ -1157,7 +1157,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null || parameter.Count() != count)
                 Throw.CustomException(exceptionFactory, parameter, count);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -1178,7 +1178,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustNotBeNullOrEmpty<TCollection>([ValidatedNotNull] this TCollection? parameter, string? parameterName = null, string? message = null)
+        public static TCollection MustNotBeNullOrEmpty<TCollection>([ValidatedNotNull] this TCollection? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where TCollection : class, IEnumerable
         {
             if (parameter.Count(parameterName, message) == 0)
@@ -1199,7 +1199,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null || parameter.Count() == 0)
                 Throw.CustomException(exceptionFactory, parameter);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -1213,7 +1213,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustContain<TCollection, TItem>([ValidatedNotNull] this TCollection? parameter, TItem item, string? parameterName = null, string? message = null)
+        public static TCollection MustContain<TCollection, TItem>([ValidatedNotNull] this TCollection? parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where TCollection : class, IEnumerable<TItem>
         {
             if (parameter is ICollection<TItem> collection)
@@ -1249,7 +1249,7 @@ namespace Light.GuardClauses
 
             if (parameter is null || !parameter.Contains(item))
                 Throw.CustomException(exceptionFactory, parameter, item);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -1263,7 +1263,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustNotContain<TCollection, TItem>([ValidatedNotNull] this TCollection? parameter, TItem item, string? parameterName = null, string? message = null)
+        public static TCollection MustNotContain<TCollection, TItem>([ValidatedNotNull] this TCollection? parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where TCollection : class, IEnumerable<TItem>
         {
             if (parameter is ICollection<TItem> collection)
@@ -1299,7 +1299,7 @@ namespace Light.GuardClauses
 
             if (parameter is null || parameter.Contains(item))
                 Throw.CustomException(exceptionFactory, parameter, item);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -1330,7 +1330,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "items"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("items:null => halt")]
-        public static TItem MustBeOneOf<TItem>(this TItem parameter, [ValidatedNotNull] IEnumerable<TItem> items, string? parameterName = null, string? message = null)
+        public static TItem MustBeOneOf<TItem>(this TItem parameter, [ValidatedNotNull] IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             if (!parameter.IsOneOf(items.MustNotBeNull(nameof(items), message)))
@@ -1368,7 +1368,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "items"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("items:null => halt")]
-        public static TItem MustNotBeOneOf<TItem>(this TItem parameter, [ValidatedNotNull] IEnumerable<TItem> items, string? parameterName = null, string? message = null)
+        public static TItem MustNotBeOneOf<TItem>(this TItem parameter, [ValidatedNotNull] IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             if (parameter.IsOneOf(items.MustNotBeNull(nameof(items), message)))
@@ -1406,7 +1406,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustHaveMinimumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, string? parameterName = null, string? message = null)
+        public static TCollection MustHaveMinimumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where TCollection : class, IEnumerable
         {
             if (parameter.Count(parameterName, message) < count)
@@ -1428,7 +1428,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null || parameter.Count() < count)
                 Throw.CustomException(exceptionFactory, parameter, count);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -1442,7 +1442,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustHaveMaximumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, string? parameterName = null, string? message = null)
+        public static TCollection MustHaveMaximumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where TCollection : class, IEnumerable
         {
             if (parameter.Count(parameterName, message) > count)
@@ -1464,7 +1464,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null || parameter.Count() > count)
                 Throw.CustomException(exceptionFactory, parameter, count);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -1476,7 +1476,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "InvalidCollectionCountException">Thrown when <paramref name = "parameter"/> does not have the specified length.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<T> MustHaveLength<T>(this Span<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static Span<T> MustHaveLength<T>(this Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length != length)
                 Throw.InvalidSpanLength(parameter, length, parameterName, message);
@@ -1507,7 +1507,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> does not have the specified length.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<T> MustHaveLength<T>(this ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static ReadOnlySpan<T> MustHaveLength<T>(this ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length != length)
                 Throw.InvalidSpanLength(parameter, length, parameterName, message);
@@ -1538,7 +1538,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "InvalidCollectionCountException">Thrown when <paramref name = "parameter"/> is shorter than or equal to <paramref name = "length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<T> MustBeLongerThan<T>(this Span<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static Span<T> MustBeLongerThan<T>(this Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length <= length)
                 Throw.SpanMustBeLongerThan(parameter, length, parameterName, message);
@@ -1569,7 +1569,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "InvalidCollectionCountException">Thrown when <paramref name = "parameter"/> is shorter than or equal to <paramref name = "length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<T> MustBeLongerThan<T>(this ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static ReadOnlySpan<T> MustBeLongerThan<T>(this ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length <= length)
                 Throw.SpanMustBeLongerThan(parameter, length, parameterName, message);
@@ -1600,7 +1600,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "InvalidCollectionCountException">Thrown when <paramref name = "parameter"/> is shorter than <paramref name = "length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<T> MustBeLongerThanOrEqualTo<T>(this Span<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static Span<T> MustBeLongerThanOrEqualTo<T>(this Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length < length)
                 Throw.SpanMustBeLongerThanOrEqualTo(parameter, length, parameterName, message);
@@ -1631,7 +1631,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "InvalidCollectionCountException">Thrown when <paramref name = "parameter"/> is shorter than <paramref name = "length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<T> MustBeLongerThanOrEqualTo<T>(this ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static ReadOnlySpan<T> MustBeLongerThanOrEqualTo<T>(this ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length < length)
                 Throw.SpanMustBeLongerThanOrEqualTo(parameter, length, parameterName, message);
@@ -1662,7 +1662,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "InvalidCollectionCountException">Thrown when <paramref name = "parameter"/> is longer than or equal to <paramref name = "length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<T> MustBeShorterThan<T>(this Span<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static Span<T> MustBeShorterThan<T>(this Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length >= length)
                 Throw.SpanMustBeShorterThan(parameter, length, parameterName, message);
@@ -1693,7 +1693,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "InvalidCollectionCountException">Thrown when <paramref name = "parameter"/> is longer than or equal to <paramref name = "length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<T> MustBeShorterThan<T>(this ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static ReadOnlySpan<T> MustBeShorterThan<T>(this ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length >= length)
                 Throw.SpanMustBeShorterThan(parameter, length, parameterName, message);
@@ -1724,7 +1724,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "InvalidCollectionCountException">Thrown when <paramref name = "parameter"/> is longer than <paramref name = "length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<T> MustBeShorterThanOrEqualTo<T>(this Span<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static Span<T> MustBeShorterThanOrEqualTo<T>(this Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length > length)
                 Throw.SpanMustBeShorterThanOrEqualTo(parameter, length, parameterName, message);
@@ -1755,7 +1755,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "InvalidCollectionCountException">Thrown when <paramref name = "parameter"/> is longer than <paramref name = "length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlySpan<T> MustBeShorterThanOrEqualTo<T>(this ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null)
+        public static ReadOnlySpan<T> MustBeShorterThanOrEqualTo<T>(this ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Length > length)
                 Throw.SpanMustBeShorterThanOrEqualTo(parameter, length, parameterName, message);
@@ -1794,11 +1794,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotBeNullOrEmpty([ValidatedNotNull] this string? parameter, string? parameterName = null, string? message = null)
+        public static string MustNotBeNullOrEmpty([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter is null)
                 Throw.ArgumentNull(parameterName, message);
-            if (parameter!.Length == 0)
+            if (parameter.Length == 0)
                 Throw.EmptyString(parameterName, message);
             return parameter;
         }
@@ -1836,7 +1836,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotBeNullOrWhiteSpace([ValidatedNotNull] this string? parameter, string? parameterName = null, string? message = null)
+        public static string MustNotBeNullOrWhiteSpace([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             parameter.MustNotBeNullOrEmpty(parameterName, message);
             foreach (var character in parameter!)
@@ -1861,7 +1861,7 @@ namespace Light.GuardClauses
         {
             if (parameter.IsNullOrWhiteSpace())
                 Throw.CustomException(exceptionFactory, parameter);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -1895,7 +1895,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ValuesNotEqualException">Thrown when <paramref name = "parameter"/> is not equal to <paramref name = "other"/>.</exception>
         /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string? MustBe(this string? parameter, string? other, StringComparison comparisonType, string? parameterName = null, string? message = null)
+        public static string? MustBe(this string? parameter, string? other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!string.Equals(parameter, other, comparisonType))
                 Throw.ValuesNotEqual(parameter, other, parameterName, message);
@@ -1930,7 +1930,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ValuesNotEqualException">Thrown when <paramref name = "parameter"/> is not equal to <paramref name = "other"/>.</exception>
         /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string? MustBe(this string? parameter, string? other, StringComparisonType comparisonType, string? parameterName = null, string? message = null)
+        public static string? MustBe(this string? parameter, string? other, StringComparisonType comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.Equals(other, comparisonType))
                 Throw.ValuesNotEqual(parameter, other, parameterName, message);
@@ -1964,7 +1964,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ValuesEqualException">Thrown when <paramref name = "parameter"/> is equal to <paramref name = "other"/>.</exception>
         /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string? MustNotBe(this string? parameter, string? other, StringComparison comparisonType, string? parameterName = null, string? message = null)
+        public static string? MustNotBe(this string? parameter, string? other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (string.Equals(parameter, other, comparisonType))
                 Throw.ValuesEqual(parameter, other, parameterName, message);
@@ -1999,7 +1999,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ValuesEqualException">Thrown when <paramref name = "parameter"/> is equal to <paramref name = "other"/>.</exception>
         /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string? MustNotBe(this string? parameter, string? other, StringComparisonType comparisonType, string? parameterName = null, string? message = null)
+        public static string? MustNotBe(this string? parameter, string? other, StringComparisonType comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.Equals(other, comparisonType))
                 Throw.ValuesEqual(parameter, other, parameterName, message);
@@ -2034,7 +2034,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> or <paramref name = "regex"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; regex:null => halt")]
-        public static string MustMatch([ValidatedNotNull] this string? parameter, Regex regex, string? parameterName = null, string? message = null)
+        public static string MustMatch([ValidatedNotNull] this string? parameter, Regex regex, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!regex.MustNotBeNull(nameof(regex), message).IsMatch(parameter.MustNotBeNull(parameterName, message)))
                 Throw.StringDoesNotMatch(parameter!, regex, parameterName, message);
@@ -2058,7 +2058,7 @@ namespace Light.GuardClauses
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
             if (parameter is null || regex is null || !regex.IsMatch(parameter))
                 Throw.CustomException(exceptionFactory, parameter, regex!);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2093,7 +2093,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> or <paramref name = "value"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustContain([ValidatedNotNull] this string? parameter, string? value, string? parameterName = null, string? message = null)
+        public static string MustContain([ValidatedNotNull] this string? parameter, string? value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.MustNotBeNull(parameterName, message).Contains(value.MustNotBeNull(nameof(value), message)))
                 Throw.StringDoesNotContain(parameter!, value!, parameterName, message);
@@ -2118,7 +2118,7 @@ namespace Light.GuardClauses
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
             if (parameter is null || value is null || !parameter.Contains(value))
                 Throw.CustomException(exceptionFactory, parameter, value!);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2134,7 +2134,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, string? parameterName = null, string? message = null)
+        public static string MustContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).IndexOf(value.MustNotBeNull(nameof(value), message), comparisonType) < 0)
                 Throw.StringDoesNotContain(parameter!, value, comparisonType, parameterName, message);
@@ -2161,7 +2161,7 @@ namespace Light.GuardClauses
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
             if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) < 0)
                 Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2175,7 +2175,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> or <paramref name = "value"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, string? parameterName = null, string? message = null)
+        public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Contains(value.MustNotBeNull(nameof(value), message)))
                 Throw.StringContains(parameter!, value, parameterName, message);
@@ -2200,7 +2200,7 @@ namespace Light.GuardClauses
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
             if (parameter is null || value is null || parameter.Contains(value))
                 Throw.CustomException(exceptionFactory, parameter, value!);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2216,7 +2216,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, string? parameterName = null, string? message = null)
+        public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).IndexOf(value.MustNotBeNull(nameof(value), message), comparisonType) >= 0)
                 Throw.StringContains(parameter!, value, comparisonType, parameterName, message);
@@ -2243,7 +2243,7 @@ namespace Light.GuardClauses
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
             if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) >= 0)
                 Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2267,7 +2267,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "value"/> or <paramref name = "other"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("value:null => halt; other:null => halt")]
-        public static bool IsSubstringOf(this string value, string other) => other.MustNotBeNull(nameof(other)).Contains(value);
+        public static bool IsSubstringOf([ValidatedNotNull] this string value, [ValidatedNotNull] string other) => other.MustNotBeNull(nameof(other)).Contains(value);
         /// <summary>
         /// Checks if the string is a substring of the other string.
         /// </summary>
@@ -2291,7 +2291,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> or <paramref name = "value"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, string? parameterName = null, string? message = null)
+        public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!value.MustNotBeNull(nameof(value), message).Contains(parameter.MustNotBeNull(parameterName, message)))
                 Throw.NotSubstring(parameter!, value, parameterName, message);
@@ -2316,7 +2316,7 @@ namespace Light.GuardClauses
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
             if (parameter is null || value is null || !value.Contains(parameter))
                 Throw.CustomException(exceptionFactory, parameter, value!);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2332,7 +2332,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, string? parameterName = null, string? message = null)
+        public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (value.MustNotBeNull(nameof(value), message).IndexOf(parameter.MustNotBeNull(parameterName, message), comparisonType) == -1)
                 Throw.NotSubstring(parameter!, value, comparisonType, parameterName, message);
@@ -2359,7 +2359,7 @@ namespace Light.GuardClauses
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
             if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || value.IndexOf(parameter, comparisonType) == -1)
                 Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2373,7 +2373,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> or <paramref name = "value"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, string? parameterName = null, string? message = null)
+        public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (value.MustNotBeNull(nameof(value), message).Contains(parameter.MustNotBeNull(parameterName, message)))
                 Throw.Substring(parameter!, value, parameterName, message);
@@ -2399,7 +2399,7 @@ namespace Light.GuardClauses
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
             if (parameter is null || value is null || value.Contains(parameter))
                 Throw.CustomException(exceptionFactory, parameter, value!);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2415,7 +2415,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, string? parameterName = null, string? message = null)
+        public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (value.MustNotBeNull(nameof(value), message).IndexOf(parameter.MustNotBeNull(parameterName, message), comparisonType) != -1)
                 Throw.Substring(parameter!, value, comparisonType, parameterName, message);
@@ -2442,7 +2442,7 @@ namespace Light.GuardClauses
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
             if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || value.IndexOf(parameter, comparisonType) != -1)
                 Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2473,7 +2473,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, string? parameterName = null, string? message = null)
+        public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.MustNotBeNull(parameterName, message).IsEmailAddress())
                 Throw.InvalidEmailAddress(parameter!, parameterName, message);
@@ -2493,7 +2493,7 @@ namespace Light.GuardClauses
         {
             if (!parameter.IsEmailAddress())
                 Throw.CustomException(exceptionFactory, parameter);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2508,7 +2508,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; emailAddressPattern:null => halt")]
-        public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, Regex emailAddressPattern, string? parameterName = null, string? message = null)
+        public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, Regex emailAddressPattern, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.MustNotBeNull(parameterName, message).IsEmailAddress(emailAddressPattern))
                 Throw.InvalidEmailAddress(parameter!, parameterName, message);
@@ -2530,7 +2530,7 @@ namespace Light.GuardClauses
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
             if (emailAddressPattern is null || !parameter.IsEmailAddress(emailAddressPattern))
                 Throw.CustomException(exceptionFactory, parameter, emailAddressPattern!);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2544,7 +2544,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeShorterThan([ValidatedNotNull] this string? parameter, int length, string? parameterName = null, string? message = null)
+        public static string MustBeShorterThan([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Length >= length)
                 Throw.StringNotShorterThan(parameter!, length, parameterName, message);
@@ -2564,7 +2564,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null || parameter.Length >= length)
                 Throw.CustomException(exceptionFactory, parameter, length);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2578,7 +2578,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeShorterThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, string? parameterName = null, string? message = null)
+        public static string MustBeShorterThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Length > length)
                 Throw.StringNotShorterThanOrEqualTo(parameter!, length, parameterName, message);
@@ -2598,7 +2598,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null || parameter.Length > length)
                 Throw.CustomException(exceptionFactory, parameter, length);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2612,7 +2612,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustHaveLength([ValidatedNotNull] this string? parameter, int length, string? parameterName = null, string? message = null)
+        public static string MustHaveLength([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Length != length)
                 Throw.StringLengthNotEqualTo(parameter!, length, parameterName, message);
@@ -2632,7 +2632,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null || parameter.Length != length)
                 Throw.CustomException(exceptionFactory, parameter, length);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2646,7 +2646,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeLongerThan([ValidatedNotNull] this string? parameter, int length, string? parameterName = null, string? message = null)
+        public static string MustBeLongerThan([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Length <= length)
                 Throw.StringNotLongerThan(parameter!, length, parameterName, message);
@@ -2666,7 +2666,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null || parameter.Length <= length)
                 Throw.CustomException(exceptionFactory, parameter, length);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2680,7 +2680,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeLongerThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, string? parameterName = null, string? message = null)
+        public static string MustBeLongerThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Length < length)
                 Throw.StringNotLongerThanOrEqualTo(parameter!, length, parameterName, message);
@@ -2700,7 +2700,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null || parameter.Length < length)
                 Throw.CustomException(exceptionFactory, parameter, length);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2714,7 +2714,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustHaveLengthIn([ValidatedNotNull] this string? parameter, Range<int> range, string? parameterName = null, string? message = null)
+        public static string MustHaveLengthIn([ValidatedNotNull] this string? parameter, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!range.IsValueWithinRange(parameter.MustNotBeNull(parameterName, message).Length))
                 Throw.StringLengthNotInRange(parameter!, range, parameterName, message);
@@ -2734,7 +2734,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null || !range.IsValueWithinRange(parameter.Length))
                 Throw.CustomException(exceptionFactory, parameter, range);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2754,7 +2754,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeNewLine([ValidatedNotNull] this string? parameter, string? parameterName = null, string? message = null)
+        public static string MustBeNewLine([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.MustNotBeNull(parameterName, message).IsNewLine())
                 Throw.NotNewLine(parameter!, parameterName, message);
@@ -2773,7 +2773,7 @@ namespace Light.GuardClauses
         {
             if (!parameter.IsNewLine())
                 Throw.CustomException(exceptionFactory, parameter);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2990,7 +2990,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeAbsoluteUri([ValidatedNotNull] this Uri? parameter, string? parameterName = null, string? message = null)
+        public static Uri MustBeAbsoluteUri([ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).IsAbsoluteUri == false)
                 Throw.MustBeAbsoluteUri(parameter!, parameterName, message);
@@ -3009,7 +3009,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null || parameter.IsAbsoluteUri == false)
                 Throw.CustomException(exceptionFactory, parameter);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -3022,7 +3022,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeRelativeUri([ValidatedNotNull] this Uri? parameter, string? parameterName = null, string? message = null)
+        public static Uri MustBeRelativeUri([ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).IsAbsoluteUri)
                 Throw.MustBeRelativeUri(parameter!, parameterName, message);
@@ -3041,7 +3041,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null || parameter.IsAbsoluteUri)
                 Throw.CustomException(exceptionFactory, parameter);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -3056,7 +3056,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Throw when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustHaveScheme([ValidatedNotNull] this Uri? parameter, string scheme, string? parameterName = null, string? message = null)
+        public static Uri MustHaveScheme([ValidatedNotNull] this Uri? parameter, string scheme, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (string.Equals(parameter.MustBeAbsoluteUri(parameterName, message).Scheme, scheme) == false)
                 Throw.UriMustHaveScheme(parameter!, scheme, parameterName, message);
@@ -3100,7 +3100,7 @@ namespace Light.GuardClauses
         {
             if (parameter is null || !parameter.IsAbsoluteUri || parameter.Scheme.Equals(scheme) == false)
                 Throw.CustomException(exceptionFactory, parameter, scheme);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -3114,7 +3114,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Throw when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpsUrl([ValidatedNotNull] this Uri? parameter, string? parameterName = null, string? message = null) => parameter.MustHaveScheme("https", parameterName, message);
+        public static Uri MustBeHttpsUrl([ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => parameter.MustHaveScheme("https", parameterName, message);
         /// <summary>
         /// Ensures that the specified URI has the "https" scheme, or otherwise throws your custom exception.
         /// </summary>
@@ -3139,7 +3139,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Throw when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpUrl([ValidatedNotNull] this Uri? parameter, string? parameterName = null, string? message = null) => parameter.MustHaveScheme("http", parameterName, message);
+        public static Uri MustBeHttpUrl([ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => parameter.MustHaveScheme("http", parameterName, message);
         /// <summary>
         /// Ensures that the specified URI has the "http" scheme, or otherwise throws your custom exception.
         /// </summary>
@@ -3164,7 +3164,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Throw when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpOrHttpsUrl([ValidatedNotNull] this Uri? parameter, string? parameterName = null, string? message = null)
+        public static Uri MustBeHttpOrHttpsUrl([ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustBeAbsoluteUri(parameterName, message).Scheme.Equals("https") == false && parameter!.Scheme.Equals("http") == false)
                 Throw.UriMustHaveOneSchemeOf(parameter, new[]{"https", "http"}, parameterName, message);
@@ -3202,7 +3202,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Throw when <paramref name = "parameter"/> or <paramref name = "schemes"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; schemes:null => halt")]
-        public static Uri MustHaveOneSchemeOf([ValidatedNotNull] this Uri? parameter, IEnumerable<string> schemes, string? parameterName = null, string? message = null)
+        public static Uri MustHaveOneSchemeOf([ValidatedNotNull] this Uri? parameter, IEnumerable<string> schemes, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustBeAbsoluteUri(parameterName, message);
@@ -3240,15 +3240,15 @@ namespace Light.GuardClauses
                 Throw.CustomException(exceptionFactory, parameter, schemes);
             if (schemes is ICollection<string> collection)
             {
-                if (!collection.Contains(parameter!.Scheme))
+                if (!collection.Contains(parameter.Scheme))
                     Throw.CustomException(exceptionFactory, parameter, schemes);
                 return parameter;
             }
 
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
-            if (schemes is null || !schemes.Contains(parameter!.Scheme))
+            if (schemes is null || !schemes.Contains(parameter.Scheme))
                 Throw.CustomException(exceptionFactory, parameter, schemes!);
-            return parameter!;
+            return parameter;
         }
     }
 
@@ -3278,10 +3278,7 @@ namespace Light.GuardClauses
         /// <summary>
         /// Gets the values of the enum as a read-only collection.
         /// </summary>
-        public static ReadOnlyMemory<T> EnumConstants
-        {
-            get;
-        }
+        public static ReadOnlyMemory<T> EnumConstants { get; }
 
         static EnumInfo()
         {
@@ -3566,20 +3563,14 @@ namespace Light.GuardClauses
         /// <summary>
         /// Returns either "inclusive" or "exclusive", depending whether <see cref = "IsFromInclusive"/> is true or false.
         /// </summary>
-        public string LowerBoundaryText
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => GetBoundaryText(IsFromInclusive);
-        }
+        public string LowerBoundaryText {[MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => GetBoundaryText(IsFromInclusive); }
 
         /// <summary>
         /// Returns either "inclusive" or "exclusive", depending whether <see cref = "IsToInclusive"/> is true or false.
         /// </summary>
-        public string UpperBoundaryText
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => GetBoundaryText(IsToInclusive);
-        }
+        public string UpperBoundaryText {[MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => GetBoundaryText(IsToInclusive); }
 
         /// <summary>
         /// Returns a text description of this range with the following pattern: From (inclusive | exclusive) to To (inclusive | exclusive).
@@ -3744,12 +3735,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public AbsoluteUriException(string? parameterName = null, string? message = null): base(parameterName, message)
+        public AbsoluteUriException(string? parameterName = null, string? message = null) : base(parameterName, message)
         {
         }
 
         /// <inheritdoc/>
-        protected AbsoluteUriException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected AbsoluteUriException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -3765,12 +3756,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public ArgumentDefaultException(string? parameterName = null, string? message = null): base(message, parameterName)
+        public ArgumentDefaultException(string? parameterName = null, string? message = null) : base(message, parameterName)
         {
         }
 
         /// <inheritdoc/>
-        protected ArgumentDefaultException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected ArgumentDefaultException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -3786,12 +3777,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public CollectionException(string? parameterName = null, string? message = null): base(message, parameterName)
+        public CollectionException(string? parameterName = null, string? message = null) : base(message, parameterName)
         {
         }
 
         /// <inheritdoc/>
-        protected CollectionException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected CollectionException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -3807,12 +3798,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public EmptyCollectionException(string? parameterName = null, string? message = null): base(parameterName, message)
+        public EmptyCollectionException(string? parameterName = null, string? message = null) : base(parameterName, message)
         {
         }
 
         /// <inheritdoc/>
-        protected EmptyCollectionException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected EmptyCollectionException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -3828,12 +3819,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public EmptyGuidException(string? parameterName = null, string? message = null): base(message, parameterName)
+        public EmptyGuidException(string? parameterName = null, string? message = null) : base(message, parameterName)
         {
         }
 
         /// <inheritdoc/>
-        protected EmptyGuidException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected EmptyGuidException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -3849,12 +3840,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public EmptyStringException(string? parameterName = null, string? message = null): base(parameterName, message)
+        public EmptyStringException(string? parameterName = null, string? message = null) : base(parameterName, message)
         {
         }
 
         /// <inheritdoc/>
-        protected EmptyStringException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected EmptyStringException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -3870,12 +3861,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter.</param>
         /// <param name = "message">The message of the exception.</param>
-        public EnumValueNotDefinedException(string? parameterName = null, string? message = null): base(message, parameterName)
+        public EnumValueNotDefinedException(string? parameterName = null, string? message = null) : base(message, parameterName)
         {
         }
 
         /// <inheritdoc/>
-        protected EnumValueNotDefinedException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected EnumValueNotDefinedException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -3891,12 +3882,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public ExistingItemException(string? parameterName = null, string? message = null): base(parameterName, message)
+        public ExistingItemException(string? parameterName = null, string? message = null) : base(parameterName, message)
         {
         }
 
         /// <inheritdoc/>
-        protected ExistingItemException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected ExistingItemException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -3912,12 +3903,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public InvalidCollectionCountException(string? parameterName = null, string? message = null): base(parameterName, message)
+        public InvalidCollectionCountException(string? parameterName = null, string? message = null) : base(parameterName, message)
         {
         }
 
         /// <inheritdoc/>
-        protected InvalidCollectionCountException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected InvalidCollectionCountException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -3933,12 +3924,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "message">The message of the exception (optional).</param>
         /// <param name = "innerException">The exception that is the cause of this one (optional).</param>
-        public InvalidConfigurationException(string? message = null, Exception? innerException = null): base(message, innerException)
+        public InvalidConfigurationException(string? message = null, Exception? innerException = null) : base(message, innerException)
         {
         }
 
         /// <inheritdoc/>
-        protected InvalidConfigurationException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected InvalidConfigurationException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -3954,12 +3945,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public InvalidDateTimeException(string? parameterName = null, string? message = null): base(message, parameterName)
+        public InvalidDateTimeException(string? parameterName = null, string? message = null) : base(message, parameterName)
         {
         }
 
         /// <inheritdoc/>
-        protected InvalidDateTimeException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected InvalidDateTimeException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -3975,12 +3966,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public InvalidEmailAddressException(string? parameterName = null, string? message = null): base(parameterName, message)
+        public InvalidEmailAddressException(string? parameterName = null, string? message = null) : base(parameterName, message)
         {
         }
 
         /// <inheritdoc/>
-        protected InvalidEmailAddressException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected InvalidEmailAddressException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -3996,12 +3987,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "message">The message of the exception (optional).</param>
         /// <param name = "innerException">The exception that is the cause of this one (optional).</param>
-        public InvalidStateException(string? message = null, Exception? innerException = null): base(message, innerException)
+        public InvalidStateException(string? message = null, Exception? innerException = null) : base(message, innerException)
         {
         }
 
         /// <inheritdoc/>
-        protected InvalidStateException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected InvalidStateException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -4017,12 +4008,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public InvalidUriSchemeException(string? parameterName = null, string? message = null): base(parameterName, message)
+        public InvalidUriSchemeException(string? parameterName = null, string? message = null) : base(parameterName, message)
         {
         }
 
         /// <inheritdoc/>
-        protected InvalidUriSchemeException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected InvalidUriSchemeException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -4038,12 +4029,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public MissingItemException(string? parameterName = null, string? message = null): base(parameterName, message)
+        public MissingItemException(string? parameterName = null, string? message = null) : base(parameterName, message)
         {
         }
 
         /// <inheritdoc/>
-        protected MissingItemException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected MissingItemException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -4059,12 +4050,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public NullableHasNoValueException(string? parameterName = null, string? message = null): base(message, parameterName)
+        public NullableHasNoValueException(string? parameterName = null, string? message = null) : base(message, parameterName)
         {
         }
 
         /// <inheritdoc/>
-        protected NullableHasNoValueException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected NullableHasNoValueException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -4080,12 +4071,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public RelativeUriException(string? parameterName = null, string? message = null): base(parameterName, message)
+        public RelativeUriException(string? parameterName = null, string? message = null) : base(parameterName, message)
         {
         }
 
         /// <inheritdoc/>
-        protected RelativeUriException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected RelativeUriException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -4101,12 +4092,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public SameObjectReferenceException(string? parameterName = null, string? message = null): base(message, parameterName)
+        public SameObjectReferenceException(string? parameterName = null, string? message = null) : base(message, parameterName)
         {
         }
 
         /// <inheritdoc/>
-        protected SameObjectReferenceException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected SameObjectReferenceException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -4122,12 +4113,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public StringDoesNotMatchException(string? parameterName = null, string? message = null): base(parameterName, message)
+        public StringDoesNotMatchException(string? parameterName = null, string? message = null) : base(parameterName, message)
         {
         }
 
         /// <inheritdoc/>
-        protected StringDoesNotMatchException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected StringDoesNotMatchException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -4143,12 +4134,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public StringException(string? parameterName = null, string? message = null): base(message, parameterName)
+        public StringException(string? parameterName = null, string? message = null) : base(message, parameterName)
         {
         }
 
         /// <inheritdoc/>
-        protected StringException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected StringException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -4164,12 +4155,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public StringLengthException(string? parameterName = null, string? message = null): base(parameterName, message)
+        public StringLengthException(string? parameterName = null, string? message = null) : base(parameterName, message)
         {
         }
 
         /// <inheritdoc/>
-        protected StringLengthException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected StringLengthException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -4185,12 +4176,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public SubstringException(string? parameterName = null, string? message = null): base(parameterName, message)
+        public SubstringException(string? parameterName = null, string? message = null) : base(parameterName, message)
         {
         }
 
         /// <inheritdoc/>
-        protected SubstringException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected SubstringException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -4217,13 +4208,13 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void InvalidTypeCast(object? parameter, Type targetType, string? parameterName = null, string? message = null) => throw new TypeCastException(parameterName, message ?? $"{parameterName ?? "The value"} {parameter.ToStringOrNull()} cannot be cast to \"{targetType}\".");
+        public static void InvalidTypeCast(object? parameter, Type targetType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new TypeCastException(parameterName, message ?? $"{parameterName ?? "The value"} {parameter.ToStringOrNull()} cannot be cast to \"{targetType}\".");
         /// <summary>
         /// Throws the default <see cref = "EnumValueNotDefinedException"/> indicating that a value is not one of the constants defined in an enum, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void EnumValueNotDefined<T>(T parameter, string? parameterName = null, string? message = null)
+        public static void EnumValueNotDefined<T>(T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : Enum => throw new EnumValueNotDefinedException(parameterName, message ?? $"{parameterName ?? "The value"} \"{parameter}\" must be one of the defined constants of enum \"{parameter.GetType()}\", but it actually is not.");
         /// <summary>
         /// Throws the default <see cref = "EmptyGuidException"/> indicating that a GUID is empty, using the optional parameter name and message.
@@ -4254,7 +4245,7 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void InvalidEmailAddress(string emailAddress, string? parameterName = null, string? message = null) => throw new InvalidEmailAddressException(parameterName, message ?? $"{parameterName ?? "The string"} must be a valid email address, but it actually is \"{emailAddress}\".");
+        public static void InvalidEmailAddress(string parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidEmailAddressException(parameterName, message ?? $"{parameterName ?? "The string"} must be a valid email address, but it actually is \"{parameter}\".");
         /// <summary>
         /// Throws the default <see cref = "NullableHasNoValueException"/> indicating that a <see cref = "Nullable{T}"/> has no value, using the optional parameter name and message.
         /// </summary>
@@ -4266,77 +4257,77 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustNotBeLessThan<T>(T parameter, T boundary, string? parameterName = null, string? message = null)
+        public static void MustNotBeLessThan<T>(T parameter, T boundary, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T> => throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be less than {boundary}, but it actually is {parameter}.");
         /// <summary>
         /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that a comparable value must be less than the given boundary value, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeLessThan<T>(T parameter, T boundary, string? parameterName = null, string? message = null)
+        public static void MustBeLessThan<T>(T parameter, T boundary, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T> => throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be less than {boundary}, but it actually is {parameter}.");
         /// <summary>
         /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that a comparable value must not be less than or equal to the given boundary value, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustNotBeLessThanOrEqualTo<T>(T parameter, T boundary, string? parameterName = null, string? message = null)
+        public static void MustNotBeLessThanOrEqualTo<T>(T parameter, T boundary, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T> => throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be less than or equal to {boundary}, but it actually is {parameter}.");
         /// <summary>
         /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that a comparable value must not be greater than or equal to the given boundary value, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustNotBeGreaterThanOrEqualTo<T>(T parameter, T boundary, string? parameterName = null, string? message = null)
+        public static void MustNotBeGreaterThanOrEqualTo<T>(T parameter, T boundary, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T> => throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be greater than or equal to {boundary}, but it actually is {parameter}.");
         /// <summary>
         /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that a comparable value must be greater than or equal to the given boundary value, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeGreaterThanOrEqualTo<T>(T parameter, T boundary, string? parameterName = null, string? message = null)
+        public static void MustBeGreaterThanOrEqualTo<T>(T parameter, T boundary, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T> => throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be greater than or equal to {boundary}, but it actually is {parameter}.");
         /// <summary>
         /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that a comparable value must be greater than the given boundary value, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeGreaterThan<T>(T parameter, T boundary, string? parameterName = null, string? message = null)
+        public static void MustBeGreaterThan<T>(T parameter, T boundary, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T> => throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be greater than {boundary}, but it actually is {parameter}.");
         /// <summary>
         /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that a comparable value must not be greater than the given boundary value, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustNotBeGreaterThan<T>(T parameter, T boundary, string? parameterName = null, string? message = null)
+        public static void MustNotBeGreaterThan<T>(T parameter, T boundary, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T> => throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be greater than {boundary}, but it actually is {parameter}.");
         /// <summary>
         /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that a comparable value must be less than or equal to the given boundary value, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeLessThanOrEqualTo<T>(T parameter, T boundary, string? parameterName = null, string? message = null)
+        public static void MustBeLessThanOrEqualTo<T>(T parameter, T boundary, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T> => throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be less than or equal to {boundary}, but it actually is {parameter}.");
         /// <summary>
         /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that a value is not within a specified range, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeInRange<T>(T parameter, Range<T> range, string? parameterName = null, string? message = null)
+        public static void MustBeInRange<T>(T parameter, Range<T> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T> => throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be between {range.CreateRangeDescriptionText("and")}, but it actually is {parameter}.");
         /// <summary>
         /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that a value is within a specified range, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustNotBeInRange<T>(T parameter, Range<T> range, string? parameterName = null, string? message = null)
+        public static void MustNotBeInRange<T>(T parameter, Range<T> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T> => throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must not be between {range.CreateRangeDescriptionText("and")}, but it actually is {parameter}.");
         /// <summary>
         /// Throws the default <see cref = "SameObjectReferenceException"/> indicating that two references point to the same object, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SameObjectReference<T>(T? parameter, string? parameterName = null, string? message = null)
+        public static void SameObjectReference<T>(T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : class => throw new SameObjectReferenceException(parameterName, message ?? $"{parameterName ?? "The reference"} must not point to object \"{parameter}\", but it actually does.");
         /// <summary>
         /// Throws the default <see cref = "EmptyStringException"/> indicating that a string is empty, using the optional parameter name and message.
@@ -4349,97 +4340,97 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void WhiteSpaceString(string parameter, string? parameterName = null, string? message = null) => throw new WhiteSpaceStringException(parameterName, message ?? $"{parameterName ?? "The string"} must not contain only white space, but it actually is \"{parameter}\".");
+        public static void WhiteSpaceString(string parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new WhiteSpaceStringException(parameterName, message ?? $"{parameterName ?? "The string"} must not contain only white space, but it actually is \"{parameter}\".");
         /// <summary>
         /// Throws the default <see cref = "StringDoesNotMatchException"/> indicating that a string does not match a regular expression, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringDoesNotMatch(string parameter, Regex regex, string? parameterName = null, string? message = null) => throw new StringDoesNotMatchException(parameterName, message ?? $"{parameterName ?? "The string"} must match the regular expression \"{regex}\", but it actually is \"{parameter}\".");
+        public static void StringDoesNotMatch(string parameter, Regex regex, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new StringDoesNotMatchException(parameterName, message ?? $"{parameterName ?? "The string"} must match the regular expression \"{regex}\", but it actually is \"{parameter}\".");
         /// <summary>
         /// Throws the default <see cref = "SubstringException"/> indicating that a string does not contain another string as a substring, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringDoesNotContain(string parameter, string substring, string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must contain {substring.ToStringOrNull()}, but it actually is {parameter.ToStringOrNull()}.");
+        public static void StringDoesNotContain(string parameter, string substring, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must contain {substring.ToStringOrNull()}, but it actually is {parameter.ToStringOrNull()}.");
         /// <summary>
         /// Throws the default <see cref = "SubstringException"/> indicating that a string does not contain another string as a substring, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringDoesNotContain(string parameter, string substring, StringComparison comparisonType, string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must contain {substring.ToStringOrNull()} ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+        public static void StringDoesNotContain(string parameter, string substring, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must contain {substring.ToStringOrNull()} ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
         /// <summary>
         /// Throws the default <see cref = "SubstringException"/> indicating that a string does contain another string as a substring, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringContains(string parameter, string substring, string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not contain {substring.ToStringOrNull()} as a substring, but it actually is {parameter.ToStringOrNull()}.");
+        public static void StringContains(string parameter, string substring, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not contain {substring.ToStringOrNull()} as a substring, but it actually is {parameter.ToStringOrNull()}.");
         /// <summary>
         /// Throws the default <see cref = "SubstringException"/> indicating that a string does contain another string as a substring, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringContains(string parameter, string substring, StringComparison comparisonType, string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not contain {substring.ToStringOrNull()} as a substring ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+        public static void StringContains(string parameter, string substring, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not contain {substring.ToStringOrNull()} as a substring ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
         /// <summary>
         /// Throws the default <see cref = "SubstringException"/> indicating that a string is not a substring of another one, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void NotSubstring(string parameter, string other, string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must be a substring of \"{other}\", but it actually is {parameter.ToStringOrNull()}.");
+        public static void NotSubstring(string parameter, string other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must be a substring of \"{other}\", but it actually is {parameter.ToStringOrNull()}.");
         /// <summary>
         /// Throws the default <see cref = "SubstringException"/> indicating that a string is not a substring of another one, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void NotSubstring(string parameter, string other, StringComparison comparisonType, string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must be a substring of \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+        public static void NotSubstring(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must be a substring of \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
         /// <summary>
         /// Throws the default <see cref = "SubstringException"/> indicating that a string is a substring of another one, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void Substring(string parameter, string other, string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be a substring of \"{other}\", but it actually is {parameter.ToStringOrNull()}.");
+        public static void Substring(string parameter, string other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be a substring of \"{other}\", but it actually is {parameter.ToStringOrNull()}.");
         /// <summary>
         /// Throws the default <see cref = "SubstringException"/> indicating that a string is a substring of another one, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void Substring(string parameter, string other, StringComparison comparisonType, string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be a substring of \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+        public static void Substring(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be a substring of \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
         /// <summary>
         /// Throws the default <see cref = "StringLengthException"/> indicating that a string is not shorter than the given length, using the optional parameter name an message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringNotShorterThan(string parameter, int length, string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be shorter than {length}, but it actually has length {parameter.Length}.");
+        public static void StringNotShorterThan(string parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be shorter than {length}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref = "StringLengthException"/> indicating that a string is not shorter or equal to the given length, using the optional parameter name an message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringNotShorterThanOrEqualTo(string parameter, int length, string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be shorter or equal to {length}, but it actually has length {parameter.Length}.");
+        public static void StringNotShorterThanOrEqualTo(string parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be shorter or equal to {length}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref = "StringLengthException"/> indicating that a string has a different length than the specified one, using the optional parameter name an message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringLengthNotEqualTo(string parameter, int length, string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must have length {length}, but it actually has length {parameter.Length}.");
+        public static void StringLengthNotEqualTo(string parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must have length {length}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref = "StringLengthException"/> indicating that a string is not longer than the given length, using the optional parameter name an message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringNotLongerThan(string parameter, int length, string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be longer than {length}, but it actually has length {parameter.Length}.");
+        public static void StringNotLongerThan(string parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be longer than {length}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref = "StringLengthException"/> indicating that a string is not longer or equal to the given length, using the optional parameter name an message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringNotLongerThanOrEqualTo(string parameter, int length, string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be longer than or equal to {length}, but it actually has length {parameter.Length}.");
+        public static void StringNotLongerThanOrEqualTo(string parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be longer than or equal to {length}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref = "StringLengthException"/> indicating that a string's length is not in between the given range, using the optional parameter name an message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void StringLengthNotInRange(string parameter, Range<int> range, string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must have its length in between {range.CreateRangeDescriptionText("and")}, but it actually has length {parameter.Length}.");
+        public static void StringLengthNotInRange(string parameter, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must have its length in between {range.CreateRangeDescriptionText("and")}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref = "StringException"/> indicating that a string is not equal to "\n" or "\r\n".
         /// </summary>
@@ -4451,91 +4442,91 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void ValuesNotEqual<T>(T parameter, T other, string? parameterName = null, string? message = null) => throw new ValuesNotEqualException(parameterName, message ?? $"{parameterName ?? "The value"} must be equal to {other.ToStringOrNull()}, but it actually is {parameter.ToStringOrNull()}.");
+        public static void ValuesNotEqual<T>(T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new ValuesNotEqualException(parameterName, message ?? $"{parameterName ?? "The value"} must be equal to {other.ToStringOrNull()}, but it actually is {parameter.ToStringOrNull()}.");
         /// <summary>
         /// Throws the default <see cref = "ValuesEqualException"/> indicating that two values are equal, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void ValuesEqual<T>(T parameter, T other, string? parameterName = null, string? message = null) => throw new ValuesEqualException(parameterName, message ?? $"{parameterName ?? "The value"} must not be equal to {other.ToStringOrNull()}, but it actually is {parameter.ToStringOrNull()}.");
+        public static void ValuesEqual<T>(T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new ValuesEqualException(parameterName, message ?? $"{parameterName ?? "The value"} must not be equal to {other.ToStringOrNull()}, but it actually is {parameter.ToStringOrNull()}.");
         /// <summary>
         /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that a collection has an invalid number of items, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void InvalidCollectionCount(IEnumerable parameter, int count, string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have count {count}, but it actually has count {parameter.Count()}.");
+        public static void InvalidCollectionCount(IEnumerable parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have count {count}, but it actually has count {parameter.Count()}.");
         /// <summary>
         /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that a span has an invalid length, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void InvalidSpanLength<T>(in Span<T> parameter, int length, string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must have length {length}, but it actually has length {parameter.Length}.");
+        public static void InvalidSpanLength<T>(in Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must have length {length}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that a span has an invalid length, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void InvalidSpanLength<T>(in ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The read-only span"} must have length {length}, but it actually has length {parameter.Length}.");
+        public static void InvalidSpanLength<T>(in ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The read-only span"} must have length {length}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that a collection has less than a minimum number of items, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void InvalidMinimumCollectionCount(IEnumerable parameter, int count, string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have at least count {count}, but it actually has count {parameter.Count()}.");
+        public static void InvalidMinimumCollectionCount(IEnumerable parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have at least count {count}, but it actually has count {parameter.Count()}.");
         /// <summary>
         /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that a span is not longer than the specified length.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SpanMustBeLongerThan<T>(in Span<T> parameter, int length, string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be longer than {length}, but it actually has length {parameter.Length}.");
+        public static void SpanMustBeLongerThan<T>(in Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be longer than {length}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that a span is not longer than the specified length.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SpanMustBeLongerThan<T>(in ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be longer than {length}, but it actually has length {parameter.Length}.");
+        public static void SpanMustBeLongerThan<T>(in ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be longer than {length}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that a span is not longer than and not equal to the specified length.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SpanMustBeLongerThanOrEqualTo<T>(in Span<T> parameter, int length, string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be longer than or equal to {length}, but it actually has length {parameter.Length}.");
+        public static void SpanMustBeLongerThanOrEqualTo<T>(in Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be longer than or equal to {length}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that a span is not longer than and not equal to the specified length.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SpanMustBeLongerThanOrEqualTo<T>(in ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be longer than or equal to {length}, but it actually has length {parameter.Length}.");
+        public static void SpanMustBeLongerThanOrEqualTo<T>(in ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be longer than or equal to {length}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that a span is not shorter than the specified length.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SpanMustBeShorterThan<T>(in Span<T> parameter, int length, string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be shorter than {length}, but it actually has length {parameter.Length}.");
+        public static void SpanMustBeShorterThan<T>(in Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be shorter than {length}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that a span is not shorter than the specified length.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SpanMustBeShorterThanOrEqualTo<T>(in Span<T> parameter, int length, string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be shorter than or equal to {length}, but it actually has length {parameter.Length}.");
+        public static void SpanMustBeShorterThanOrEqualTo<T>(in Span<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be shorter than or equal to {length}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that a span is not shorter than the specified length.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SpanMustBeShorterThanOrEqualTo<T>(in ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be shorter than or equal to {length}, but it actually has length {parameter.Length}.");
+        public static void SpanMustBeShorterThanOrEqualTo<T>(in ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be shorter than or equal to {length}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that a span is not shorter than the specified length.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void SpanMustBeShorterThan<T>(in ReadOnlySpan<T> parameter, int length, string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be shorter than {length}, but it actually has length {parameter.Length}.");
+        public static void SpanMustBeShorterThan<T>(in ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be shorter than {length}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that a collection has more than a maximum number of items, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void InvalidMaximumCollectionCount(IEnumerable parameter, int count, string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have at most count {count}, but it actually has count {parameter.Count()}.");
+        public static void InvalidMaximumCollectionCount(IEnumerable parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have at most count {count}, but it actually has count {parameter.Count()}.");
         /// <summary>
         /// Throws the default <see cref = "EmptyCollectionException"/> indicating that a collection has no items, using the optional parameter name and message.
         /// </summary>
@@ -4547,67 +4538,67 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MissingItem<TItem>(IEnumerable<TItem> parameter, TItem item, string? parameterName = null, string? message = null) => throw new MissingItemException(parameterName, message ?? new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain {item.ToStringOrNull()}, but it actually does not.").AppendCollectionContent(parameter).ToString());
+        public static void MissingItem<TItem>(IEnumerable<TItem> parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new MissingItemException(parameterName, message ?? new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain {item.ToStringOrNull()}, but it actually does not.").AppendCollectionContent(parameter).ToString());
         /// <summary>
         /// Throws the default <see cref = "ExistingItemException"/> indicating that a collection contains the specified item that should not be part of it, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void ExistingItem<TItem>(IEnumerable<TItem> parameter, TItem item, string? parameterName = null, string? message = null) => throw new ExistingItemException(parameterName, message ?? new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not contain {item.ToStringOrNull()}, but it actually does.").AppendCollectionContent(parameter).ToString());
+        public static void ExistingItem<TItem>(IEnumerable<TItem> parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new ExistingItemException(parameterName, message ?? new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not contain {item.ToStringOrNull()}, but it actually does.").AppendCollectionContent(parameter).ToString());
         /// <summary>
         /// Throws the default <see cref = "ValueIsNotOneOfException"/> indicating that a value is not one of a specified collection of items, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void ValueNotOneOf<TItem>(TItem parameter, IEnumerable<TItem> items, string? parameterName = null, string? message = null) => throw new ValueIsNotOneOfException(parameterName, message ?? new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be one of the following items").AppendItemsWithNewLine(items).AppendLine($"but it actually is {parameter.ToStringOrNull()}.").ToString());
+        public static void ValueNotOneOf<TItem>(TItem parameter, IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new ValueIsNotOneOfException(parameterName, message ?? new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be one of the following items").AppendItemsWithNewLine(items).AppendLine($"but it actually is {parameter.ToStringOrNull()}.").ToString());
         /// <summary>
         /// Throws the default <see cref = "ValueIsOneOfException"/> indicating that a value is one of a specified collection of items, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void ValueIsOneOf<TItem>(TItem parameter, IEnumerable<TItem> items, string? parameterName = null, string? message = null) => throw new ValueIsOneOfException(parameterName, message ?? new StringBuilder().AppendLine($"{parameterName ?? "The value"} must not be one of the following items").AppendItemsWithNewLine(items).AppendLine($"but it actually is {parameter.ToStringOrNull()}.").ToString());
+        public static void ValueIsOneOf<TItem>(TItem parameter, IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new ValueIsOneOfException(parameterName, message ?? new StringBuilder().AppendLine($"{parameterName ?? "The value"} must not be one of the following items").AppendItemsWithNewLine(items).AppendLine($"but it actually is {parameter.ToStringOrNull()}.").ToString());
         /// <summary>
         /// Throws the default <see cref = "RelativeUriException"/> indicating that a URI is relative instead of absolute, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeAbsoluteUri(Uri parameter, string? parameterName = null, string? message = null) => throw new RelativeUriException(parameterName, message ?? $"{parameterName ?? "The URI"} must be an absolute URI, but it actually is \"{parameter}\".");
+        public static void MustBeAbsoluteUri(Uri parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new RelativeUriException(parameterName, message ?? $"{parameterName ?? "The URI"} must be an absolute URI, but it actually is \"{parameter}\".");
         /// <summary>
         /// Throws the default <see cref = "AbsoluteUriException"/> indicating that a URI is absolute instead of relative, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeRelativeUri(Uri parameter, string? parameterName = null, string? message = null) => throw new AbsoluteUriException(parameterName, message ?? $"{parameterName ?? "The URI"} must be a relative URI, but it actually is \"{parameter}\".");
+        public static void MustBeRelativeUri(Uri parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new AbsoluteUriException(parameterName, message ?? $"{parameterName ?? "The URI"} must be a relative URI, but it actually is \"{parameter}\".");
         /// <summary>
         /// Throws the default <see cref = "InvalidUriSchemeException"/> indicating that a URI has an unexpected scheme, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void UriMustHaveScheme(Uri uri, string scheme, string? parameterName = null, string? message = null) => throw new InvalidUriSchemeException(parameterName, message ?? $"{parameterName ?? "The URI"} must use the scheme \"{scheme}\", but it actually is \"{uri}\".");
+        public static void UriMustHaveScheme(Uri parameter, string scheme, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidUriSchemeException(parameterName, message ?? $"{parameterName ?? "The URI"} must use the scheme \"{scheme}\", but it actually is \"{parameter}\".");
         /// <summary>
         /// Throws the default <see cref = "InvalidUriSchemeException"/> indicating that a URI does not use one of a set of expected schemes, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void UriMustHaveOneSchemeOf(Uri uri, IEnumerable<string> schemes, string? parameterName = null, string? message = null) => throw new InvalidUriSchemeException(parameterName, message ?? new StringBuilder().AppendLine($"{parameterName ?? "The URI"} must use one of the following schemes").AppendItemsWithNewLine(schemes).AppendLine($"but it actually is \"{uri}\".").ToString());
+        public static void UriMustHaveOneSchemeOf(Uri parameter, IEnumerable<string> schemes, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidUriSchemeException(parameterName, message ?? new StringBuilder().AppendLine($"{parameterName ?? "The URI"} must use one of the following schemes").AppendItemsWithNewLine(schemes).AppendLine($"but it actually is \"{parameter}\".").ToString());
         /// <summary>
         /// Throws the default <see cref = "InvalidDateTimeException"/> indicating that a date time is not using <see cref = "DateTimeKind.Utc"/>, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeUtcDateTime(DateTime parameter, string? parameterName = null, string? message = null) => throw new InvalidDateTimeException(parameterName, message ?? $"{parameterName ?? "The date time"} must use kind \"{DateTimeKind.Utc}\", but it actually uses \"{parameter.Kind}\" and is \"{parameter:O}\".");
+        public static void MustBeUtcDateTime(DateTime parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidDateTimeException(parameterName, message ?? $"{parameterName ?? "The date time"} must use kind \"{DateTimeKind.Utc}\", but it actually uses \"{parameter.Kind}\" and is \"{parameter:O}\".");
         /// <summary>
         /// Throws the default <see cref = "InvalidDateTimeException"/> indicating that a date time is not using <see cref = "DateTimeKind.Local"/>, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeLocalDateTime(DateTime parameter, string? parameterName = null, string? message = null) => throw new InvalidDateTimeException(parameterName, message ?? $"{parameterName ?? "The date time"} must use kind \"{DateTimeKind.Local}\", but it actually uses \"{parameter.Kind}\" and is \"{parameter:O}\".");
+        public static void MustBeLocalDateTime(DateTime parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidDateTimeException(parameterName, message ?? $"{parameterName ?? "The date time"} must use kind \"{DateTimeKind.Local}\", but it actually uses \"{parameter.Kind}\" and is \"{parameter:O}\".");
         /// <summary>
         /// Throws the default <see cref = "InvalidDateTimeException"/> indicating that a date time is not using <see cref = "DateTimeKind.Unspecified"/>, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
-        public static void MustBeUnspecifiedDateTime(DateTime parameter, string? parameterName = null, string? message = null) => throw new InvalidDateTimeException(parameterName, message ?? $"{parameterName ?? "The date time"} must use kind \"{DateTimeKind.Unspecified}\", but it actually uses \"{parameter.Kind}\" and is \"{parameter:O}\".");
+        public static void MustBeUnspecifiedDateTime(DateTime parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidDateTimeException(parameterName, message ?? $"{parameterName ?? "The date time"} must use kind \"{DateTimeKind.Unspecified}\", but it actually uses \"{parameter.Kind}\" and is \"{parameter:O}\".");
         /// <summary>
         /// Throws the exception that is returned by <paramref name = "exceptionFactory"/>.
         /// </summary>
@@ -4657,12 +4648,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public TypeCastException(string? parameterName = null, string? message = null): base(message, parameterName)
+        public TypeCastException(string? parameterName = null, string? message = null) : base(message, parameterName)
         {
         }
 
         /// <inheritdoc/>
-        protected TypeCastException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected TypeCastException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -4678,12 +4669,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public UriException(string? parameterName = null, string? message = null): base(message, parameterName)
+        public UriException(string? parameterName = null, string? message = null) : base(message, parameterName)
         {
         }
 
         /// <inheritdoc/>
-        protected UriException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected UriException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -4699,12 +4690,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public ValueIsNotOneOfException(string? parameterName = null, string? message = null): base(message, parameterName)
+        public ValueIsNotOneOfException(string? parameterName = null, string? message = null) : base(message, parameterName)
         {
         }
 
         /// <inheritdoc/>
-        protected ValueIsNotOneOfException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected ValueIsNotOneOfException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -4720,12 +4711,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public ValueIsOneOfException(string? parameterName = null, string? message = null): base(message, parameterName)
+        public ValueIsOneOfException(string? parameterName = null, string? message = null) : base(message, parameterName)
         {
         }
 
         /// <inheritdoc/>
-        protected ValueIsOneOfException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected ValueIsOneOfException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -4741,12 +4732,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public ValuesEqualException(string? parameterName = null, string? message = null): base(message, parameterName)
+        public ValuesEqualException(string? parameterName = null, string? message = null) : base(message, parameterName)
         {
         }
 
         /// <inheritdoc/>
-        protected ValuesEqualException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected ValuesEqualException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -4762,12 +4753,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public ValuesNotEqualException(string? parameterName = null, string? message = null): base(message, parameterName)
+        public ValuesNotEqualException(string? parameterName = null, string? message = null) : base(message, parameterName)
         {
         }
 
         /// <inheritdoc/>
-        protected ValuesNotEqualException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected ValuesNotEqualException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -4783,12 +4774,12 @@ namespace Light.GuardClauses.Exceptions
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public WhiteSpaceStringException(string? parameterName = null, string? message = null): base(parameterName, message)
+        public WhiteSpaceStringException(string? parameterName = null, string? message = null) : base(parameterName, message)
         {
         }
 
         /// <inheritdoc/>
-        protected WhiteSpaceStringException(SerializationInfo info, StreamingContext context): base(info, context)
+        protected WhiteSpaceStringException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -5711,7 +5702,7 @@ namespace JetBrains.Annotations
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     internal sealed class ContractAnnotationAttribute : Attribute
     {
-        public ContractAnnotationAttribute([NotNull] string contract): this(contract, false)
+        public ContractAnnotationAttribute([NotNull] string contract) : this(contract, false)
         {
         }
 
@@ -5722,24 +5713,16 @@ namespace JetBrains.Annotations
         }
 
         [NotNull]
-        public string Contract
-        {
-            get;
-            private set;
-        }
+        public string Contract { get; private set; }
 
-        public bool ForceFullStates
-        {
-            get;
-            private set;
-        }
+        public bool ForceFullStates { get; private set; }
     }
 }
 
 namespace System.Diagnostics.CodeAnalysis
 {
     /// <summary>
-    /// Specifies that <see langword = "null"/> is allowed as an input even if the
+    /// Specifies that <see langword="null"/> is allowed as an input even if the
     /// corresponding type disallows it.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, Inherited = false)]
@@ -5754,7 +5737,7 @@ namespace System.Diagnostics.CodeAnalysis
     }
 
     /// <summary>
-    /// Specifies that <see langword = "null"/> is disallowed as an input even if the
+    /// Specifies that <see langword="null"/> is disallowed as an input even if the
     /// corresponding type allows it.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, Inherited = false)]
@@ -5794,10 +5777,7 @@ namespace System.Diagnostics.CodeAnalysis
         /// Code after the method is considered unreachable by diagnostics if the argument
         /// to the associated parameter matches this value.
         /// </summary>
-        public bool ParameterValue
-        {
-            get;
-        }
+        public bool ParameterValue { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref = "DoesNotReturnIfAttribute"/>
@@ -5815,7 +5795,7 @@ namespace System.Diagnostics.CodeAnalysis
     }
 
     /// <summary>
-    /// Specifies that an output may be <see langword = "null"/> even if the
+    /// Specifies that an output may be <see langword="null"/> even if the
     /// corresponding type disallows it.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, Inherited = false)]
@@ -5831,26 +5811,23 @@ namespace System.Diagnostics.CodeAnalysis
 
     /// <summary>
     /// Specifies that when a method returns <see cref = "ReturnValue"/>, 
-    /// the parameter may be <see langword = "null"/> even if the corresponding type disallows it.
+    /// the parameter may be <see langword="null"/> even if the corresponding type disallows it.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     internal sealed class MaybeNullWhenAttribute : Attribute
     {
         /// <summary>
         /// Gets the return value condition.
-        /// If the method returns this value, the associated parameter may be <see langword = "null"/>.
+        /// If the method returns this value, the associated parameter may be <see langword="null"/>.
         /// </summary>
-        public bool ReturnValue
-        {
-            get;
-        }
+        public bool ReturnValue { get; }
 
         /// <summary>
         /// Initializes the attribute with the specified return value condition.
         /// </summary>
         /// <param name = "returnValue">
         /// The return value condition.
-        /// If the method returns this value, the associated parameter may be <see langword = "null"/>.
+        /// If the method returns this value, the associated parameter may be <see langword="null"/>.
         /// </param>
         public MaybeNullWhenAttribute(bool returnValue)
         {
@@ -5859,7 +5836,7 @@ namespace System.Diagnostics.CodeAnalysis
     }
 
     /// <summary>
-    /// Specifies that an output is not <see langword = "null"/> even if the
+    /// Specifies that an output is not <see langword="null"/> even if the
     /// corresponding type allows it.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, Inherited = false)]
@@ -5874,29 +5851,26 @@ namespace System.Diagnostics.CodeAnalysis
     }
 
     /// <summary>
-    /// Specifies that the output will be non-<see langword = "null"/> if the
-    /// named parameter is non-<see langword = "null"/>.
+    /// Specifies that the output will be non-<see langword="null"/> if the
+    /// named parameter is non-<see langword="null"/>.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.ReturnValue, AllowMultiple = true, Inherited = false)]
     internal sealed class NotNullIfNotNullAttribute : Attribute
     {
         /// <summary>
         /// Gets the associated parameter name.
-        /// The output will be non-<see langword = "null"/> if the argument to the
-        /// parameter specified is non-<see langword = "null"/>.
+        /// The output will be non-<see langword="null"/> if the argument to the
+        /// parameter specified is non-<see langword="null"/>.
         /// </summary>
-        public string ParameterName
-        {
-            get;
-        }
+        public string ParameterName { get; }
 
         /// <summary>
         /// Initializes the attribute with the associated parameter name.
         /// </summary>
         /// <param name = "parameterName">
         /// The associated parameter name.
-        /// The output will be non-<see langword = "null"/> if the argument to the
-        /// parameter specified is non-<see langword = "null"/>.
+        /// The output will be non-<see langword="null"/> if the argument to the
+        /// parameter specified is non-<see langword="null"/>.
         /// </param>
         public NotNullIfNotNullAttribute(string parameterName)
         {
@@ -5906,30 +5880,41 @@ namespace System.Diagnostics.CodeAnalysis
 
     /// <summary>
     /// Specifies that when a method returns <see cref = "ReturnValue"/>,
-    /// the parameter will not be <see langword = "null"/> even if the corresponding type allows it.
+    /// the parameter will not be <see langword="null"/> even if the corresponding type allows it.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     internal sealed class NotNullWhenAttribute : Attribute
     {
         /// <summary>
         /// Gets the return value condition.
-        /// If the method returns this value, the associated parameter will not be <see langword = "null"/>.
+        /// If the method returns this value, the associated parameter will not be <see langword="null"/>.
         /// </summary>
-        public bool ReturnValue
-        {
-            get;
-        }
+        public bool ReturnValue { get; }
 
         /// <summary>
         /// Initializes the attribute with the specified return value condition.
         /// </summary>
         /// <param name = "returnValue">
         /// The return value condition.
-        /// If the method returns this value, the associated parameter will not be <see langword = "null"/>.
+        /// If the method returns this value, the associated parameter will not be <see langword="null"/>.
         /// </param>
         public NotNullWhenAttribute(bool returnValue)
         {
             ReturnValue = returnValue;
         }
+    }
+}
+
+namespace System.Runtime.CompilerServices
+{
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
+    internal sealed class CallerArgumentExpressionAttribute : Attribute
+    {
+        public CallerArgumentExpressionAttribute(string parameterName)
+        {
+            ParameterName = parameterName;
+        }
+
+        public string ParameterName { get; }
     }
 }
