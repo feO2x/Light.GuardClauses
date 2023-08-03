@@ -328,7 +328,7 @@ public static partial class Check
     /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
     /// <exception cref="NullableHasNoValueException">Thrown when <paramref name="parameter" /> has no value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T MustHaveValue<T>(this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : struct
+    public static T MustHaveValue<T>([NoEnumeration] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : struct
     {
         if (!parameter.HasValue)
             Throw.NullableHasNoValue(parameterName, message);
@@ -344,7 +344,7 @@ public static partial class Check
     /// <exception cref="NullableHasNoValueException">Thrown when <paramref name="parameter" /> has no value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("exceptionFactory:null => halt")]
-    public static T MustHaveValue<T>(this T? parameter, Func<Exception> exceptionFactory) where T : struct
+    public static T MustHaveValue<T>([NoEnumeration] this T? parameter, Func<Exception> exceptionFactory) where T : struct
     {
         if (!parameter.HasValue)
             Throw.CustomException(exceptionFactory);
