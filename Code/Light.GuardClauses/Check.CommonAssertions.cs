@@ -141,7 +141,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static T MustBeOfType<T>([ValidatedNotNull] this object? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static T MustBeOfType<T>([ValidatedNotNull, NoEnumeration] this object? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message) is T castValue)
             return castValue;
@@ -158,7 +158,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> cannot be cast to <typeparamref name="T" />.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-    public static T MustBeOfType<T>([ValidatedNotNull] this object? parameter, Func<object?, Exception> exceptionFactory)
+    public static T MustBeOfType<T>([ValidatedNotNull, NoEnumeration] this object? parameter, Func<object?, Exception> exceptionFactory)
     {
         if (parameter is T castValue)
             return castValue;
