@@ -346,8 +346,8 @@ namespace System.Runtime.CompilerServices
         var sourceSyntaxTree = CSharpSyntaxTree.ParseText(currentFile.ReadContent(), csharpParseOptions);
         var checkClassDeclaration = (ClassDeclarationSyntax) sourceSyntaxTree.GetRoot()
                                                                              .DescendantNodes()
-                                                                             .First(node => node.Kind() == SyntaxKind.ClassDeclaration);
-        checkClassDeclaration = checkClassDeclaration.WithModifiers(checkClassDeclaration.Modifiers.Remove(checkClassDeclaration.Modifiers.First(token => token.Kind() == SyntaxKind.PartialKeyword)));
+                                                                             .First(node => node.IsKind(SyntaxKind.ClassDeclaration));
+        checkClassDeclaration = checkClassDeclaration.WithModifiers(checkClassDeclaration.Modifiers.Remove(checkClassDeclaration.Modifiers.First(token => token.IsKind(SyntaxKind.PartialKeyword))));
 
         // Process all other files
         Console.WriteLine("Merging remaining files...");
@@ -370,7 +370,7 @@ namespace System.Runtime.CompilerServices
             {
                 var classDeclaration = (ClassDeclarationSyntax) sourceSyntaxTree.GetRoot()
                                                                                 .DescendantNodes()
-                                                                                .First(node => node.Kind() == SyntaxKind.ClassDeclaration);
+                                                                                .First(node => node.IsKind(SyntaxKind.ClassDeclaration));
                 checkClassDeclaration = checkClassDeclaration.WithMembers(checkClassDeclaration.Members.AddRange(classDeclaration.Members));
                 continue;
             }
@@ -402,10 +402,10 @@ namespace System.Runtime.CompilerServices
             Console.WriteLine("Types are changed from public to internal...");
             var changedTypeDeclarations = new Dictionary<MemberDeclarationSyntax, MemberDeclarationSyntax>();
 
-            foreach (var typeDeclaration in targetRoot.DescendantNodes().Where(node => node.Kind() == SyntaxKind.ClassDeclaration ||
-                                                                                       node.Kind() == SyntaxKind.StructDeclaration ||
-                                                                                       node.Kind() == SyntaxKind.EnumDeclaration ||
-                                                                                       node.Kind() == SyntaxKind.DelegateDeclaration))
+            foreach (var typeDeclaration in targetRoot.DescendantNodes().Where(node => node.IsKind(SyntaxKind.ClassDeclaration) ||
+                                                                                       node.IsKind(SyntaxKind.StructDeclaration) ||
+                                                                                       node.IsKind(SyntaxKind.EnumDeclaration) ||
+                                                                                       node.IsKind(SyntaxKind.DelegateDeclaration)))
             {
                 if (typeDeclaration is BaseTypeDeclarationSyntax typeDeclarationSyntax)
                 {
@@ -442,7 +442,7 @@ namespace System.Runtime.CompilerServices
             Console.WriteLine("Removing overloads with exception factory...");
 
             var checkClass = (ClassDeclarationSyntax) targetRoot.DescendantNodes()
-                                                                .First(node => node.Kind() == SyntaxKind.ClassDeclaration &&
+                                                                .First(node => node.IsKind(SyntaxKind.ClassDeclaration) &&
                                                                                node is ClassDeclarationSyntax { Identifier.Text: "Check" });
 
             var membersWithoutExceptionFactory =
@@ -452,7 +452,7 @@ namespace System.Runtime.CompilerServices
 
             // Remove members from Throw class that use exception factories
             var throwClass = (ClassDeclarationSyntax) targetRoot.DescendantNodes()
-                                                                .First(node => node.Kind() == SyntaxKind.ClassDeclaration &&
+                                                                .First(node => node.IsKind(SyntaxKind.ClassDeclaration) &&
                                                                                node is ClassDeclarationSyntax { Identifier.Text: "Throw" });
 
             membersWithoutExceptionFactory =

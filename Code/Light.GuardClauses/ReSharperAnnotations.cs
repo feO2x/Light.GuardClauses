@@ -20,13 +20,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
+#nullable disable
+
 using System;
 // ReSharper disable CheckNamespace
+// ReSharper disable UnusedMember.Global
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable IntroduceOptionalParameters.Global
+// ReSharper disable MemberCanBeProtected.Global
+// ReSharper disable InconsistentNaming
 
 namespace JetBrains.Annotations;
 
 /// <summary>
-/// Indicates that the value of the marked element could never be <c>null</c>.
+/// Indicates that the value of the marked element can never be <c>null</c>.
 /// </summary>
 /// <example><code>
 /// [NotNull] object Foo() {
@@ -40,7 +48,7 @@ namespace JetBrains.Annotations;
 internal sealed class NotNullAttribute : Attribute { }
 
 /// <summary>
-/// Describes dependency between method input and output.
+/// Describes dependence between method input and output.
 /// </summary>
 /// <syntax>
 /// <p>Function Definition Table syntax:</p>
@@ -51,13 +59,13 @@ internal sealed class NotNullAttribute : Attribute { }
 /// <item>Output   ::= [ParameterName: Value]* {halt|stop|void|nothing|Value}</item>
 /// <item>Value    ::= true | false | null | notnull | canbenull</item>
 /// </list>
-/// If method has single input parameter, it's name could be omitted.<br/>
-/// Using <c>halt</c> (or <c>void</c>/<c>nothing</c>, which is the same) for method output
-/// means that the methos doesn't return normally (throws or terminates the process).<br/>
+/// If the method has a single input parameter, its name could be omitted.<br/>
+/// Using <c>halt</c> (or <c>void</c>/<c>nothing</c>, which is the same) for the method output
+/// means that the method doesn't return normally (throws or terminates the process).<br/>
 /// Value <c>canbenull</c> is only applicable for output parameters.<br/>
 /// You can use multiple <c>[ContractAnnotation]</c> for each FDT row, or use single attribute
-/// with rows separated by semicolon. There is no notion of order rows, all rows are checked
-/// for applicability and applied per each program state tracked by R# analysis.<br/>
+/// with rows separated by the semicolon. There is no notion of order rows, all rows are checked
+/// for applicability and applied per each program state tracked by the analysis engine.<br/>
 /// </syntax>
 /// <examples><list>
 /// <item><code>
@@ -65,8 +73,8 @@ internal sealed class NotNullAttribute : Attribute { }
 /// public void TerminationMethod()
 /// </code></item>
 /// <item><code>
-/// [ContractAnnotation("halt &lt;= condition: false")]
-/// public void Assert(bool condition, string text) // regular assertion method
+/// [ContractAnnotation("null &lt;= param:null")] // reverse condition syntax
+/// public string GetName(string surname)
 /// </code></item>
 /// <item><code>
 /// [ContractAnnotation("s:null =&gt; true")]
@@ -76,7 +84,7 @@ internal sealed class NotNullAttribute : Attribute { }
 /// // A method that returns null if the parameter is null,
 /// // and not null if the parameter is not null
 /// [ContractAnnotation("null =&gt; null; notnull =&gt; notnull")]
-/// public object Transform(object data) 
+/// public object Transform(object data)
 /// </code></item>
 /// <item><code>
 /// [ContractAnnotation("=&gt; true, result: notnull; =&gt; false, result: null")]
@@ -95,7 +103,26 @@ internal sealed class ContractAnnotationAttribute : Attribute
         ForceFullStates = forceFullStates;
     }
 
-    [NotNull] public string Contract { get; private set; }
+    [NotNull] public string Contract { get; }
 
-    public bool ForceFullStates { get; private set; }
+    public bool ForceFullStates { get; }
 }
+
+/// <summary>
+/// Indicates that IEnumerable passed as a parameter is not enumerated.
+/// Use this annotation to suppress the 'Possible multiple enumeration of IEnumerable' inspection.
+/// </summary>
+/// <example><code>
+/// static void ThrowIfNull&lt;T&gt;([NoEnumeration] T v, string n) where T : class
+/// {
+///   // custom check for null but no enumeration
+/// }
+///
+/// void Foo(IEnumerable&lt;string&gt; values)
+/// {
+///   ThrowIfNull(values, nameof(values));
+///   var x = values.ToList(); // No warnings about multiple enumeration
+/// }
+/// </code></example>
+[AttributeUsage(AttributeTargets.Parameter)]
+internal sealed class NoEnumerationAttribute : Attribute { }
