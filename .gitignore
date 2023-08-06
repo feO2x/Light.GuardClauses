@@ -218,6 +218,10 @@ ModelManifest.xml
 # TargetFrameworks.props files
 **/TargetFrameworks.props
 
+# JetBrains Rider
+*.sln.iml
+.idea/
+
 # The source code redistributable of Light.GuardClauses
 /Code/Light.GuardClauses.Source/Light.GuardClauses.cs
 /Code/Light.GuardClauses.SourceCodeTransformation/settings.json

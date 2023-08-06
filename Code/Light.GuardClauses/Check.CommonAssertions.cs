@@ -20,7 +20,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static T MustNotBeNull<T>([ValidatedNotNull] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : class
+    public static T MustNotBeNull<T>([ValidatedNotNull, NoEnumeration] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : class
     {
         if (parameter is null)
             Throw.ArgumentNull(parameterName, message);
@@ -35,7 +35,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-    public static T MustNotBeNull<T>([ValidatedNotNull] this T? parameter, Func<Exception> exceptionFactory) where T : class
+    public static T MustNotBeNull<T>([ValidatedNotNull, NoEnumeration] this T? parameter, Func<Exception> exceptionFactory) where T : class
     {
         if (parameter is null)
             Throw.CustomException(exceptionFactory);
@@ -101,7 +101,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <typeparamref name="T" /> is a reference type and <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static T MustNotBeNullReference<T>([ValidatedNotNull] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static T MustNotBeNullReference<T>([ValidatedNotNull, NoEnumeration] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (default(T) != null)
             return parameter;
@@ -121,7 +121,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <typeparamref name="T" /> is a reference type and <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-    public static T MustNotBeNullReference<T>([ValidatedNotNull] this T parameter, Func<Exception> exceptionFactory)
+    public static T MustNotBeNullReference<T>([ValidatedNotNull, NoEnumeration] this T parameter, Func<Exception> exceptionFactory)
     {
         if (default(T) != null)
             return parameter;
@@ -141,7 +141,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static T MustBeOfType<T>([ValidatedNotNull] this object? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static T MustBeOfType<T>([ValidatedNotNull, NoEnumeration] this object? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message) is T castValue)
             return castValue;
@@ -158,7 +158,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> cannot be cast to <typeparamref name="T" />.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-    public static T MustBeOfType<T>([ValidatedNotNull] this object? parameter, Func<object?, Exception> exceptionFactory)
+    public static T MustBeOfType<T>([ValidatedNotNull, NoEnumeration] this object? parameter, Func<object?, Exception> exceptionFactory)
     {
         if (parameter is T castValue)
             return castValue;
@@ -328,7 +328,7 @@ public static partial class Check
     /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
     /// <exception cref="NullableHasNoValueException">Thrown when <paramref name="parameter" /> has no value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T MustHaveValue<T>(this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : struct
+    public static T MustHaveValue<T>([NoEnumeration] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : struct
     {
         if (!parameter.HasValue)
             Throw.NullableHasNoValue(parameterName, message);
@@ -344,7 +344,7 @@ public static partial class Check
     /// <exception cref="NullableHasNoValueException">Thrown when <paramref name="parameter" /> has no value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("exceptionFactory:null => halt")]
-    public static T MustHaveValue<T>(this T? parameter, Func<Exception> exceptionFactory) where T : struct
+    public static T MustHaveValue<T>([NoEnumeration] this T? parameter, Func<Exception> exceptionFactory) where T : struct
     {
         if (!parameter.HasValue)
             Throw.CustomException(exceptionFactory);
@@ -359,7 +359,7 @@ public static partial class Check
     // ReSharper disable StringLiteralTypo
     [ContractAnnotation("parameter:notNull => true, other:notnull; parameter:notNull => false, other:canbenull; other:notnull => true, parameter:notnull; other:notnull => false, parameter:canbenull")]
     // ReSharper restore StringLiteralTypo
-    public static bool IsSameAs<T>(this T? parameter, T? other) where T : class =>
+    public static bool IsSameAs<T>([NoEnumeration] this T? parameter, [NoEnumeration] T? other) where T : class =>
         ReferenceEquals(parameter, other);
 
     /// <summary>
@@ -372,7 +372,7 @@ public static partial class Check
     /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
     /// <exception cref="SameObjectReferenceException">Thrown when both <paramref name="parameter" /> and <paramref name="other" /> point to the same object.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T? MustNotBeSameAs<T>(this T? parameter, T? other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : class
+    public static T? MustNotBeSameAs<T>([NoEnumeration] this T? parameter, [NoEnumeration] T? other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : class
     {
         if (ReferenceEquals(parameter, other))
             Throw.SameObjectReference(parameter, parameterName, message);
@@ -388,7 +388,7 @@ public static partial class Check
     /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.</param>
     /// <exception cref="SameObjectReferenceException">Thrown when both <paramref name="parameter" /> and <paramref name="other" /> point to the same object.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T? MustNotBeSameAs<T>(this T? parameter, T? other, Func<T?, Exception> exceptionFactory) where T : class
+    public static T? MustNotBeSameAs<T>([NoEnumeration] this T? parameter, T? other, Func<T?, Exception> exceptionFactory) where T : class
     {
         if (ReferenceEquals(parameter, other))
             Throw.CustomException(exceptionFactory, parameter);
