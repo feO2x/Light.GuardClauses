@@ -1,5 +1,5 @@
 /* ------------------------------
-   Light.GuardClauses 10.0.0
+   Light.GuardClauses 10.1.0
    ------------------------------
 
 License information for Light.GuardClauses
@@ -58,7 +58,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeNull<T>([ValidatedNotNull] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static T MustNotBeNull<T>([ValidatedNotNull, NoEnumeration] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : class
         {
             if (parameter is null)
@@ -74,7 +74,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeNull<T>([ValidatedNotNull] this T? parameter, Func<Exception> exceptionFactory)
+        public static T MustNotBeNull<T>([ValidatedNotNull, NoEnumeration] this T? parameter, Func<Exception> exceptionFactory)
             where T : class
         {
             if (parameter is null)
@@ -140,7 +140,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <typeparamref name = "T"/> is a reference type and <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeNullReference<T>([ValidatedNotNull] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static T MustNotBeNullReference<T>([ValidatedNotNull, NoEnumeration] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (default(T) != null)
                 return parameter;
@@ -159,7 +159,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <typeparamref name = "T"/> is a reference type and <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeNullReference<T>([ValidatedNotNull] this T parameter, Func<Exception> exceptionFactory)
+        public static T MustNotBeNullReference<T>([ValidatedNotNull, NoEnumeration] this T parameter, Func<Exception> exceptionFactory)
         {
             if (default(T) != null)
                 return parameter;
@@ -178,7 +178,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeOfType<T>([ValidatedNotNull] this object? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static T MustBeOfType<T>([ValidatedNotNull, NoEnumeration] this object? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message)is T castValue)
                 return castValue;
@@ -194,7 +194,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> cannot be cast to <typeparamref name = "T"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustBeOfType<T>([ValidatedNotNull] this object? parameter, Func<object?, Exception> exceptionFactory)
+        public static T MustBeOfType<T>([ValidatedNotNull, NoEnumeration] this object? parameter, Func<object?, Exception> exceptionFactory)
         {
             if (parameter is T castValue)
                 return castValue;
@@ -363,7 +363,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "NullableHasNoValueException">Thrown when <paramref name = "parameter"/> has no value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustHaveValue<T>(this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static T MustHaveValue<T>([NoEnumeration] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : struct
         {
             if (!parameter.HasValue)
@@ -379,7 +379,7 @@ namespace Light.GuardClauses
         /// <exception cref = "NullableHasNoValueException">Thrown when <paramref name = "parameter"/> has no value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("exceptionFactory:null => halt")]
-        public static T MustHaveValue<T>(this T? parameter, Func<Exception> exceptionFactory)
+        public static T MustHaveValue<T>([NoEnumeration] this T? parameter, Func<Exception> exceptionFactory)
             where T : struct
         {
             if (!parameter.HasValue)
@@ -394,7 +394,7 @@ namespace Light.GuardClauses
         // ReSharper disable StringLiteralTypo
         [ContractAnnotation("parameter:notNull => true, other:notnull; parameter:notNull => false, other:canbenull; other:notnull => true, parameter:notnull; other:notnull => false, parameter:canbenull")]
         // ReSharper restore StringLiteralTypo
-        public static bool IsSameAs<T>(this T? parameter, T? other)
+        public static bool IsSameAs<T>([NoEnumeration] this T? parameter, [NoEnumeration] T? other)
             where T : class => ReferenceEquals(parameter, other);
         /// <summary>
         /// Ensures that <paramref name = "parameter"/> and <paramref name = "other"/> do not point to the same object instance, or otherwise
@@ -406,7 +406,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "SameObjectReferenceException">Thrown when both <paramref name = "parameter"/> and <paramref name = "other"/> point to the same object.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T? MustNotBeSameAs<T>(this T? parameter, T? other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static T? MustNotBeSameAs<T>([NoEnumeration] this T? parameter, [NoEnumeration] T? other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : class
         {
             if (ReferenceEquals(parameter, other))
@@ -423,7 +423,7 @@ namespace Light.GuardClauses
         /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.</param>
         /// <exception cref = "SameObjectReferenceException">Thrown when both <paramref name = "parameter"/> and <paramref name = "other"/> point to the same object.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T? MustNotBeSameAs<T>(this T? parameter, T? other, Func<T?, Exception> exceptionFactory)
+        public static T? MustNotBeSameAs<T>([NoEnumeration] this T? parameter, T? other, Func<T?, Exception> exceptionFactory)
             where T : class
         {
             if (ReferenceEquals(parameter, other))
@@ -3167,7 +3167,7 @@ namespace Light.GuardClauses
         public static Uri MustBeHttpOrHttpsUrl([ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustBeAbsoluteUri(parameterName, message).Scheme.Equals("https") == false && parameter!.Scheme.Equals("http") == false)
-                Throw.UriMustHaveOneSchemeOf(parameter, new[]{"https", "http"}, parameterName, message);
+                Throw.UriMustHaveOneSchemeOf(parameter, new[] { "https", "http" }, parameterName, message);
             return parameter!;
         }
 
@@ -3565,7 +3565,6 @@ namespace Light.GuardClauses
         /// </summary>
         public string LowerBoundaryText {[MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => GetBoundaryText(IsFromInclusive); }
-
         /// <summary>
         /// Returns either "inclusive" or "exclusive", depending whether <see cref = "IsToInclusive"/> is true or false.
         /// </summary>
@@ -5368,7 +5367,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Gets the list of types that will not be surrounded by quotation marks in error messages.
         /// </summary>
-        public static readonly ReadOnlyCollection<Type> UnquotedTypes = new ReadOnlyCollection<Type>(new[]{typeof(int), typeof(long), typeof(short), typeof(sbyte), typeof(uint), typeof(ulong), typeof(ushort), typeof(byte), typeof(bool), typeof(double), typeof(decimal), typeof(float)});
+        public static readonly ReadOnlyCollection<Type> UnquotedTypes = new ReadOnlyCollection<Type>(new[] { typeof(int), typeof(long), typeof(short), typeof(sbyte), typeof(uint), typeof(ulong), typeof(ushort), typeof(byte), typeof(bool), typeof(double), typeof(decimal), typeof(float) });
         private static bool IsUnquotedType<T>()
         {
             if (typeof(T) == typeof(int))
@@ -5643,7 +5642,7 @@ SOFTWARE. */
 namespace JetBrains.Annotations
 {
     /// <summary>
-    /// Indicates that the value of the marked element could never be <c>null</c>.
+    /// Indicates that the value of the marked element can never be <c>null</c>.
     /// </summary>
     /// <example><code>
     /// [NotNull] object Foo() {
@@ -5656,7 +5655,7 @@ namespace JetBrains.Annotations
     }
 
     /// <summary>
-    /// Describes dependency between method input and output.
+    /// Describes dependence between method input and output.
     /// </summary>
     /// <syntax>
     /// <p>Function Definition Table syntax:</p>
@@ -5667,13 +5666,13 @@ namespace JetBrains.Annotations
     /// <item>Output   ::= [ParameterName: Value]* {halt|stop|void|nothing|Value}</item>
     /// <item>Value    ::= true | false | null | notnull | canbenull</item>
     /// </list>
-    /// If method has single input parameter, it's name could be omitted.<br/>
-    /// Using <c>halt</c> (or <c>void</c>/<c>nothing</c>, which is the same) for method output
-    /// means that the methos doesn't return normally (throws or terminates the process).<br/>
+    /// If the method has a single input parameter, its name could be omitted.<br/>
+    /// Using <c>halt</c> (or <c>void</c>/<c>nothing</c>, which is the same) for the method output
+    /// means that the method doesn't return normally (throws or terminates the process).<br/>
     /// Value <c>canbenull</c> is only applicable for output parameters.<br/>
     /// You can use multiple <c>[ContractAnnotation]</c> for each FDT row, or use single attribute
-    /// with rows separated by semicolon. There is no notion of order rows, all rows are checked
-    /// for applicability and applied per each program state tracked by R# analysis.<br/>
+    /// with rows separated by the semicolon. There is no notion of order rows, all rows are checked
+    /// for applicability and applied per each program state tracked by the analysis engine.<br/>
     /// </syntax>
     /// <examples><list>
     /// <item><code>
@@ -5681,8 +5680,8 @@ namespace JetBrains.Annotations
     /// public void TerminationMethod()
     /// </code></item>
     /// <item><code>
-    /// [ContractAnnotation("halt &lt;= condition: false")]
-    /// public void Assert(bool condition, string text) // regular assertion method
+    /// [ContractAnnotation("null &lt;= param:null")] // reverse condition syntax
+    /// public string GetName(string surname)
     /// </code></item>
     /// <item><code>
     /// [ContractAnnotation("s:null =&gt; true")]
@@ -5692,7 +5691,7 @@ namespace JetBrains.Annotations
     /// // A method that returns null if the parameter is null,
     /// // and not null if the parameter is not null
     /// [ContractAnnotation("null =&gt; null; notnull =&gt; notnull")]
-    /// public object Transform(object data) 
+    /// public object Transform(object data)
     /// </code></item>
     /// <item><code>
     /// [ContractAnnotation("=&gt; true, result: notnull; =&gt; false, result: null")]
@@ -5713,9 +5712,29 @@ namespace JetBrains.Annotations
         }
 
         [NotNull]
-        public string Contract { get; private set; }
+        public string Contract { get; }
+        public bool ForceFullStates { get; }
+    }
 
-        public bool ForceFullStates { get; private set; }
+    /// <summary>
+    /// Indicates that IEnumerable passed as a parameter is not enumerated.
+    /// Use this annotation to suppress the 'Possible multiple enumeration of IEnumerable' inspection.
+    /// </summary>
+    /// <example><code>
+    /// static void ThrowIfNull&lt;T&gt;([NoEnumeration] T v, string n) where T : class
+    /// {
+    ///   // custom check for null but no enumeration
+    /// }
+    ///
+    /// void Foo(IEnumerable&lt;string&gt; values)
+    /// {
+    ///   ThrowIfNull(values, nameof(values));
+    ///   var x = values.ToList(); // No warnings about multiple enumeration
+    /// }
+    /// </code></example>
+    [AttributeUsage(AttributeTargets.Parameter)]
+    internal sealed class NoEnumerationAttribute : Attribute
+    {
     }
 }
 
