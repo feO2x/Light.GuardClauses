@@ -101,7 +101,7 @@ public static class CleanupStep
         DoesNotReturnAnnotation
     }
 
-    public static bool TryGetNextLine(this in ReadOnlySpan<char> text, int startIndex, out ReadOnlySpan<char> nextLine)
+    public static bool TryGetNextLine(this ReadOnlySpan<char> text, int startIndex, out ReadOnlySpan<char> nextLine)
     {
         if (startIndex >= text.Length)
         {

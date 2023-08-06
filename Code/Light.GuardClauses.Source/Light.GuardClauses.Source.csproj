@@ -5,12 +5,12 @@
         <LangVersion>10.0</LangVersion>
         <Authors>Kenny Pflug</Authors>
         <Company>Kenny Pflug</Company>
-        <Copyright>Copyright © Kenny Pflug 2016 - 2021</Copyright>
+        <Copyright>Copyright © Kenny Pflug 2016 - 2023</Copyright>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Memory" Version="4.5.4" />
+        <PackageReference Include="System.Memory" Version="4.5.5" />
         <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     </ItemGroup>
 
