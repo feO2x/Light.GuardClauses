@@ -24,10 +24,9 @@
         <PackageTags>Assertions;Preconditions;GuardClauses;DesignByContract;DbC</PackageTags>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageReleaseNotes>
-Light.GuardClauses 10.0.0
+Light.GuardClauses 10.1.0
 --------------------------------
-- added support for CallerArgumentExpressionAttribute
-- Breaking change: the library is now built against .NET Standard 2.0 and .NET Standard 2.1
+- added support for JetBrains' NoEnumerationAttribute
         </PackageReleaseNotes>
     </PropertyGroup>
 
