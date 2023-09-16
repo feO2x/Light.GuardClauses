@@ -538,7 +538,7 @@ public static partial class Check
     /// <param name="other">The second value to be compared.</param>
     /// <param name="tolerance">The tolerance indicating how much the two values may differ from each other.</param>
     /// <returns>
-    /// True if <paramref name="value" /> <paramref name="other" /> are equal or if their absolute difference
+    /// True if <paramref name="value" /> and <paramref name="other" /> are equal or if their absolute difference
     /// is smaller than the given <paramref name="tolerance" />, otherwise false.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -551,7 +551,7 @@ public static partial class Check
     /// <param name="value">The first value to be compared.</param>
     /// <param name="other">The second value to be compared.</param>
     /// <returns>
-    /// True if <paramref name="value" /> <paramref name="other" /> are equal or if their absolute difference
+    /// True if <paramref name="value" /> and <paramref name="other" /> are equal or if their absolute difference
     /// is smaller than 0.0001, otherwise false.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -565,7 +565,7 @@ public static partial class Check
     /// <param name="other">The second value to compare.</param>
     /// <param name="tolerance">The tolerance indicating how much the two values may differ from each other.</param>
     /// <returns>
-    /// True if <paramref name="value" /> <paramref name="other" /> are equal or if their absolute difference
+    /// True if <paramref name="value" /> and <paramref name="other" /> are equal or if their absolute difference
     /// is smaller than the given <paramref name="tolerance" />, otherwise false.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -578,7 +578,7 @@ public static partial class Check
     /// <param name="value">The first value to be compared.</param>
     /// <param name="other">The second value to be compared.</param>
     /// <returns>
-    /// True if <paramref name="value" /> <paramref name="other" /> are equal or if their absolute difference
+    /// True if <paramref name="value" /> and <paramref name="other" /> are equal or if their absolute difference
     /// is smaller than 0.0001f, otherwise false.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
