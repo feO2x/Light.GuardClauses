@@ -584,4 +584,31 @@ public static partial class Check
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsApproximately(this float value, float other) =>
         Math.Abs(value - other) < 0.0001f;
+
+    /// <summary>
+    /// Checks if the specified value is greater than or approximately the same as the other value, using the given tolerance.
+    /// </summary>
+    /// <param name="value">The first value to compare.</param>
+    /// <param name="other">The second value to compare.</param>
+    /// <param name="tolerance">The tolerance indicating how much the two values may differ from each other.</param>
+    /// <returns>
+    /// True if <paramref name="value" /> <paramref name="other" /> are equal or if their absolute difference
+    /// is smaller than the given <paramref name="tolerance" />, otherwise false.
+    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsGreaterThanOrApproximately(this double value, double other, double tolerance) =>
+        value > other || value.IsApproximately(other, tolerance);
+
+    /// <summary>
+    /// Checks if the specified value is greater than or approximately the same as the other value, using the default tolerance of 0.0001.
+    /// </summary>
+    /// <param name="value">The first value to compare.</param>
+    /// <param name="other">The second value to compare.</param>
+    /// <returns>
+    /// True if <paramref name="value" /> <paramref name="other" /> are equal or if their absolute difference
+    /// is smaller than 0.0001, otherwise false.
+    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsGreaterThanOrApproximately(this double value, double other) =>
+        value > other || value.IsApproximately(other);
 }
