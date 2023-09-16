@@ -20,4 +20,20 @@ public static class IsGreaterThanOrApproximatelyTests
     [InlineData(2.369, 2.37, 0.0005, false)]
     public static void DoubleWithCustomTolerance(double first, double second, double tolerance, bool expected) =>
         first.IsGreaterThanOrApproximately(second, tolerance).Should().Be(expected);
+
+    [Theory]
+    [InlineData(100.225f, 100.2f, true)]
+    [InlineData(-5.9f, -5.5f, false)]
+    [InlineData(0f, -0.02f, true)]
+    [InlineData(-0.001f, 0f, false)]
+    public static void FloatWithDefaultTolerance(float first, float second, bool expected) =>
+        first.IsGreaterThanOrApproximately(second).Should().Be(expected);
+
+    [Theory]
+    [InlineData(2.0f, 1.0f, 0.1f, true)]
+    [InlineData(1.0f, 1.0f, 0.1f, true)]
+    [InlineData(1.0f, 1.1f, 0.01f, false)]
+    [InlineData(1.0f, 2.0f, 0.1f, false)]
+    public static void FloatWIthCustomTolerance(float first, float second, float tolerance, bool expected) =>
+        first.IsGreaterThanOrApproximately(second, tolerance).Should().Be(expected);
 }
