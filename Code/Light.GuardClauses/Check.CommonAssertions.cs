@@ -681,13 +681,13 @@ public static partial class Check
         value < other || value.IsApproximately(other, tolerance);
     
     /// <summary>
-    /// Checks if the specified value is less than or approximately the same as the other value, using the default tolerance of 0.0001.
+    /// Checks if the specified value is less than or approximately the same as the other value, using the default tolerance of 0.0001f.
     /// </summary>
     /// <param name="value">The first value to compare.</param>
     /// <param name="other">The second value to compare.</param>
     /// <returns>
     /// True if <paramref name="value" /> is less than <paramref name="other" /> or if their absolute difference
-    /// is smaller than 0.0001, otherwise false.
+    /// is smaller than 0.0001f, otherwise false.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsLessThanOrApproximately(this float value, float other) =>
