@@ -457,7 +457,7 @@ public static partial class Check
     [ContractAnnotation("equalityComparer:null => halt")]
     public static T MustBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, Func<T, T, IEqualityComparer<T>, Exception> exceptionFactory)
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (equalityComparer is null || !equalityComparer.Equals(parameter, other))
             Throw.CustomException(exceptionFactory, parameter, other, equalityComparer!);
         return parameter;
@@ -525,7 +525,7 @@ public static partial class Check
     [ContractAnnotation("equalityComparer:null => halt")]
     public static T MustNotBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, Func<T, T, IEqualityComparer<T>, Exception> exceptionFactory)
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (equalityComparer is null || equalityComparer.Equals(parameter, other))
             Throw.CustomException(exceptionFactory, parameter, other, equalityComparer!);
         return parameter;
