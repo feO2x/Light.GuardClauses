@@ -50,7 +50,12 @@ public static partial class Check
     {
         if (string.IsNullOrEmpty(parameter))
             Throw.CustomException(exceptionFactory, parameter);
+        
+#if NETSTANDARD2_0
         return parameter!;
+#else
+        return parameter;
+#endif
     }
 
     /// <summary>
@@ -296,7 +301,7 @@ public static partial class Check
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string MustMatch([ValidatedNotNull] this string? parameter, Regex regex, Func<string?, Regex, Exception> exceptionFactory)
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || regex is null || !regex.IsMatch(parameter))
             Throw.CustomException(exceptionFactory, parameter, regex!);
         return parameter;
@@ -357,7 +362,7 @@ public static partial class Check
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
     public static string MustContain([ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || !parameter.Contains(value))
             Throw.CustomException(exceptionFactory, parameter, value!);
         return parameter;
@@ -400,7 +405,7 @@ public static partial class Check
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
     public static string MustContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) < 0)
             Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
         return parameter;
@@ -439,7 +444,7 @@ public static partial class Check
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
     public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || parameter.Contains(value))
             Throw.CustomException(exceptionFactory, parameter, value!);
         return parameter;
@@ -482,7 +487,7 @@ public static partial class Check
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
     public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) >= 0)
             Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
         return parameter;
@@ -561,7 +566,7 @@ public static partial class Check
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
     public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || !value.Contains(parameter))
             Throw.CustomException(exceptionFactory, parameter, value!);
         return parameter;
@@ -604,7 +609,7 @@ public static partial class Check
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
     public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || value.IndexOf(parameter, comparisonType) == -1)
             Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
         return parameter;
@@ -644,7 +649,7 @@ public static partial class Check
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
     public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || value.Contains(parameter))
             Throw.CustomException(exceptionFactory, parameter, value!);
         return parameter;
@@ -687,7 +692,7 @@ public static partial class Check
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
     public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || value.IndexOf(parameter, comparisonType) != -1)
             Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
         return parameter;
@@ -779,7 +784,7 @@ public static partial class Check
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; emailAddressPattern:null => halt")]
     public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, Regex emailAddressPattern, Func<string?, Regex, Exception> exceptionFactory)
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (emailAddressPattern is null || !parameter.IsEmailAddress(emailAddressPattern))
             Throw.CustomException(exceptionFactory, parameter, emailAddressPattern!);
         return parameter;
