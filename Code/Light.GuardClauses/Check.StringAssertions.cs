@@ -1055,11 +1055,11 @@ public static partial class Check
         parameter is null ? regardNullAsTrimmed : parameter.AsSpan().IsTrimmed();
 
     /// <summary>
-    /// Checks if the specified character sequence is trimmed, i.e. it does not start or end with
-    /// white space characters. Inputting an empty sequence will return true.
+    /// Checks if the specified character span is trimmed, i.e. it does not start or end with
+    /// white space characters. Inputting an empty span will return true.
     /// </summary>
-    /// <param name="parameter">The character sequence to be checked.</param>
-    /// <returns>True if the <paramref name="parameter"/> is trimmed, else false. An empty sequence will result in true.</returns>
+    /// <param name="parameter">The character span to be checked.</param>
+    /// <returns>True if the <paramref name="parameter"/> is trimmed, else false. An empty span will result in true.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsTrimmed(this ReadOnlySpan<char> parameter) =>
         parameter.Length == 0 ||
@@ -1067,11 +1067,11 @@ public static partial class Check
         !parameter[parameter.Length - 1].IsWhiteSpace();
     
     /// <summary>
-    /// Checks if the specified character sequence is trimmed, i.e. it does not start or end with
-    /// white space characters. Inputting an empty sequence will return true.
+    /// Checks if the specified character span is trimmed, i.e. it does not start or end with
+    /// white space characters. Inputting an empty span will return true.
     /// </summary>
-    /// <param name="parameter">The character sequence to be checked.</param>
-    /// <returns>True if the <paramref name="parameter"/> is trimmed, else false. An empty sequence will result in true.</returns>
+    /// <param name="parameter">The character span to be checked.</param>
+    /// <returns>True if the <paramref name="parameter"/> is trimmed, else false. An empty span will result in true.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsTrimmed(this Span<char> parameter) =>
         parameter.Length == 0 ||
@@ -1080,7 +1080,7 @@ public static partial class Check
 
     /// <summary>
     /// Checks if the specified string is trimmed at the start, i.e. it does not start with
-    /// white space characters. Inputting an empty sequence will return true.
+    /// white space characters. Inputting an empty string will return true.
     /// </summary>
     /// <param name="parameter">The string to be checked.</param>
     /// <param name="regardNullAsTrimmed">
@@ -1096,26 +1096,26 @@ public static partial class Check
         parameter is null ? regardNullAsTrimmed : parameter.AsSpan().IsTrimmedAtStart();
 
     /// <summary>
-    /// Checks if the specified character sequence is trimmed at the start, i.e. it does not start with
-    /// white space characters. Inputting an empty sequence will return true.
+    /// Checks if the specified character span is trimmed at the start, i.e. it does not start with
+    /// white space characters. Inputting an empty span will return true.
     /// </summary>
-    /// <param name="parameter">The character sequence to be checked.</param>
+    /// <param name="parameter">The character span to be checked.</param>
     /// <returns>
     /// True if the <paramref name="parameter"/> is trimmed at the start, else false.
-    /// An empty sequence will result in true.
+    /// An empty span will result in true.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsTrimmedAtStart(this ReadOnlySpan<char> parameter) =>
         parameter.Length == 0 || !parameter[0].IsWhiteSpace();
     
     /// <summary>
-    /// Checks if the specified character sequence is trimmed at the start, i.e. it does not start with
-    /// white space characters. Inputting an empty sequence will return true.
+    /// Checks if the specified character span is trimmed at the start, i.e. it does not start with
+    /// white space characters. Inputting an empty span will return true.
     /// </summary>
-    /// <param name="parameter">The character sequence to be checked.</param>
+    /// <param name="parameter">The character span to be checked.</param>
     /// <returns>
     /// True if the <paramref name="parameter"/> is trimmed at the start, else false.
-    /// An empty sequence will result in true.
+    /// An empty span will result in true.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsTrimmedAtStart(this Span<char> parameter) =>
