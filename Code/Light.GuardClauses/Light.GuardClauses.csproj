@@ -3,11 +3,12 @@
     <Import Project="..\Version.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0</TargetFrameworks>
         <Description>A lightweight .NET library for expressive Guard Clauses.</Description>
         <Authors>Kenny Pflug</Authors>
         <Company>Kenny Pflug</Company>
         <Nullable>enable</Nullable>
+        <IsAotCompatible Condition="'$(TargetFramework)' == 'net8.0'">true</IsAotCompatible>
         <Copyright>Copyright © Kenny Pflug 2016, 2023</Copyright>
         <LangVersion>11.0</LangVersion>
         <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
