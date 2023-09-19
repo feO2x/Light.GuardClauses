@@ -9,6 +9,7 @@ namespace Light.GuardClauses.Tests.StringAssertions;
 public static class MustBeTrimmedTests
 {
     [Theory]
+    [InlineData("")]
     [InlineData("foo")]
     [InlineData("bar")]
     [InlineData("Another string\twith whitespace")]
