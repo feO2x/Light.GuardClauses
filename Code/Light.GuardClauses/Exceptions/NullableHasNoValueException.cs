@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Light.GuardClauses.Exceptions;
 
 /// <summary>
-/// This exception indicates that a <see cref="Nullable{T}"/> has no value.
+/// This exception indicates that a <see cref="Nullable{T}" /> has no value.
 /// </summary>
 [Serializable]
 public class NullableHasNoValueException : ArgumentException
@@ -16,6 +16,8 @@ public class NullableHasNoValueException : ArgumentException
     /// <param name="message">The message of the exception (optional).</param>
     public NullableHasNoValueException(string? parameterName = null, string? message = null) : base(message, parameterName) { }
 
+#if !NET8_0
     /// <inheritdoc />
     protected NullableHasNoValueException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
 }

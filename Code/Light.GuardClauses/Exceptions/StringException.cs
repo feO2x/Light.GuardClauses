@@ -16,6 +16,8 @@ public class StringException : ArgumentException
     /// <param name="message">The message of the exception (optional).</param>
     public StringException(string? parameterName = null, string? message = null) : base(message, parameterName) { }
 
+#if !NET8_0
     /// <inheritdoc />
     protected StringException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
 }

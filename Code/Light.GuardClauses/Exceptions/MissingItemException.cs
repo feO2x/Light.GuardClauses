@@ -16,6 +16,8 @@ public class MissingItemException : CollectionException
     /// <param name="message">The message of the exception (optional).</param>
     public MissingItemException(string? parameterName = null, string? message = null) : base(parameterName, message) { }
 
+#if !NET8_0
     /// <inheritdoc />
     protected MissingItemException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
 }

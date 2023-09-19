@@ -16,6 +16,8 @@ public class InvalidStateException : Exception
     /// <param name="innerException">The exception that is the cause of this one (optional).</param>
     public InvalidStateException(string? message = null, Exception? innerException = null) : base(message, innerException) { }
 
+#if !NET8_0
     /// <inheritdoc />
     protected InvalidStateException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
 }

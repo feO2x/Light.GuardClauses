@@ -16,6 +16,8 @@ public class StringDoesNotMatchException : StringException
     /// <param name="message">The message of the exception (optional).</param>
     public StringDoesNotMatchException(string? parameterName = null, string? message = null) : base(parameterName, message) { }
 
+#if !NET8_0
     /// <inheritdoc />
     protected StringDoesNotMatchException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
 }
