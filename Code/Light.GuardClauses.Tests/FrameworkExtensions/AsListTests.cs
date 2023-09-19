@@ -44,12 +44,12 @@ public static class AsListTests
     public static void ReturnsNewListIfCastNotPossible()
     {
         // ReSharper disable PossibleMultipleEnumeration
-        var enumerable = Enumerable.Range(1, 5);
+        var enumerable = LazyEnumerable();
 
         var list = enumerable.AsList();
 
         list.Should().NotBeSameAs(enumerable);
-        list.Should().BeOfType<List<int>>();
+        list.Should().BeOfType<List<string>>();
         list.Should().Equal(enumerable);
         // ReSharper restore PossibleMultipleEnumeration
     }
