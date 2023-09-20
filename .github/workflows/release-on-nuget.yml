@@ -1,0 +1,27 @@
+name: Release to NuGet
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 7.0.x
+      - name: Prepare SNK file
+        env:
+          LIGHT_GUARDCLAUSES_SNK: ${{ secrets.LIGHT_GUARDCLAUSES_SNK }}
+        run: |
+          echo $LIGHT_GUARDCLAUSES_SNK | base64 --decode > ./Code/Light.GuardClauses/Light.GuardClauses.snk
+      - name: Create NuGet packages
+        run: dotnet pack ./Code/Light.GuardClauses/Light.GuardClauses.csproj -c Release /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=Light.GuardClauses.snk /p:ContinuousIntegrationBuild=true
+      - name: Delete SNK file
+        run: rm ./Code/Light.GuardClauses/Light.GuardClauses.snk
+      
