@@ -1,11 +1,11 @@
 /* ------------------------------
-   Light.GuardClauses 10.1.0
+   Light.GuardClauses 10.2.0
    ------------------------------
 
 License information for Light.GuardClauses
 
 The MIT License (MIT)
-Copyright (c) 2016, 2021 Kenny Pflug mailto:kenny.pflug@live.de
+Copyright (c) 2016, 2023 Kenny Pflug mailto:kenny.pflug@live.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -493,7 +493,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("equalityComparer:null => halt")]
         public static T MustBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, Func<T, T, IEqualityComparer<T>, Exception> exceptionFactory)
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (equalityComparer is null || !equalityComparer.Equals(parameter, other))
                 Throw.CustomException(exceptionFactory, parameter, other, equalityComparer!);
             return parameter;
@@ -561,7 +561,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("equalityComparer:null => halt")]
         public static T MustNotBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, Func<T, T, IEqualityComparer<T>, Exception> exceptionFactory)
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (equalityComparer is null || equalityComparer.Equals(parameter, other))
                 Throw.CustomException(exceptionFactory, parameter, other, equalityComparer!);
             return parameter;
@@ -574,7 +574,7 @@ namespace Light.GuardClauses
         /// <param name = "other">The second value to be compared.</param>
         /// <param name = "tolerance">The tolerance indicating how much the two values may differ from each other.</param>
         /// <returns>
-        /// True if <paramref name = "value"/> <paramref name = "other"/> are equal or if their absolute difference
+        /// True if <paramref name = "value"/> and <paramref name = "other"/> are equal or if their absolute difference
         /// is smaller than the given <paramref name = "tolerance"/>, otherwise false.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -585,7 +585,7 @@ namespace Light.GuardClauses
         /// <param name = "value">The first value to be compared.</param>
         /// <param name = "other">The second value to be compared.</param>
         /// <returns>
-        /// True if <paramref name = "value"/> <paramref name = "other"/> are equal or if their absolute difference
+        /// True if <paramref name = "value"/> and <paramref name = "other"/> are equal or if their absolute difference
         /// is smaller than 0.0001, otherwise false.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -597,7 +597,7 @@ namespace Light.GuardClauses
         /// <param name = "other">The second value to compare.</param>
         /// <param name = "tolerance">The tolerance indicating how much the two values may differ from each other.</param>
         /// <returns>
-        /// True if <paramref name = "value"/> <paramref name = "other"/> are equal or if their absolute difference
+        /// True if <paramref name = "value"/> and <paramref name = "other"/> are equal or if their absolute difference
         /// is smaller than the given <paramref name = "tolerance"/>, otherwise false.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -608,11 +608,103 @@ namespace Light.GuardClauses
         /// <param name = "value">The first value to be compared.</param>
         /// <param name = "other">The second value to be compared.</param>
         /// <returns>
-        /// True if <paramref name = "value"/> <paramref name = "other"/> are equal or if their absolute difference
+        /// True if <paramref name = "value"/> and <paramref name = "other"/> are equal or if their absolute difference
         /// is smaller than 0.0001f, otherwise false.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsApproximately(this float value, float other) => Math.Abs(value - other) < 0.0001f;
+        /// <summary>
+        /// Checks if the specified value is greater than or approximately the same as the other value, using the given tolerance.
+        /// </summary>
+        /// <param name = "value">The first value to compare.</param>
+        /// <param name = "other">The second value to compare.</param>
+        /// <param name = "tolerance">The tolerance indicating how much the two values may differ from each other.</param>
+        /// <returns>
+        /// True if <paramref name = "value"/> is greater than <paramref name = "other"/> or if their absolute difference
+        /// is smaller than the given <paramref name = "tolerance"/>, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsGreaterThanOrApproximately(this double value, double other, double tolerance) => value > other || value.IsApproximately(other, tolerance);
+        /// <summary>
+        /// Checks if the specified value is greater than or approximately the same as the other value, using the default tolerance of 0.0001.
+        /// </summary>
+        /// <param name = "value">The first value to compare.</param>
+        /// <param name = "other">The second value to compare.</param>
+        /// <returns>
+        /// True if <paramref name = "value"/> is greater than <paramref name = "other"/> or if their absolute difference
+        /// is smaller than 0.0001, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsGreaterThanOrApproximately(this double value, double other) => value > other || value.IsApproximately(other);
+        /// <summary>
+        /// Checks if the specified value is greater than or approximately the same as the other value, using the given tolerance.
+        /// </summary>
+        /// <param name = "value">The first value to compare.</param>
+        /// <param name = "other">The second value to compare.</param>
+        /// <param name = "tolerance">The tolerance indicating how much the two values may differ from each other.</param>
+        /// <returns>
+        /// True if <paramref name = "value"/> is greater than <paramref name = "other"/> or if their absolute difference
+        /// is smaller than the given <paramref name = "tolerance"/>, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsGreaterThanOrApproximately(this float value, float other, float tolerance) => value > other || value.IsApproximately(other, tolerance);
+        /// <summary>
+        /// Checks if the specified value is greater than or approximately the same as the other value, using the default tolerance of 0.0001f.
+        /// </summary>
+        /// <param name = "value">The first value to compare.</param>
+        /// <param name = "other">The second value to compare.</param>
+        /// <returns>
+        /// True if <paramref name = "value"/> is greater than <paramref name = "other"/> or if their absolute difference
+        /// is smaller than 0.0001, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsGreaterThanOrApproximately(this float value, float other) => value > other || value.IsApproximately(other);
+        /// <summary>
+        /// Checks if the specified value is less than or approximately the same as the other value, using the given tolerance.
+        /// </summary>
+        /// <param name = "value">The first value to compare.</param>
+        /// <param name = "other">The second value to compare.</param>
+        /// <param name = "tolerance">The tolerance indicating how much the two values may differ from each other.</param>
+        /// <returns>
+        /// True if <paramref name = "value"/> is less than <paramref name = "other"/> or if their absolute difference
+        /// is smaller than the given <paramref name = "tolerance"/>, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsLessThanOrApproximately(this double value, double other, double tolerance) => value < other || value.IsApproximately(other, tolerance);
+        /// <summary>
+        /// Checks if the specified value is less than or approximately the same as the other value, using the default tolerance of 0.0001.
+        /// </summary>
+        /// <param name = "value">The first value to compare.</param>
+        /// <param name = "other">The second value to compare.</param>
+        /// <returns>
+        /// True if <paramref name = "value"/> is less than <paramref name = "other"/> or if their absolute difference
+        /// is smaller than 0.0001, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsLessThanOrApproximately(this double value, double other) => value < other || value.IsApproximately(other);
+        /// <summary>
+        /// Checks if the specified value is less than or approximately the same as the other value, using the given tolerance.
+        /// </summary>
+        /// <param name = "value">The first value to compare.</param>
+        /// <param name = "other">The second value to compare.</param>
+        /// <param name = "tolerance">The tolerance indicating how much the two values may differ from each other.</param>
+        /// <returns>
+        /// True if <paramref name = "value"/> is less than <paramref name = "other"/> or if their absolute difference
+        /// is smaller than the given <paramref name = "tolerance"/>, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsLessThanOrApproximately(this float value, float other, float tolerance) => value < other || value.IsApproximately(other, tolerance);
+        /// <summary>
+        /// Checks if the specified value is less than or approximately the same as the other value, using the default tolerance of 0.0001f.
+        /// </summary>
+        /// <param name = "value">The first value to compare.</param>
+        /// <param name = "other">The second value to compare.</param>
+        /// <returns>
+        /// True if <paramref name = "value"/> is less than <paramref name = "other"/> or if their absolute difference
+        /// is smaller than 0.0001f, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsLessThanOrApproximately(this float value, float other) => value < other || value.IsApproximately(other);
         /*
      * -------------------------------------
      * Must Not Be Less Than
@@ -1815,7 +1907,11 @@ namespace Light.GuardClauses
         {
             if (string.IsNullOrEmpty(parameter))
                 Throw.CustomException(exceptionFactory, parameter);
-            return parameter!;
+#if NETSTANDARD2_0
+        return parameter!;
+#else
+            return parameter;
+#endif
         }
 
         /// <summary>
@@ -2055,7 +2151,7 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string MustMatch([ValidatedNotNull] this string? parameter, Regex regex, Func<string?, Regex, Exception> exceptionFactory)
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (parameter is null || regex is null || !regex.IsMatch(parameter))
                 Throw.CustomException(exceptionFactory, parameter, regex!);
             return parameter;
@@ -2115,7 +2211,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustContain([ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (parameter is null || value is null || !parameter.Contains(value))
                 Throw.CustomException(exceptionFactory, parameter, value!);
             return parameter;
@@ -2158,7 +2254,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) < 0)
                 Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
             return parameter;
@@ -2197,7 +2293,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (parameter is null || value is null || parameter.Contains(value))
                 Throw.CustomException(exceptionFactory, parameter, value!);
             return parameter;
@@ -2240,7 +2336,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) >= 0)
                 Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
             return parameter;
@@ -2313,7 +2409,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
         public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (parameter is null || value is null || !value.Contains(parameter))
                 Throw.CustomException(exceptionFactory, parameter, value!);
             return parameter;
@@ -2356,7 +2452,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
         public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || value.IndexOf(parameter, comparisonType) == -1)
                 Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
             return parameter;
@@ -2396,7 +2492,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
         public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (parameter is null || value is null || value.Contains(parameter))
                 Throw.CustomException(exceptionFactory, parameter, value!);
             return parameter;
@@ -2439,7 +2535,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
         public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || value.IndexOf(parameter, comparisonType) != -1)
                 Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
             return parameter;
@@ -2527,7 +2623,7 @@ namespace Light.GuardClauses
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; emailAddressPattern:null => halt")]
         public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, Regex emailAddressPattern, Func<string?, Regex, Exception> exceptionFactory)
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (emailAddressPattern is null || !parameter.IsEmailAddress(emailAddressPattern))
                 Throw.CustomException(exceptionFactory, parameter, emailAddressPattern!);
             return parameter;
@@ -2774,6 +2870,195 @@ namespace Light.GuardClauses
             if (!parameter.IsNewLine())
                 Throw.CustomException(exceptionFactory, parameter);
             return parameter;
+        }
+
+        /// <summary>
+        /// Checks if the specified string is trimmed, i.e. it does not start or end with
+        /// white space characters. Inputting an empty string will return true. When null is passed,
+        /// you can control the return value with <paramref name = "regardNullAsTrimmed"/> which will
+        /// return true by default.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "regardNullAsTrimmed">
+        /// The value indicating whether true or false should be returned from this method when the
+        /// <paramref name = "parameter"/> is null. The default value is true.
+        /// </param>
+        /// <returns>
+        /// True if the <paramref name = "parameter"/> is trimmed, else false. An empty string will result in true.
+        /// You can control the return value with <paramref name = "regardNullAsTrimmed"/> when the
+        /// <paramref name = "parameter"/> is null.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsTrimmed(this string? parameter, bool regardNullAsTrimmed = true) => parameter is null ? regardNullAsTrimmed : parameter.AsSpan().IsTrimmed();
+        /// <summary>
+        /// Checks if the specified character span is trimmed, i.e. it does not start or end with
+        /// white space characters. Inputting an empty span will return true.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <returns>True if the <paramref name = "parameter"/> is trimmed, else false. An empty span will result in true.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsTrimmed(this ReadOnlySpan<char> parameter) => parameter.Length == 0 || !parameter[0].IsWhiteSpace() && !parameter[parameter.Length - 1].IsWhiteSpace();
+        /// <summary>
+        /// Ensures that the string is not null and trimmed, or otherwise throws a <see cref = "StringException"/>.
+        /// Empty strings are regarded as trimmed.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "StringException">
+        /// Thrown when <paramref name = "parameter"/> is not trimmed, i.e. they start or end with white space characters.
+        /// Empty strings are regarded as trimmed.
+        /// </exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeTrimmed([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.MustNotBeNull(parameterName, message).IsTrimmed())
+                Throw.NotTrimmed(parameter, parameterName, message);
+            return parameter!;
+        }
+
+        /// <summary>
+        /// Ensures that the string is not null and trimmed, or otherwise throws your custom exception.
+        /// Empty strings are regarded as trimmed.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or not trimmed. Empty strings are regarded as trimmed.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeTrimmed([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        {
+            if (!parameter.IsTrimmed(regardNullAsTrimmed: false))
+                Throw.CustomException(exceptionFactory, parameter);
+            return parameter!;
+        }
+
+        /// <summary>
+        /// Checks if the specified string is trimmed at the start, i.e. it does not start with
+        /// white space characters. Inputting an empty string will return true.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "regardNullAsTrimmed">
+        /// The value indicating whether true or false should be returned from this method when the
+        /// <paramref name = "parameter"/> is null. The default value is true.
+        /// </param>
+        /// <returns>
+        /// True if the <paramref name = "parameter"/> is trimmed at the start, else false.
+        /// An empty string will result in true.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsTrimmedAtStart(this string? parameter, bool regardNullAsTrimmed = true) => parameter is null ? regardNullAsTrimmed : parameter.AsSpan().IsTrimmedAtStart();
+        /// <summary>
+        /// Checks if the specified character span is trimmed at the start, i.e. it does not start with
+        /// white space characters. Inputting an empty span will return true.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <returns>
+        /// True if the <paramref name = "parameter"/> is trimmed at the start, else false.
+        /// An empty span will result in true.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsTrimmedAtStart(this ReadOnlySpan<char> parameter) => parameter.Length == 0 || !parameter[0].IsWhiteSpace();
+        /// <summary>
+        /// Ensures that the string is not null and trimmed at the start, or otherwise throws a <see cref = "StringException"/>.
+        /// Empty strings are regarded as trimmed.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "StringException">
+        /// Thrown when <paramref name = "parameter"/> is not trimmed at the start, i.e. they start with white space characters.
+        /// Empty strings are regarded as trimmed.
+        /// </exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeTrimmedAtStart([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.MustNotBeNull(parameterName, message).IsTrimmedAtStart())
+                Throw.NotTrimmedAtStart(parameter, parameterName, message);
+            return parameter!;
+        }
+
+        /// <summary>
+        /// Ensures that the string is not null and trimmed at the start, or otherwise throws your custom exception.
+        /// Empty strings are regarded as trimmed.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or not trimmed at the start. Empty strings are regarded as trimmed.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeTrimmedAtStart([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        {
+            if (!parameter.IsTrimmedAtStart(regardNullAsTrimmed: false))
+                Throw.CustomException(exceptionFactory, parameter);
+            return parameter!;
+        }
+
+        /// <summary>
+        /// Checks if the specified string is trimmed at the end, i.e. it does not end with
+        /// white space characters. Inputting an empty string will return true.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "regardNullAsTrimmed">
+        /// The value indicating whether true or false should be returned from this method when the
+        /// <paramref name = "parameter"/> is null. The default value is true.
+        /// </param>
+        /// <returns>
+        /// True if the <paramref name = "parameter"/> is trimmed at the start, else false.
+        /// An empty string will result in true.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsTrimmedAtEnd(this string? parameter, bool regardNullAsTrimmed = true) => parameter is null ? regardNullAsTrimmed : parameter.AsSpan().IsTrimmedAtEnd();
+        /// <summary>
+        /// Checks if the specified character span is trimmed at the end, i.e. it does not end with
+        /// white space characters. Inputting an empty span will return true.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <returns>
+        /// True if the <paramref name = "parameter"/> is trimmed at the end, else false.
+        /// An empty span will result in true.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsTrimmedAtEnd(this ReadOnlySpan<char> parameter) => parameter.Length == 0 || !parameter[parameter.Length - 1].IsWhiteSpace();
+        /// <summary>
+        /// Ensures that the string is not null and trimmed at the end, or otherwise throws a <see cref = "StringException"/>.
+        /// Empty strings are regarded as trimmed.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "StringException">
+        /// Thrown when <paramref name = "parameter"/> is not trimmed at the end, i.e. they end with white space characters.
+        /// Empty strings are regarded as trimmed.
+        /// </exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeTrimmedAtEnd([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.MustNotBeNull(parameterName, message).IsTrimmedAtEnd())
+                Throw.NotTrimmedAtEnd(parameter, parameterName, message);
+            return parameter!;
+        }
+
+        /// <summary>
+        /// Ensures that the string is not null and trimmed at the end, or otherwise throws your custom exception.
+        /// Empty strings are regarded as trimmed.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or not trimmed at the end. Empty strings are regarded as trimmed.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeTrimmedAtEnd([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        {
+            if (!parameter.IsTrimmedAtEnd(regardNullAsTrimmed: false))
+                Throw.CustomException(exceptionFactory, parameter);
+            return parameter!;
         }
 
         /// <summary>
@@ -4436,6 +4721,24 @@ namespace Light.GuardClauses.Exceptions
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void NotNewLine(string? parameter, string? parameterName, string? message) => throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must be either \"\\n\" or \"\\r\\n\", but it actually is {parameter.ToStringOrNull()}.");
+        /// <summary>
+        /// Throws the default <see cref = "StringException"/> indicating that a string is not trimmed.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void NotTrimmed(string? parameter, string? parameterName, string? message) => throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must be trimmed, but it actually is {parameter.ToStringOrNull()}.");
+        /// <summary>
+        /// Throws the default <see cref = "StringException"/> indicating that a string is not trimmed at the start.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void NotTrimmedAtStart(string? parameter, string? parameterName, string? message) => throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must be trimmed at the start, but it actually is {parameter.ToStringOrNull()}.");
+        /// <summary>
+        /// Throws the default <see cref = "StringException"/> indicating that a string is not trimmed at the end.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void NotTrimmedAtEnd(string? parameter, string? parameterName, string? message) => throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must be trimmed at the end, but it actually is {parameter.ToStringOrNull()}.");
         /// <summary>
         /// Throws the default <see cref = "ValuesNotEqualException"/> indicating that two values are not equal, using the optional parameter name and message.
         /// </summary>

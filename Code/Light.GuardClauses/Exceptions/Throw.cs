@@ -324,6 +324,30 @@ public static class Throw
     [DoesNotReturn]
     public static void NotNewLine(string? parameter, string? parameterName, string? message) =>
         throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must be either \"\\n\" or \"\\r\\n\", but it actually is {parameter.ToStringOrNull()}.");
+    
+    /// <summary>
+    /// Throws the default <see cref="StringException"/> indicating that a string is not trimmed.
+    /// </summary>
+    [ContractAnnotation("=> halt")]
+    [DoesNotReturn]
+    public static void NotTrimmed(string? parameter, string? parameterName, string? message) =>
+        throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must be trimmed, but it actually is {parameter.ToStringOrNull()}.");
+    
+    /// <summary>
+    /// Throws the default <see cref="StringException"/> indicating that a string is not trimmed at the start.
+    /// </summary>
+    [ContractAnnotation("=> halt")]
+    [DoesNotReturn]
+    public static void NotTrimmedAtStart(string? parameter, string? parameterName, string? message) =>
+        throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must be trimmed at the start, but it actually is {parameter.ToStringOrNull()}.");
+    
+    /// <summary>
+    /// Throws the default <see cref="StringException"/> indicating that a string is not trimmed at the end.
+    /// </summary>
+    [ContractAnnotation("=> halt")]
+    [DoesNotReturn]
+    public static void NotTrimmedAtEnd(string? parameter, string? parameterName, string? message) =>
+        throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must be trimmed at the end, but it actually is {parameter.ToStringOrNull()}.");
 
     /// <summary>
     /// Throws the default <see cref="ValuesNotEqualException" /> indicating that two values are not equal, using the optional parameter name and message.

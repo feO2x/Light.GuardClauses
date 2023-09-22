@@ -457,7 +457,7 @@ public static partial class Check
     [ContractAnnotation("equalityComparer:null => halt")]
     public static T MustBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, Func<T, T, IEqualityComparer<T>, Exception> exceptionFactory)
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (equalityComparer is null || !equalityComparer.Equals(parameter, other))
             Throw.CustomException(exceptionFactory, parameter, other, equalityComparer!);
         return parameter;
@@ -525,7 +525,7 @@ public static partial class Check
     [ContractAnnotation("equalityComparer:null => halt")]
     public static T MustNotBe<T>(this T parameter, T other, IEqualityComparer<T> equalityComparer, Func<T, T, IEqualityComparer<T>, Exception> exceptionFactory)
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (equalityComparer is null || equalityComparer.Equals(parameter, other))
             Throw.CustomException(exceptionFactory, parameter, other, equalityComparer!);
         return parameter;
@@ -538,7 +538,7 @@ public static partial class Check
     /// <param name="other">The second value to be compared.</param>
     /// <param name="tolerance">The tolerance indicating how much the two values may differ from each other.</param>
     /// <returns>
-    /// True if <paramref name="value" /> <paramref name="other" /> are equal or if their absolute difference
+    /// True if <paramref name="value" /> and <paramref name="other" /> are equal or if their absolute difference
     /// is smaller than the given <paramref name="tolerance" />, otherwise false.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -551,7 +551,7 @@ public static partial class Check
     /// <param name="value">The first value to be compared.</param>
     /// <param name="other">The second value to be compared.</param>
     /// <returns>
-    /// True if <paramref name="value" /> <paramref name="other" /> are equal or if their absolute difference
+    /// True if <paramref name="value" /> and <paramref name="other" /> are equal or if their absolute difference
     /// is smaller than 0.0001, otherwise false.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -565,7 +565,7 @@ public static partial class Check
     /// <param name="other">The second value to compare.</param>
     /// <param name="tolerance">The tolerance indicating how much the two values may differ from each other.</param>
     /// <returns>
-    /// True if <paramref name="value" /> <paramref name="other" /> are equal or if their absolute difference
+    /// True if <paramref name="value" /> and <paramref name="other" /> are equal or if their absolute difference
     /// is smaller than the given <paramref name="tolerance" />, otherwise false.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -578,10 +578,118 @@ public static partial class Check
     /// <param name="value">The first value to be compared.</param>
     /// <param name="other">The second value to be compared.</param>
     /// <returns>
-    /// True if <paramref name="value" /> <paramref name="other" /> are equal or if their absolute difference
+    /// True if <paramref name="value" /> and <paramref name="other" /> are equal or if their absolute difference
     /// is smaller than 0.0001f, otherwise false.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsApproximately(this float value, float other) =>
         Math.Abs(value - other) < 0.0001f;
+
+    /// <summary>
+    /// Checks if the specified value is greater than or approximately the same as the other value, using the given tolerance.
+    /// </summary>
+    /// <param name="value">The first value to compare.</param>
+    /// <param name="other">The second value to compare.</param>
+    /// <param name="tolerance">The tolerance indicating how much the two values may differ from each other.</param>
+    /// <returns>
+    /// True if <paramref name="value" /> is greater than <paramref name="other" /> or if their absolute difference
+    /// is smaller than the given <paramref name="tolerance" />, otherwise false.
+    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsGreaterThanOrApproximately(this double value, double other, double tolerance) =>
+        value > other || value.IsApproximately(other, tolerance);
+
+    /// <summary>
+    /// Checks if the specified value is greater than or approximately the same as the other value, using the default tolerance of 0.0001.
+    /// </summary>
+    /// <param name="value">The first value to compare.</param>
+    /// <param name="other">The second value to compare.</param>
+    /// <returns>
+    /// True if <paramref name="value" /> is greater than <paramref name="other" /> or if their absolute difference
+    /// is smaller than 0.0001, otherwise false.
+    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsGreaterThanOrApproximately(this double value, double other) =>
+        value > other || value.IsApproximately(other);
+    
+    /// <summary>
+    /// Checks if the specified value is greater than or approximately the same as the other value, using the given tolerance.
+    /// </summary>
+    /// <param name="value">The first value to compare.</param>
+    /// <param name="other">The second value to compare.</param>
+    /// <param name="tolerance">The tolerance indicating how much the two values may differ from each other.</param>
+    /// <returns>
+    /// True if <paramref name="value" /> is greater than <paramref name="other" /> or if their absolute difference
+    /// is smaller than the given <paramref name="tolerance" />, otherwise false.
+    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsGreaterThanOrApproximately(this float value, float other, float tolerance) =>
+        value > other || value.IsApproximately(other, tolerance);
+
+    /// <summary>
+    /// Checks if the specified value is greater than or approximately the same as the other value, using the default tolerance of 0.0001f.
+    /// </summary>
+    /// <param name="value">The first value to compare.</param>
+    /// <param name="other">The second value to compare.</param>
+    /// <returns>
+    /// True if <paramref name="value" /> is greater than <paramref name="other" /> or if their absolute difference
+    /// is smaller than 0.0001, otherwise false.
+    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsGreaterThanOrApproximately(this float value, float other) =>
+        value > other || value.IsApproximately(other);
+    
+    /// <summary>
+    /// Checks if the specified value is less than or approximately the same as the other value, using the given tolerance.
+    /// </summary>
+    /// <param name="value">The first value to compare.</param>
+    /// <param name="other">The second value to compare.</param>
+    /// <param name="tolerance">The tolerance indicating how much the two values may differ from each other.</param>
+    /// <returns>
+    /// True if <paramref name="value" /> is less than <paramref name="other" /> or if their absolute difference
+    /// is smaller than the given <paramref name="tolerance" />, otherwise false.
+    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsLessThanOrApproximately(this double value, double other, double tolerance) =>
+        value < other || value.IsApproximately(other, tolerance);
+    
+    /// <summary>
+    /// Checks if the specified value is less than or approximately the same as the other value, using the default tolerance of 0.0001.
+    /// </summary>
+    /// <param name="value">The first value to compare.</param>
+    /// <param name="other">The second value to compare.</param>
+    /// <returns>
+    /// True if <paramref name="value" /> is less than <paramref name="other" /> or if their absolute difference
+    /// is smaller than 0.0001, otherwise false.
+    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsLessThanOrApproximately(this double value, double other) =>
+        value < other || value.IsApproximately(other);
+    
+    /// <summary>
+    /// Checks if the specified value is less than or approximately the same as the other value, using the given tolerance.
+    /// </summary>
+    /// <param name="value">The first value to compare.</param>
+    /// <param name="other">The second value to compare.</param>
+    /// <param name="tolerance">The tolerance indicating how much the two values may differ from each other.</param>
+    /// <returns>
+    /// True if <paramref name="value" /> is less than <paramref name="other" /> or if their absolute difference
+    /// is smaller than the given <paramref name="tolerance" />, otherwise false.
+    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsLessThanOrApproximately(this float value, float other, float tolerance) =>
+        value < other || value.IsApproximately(other, tolerance);
+    
+    /// <summary>
+    /// Checks if the specified value is less than or approximately the same as the other value, using the default tolerance of 0.0001f.
+    /// </summary>
+    /// <param name="value">The first value to compare.</param>
+    /// <param name="other">The second value to compare.</param>
+    /// <returns>
+    /// True if <paramref name="value" /> is less than <paramref name="other" /> or if their absolute difference
+    /// is smaller than 0.0001f, otherwise false.
+    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsLessThanOrApproximately(this float value, float other) =>
+        value < other || value.IsApproximately(other);
 }
