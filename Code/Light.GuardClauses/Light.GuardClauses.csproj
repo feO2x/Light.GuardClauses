@@ -24,10 +24,13 @@
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <PackageTags>Assertions;Preconditions;GuardClauses;DesignByContract;DbC</PackageTags>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageReleaseNotes>
-Light.GuardClauses 10.1.0
+Light.GuardClauses 10.2.0
 --------------------------------
-- added support for JetBrains' NoEnumerationAttribute
+
+- Added IsLessThanOrApproximately and IsGreaterThanOrApproximately assertions for doubles and floats
+- Added "IsTrimmedXXX" and "MustBeTrimmedXXX" assertions for strings
         </PackageReleaseNotes>
     </PropertyGroup>
 
@@ -45,6 +48,7 @@ Light.GuardClauses 10.1.0
 
     <ItemGroup>
         <None Include="light-logo.png" Pack="true" PackagePath="\" />
+        <None Include="../../README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
 </Project>
