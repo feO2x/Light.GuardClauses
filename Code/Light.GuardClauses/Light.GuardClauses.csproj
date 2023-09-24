@@ -10,7 +10,7 @@
         <Nullable>enable</Nullable>
         <IsAotCompatible Condition="'$(TargetFramework)' == 'net8.0'">true</IsAotCompatible>
         <Copyright>Copyright © Kenny Pflug 2016, 2023</Copyright>
-        <LangVersion>11.0</LangVersion>
+        <LangVersion>12</LangVersion>
         <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
         <IsPackable>true</IsPackable>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -26,16 +26,17 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageReleaseNotes>
-Light.GuardClauses 10.2.0
+Light.GuardClauses 11.0.0-preview1
 --------------------------------
 
-- Added IsLessThanOrApproximately and IsGreaterThanOrApproximately assertions for doubles and floats
-- Added "IsTrimmedXXX" and "MustBeTrimmedXXX" assertions for strings
+- Light.GuardClauses now targets .NET 8 and is AOT-compatible
+- breaking: EnumInfo&lt;T&gt; no longer has the UnderlyingType property
+- In AOT scenarios, avoid the Type-related assertions, they are marked with the DynamicallyAccessedMembersAttribute
         </PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" Condition="'$(TargetFramework)' != 'net8.0'" />
         <PackageReference Include="System.Memory" Version="4.5.5" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
         <PackageReference Include="Nullable" Version="1.3.1" PrivateAssets="all" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
