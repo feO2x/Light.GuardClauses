@@ -163,13 +163,26 @@ public static class EnumerableExtensions
 
         return DetermineCountViaEnumerating(enumerable, parameterName, message);
     }
+    
+    /// <summary>
+    /// Gets the count of the specified enumerable.
+    /// </summary>
+    public static int GetCount<T>(this IEnumerable<T> enumerable) =>
+        enumerable switch
+        {
+            ICollection<T> collectionOfT => collectionOfT.Count,
+            IReadOnlyCollection<T> readOnlyCollectionOfT => readOnlyCollectionOfT.Count,
+            string @string => @string.Length,
+            ICollection collection => collection.Count,
+            _ => DetermineCountViaEnumerating(enumerable)
+        };
 
     private static int DetermineCountViaEnumerating(IEnumerable? enumerable)
     {
         var count = 0;
         var enumerator = enumerable.MustNotBeNull(nameof(enumerable)).GetEnumerator();
         while (enumerator.MoveNext())
-            ++count;
+            count++;
         return count;
     }
 
@@ -178,7 +191,7 @@ public static class EnumerableExtensions
         var count = 0;
         var enumerator = enumerable.MustNotBeNull(parameterName, message).GetEnumerator();
         while (enumerator.MoveNext())
-            ++count;
+            count++;
         return count;
     }
 
