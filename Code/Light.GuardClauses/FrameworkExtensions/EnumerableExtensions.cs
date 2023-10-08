@@ -167,15 +167,59 @@ public static class EnumerableExtensions
     /// <summary>
     /// Gets the count of the specified enumerable.
     /// </summary>
-    public static int GetCount<T>(this IEnumerable<T> enumerable) =>
-        enumerable switch
+    /// <param name="enumerable">The enumerable whose count should be determined.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("enumerable:null => halt")]
+    public static int GetCount<T>(this IEnumerable<T> enumerable)
+    {
+        if (enumerable is ICollection collection)
+            return collection.Count;
+        if (enumerable is string @string)
+            return @string.Length;
+        if (TryGetCollectionOfTCount(enumerable, out var count))
+            return count;
+
+        return DetermineCountViaEnumerating(enumerable);
+    }
+
+    /// <summary>
+    /// Gets the count of the specified enumerable.
+    /// </summary>
+    /// <param name="enumerable">The enumerable whose count should be determined.</param>
+    /// <param name="parameterName">The name of the parameter that is passed to the <see cref="ArgumentNullException"/> (optional).</param>
+    /// <param name="message">The message that is passed to the <see cref="ArgumentNullException"/> (optional).</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("enumerable:null => halt")]
+    public static int GetCount<T>(this IEnumerable<T> enumerable, string? parameterName, string? message = null)
+    {
+        if (enumerable is ICollection collection)
+            return collection.Count;
+        if (enumerable is string @string)
+            return @string.Length;
+        if (TryGetCollectionOfTCount(enumerable, out var count))
+            return count;
+
+        return DetermineCountViaEnumerating(enumerable, parameterName, message);
+    }
+
+    private static bool TryGetCollectionOfTCount<T>([NoEnumeration] this IEnumerable<T> enumerable, out int count)
+    {
+        if (enumerable is ICollection<T> collectionOfT)
         {
-            ICollection<T> collectionOfT => collectionOfT.Count,
-            IReadOnlyCollection<T> readOnlyCollectionOfT => readOnlyCollectionOfT.Count,
-            string @string => @string.Length,
-            ICollection collection => collection.Count,
-            _ => DetermineCountViaEnumerating(enumerable)
-        };
+            count = collectionOfT.Count;
+            return true;
+        }
+        if (enumerable is IReadOnlyCollection<T> readOnlyCollection)
+        {
+            count = readOnlyCollection.Count;
+            return true;
+        }
+
+        count = 0;
+        return false;
+    }
 
     private static int DetermineCountViaEnumerating(IEnumerable? enumerable)
     {
