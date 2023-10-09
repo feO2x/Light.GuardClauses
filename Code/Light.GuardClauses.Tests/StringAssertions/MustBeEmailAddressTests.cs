@@ -112,6 +112,6 @@ public static class MustBeEmailAddressTests
         var act = () => email.MustBeEmailAddress();
 
         act.Should().Throw<InvalidEmailAddressException>()
-           .And.ParamName.Should().Be(nameof(email));
+           .WithParameterName(nameof(email));
     }
 }

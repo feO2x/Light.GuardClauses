@@ -59,6 +59,6 @@ public static class MustNotBeLessThanOrEqualToTests
         Action act = () => nine.MustNotBeLessThanOrEqualTo(12);
 
         act.Should().Throw<ArgumentOutOfRangeException>()
-           .And.ParamName.Should().Be(nameof(nine));
+           .WithParameterName(nameof(nine));
     }
 }

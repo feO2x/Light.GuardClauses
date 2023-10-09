@@ -69,6 +69,6 @@ public static class MustHaveMaximumCountTests
         var act = () => myCollection.MustHaveMaximumCount(2);
 
         act.Should().Throw<InvalidCollectionCountException>()
-           .And.ParamName.Should().Be(nameof(myCollection));
+           .WithParameterName(nameof(myCollection));
     }
 }

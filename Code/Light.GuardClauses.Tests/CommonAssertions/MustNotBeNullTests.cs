@@ -41,6 +41,6 @@ public static class MustNotBeNullTests
         Action act = () => someParameter.MustNotBeNull();
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(someParameter));
+           .WithParameterName(nameof(someParameter));
     }
 }

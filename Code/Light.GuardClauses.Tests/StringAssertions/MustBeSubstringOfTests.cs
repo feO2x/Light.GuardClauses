@@ -141,6 +141,6 @@ public static class MustBeSubstringOfTests
         var act = () => foo.MustBeSubstringOf("Bar");
 
         act.Should().Throw<SubstringException>()
-           .And.ParamName.Should().Be(nameof(foo));
+           .WithParameterName(nameof(foo));
     }
 }

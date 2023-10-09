@@ -90,6 +90,6 @@ public static class MustHaveOneSchemeOfTests
         var act = () => myUrl.MustHaveOneSchemeOf(new[] { "ftp", "ftps" });
 
         act.Should().Throw<InvalidUriSchemeException>()
-           .And.ParamName.Should().Be(nameof(myUrl));
+           .WithParameterName(nameof(myUrl));
     }
 }

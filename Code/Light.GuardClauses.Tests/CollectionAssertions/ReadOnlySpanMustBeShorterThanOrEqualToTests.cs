@@ -86,6 +86,6 @@ public static class ReadOnlySpanMustBeShorterThanOrEqualToTests
         };
 
         act.Should().Throw<InvalidCollectionCountException>()
-           .And.ParamName.Should().Be("span");
+           .WithParameterName("span");
     }
 }

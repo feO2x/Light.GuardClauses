@@ -1,5 +1,4 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Light.GuardClauses.Exceptions;
 using Xunit;
 

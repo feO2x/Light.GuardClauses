@@ -54,6 +54,6 @@ public static class MustHaveLengthTests
         var act = () => foo.MustHaveLength(4);
 
         act.Should().Throw<StringLengthException>()
-           .And.ParamName.Should().Be(nameof(foo));
+           .WithParameterName(nameof(foo));
     }
 }

@@ -37,7 +37,7 @@ public static class ExtractPropertyTests
         Action act = () => ((Expression<Func<object, object>>) null).ExtractProperty();
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be("expression");
+           .WithParameterName("expression");
     }
 }
 

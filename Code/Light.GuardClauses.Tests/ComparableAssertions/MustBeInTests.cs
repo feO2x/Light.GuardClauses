@@ -79,6 +79,6 @@ public static class MustBeInTests
         Action act = () => twenty.MustBeIn(Range.FromInclusive(10).ToInclusive(15));
 
         act.Should().Throw<ArgumentOutOfRangeException>()
-           .And.ParamName.Should().Be(nameof(twenty));
+           .WithParameterName(nameof(twenty));
     }
 }

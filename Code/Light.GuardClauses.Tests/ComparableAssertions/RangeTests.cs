@@ -1,5 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using FluentAssertions;
+using Light.GuardClauses.FrameworkExtensions;
 using Xunit;
 
 namespace Light.GuardClauses.Tests.ComparableAssertions;
@@ -49,4 +54,114 @@ public static class RangeTests
         act.Should().Throw<ArgumentOutOfRangeException>().And
            .Message.Should().Contain($"{nameof(to)} must not be less than {from}, but it actually is {to}.");
     }
+
+    [Theory]
+    [MemberData(nameof(Collections))]
+    public static void RangeForCollections(IEnumerable enumerable)
+    {
+        // ReSharper disable PossibleMultipleEnumeration
+        var range = Range.For(enumerable);
+
+        var expectedRange = new Range<int>(0, enumerable.Count(), true, false);
+        range.Should().Be(expectedRange);
+        // ReSharper restore PossibleMultipleEnumeration
+    }
+
+    public static readonly TheoryData<IEnumerable> Collections =
+        new ()
+        {
+            new List<int> { 1, 2, 3, 4 },
+            "This is a long string",
+            new[] { 'a', 'b', 'c', 'd' },
+            new ObservableCollection<long> { 1, -1 },
+            new ArrayList()
+        };
+
+    [Fact]
+    public static void EnumerableNull()
+    {
+        // ReSharper disable once RedundantCast -- I want to specifically target the overload accepting IEnumerable
+        var act = () => Range.For(((IEnumerable) null)!);
+
+        act.Should().Throw<ArgumentNullException>().WithParameterName("enumerable");
+    }
+
+    [Theory]
+    [MemberData(nameof(GenericCollections))]
+    public static void RangeForGenericCollections(IEnumerable<char> enumerable)
+    {
+        // ReSharper disable PossibleMultipleEnumeration
+        var range = Range.For(enumerable);
+
+        var expectedRange = new Range<int>(0, enumerable.Count(), true, false);
+        range.Should().Be(expectedRange);
+        // ReSharper restore PossibleMultipleEnumeration
+    }
+
+    public static readonly TheoryData<IEnumerable<char>> GenericCollections =
+        new ()
+        {
+            Array.Empty<char>(),
+            new List<char> { 'a', 'b', 'c' },
+            "007",
+            new ArraySegment<char>(new[] { 'a' })
+        };
+
+    [Fact]
+    public static void GenericEnumerableNull()
+    {
+        var act = () => Range.For(((IEnumerable<string>) null)!);
+
+        act.Should().Throw<ArgumentNullException>().WithParameterName("enumerable");
+    }
+
+    [Theory]
+    [MemberData(nameof(Memories))]
+    public static void RangeForMemory(Memory<int> memory)
+    {
+        var range = Range.For(memory);
+
+        var expectedRange = new Range<int>(0, memory.Length, true, false);
+        range.Should().Be(expectedRange);
+    }
+
+    [Theory]
+    [MemberData(nameof(Memories))]
+    public static void RangeForReadOnlyMemory(Memory<int> memory)
+    {
+        ReadOnlyMemory<int> readOnlyMemory = memory;
+        var range = Range.For(readOnlyMemory);
+
+        var expectedRange = new Range<int>(0, memory.Length, true, false);
+        range.Should().Be(expectedRange);
+    }
+
+    [Theory]
+    [MemberData(nameof(Memories))]
+    public static void RangeForSpan(Memory<int> memory)
+    {
+        var range = Range.For(memory.Span);
+
+        var expectedRange = new Range<int>(0, memory.Length, true, false);
+        range.Should().Be(expectedRange);
+    }
+
+    [Theory]
+    [MemberData(nameof(Memories))]
+    public static void RangeForReadOnlySpan(Memory<int> memory)
+    {
+        ReadOnlySpan<int> readOnlySpan = memory.Span;
+        var range = Range.For(readOnlySpan);
+
+        var expectedRange = new Range<int>(0, memory.Length, true, false);
+        range.Should().Be(expectedRange);
+    }
+
+    public static readonly TheoryData<Memory<int>> Memories =
+        new ()
+        {
+            new[] { 1, 2, 3, 4 },
+            Enumerable.Range(1, 500).ToArray(),
+            Array.Empty<int>()
+        };
 }

@@ -52,6 +52,6 @@ public static class MustBeLessThanOrEqualToTests
         Action act = () => six.MustBeLessThanOrEqualTo(5);
 
         act.Should().Throw<ArgumentOutOfRangeException>()
-           .And.ParamName.Should().Be(nameof(six));
+           .WithParameterName(nameof(six));
     }
 }

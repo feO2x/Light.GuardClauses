@@ -84,6 +84,6 @@ public static class SpanMustBeShorterThanTests
         };
 
         act.Should().Throw<InvalidCollectionCountException>()
-           .And.ParamName.Should().Be("span");
+           .WithParameterName("span");
     }
 }

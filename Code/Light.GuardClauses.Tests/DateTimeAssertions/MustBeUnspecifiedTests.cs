@@ -55,6 +55,6 @@ public static class MustBeUnspecifiedTests
         Action act = () => invalidDateTime.MustBeUnspecified();
 
         act.Should().Throw<InvalidDateTimeException>()
-           .And.ParamName.Should().Be(nameof(invalidDateTime));
+           .WithParameterName(nameof(invalidDateTime));
     }
 }

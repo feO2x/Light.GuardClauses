@@ -67,6 +67,6 @@ public static class MustNotBeOneOfTests
         Action act = () => fortyTwo.MustNotBeOneOf(new[] { 42 });
 
         act.Should().Throw<ValueIsOneOfException>()
-           .And.ParamName.Should().Be(nameof(fortyTwo));
+           .WithParameterName(nameof(fortyTwo));
     }
 }

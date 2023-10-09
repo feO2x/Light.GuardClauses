@@ -74,7 +74,7 @@ public static class DerivesFromTests
         Action act = () => type.DerivesFrom(typeof(object));
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(type));
+           .WithParameterName(nameof(type));
     }
 
     [Fact]
@@ -86,7 +86,7 @@ public static class DerivesFromTests
         Action act = () => typeof(string).DerivesFrom(baseClass);
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(baseClass));
+           .WithParameterName(nameof(baseClass));
     }
 
     public sealed class StringDictionary : Dictionary<string, object> { }

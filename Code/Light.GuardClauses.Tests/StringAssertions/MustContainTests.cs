@@ -118,6 +118,6 @@ public static class MustContainTests
         var act = () => foo.MustContain("Bar");
 
         act.Should().Throw<SubstringException>()
-           .And.ParamName.Should().Be(nameof(foo));
+           .WithParameterName(nameof(foo));
     }
 }

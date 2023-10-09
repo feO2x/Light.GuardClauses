@@ -31,7 +31,7 @@ public static class IsOrDerivesFromTests
         Action act = () => type.IsOrDerivesFrom(typeof(object));
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(type));
+           .WithParameterName(nameof(type));
     }
 
     [Fact]
@@ -43,7 +43,7 @@ public static class IsOrDerivesFromTests
         Action act = () => typeof(object).IsOrDerivesFrom(otherType);
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(otherType));
+           .WithParameterName(nameof(otherType));
     }
 
     private static void CheckIsOrDerivesFrom(Type type, Type otherType, bool expected) =>

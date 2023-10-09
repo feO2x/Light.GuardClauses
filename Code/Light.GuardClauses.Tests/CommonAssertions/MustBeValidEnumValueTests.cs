@@ -60,7 +60,7 @@ public static class MustBeValidEnumValueTests
         Action act = () => someValue.MustBeValidEnumValue();
 
         act.Should().Throw<EnumValueNotDefinedException>()
-           .And.ParamName.Should().Be(nameof(someValue));
+           .WithParameterName(nameof(someValue));
     }
 }
 
