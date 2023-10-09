@@ -25,11 +25,11 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageReleaseNotes>
-Light.GuardClauses 10.2.0
+Light.GuardClauses 10.3.0
 --------------------------------
 
-- Added IsLessThanOrApproximately and IsGreaterThanOrApproximately assertions for doubles and floats
-- Added "IsTrimmedXXX" and "MustBeTrimmedXXX" assertions for strings
+- Added Range.For to create range instances for valid collection indexes
+- Added GetCount extension method for IEnumerable&lt;T&gt; - this is a more optimized version of LINQ's Count extension method that also optimizes paths for IReadOnlyCollection&lt;T&gt; and string            
         </PackageReleaseNotes>
     </PropertyGroup>
 
