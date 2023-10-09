@@ -1,5 +1,5 @@
 /* ------------------------------
-   Light.GuardClauses 10.2.0
+   Light.GuardClauses 10.3.0
    ------------------------------
 
 License information for Light.GuardClauses
@@ -3803,7 +3803,7 @@ namespace Light.GuardClauses
         /// <summary>
         /// The nested <see cref = "RangeFromInfo"/> can be used to fluently create a <see cref = "Range{T}"/>.
         /// </summary>
-        public struct RangeFromInfo
+        public readonly struct RangeFromInfo
         {
             private readonly T _from;
             private readonly bool _isFromInclusive;
@@ -3906,7 +3906,7 @@ namespace Light.GuardClauses
         /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Range<T>.RangeFromInfo FromInclusive<T>(T value)
-            where T : IComparable<T> => new Range<T>.RangeFromInfo(value, true);
+            where T : IComparable<T> => new(value, true);
         /// <summary>
         /// Use this method to create a range in a fluent style using method chaining.
         /// Defines the lower boundary as an exclusive value.
@@ -3915,7 +3915,66 @@ namespace Light.GuardClauses
         /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Range<T>.RangeFromInfo FromExclusive<T>(T value)
-            where T : IComparable<T> => new Range<T>.RangeFromInfo(value, false);
+            where T : IComparable<T> => new(value, false);
+        /// <summary>
+        /// Creates a range for the specified enumerable that encompasses all valid indexes.
+        /// </summary>
+        /// <param name = "enumerable">
+        /// The count of this enumerable will be used to create the index range. Please ensure that this enumerable
+        /// is actually a collection, not a lazy enumerable.
+        /// </param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "enumerable"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Range<int> For(IEnumerable enumerable) => new(0, enumerable.Count(), isFromInclusive: true, isToInclusive: false);
+        /// <summary>
+        /// Creates a range for the specified enumerable that encompasses all valid indexes.
+        /// </summary>
+        /// <param name = "enumerable">
+        /// The count of this enumerable will be used to create the index range. Please ensure that this enumerable
+        /// is actually a collection, not a lazy enumerable.
+        /// </param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "enumerable"/> is null.</exception>
+        public static Range<int> For<T>(IEnumerable<T> enumerable) => new(0, enumerable.GetCount(), isFromInclusive: true, isToInclusive: false);
+        /// <summary>
+        /// Creates a range for the specified span that encompasses all valid indexes.
+        /// </summary>
+        /// <param name = "span">
+        /// The length of the span is used to create a valid index range.
+        /// </param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Range<int> For<T>(ReadOnlySpan<T> span) => new(0, span.Length, isFromInclusive: true, isToInclusive: false);
+        /// <summary>
+        /// Creates a range for the specified span that encompasses all valid indexes.
+        /// </summary>
+        /// <param name = "span">
+        /// The length of the span is used to create a valid index range.
+        /// </param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Range<int> For<T>(Span<T> span) => new(0, span.Length, isFromInclusive: true, isToInclusive: false);
+        /// <summary>
+        /// Creates a range for the specified memory that encompasses all valid indexes.
+        /// </summary>
+        /// <param name = "memory">
+        /// The length of the memory is used to create a valid index range.
+        /// </param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Range<int> For<T>(Memory<T> memory) => new(0, memory.Length, isFromInclusive: true, isToInclusive: false);
+        /// <summary>
+        /// Creates a range for the specified memory that encompasses all valid indexes.
+        /// </summary>
+        /// <param name = "memory">
+        /// The length of the memory is used to create a valid index range.
+        /// </param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Range<int> For<T>(ReadOnlyMemory<T> memory) => new(0, memory.Length, isFromInclusive: true, isToInclusive: false);
+        /// <summary>
+        /// Creates a range for the specified memory that encompasses all valid indexes.
+        /// </summary>
+        /// <param name = "segment">
+        /// The count of the segment is used to create a valid index range.
+        /// </param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Range<int> For<T>(ArraySegment<T> segment) => new(0, segment.Count, isFromInclusive: true, isToInclusive: false);
     }
 
     /// <summary>
@@ -5235,12 +5294,68 @@ namespace Light.GuardClauses.FrameworkExtensions
             return DetermineCountViaEnumerating(enumerable, parameterName, message);
         }
 
+        /// <summary>
+        /// Gets the count of the specified enumerable.
+        /// </summary>
+        /// <param name = "enumerable">The enumerable whose count should be determined.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "enumerable"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("enumerable:null => halt")]
+        public static int GetCount<T>(this IEnumerable<T> enumerable)
+        {
+            if (enumerable is ICollection collection)
+                return collection.Count;
+            if (enumerable is string @string)
+                return @string.Length;
+            if (TryGetCollectionOfTCount(enumerable, out var count))
+                return count;
+            return DetermineCountViaEnumerating(enumerable);
+        }
+
+        /// <summary>
+        /// Gets the count of the specified enumerable.
+        /// </summary>
+        /// <param name = "enumerable">The enumerable whose count should be determined.</param>
+        /// <param name = "parameterName">The name of the parameter that is passed to the <see cref = "ArgumentNullException"/> (optional).</param>
+        /// <param name = "message">The message that is passed to the <see cref = "ArgumentNullException"/> (optional).</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "enumerable"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("enumerable:null => halt")]
+        public static int GetCount<T>(this IEnumerable<T> enumerable, string? parameterName, string? message = null)
+        {
+            if (enumerable is ICollection collection)
+                return collection.Count;
+            if (enumerable is string @string)
+                return @string.Length;
+            if (TryGetCollectionOfTCount(enumerable, out var count))
+                return count;
+            return DetermineCountViaEnumerating(enumerable, parameterName, message);
+        }
+
+        private static bool TryGetCollectionOfTCount<T>([NoEnumeration] this IEnumerable<T> enumerable, out int count)
+        {
+            if (enumerable is ICollection<T> collectionOfT)
+            {
+                count = collectionOfT.Count;
+                return true;
+            }
+
+            if (enumerable is IReadOnlyCollection<T> readOnlyCollection)
+            {
+                count = readOnlyCollection.Count;
+                return true;
+            }
+
+            count = 0;
+            return false;
+        }
+
         private static int DetermineCountViaEnumerating(IEnumerable? enumerable)
         {
             var count = 0;
             var enumerator = enumerable.MustNotBeNull(nameof(enumerable)).GetEnumerator();
             while (enumerator.MoveNext())
-                ++count;
+                count++;
             return count;
         }
 
@@ -5249,7 +5364,7 @@ namespace Light.GuardClauses.FrameworkExtensions
             var count = 0;
             var enumerator = enumerable.MustNotBeNull(parameterName, message).GetEnumerator();
             while (enumerator.MoveNext())
-                ++count;
+                count++;
             return count;
         }
 
