@@ -82,6 +82,6 @@ public static class MustNotBeInTests
         Action act = () => two.MustNotBeIn(Range.FromInclusive(1).ToInclusive(5));
 
         act.Should().Throw<ArgumentOutOfRangeException>()
-           .And.ParamName.Should().Be(nameof(two));
+           .WithParameterName(nameof(two));
     }
 }

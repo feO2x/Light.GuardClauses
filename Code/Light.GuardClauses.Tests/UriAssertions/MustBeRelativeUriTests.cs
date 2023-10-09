@@ -72,6 +72,6 @@ public static class MustBeRelativeUriTests
         var act = () => absoluteUri.MustBeRelativeUri();
 
         act.Should().Throw<AbsoluteUriException>()
-           .And.ParamName.Should().Be(nameof(absoluteUri));
+           .WithParameterName(nameof(absoluteUri));
     }
 }

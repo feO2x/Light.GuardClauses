@@ -83,8 +83,7 @@ public static class RangeTests
         // ReSharper disable once RedundantCast -- I want to specifically target the overload accepting IEnumerable
         var act = () => Range.For(((IEnumerable) null)!);
 
-        act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be("enumerable");
+        act.Should().Throw<ArgumentNullException>().WithParameterName("enumerable");
     }
 
     [Theory]
@@ -113,8 +112,7 @@ public static class RangeTests
     {
         var act = () => Range.For(((IEnumerable<string>) null)!);
 
-        act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be("enumerable");
+        act.Should().Throw<ArgumentNullException>().WithParameterName("enumerable");
     }
 
     [Theory]

@@ -52,7 +52,7 @@ public static class InheritsFromTests
         Action act = () => type.InheritsFrom(typeof(object));
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(type));
+           .WithParameterName(nameof(type));
     }
 
     [Fact(DisplayName = "IsDerivingFromOrImplementing must throw an ArgumentNullException when the specified base type is null.")]
@@ -64,7 +64,7 @@ public static class InheritsFromTests
         Action act = () => typeof(string).InheritsFrom(baseClassOrInterfaceType);
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(baseClassOrInterfaceType));
+           .WithParameterName(nameof(baseClassOrInterfaceType));
     }
 
     private static void CheckInheritsFrom(Type type, Type baseClassOrInterfaceType, bool expected)

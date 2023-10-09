@@ -82,7 +82,7 @@ public static class MustNotBeTests
         Action act = () => eight.MustNotBe(8);
 
         act.Should().Throw<ValuesEqualException>()
-           .And.ParamName.Should().Be(nameof(eight));
+           .WithParameterName(nameof(eight));
     }
 
     [Fact]
@@ -93,6 +93,6 @@ public static class MustNotBeTests
         Action act = () => foo.MustNotBe("Foo", new EqualityComparerStub<string>(true));
 
         act.Should().Throw<ValuesEqualException>()
-           .And.ParamName.Should().Be(nameof(foo));
+           .WithParameterName(nameof(foo));
     }
 }

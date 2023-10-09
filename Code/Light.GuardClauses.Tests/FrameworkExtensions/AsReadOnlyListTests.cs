@@ -59,7 +59,7 @@ public static class AsReadOnlyListTests
         Action act = () => ((IEnumerable<string>) null)!.AsReadOnlyList();
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be("source");
+           .WithParameterName("source");
     }
 
     [Fact]

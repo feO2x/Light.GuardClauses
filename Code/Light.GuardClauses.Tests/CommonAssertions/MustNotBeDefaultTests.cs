@@ -94,7 +94,7 @@ public static class MustNotBeDefaultTests
         Action act = () => someParameter.MustNotBeDefault();
 
         act.Should().Throw<ArgumentDefaultException>()
-           .And.ParamName.Should().Be(nameof(someParameter));
+           .WithParameterName(nameof(someParameter));
     }
 
 }

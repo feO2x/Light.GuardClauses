@@ -52,6 +52,6 @@ public static class MustBeShorterThanTests
         var act = () => message.MustBeShorterThan(10);
 
         act.Should().Throw<StringLengthException>()
-           .And.ParamName.Should().Be(nameof(message));
+           .WithParameterName(nameof(message));
     }
 }

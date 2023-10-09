@@ -82,6 +82,6 @@ public static class MustMatchTests
         var act = () => email.MustMatch(RegularExpressions.EmailRegex);
 
         act.Should().Throw<StringDoesNotMatchException>()
-           .And.ParamName.Should().Be(nameof(email));
+           .WithParameterName(nameof(email));
     }
 }

@@ -59,7 +59,7 @@ public static class AsListTests
         Action act = () => ((IEnumerable<string>) null)!.AsList();
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be("source");
+           .WithParameterName("source");
     }
 
     [Fact]
