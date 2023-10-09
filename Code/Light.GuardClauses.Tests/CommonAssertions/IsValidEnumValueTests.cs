@@ -40,8 +40,8 @@ public static class IsValidEnumValueTests
     [InlineData(-2)]
     [InlineData(-512)]
     [InlineData(int.MinValue)]
-    [InlineData(1024)]
     [InlineData(2048)]
+    [InlineData(2055)]
     [InlineData(int.MaxValue)]
     public static void InvalidNumberStyles(int invalidValue) => ((NumberStyles) invalidValue).IsValidEnumValue().Should().BeFalse();
 

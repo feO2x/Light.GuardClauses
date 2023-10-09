@@ -25,7 +25,7 @@ public static class MustBeTrimmedTests
         var act = () => nullString.MustBeTrimmed(nameof(nullString));
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(nullString));
+           .WithParameterName(nameof(nullString));
     }
 
     [Theory]
@@ -68,6 +68,6 @@ public static class MustBeTrimmedTests
         var act = () => invalidString.MustBeTrimmed();
 
         act.Should().Throw<StringException>()
-           .And.ParamName.Should().Be(nameof(invalidString));
+           .WithParameterName(nameof(invalidString));
     }
 }

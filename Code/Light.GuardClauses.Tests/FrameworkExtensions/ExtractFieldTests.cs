@@ -36,6 +36,6 @@ public static class ExtractFieldTests
         Action act = () => ((Expression<Func<object, object>>) null).ExtractField();
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be("expression");
+           .WithParameterName("expression");
     }
 }

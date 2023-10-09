@@ -106,6 +106,6 @@ public static class MustHaveSchemeTests
         var act = () => myUrl.MustHaveScheme("ftps");
 
         act.Should().Throw<InvalidUriSchemeException>()
-           .And.ParamName.Should().Be(nameof(myUrl));
+           .WithParameterName(nameof(myUrl));
     }
 }

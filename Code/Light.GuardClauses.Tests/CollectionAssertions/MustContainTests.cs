@@ -67,6 +67,6 @@ public static class MustContainTests
         var act = () => array.MustContain("Baz");
 
         act.Should().Throw<MissingItemException>()
-           .And.ParamName.Should().Be(nameof(array));
+           .WithParameterName(nameof(array));
     }
 }

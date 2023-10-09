@@ -111,6 +111,6 @@ public static class MustNotContainTests
         var act = () => bar.MustNotContain("ar");
 
         act.Should().Throw<SubstringException>()
-           .And.ParamName.Should().Be(nameof(bar));
+           .WithParameterName(nameof(bar));
     }
 }

@@ -53,6 +53,6 @@ public static class MustBeLocalTests
         Action act = () => invalidDateTime.MustBeLocal();
 
         act.Should().Throw<InvalidDateTimeException>()
-           .And.ParamName.Should().Be(nameof(invalidDateTime));
+           .WithParameterName(nameof(invalidDateTime));
     }
 }

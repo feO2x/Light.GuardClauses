@@ -45,6 +45,6 @@ public static class MustNotBeSameAsTests
         Action act = () => object1.MustNotBeSameAs(object1);
 
         act.Should().Throw<SameObjectReferenceException>()
-           .And.ParamName.Should().Be(nameof(object1));
+           .WithParameterName(nameof(object1));
     }
 }

@@ -35,7 +35,7 @@ public static class MustBeOfTypeTests
         Action act = () => ((object) null).MustBeOfType<string>("Foo");
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be("Foo");
+           .WithParameterName("Foo");
     }
 
     [Fact]
@@ -72,7 +72,7 @@ public static class MustBeOfTypeTests
         Action act = () => someValue.MustBeOfType<Exception>();
 
         act.Should().Throw<TypeCastException>()
-           .And.ParamName.Should().Be(nameof(someValue));
+           .WithParameterName(nameof(someValue));
     }
 
     [Fact]
@@ -84,6 +84,6 @@ public static class MustBeOfTypeTests
         Action act = () => myValue.MustBeOfType<string>();
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(myValue));
+           .WithParameterName(nameof(myValue));
     }
 }

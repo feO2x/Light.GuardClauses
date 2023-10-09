@@ -74,6 +74,6 @@ public static class MustNotBeTests
         var act = () => message.MustNotBe("Foo");
 
         act.Should().Throw<ValuesEqualException>()
-           .And.ParamName.Should().Be(nameof(message));
+           .WithParameterName(nameof(message));
     }
 }

@@ -73,6 +73,6 @@ public static class MustNotContainTests
         Action act = () => array.MustNotContain(3);
 
         act.Should().Throw<ExistingItemException>()
-           .And.ParamName.Should().Be(nameof(array));
+           .WithParameterName(nameof(array));
     }
 }

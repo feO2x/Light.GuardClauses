@@ -11,7 +11,7 @@ namespace Light.GuardClauses.Performance
         private static IConfig DefaultConfiguration =>
             DefaultConfig
                .Instance
-               .AddJob(Job.Default.WithRuntime(CoreRuntime.Core60))
+               .AddJob(Job.Default.WithRuntime(CoreRuntime.Core70))
                .AddJob(Job.Default.WithRuntime(ClrRuntime.Net48))
                .AddDiagnoser(MemoryDiagnoser.Default, new DisassemblyDiagnoser(new DisassemblyDiagnoserConfig()));
 

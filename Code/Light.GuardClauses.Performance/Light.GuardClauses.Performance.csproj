@@ -3,11 +3,12 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFrameworks>net7.0;net48</TargetFrameworks>
+        <LangVersion>11</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Light.GuardClauses\Light.GuardClauses.csproj" />
-        <PackageReference Include="BenchmarkDotNet" Version="0.13.7" />
+        <PackageReference Include="BenchmarkDotNet" Version="0.13.9" />
     </ItemGroup>
 
 </Project>

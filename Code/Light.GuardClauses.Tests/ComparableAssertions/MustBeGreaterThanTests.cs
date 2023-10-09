@@ -55,6 +55,6 @@ public static class MustBeGreaterThanTests
         Action act = () => fifteen.MustBeGreaterThan(20);
 
         act.Should().Throw<ArgumentOutOfRangeException>()
-           .And.ParamName.Should().Be(nameof(fifteen));
+           .WithParameterName(nameof(fifteen));
     }
 }

@@ -53,6 +53,6 @@ public static class MustNotBeGreaterThanOrEqualToTests
         Action act = () => four.MustNotBeGreaterThanOrEqualTo(4);
 
         act.Should().Throw<ArgumentOutOfRangeException>()
-           .And.ParamName.Should().Be(nameof(four));
+           .WithParameterName(nameof(four));
     }
 }

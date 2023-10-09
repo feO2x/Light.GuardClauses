@@ -13,7 +13,7 @@ public static class MustNotBeNullOrEmptyTests
         Action act = () => ((string) null).MustNotBeNullOrEmpty("Foo");
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be("Foo");
+           .WithParameterName("Foo");
     }
 
     [Fact]
@@ -58,6 +58,6 @@ public static class MustNotBeNullOrEmptyTests
         var act = () => nullString.MustNotBeNullOrEmpty();
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(nullString));
+           .WithParameterName(nameof(nullString));
     }
 }

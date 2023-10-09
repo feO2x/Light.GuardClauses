@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Light.GuardClauses.FrameworkExtensions;
 using System.Runtime.CompilerServices;
@@ -85,7 +86,7 @@ public readonly struct Range<T> : IEquatable<Range<T>> where T : IComparable<T>
     /// <summary>
     /// The nested <see cref="RangeFromInfo" /> can be used to fluently create a <see cref="Range{T}" />.
     /// </summary>
-    public struct RangeFromInfo
+    public readonly struct RangeFromInfo
     {
         private readonly T _from;
         private readonly bool _isFromInclusive;
@@ -204,8 +205,7 @@ public static class Range
     /// <param name="value">The value that indicates the inclusive lower boundary of the resulting range.</param>
     /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Range<T>.RangeFromInfo FromInclusive<T>(T value) where T : IComparable<T> =>
-        new Range<T>.RangeFromInfo(value, true);
+    public static Range<T>.RangeFromInfo FromInclusive<T>(T value) where T : IComparable<T> => new (value, true);
 
     /// <summary>
     /// Use this method to create a range in a fluent style using method chaining.
@@ -214,6 +214,78 @@ public static class Range
     /// <param name="value">The value that indicates the exclusive lower boundary of the resulting range.</param>
     /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Range<T>.RangeFromInfo FromExclusive<T>(T value) where T : IComparable<T> =>
-        new Range<T>.RangeFromInfo(value, false); 
+    public static Range<T>.RangeFromInfo FromExclusive<T>(T value) where T : IComparable<T> => new (value, false);
+
+    /// <summary>
+    /// Creates a range for the specified enumerable that encompasses all valid indexes.
+    /// </summary>
+    /// <param name="enumerable">
+    /// The count of this enumerable will be used to create the index range. Please ensure that this enumerable
+    /// is actually a collection, not a lazy enumerable.
+    /// </param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Range<int> For(IEnumerable enumerable) =>
+        new (0, enumerable.Count(), isFromInclusive: true, isToInclusive: false);
+    
+    /// <summary>
+    /// Creates a range for the specified enumerable that encompasses all valid indexes.
+    /// </summary>
+    /// <param name="enumerable">
+    /// The count of this enumerable will be used to create the index range. Please ensure that this enumerable
+    /// is actually a collection, not a lazy enumerable.
+    /// </param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
+    public static Range<int> For<T>(IEnumerable<T> enumerable) =>
+        new (0, enumerable.GetCount(), isFromInclusive: true, isToInclusive: false);
+    
+    /// <summary>
+    /// Creates a range for the specified span that encompasses all valid indexes.
+    /// </summary>
+    /// <param name="span">
+    /// The length of the span is used to create a valid index range.
+    /// </param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Range<int> For<T>(ReadOnlySpan<T> span) =>
+        new (0, span.Length, isFromInclusive: true, isToInclusive: false);
+    
+    /// <summary>
+    /// Creates a range for the specified span that encompasses all valid indexes.
+    /// </summary>
+    /// <param name="span">
+    /// The length of the span is used to create a valid index range.
+    /// </param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Range<int> For<T>(Span<T> span) =>
+        new (0 , span.Length, isFromInclusive: true, isToInclusive: false);
+
+    /// <summary>
+    /// Creates a range for the specified memory that encompasses all valid indexes.
+    /// </summary>
+    /// <param name="memory">
+    /// The length of the memory is used to create a valid index range.
+    /// </param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Range<int> For<T>(Memory<T> memory) =>
+        new (0, memory.Length, isFromInclusive: true, isToInclusive: false);
+    
+    /// <summary>
+    /// Creates a range for the specified memory that encompasses all valid indexes.
+    /// </summary>
+    /// <param name="memory">
+    /// The length of the memory is used to create a valid index range.
+    /// </param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Range<int> For<T>(ReadOnlyMemory<T> memory) =>
+        new (0, memory.Length, isFromInclusive: true, isToInclusive: false);
+    
+    /// <summary>
+    /// Creates a range for the specified memory that encompasses all valid indexes.
+    /// </summary>
+    /// <param name="segment">
+    /// The count of the segment is used to create a valid index range.
+    /// </param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Range<int> For<T>(ArraySegment<T> segment) =>
+        new (0, segment.Count, isFromInclusive: true, isToInclusive: false);
 }
