@@ -26,7 +26,7 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageReleaseNotes>
-Light.GuardClauses 11.0.0-preview1
+Light.GuardClauses 11.0.0
 --------------------------------
 
 - Light.GuardClauses now targets .NET 8 and is AOT-compatible
