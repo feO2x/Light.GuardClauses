@@ -74,6 +74,6 @@ public static class MustBeTests
         var act = () => myString.MustBe("Bar");
 
         act.Should().Throw<ValuesNotEqualException>()
-           .And.ParamName.Should().Be(nameof(myString));
+           .WithParameterName(nameof(myString));
     }
 }

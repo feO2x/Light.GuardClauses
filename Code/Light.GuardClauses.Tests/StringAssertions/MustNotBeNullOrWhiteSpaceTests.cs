@@ -13,7 +13,7 @@ public static class MustNotBeNullOrWhiteSpaceTests
         Action act = () => ((string) null).MustNotBeNullOrWhiteSpace("Foo");
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be("Foo");
+           .WithParameterName("Foo");
     }
 
     [Fact]
@@ -79,6 +79,6 @@ public static class MustNotBeNullOrWhiteSpaceTests
         var act = () => whiteSpaceString.MustNotBeNullOrWhiteSpace();
 
         act.Should().Throw<WhiteSpaceStringException>()
-           .And.ParamName.Should().Be(nameof(whiteSpaceString));
+           .WithParameterName(nameof(whiteSpaceString));
     }
 }

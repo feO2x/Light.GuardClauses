@@ -53,6 +53,6 @@ public static class MustBeGreaterThanOrEqualToTests
         Action act = () => threePointThree.MustBeGreaterThanOrEqualTo(5.0);
 
         act.Should().Throw<ArgumentOutOfRangeException>()
-           .And.ParamName.Should().Be(nameof(threePointThree));
+           .WithParameterName(nameof(threePointThree));
     }
 }

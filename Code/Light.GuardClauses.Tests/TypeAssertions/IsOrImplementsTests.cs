@@ -29,7 +29,7 @@ public static class IsOrImplementsTests
         Action act = () => type.IsOrImplements(typeof(object));
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(type));
+           .WithParameterName(nameof(type));
     }
 
     [Fact]
@@ -41,7 +41,7 @@ public static class IsOrImplementsTests
         Action act = () => typeof(object).IsOrImplements(otherType);
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(otherType));
+           .WithParameterName(nameof(otherType));
     }
 
     private static void CheckIsOrImplements(Type type, Type otherType, bool expected) =>

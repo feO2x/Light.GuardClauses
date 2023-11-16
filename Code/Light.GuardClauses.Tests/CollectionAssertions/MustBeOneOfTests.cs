@@ -69,6 +69,6 @@ public static class MustBeOneOfTests
         Action act = () => myNumber.MustBeOneOf(Enumerable.Range(1, 10));
 
         act.Should().Throw<ValueIsNotOneOfException>()
-           .And.ParamName.Should().Be(nameof(myNumber));
+           .WithParameterName(nameof(myNumber));
     }
 }

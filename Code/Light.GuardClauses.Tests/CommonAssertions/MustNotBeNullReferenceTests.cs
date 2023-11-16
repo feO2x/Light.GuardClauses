@@ -63,6 +63,6 @@ public static class MustNotBeNullReferenceTests
         Action act = () => someParameter.MustNotBeNullReference();
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(someParameter));
+           .WithParameterName(nameof(someParameter));
     }
 }

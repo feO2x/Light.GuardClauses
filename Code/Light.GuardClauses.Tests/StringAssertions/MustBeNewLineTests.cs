@@ -24,7 +24,7 @@ public static class MustBeNewLineTests
         var act = () => stringValue.MustBeNewLine(nameof(stringValue));
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(stringValue));
+           .WithParameterName(nameof(stringValue));
     }
 
     [Theory]
@@ -66,6 +66,6 @@ public static class MustBeNewLineTests
         var act = () => expression.MustBeNewLine();
 
         act.Should().Throw<StringException>()
-           .And.ParamName.Should().Be(nameof(expression));
+           .WithParameterName(nameof(expression));
     }
 }

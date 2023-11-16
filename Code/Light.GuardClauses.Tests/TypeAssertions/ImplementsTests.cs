@@ -42,7 +42,7 @@ public static class ImplementsTests
         Action act = () => type.Implements(typeof(IComparable));
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(type));
+           .WithParameterName(nameof(type));
     }
 
     [Fact]
@@ -54,7 +54,7 @@ public static class ImplementsTests
         Action act = () => typeof(List<object>).Implements(interfaceType);
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(interfaceType));
+           .WithParameterName(nameof(interfaceType));
     }
 
     private static void CheckImplements(Type type, Type interfaceType, bool expected) => 

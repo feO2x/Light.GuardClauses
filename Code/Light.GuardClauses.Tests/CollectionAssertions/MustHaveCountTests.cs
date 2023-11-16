@@ -68,6 +68,6 @@ public static class MustHaveCountTests
         Action act = () => collection.MustHaveCount(5);
 
         act.Should().Throw<InvalidCollectionCountException>()
-           .And.ParamName.Should().Be(nameof(collection));
+           .WithParameterName(nameof(collection));
     }
 }

@@ -15,7 +15,7 @@ public static class MustNotBeNullOrEmptyTests
         Action act = () => ((object[]) null).MustNotBeNullOrEmpty("Foo");
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be("Foo");
+           .WithParameterName("Foo");
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public static class MustNotBeNullOrEmptyTests
         Action act = () => emptyArray.MustNotBeNullOrEmpty();
 
         act.Should().Throw<EmptyCollectionException>()
-           .And.ParamName.Should().Be(nameof(emptyArray));
+           .WithParameterName(nameof(emptyArray));
     }
 
     [Fact]
@@ -80,6 +80,6 @@ public static class MustNotBeNullOrEmptyTests
         Action act = () => nullArray.MustNotBeNullOrEmpty();
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(nullArray));
+           .WithParameterName(nameof(nullArray));
     }
 }

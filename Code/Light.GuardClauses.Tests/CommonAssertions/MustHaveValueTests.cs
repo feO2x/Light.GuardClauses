@@ -42,6 +42,6 @@ public static class MustHaveValueTests
         Action act = () => nullable.MustHaveValue();
 
         act.Should().Throw<NullableHasNoValueException>()
-           .And.ParamName.Should().Be(nameof(nullable));
+           .WithParameterName(nameof(nullable));
     }
 }

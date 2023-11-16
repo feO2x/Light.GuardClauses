@@ -31,7 +31,7 @@ public static class IsOrInheritsFromTests
         Action act = () => type.IsOrInheritsFrom(typeof(object));
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(type));
+           .WithParameterName(nameof(type));
     }
 
     [Fact]
@@ -43,7 +43,7 @@ public static class IsOrInheritsFromTests
         Action act = () => typeof(object).IsOrInheritsFrom(otherType);
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be(nameof(otherType));
+           .WithParameterName(nameof(otherType));
     }
 
     private static void CheckIsOrInheritsFrom(Type type, Type otherType, bool expected) => type.IsOrInheritsFrom(otherType).Should().Be(expected);

@@ -55,6 +55,6 @@ public static class MustBeUtcTests
         Action act = () => invalidDateTime.MustBeUtc();
 
         act.Should().Throw<InvalidDateTimeException>()
-           .And.ParamName.Should().Be(nameof(invalidDateTime));
+           .WithParameterName(nameof(invalidDateTime));
     }
 }

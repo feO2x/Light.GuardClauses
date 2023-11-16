@@ -15,7 +15,7 @@ public static class MustNotBeEmptyGuidTests
         Action act = () => emptyGuid.MustNotBeEmpty(nameof(emptyGuid));
 
         act.Should().Throw<EmptyGuidException>()
-           .And.ParamName.Should().Be(nameof(emptyGuid));
+           .WithParameterName(nameof(emptyGuid));
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public static class MustNotBeEmptyGuidTests
         Action act = () => emptyGuid.MustNotBeEmpty();
 
         act.Should().Throw<EmptyGuidException>()
-           .And.ParamName.Should().Be(nameof(emptyGuid));
+           .WithParameterName(nameof(emptyGuid));
     }
 
     public class Entity(Guid id)

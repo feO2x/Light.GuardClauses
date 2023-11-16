@@ -132,6 +132,6 @@ public static class MustNotBeSubstringOfTests
         var act = () => message.MustNotBeSubstringOf("Foobar");
 
         act.Should().Throw<SubstringException>()
-           .And.ParamName.Should().Be(nameof(message));
+           .WithParameterName(nameof(message));
     }
 }

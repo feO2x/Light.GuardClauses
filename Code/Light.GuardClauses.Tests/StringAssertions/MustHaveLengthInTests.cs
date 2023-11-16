@@ -66,6 +66,6 @@ public static class MustHaveLengthInTests
         var act = () => message.MustHaveLengthIn(Range.FromInclusive(3).ToExclusive(10));
 
         act.Should().Throw<StringLengthException>()
-           .And.ParamName.Should().Be(nameof(message));
+           .WithParameterName(nameof(message));
     }
 }

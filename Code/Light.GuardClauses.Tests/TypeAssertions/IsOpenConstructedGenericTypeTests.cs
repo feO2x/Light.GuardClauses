@@ -32,6 +32,6 @@ public static class IsOpenConstructedGenericTypeTests
         Action act = () => ((Type) null).IsOpenConstructedGenericType();
 
         act.Should().Throw<ArgumentNullException>()
-           .And.ParamName.Should().Be("type");
+           .WithParameterName("type");
     }
 }

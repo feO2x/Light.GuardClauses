@@ -34,7 +34,7 @@ Light.GuardClauses 11.0.0-preview1
 - In AOT scenarios, avoid the Type-related assertions, they are marked with the DynamicallyAccessedMembersAttribute
         </PackageReleaseNotes>
     </PropertyGroup>
-
+    
     <ItemGroup>
         <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" Condition="'$(TargetFramework)' != 'net8.0'" />
         <PackageReference Include="System.Memory" Version="4.5.5" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
