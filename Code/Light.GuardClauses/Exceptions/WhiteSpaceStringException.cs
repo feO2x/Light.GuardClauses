@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-
 namespace Light.GuardClauses.Exceptions;
 
 /// <summary>
@@ -17,6 +16,8 @@ public class WhiteSpaceStringException : StringException
     /// <param name="message">The message of the exception (optional).</param>
     public WhiteSpaceStringException(string? parameterName = null, string? message = null) : base(parameterName, message) { }
 
+#if !NET8_0
     /// <inheritdoc />
     protected WhiteSpaceStringException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
 }

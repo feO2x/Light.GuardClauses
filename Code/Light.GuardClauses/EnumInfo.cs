@@ -10,7 +10,7 @@ namespace Light.GuardClauses;
 /// Can be used to validate that an enum value is valid.
 /// </summary>
 /// <typeparam name="T">The type of the enum.</typeparam>
-public static class EnumInfo<T> where T : Enum
+public static class EnumInfo<T> where T : struct, Enum
 {
     // ReSharper disable StaticMemberInGenericType
 
@@ -29,22 +29,18 @@ public static class EnumInfo<T> where T : Enum
     private static readonly T[] EnumConstantsArray;
 
     /// <summary>
-    /// Gets the underlying type that is used for the enum (<see cref="int" /> for default enums).
-    /// </summary>
-    public static readonly Type UnderlyingType;
-
-    /// <summary>
     /// Gets the values of the enum as a read-only collection.
     /// </summary>
     public static ReadOnlyMemory<T> EnumConstants { get; }
 
     static EnumInfo()
     {
+#if NET8_0
+        EnumConstantsArray = Enum.GetValues<T>();
+#else
         EnumConstantsArray = (T[]) Enum.GetValues(typeof(T));
-        var fields = typeof(T).GetFields();
-
-        UnderlyingType = fields[0].FieldType;
-        EnumConstants = new ReadOnlyMemory<T>(EnumConstantsArray);
+#endif
+        EnumConstants = new (EnumConstantsArray);
 
         if (!IsFlagsEnum)
             return;

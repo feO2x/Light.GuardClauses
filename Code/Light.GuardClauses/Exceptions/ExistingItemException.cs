@@ -16,6 +16,8 @@ public class ExistingItemException : CollectionException
     /// <param name="message">The message of the exception (optional).</param>
     public ExistingItemException(string? parameterName = null, string? message = null) : base(parameterName, message) { }
 
+#if !NET8_0
     /// <inheritdoc />
     protected ExistingItemException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
 }

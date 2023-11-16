@@ -3,13 +3,14 @@
     <Import Project="..\Version.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0</TargetFrameworks>
         <Description>A lightweight .NET library for expressive Guard Clauses.</Description>
         <Authors>Kenny Pflug</Authors>
         <Company>Kenny Pflug</Company>
         <Nullable>enable</Nullable>
+        <IsAotCompatible Condition="'$(TargetFramework)' == 'net8.0'">true</IsAotCompatible>
         <Copyright>Copyright © Kenny Pflug 2016, 2023</Copyright>
-        <LangVersion>11.0</LangVersion>
+        <LangVersion>12</LangVersion>
         <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
         <IsPackable>true</IsPackable>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -25,16 +26,17 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageReleaseNotes>
-Light.GuardClauses 10.3.0
+Light.GuardClauses 11.0.0
 --------------------------------
 
-- Added Range.For to create range instances for valid collection indexes
-- Added GetCount extension method for IEnumerable&lt;T&gt; - this is a more optimized version of LINQ's Count extension method that also optimizes paths for IReadOnlyCollection&lt;T&gt; and string            
+- Light.GuardClauses now targets .NET 8 and is AOT-compatible
+- breaking: EnumInfo&lt;T&gt; no longer has the UnderlyingType property
+- In AOT scenarios, avoid the Type-related assertions, they are marked with the DynamicallyAccessedMembersAttribute
         </PackageReleaseNotes>
     </PropertyGroup>
-
+    
     <ItemGroup>
-        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" Condition="'$(TargetFramework)' != 'net8.0'" />
         <PackageReference Include="System.Memory" Version="4.5.5" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
         <PackageReference Include="Nullable" Version="1.3.1" PrivateAssets="all" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
