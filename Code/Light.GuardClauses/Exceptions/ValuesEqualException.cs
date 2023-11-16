@@ -16,6 +16,8 @@ public class ValuesEqualException : ArgumentException
     /// <param name="message">The message of the exception (optional).</param>
     public ValuesEqualException(string? parameterName = null, string? message = null) : base(message, parameterName) { }
 
+#if !NET8_0
     /// <inheritdoc />
     protected ValuesEqualException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
 }

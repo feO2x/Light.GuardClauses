@@ -16,6 +16,8 @@ public class StringLengthException : StringException
     /// <param name="message">The message of the exception (optional).</param>
     public StringLengthException(string? parameterName = null, string? message = null) : base(parameterName, message) { }
 
+#if !NET8_0
     /// <inheritdoc />
     protected StringLengthException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
 }

@@ -16,6 +16,8 @@ public class ArgumentDefaultException : ArgumentException
     /// <param name="message">The message of the exception (optional).</param>
     public ArgumentDefaultException(string? parameterName = null, string? message = null) : base(message, parameterName) { }
 
+#if !NET8_0
     /// <inheritdoc />
     protected ArgumentDefaultException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
 }

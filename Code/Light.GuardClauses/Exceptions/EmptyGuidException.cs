@@ -16,6 +16,8 @@ public class EmptyGuidException : ArgumentException
     /// <param name="message">The message of the exception (optional).</param>
     public EmptyGuidException(string? parameterName = null, string? message = null) : base(message, parameterName) { }
 
+#if !NET8_0
     /// <inheritdoc />
     protected EmptyGuidException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
 }

@@ -20,7 +20,7 @@ public static class IsValidEnumValueTests
     [InlineData(UInt64Enum.AllLow | UInt64Enum.High1)]
     [InlineData(UInt64Enum.AllHigh)]
     [InlineData(UInt64Enum.MaxValue)]
-    public static void EnumValueValid<T>(T enumValue) where T : Enum, IComparable
+    public static void EnumValueValid<T>(T enumValue) where T : struct, Enum, IComparable
     {
         if (enumValue is BindingFlags)
         {
@@ -42,6 +42,7 @@ public static class IsValidEnumValueTests
     [InlineData(int.MinValue)]
     [InlineData(2048)]
     [InlineData(2055)]
+    [InlineData(4096)]
     [InlineData(int.MaxValue)]
     public static void InvalidNumberStyles(int invalidValue) => ((NumberStyles) invalidValue).IsValidEnumValue().Should().BeFalse();
 

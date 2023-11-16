@@ -46,4 +46,28 @@ public static class MustNotBeEmptyGuidTests
         act.Should().Throw<EmptyGuidException>()
            .WithParameterName(nameof(emptyGuid));
     }
+
+    public class Entity(Guid id)
+    {
+        public Guid Id { get; } = id.MustNotBeEmpty();
+    }
+    
+    [Fact]
+    public static void PrimaryConstructorValidArgument()
+    {
+        var guid = Guid.NewGuid();
+        var entity = new Entity(guid);
+
+        entity.Id.Should().Be(guid);
+    }
+
+    [Fact]
+    public static void PrimaryConstructorInvalidArgument()
+    {
+        var act = () => new Entity(Guid.Empty);
+
+        act.Should().Throw<EmptyGuidException>()
+           .And.Message.Should().StartWith("id must be a valid GUID, but it actually is an empty one.");
+    }
 }
+

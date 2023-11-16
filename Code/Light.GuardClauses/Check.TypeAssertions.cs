@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+#if NET8_0
+using System.Diagnostics.CodeAnalysis;
+#endif
 
 namespace Light.GuardClauses;
 
@@ -41,11 +44,19 @@ public static partial class Check
     /// <param name="interfaceType">The interface type that <paramref name="type" /> should implement.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="interfaceType" /> is null.</exception>
     [ContractAnnotation("type:null => halt; interfaceType:null => halt")]
-    public static bool Implements([ValidatedNotNull] this Type type, [ValidatedNotNull] Type interfaceType)
+    public static bool Implements(
+#if NET8_0
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
+#endif
+        [ValidatedNotNull]
+        this Type type,
+        [ValidatedNotNull] Type interfaceType
+    )
     {
-        interfaceType.MustNotBeNull(nameof(interfaceType));
-        var implementedInterfaces = type.MustNotBeNull(nameof(type)).GetInterfaces();
+        type.MustNotBeNull();
+        interfaceType.MustNotBeNull();
 
+        var implementedInterfaces = type.GetInterfaces();
         for (var i = 0; i < implementedInterfaces.Length; ++i)
         {
             if (interfaceType.IsEquivalentTypeTo(implementedInterfaces[i]))
@@ -64,12 +75,21 @@ public static partial class Check
     /// <param name="typeComparer">The equality comparer used to compare the interface types.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="interfaceType" />, or <paramref name="typeComparer" /> is null.</exception>
     [ContractAnnotation("type:null => halt; interfaceType:null => halt; typeComparer:null => halt")]
-    public static bool Implements([ValidatedNotNull] this Type type, [ValidatedNotNull] Type interfaceType, [ValidatedNotNull] IEqualityComparer<Type> typeComparer)
+    public static bool Implements(
+#if NET8_0
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
+#endif
+        [ValidatedNotNull]
+        this Type type,
+        [ValidatedNotNull] Type interfaceType,
+        [ValidatedNotNull] IEqualityComparer<Type> typeComparer
+    )
     {
-        interfaceType.MustNotBeNull(nameof(interfaceType));
-        typeComparer.MustNotBeNull(nameof(typeComparer));
+        type.MustNotBeNull();
+        interfaceType.MustNotBeNull();
+        typeComparer.MustNotBeNull();
 
-        var implementedInterfaces = type.MustNotBeNull(nameof(type)).GetInterfaces();
+        var implementedInterfaces = type.GetInterfaces();
         for (var i = 0; i < implementedInterfaces.Length; ++i)
         {
             if (typeComparer.Equals(implementedInterfaces[i], interfaceType))
@@ -88,7 +108,12 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("type:null => halt; otherType:null => halt")]
-    public static bool IsOrImplements([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType) =>
+    public static bool IsOrImplements(
+#if NET8_0
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
+#endif
+        [ValidatedNotNull] this Type type,
+        [ValidatedNotNull] Type otherType) =>
         type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.Implements(otherType);
 
     /// <summary>
@@ -102,7 +127,13 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("type:null => halt; otherType:null => halt")]
-    public static bool IsOrImplements([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType, [ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
+    public static bool IsOrImplements(
+#if NET8_0
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
+#endif
+        [ValidatedNotNull] this Type type,
+        [ValidatedNotNull] Type otherType,
+        [ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
         typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type.MustNotBeNull(nameof(type)), otherType.MustNotBeNull(nameof(otherType))) || type.Implements(otherType, typeComparer);
 
     /// <summary>
@@ -190,11 +221,16 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="baseClassOrInterfaceType" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt")]
-    public static bool InheritsFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type baseClassOrInterfaceType) =>
+    public static bool InheritsFrom(
+#if NET8_0
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
+#endif        
+        [ValidatedNotNull] this Type type,
+        [ValidatedNotNull] Type baseClassOrInterfaceType) =>
         baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType))
-                                .IsInterface
-            ? type.Implements(baseClassOrInterfaceType)
-            : type.DerivesFrom(baseClassOrInterfaceType);
+                                .IsInterface ?
+            type.Implements(baseClassOrInterfaceType) :
+            type.DerivesFrom(baseClassOrInterfaceType);
 
     /// <summary>
     /// Checks if the given type derives from the specified base class or interface type. This overload uses the specified <paramref name="typeComparer" />
@@ -206,11 +242,17 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="baseClassOrInterfaceType" />, or <paramref name="typeComparer" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt; typeComparer:null => halt")]
-    public static bool InheritsFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type baseClassOrInterfaceType, [ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
+    public static bool InheritsFrom(
+#if NET8_0
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
+#endif        
+        [ValidatedNotNull] this Type type,
+        [ValidatedNotNull] Type baseClassOrInterfaceType,
+        [ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
         baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType))
-                                .IsInterface
-            ? type.Implements(baseClassOrInterfaceType, typeComparer)
-            : type.DerivesFrom(baseClassOrInterfaceType, typeComparer);
+                                .IsInterface ?
+            type.Implements(baseClassOrInterfaceType, typeComparer) :
+            type.DerivesFrom(baseClassOrInterfaceType, typeComparer);
 
     /// <summary>
     /// Checks if the given <paramref name="type" /> is equal to the specified <paramref name="otherType" /> or if it derives from it or implements it.
@@ -222,7 +264,12 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("type:null => halt; otherType:null => halt")]
-    public static bool IsOrInheritsFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType) =>
+    public static bool IsOrInheritsFrom(
+#if NET8_0
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
+#endif
+        [ValidatedNotNull] this Type type,
+        [ValidatedNotNull] Type otherType) =>
         type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType);
 
 
@@ -236,7 +283,13 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("type:null => halt; otherType:null => halt; typeComparer:null => halt")]
-    public static bool IsOrInheritsFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType, [ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
+    public static bool IsOrInheritsFrom(
+#if NET8_0
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
+#endif        
+        [ValidatedNotNull] this Type type,
+        [ValidatedNotNull] Type otherType,
+        [ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
         typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type, otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType, typeComparer);
 
 

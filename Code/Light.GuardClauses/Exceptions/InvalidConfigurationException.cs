@@ -16,6 +16,8 @@ public class InvalidConfigurationException : Exception
     /// <param name="innerException">The exception that is the cause of this one (optional).</param>
     public InvalidConfigurationException(string? message = null, Exception? innerException = null) : base(message, innerException) { }
 
+#if !NET8_0
     /// <inheritdoc />
     protected InvalidConfigurationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+#endif
 }
