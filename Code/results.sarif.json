@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.6.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "results": [],
+      "tool": {
+        "driver": {
+          "name": "InspectCode",
+          "organization": "JetBrains, Inc",
+          "fullName": "JetBrains Inspect Code 2023.2.2",
+          "semanticVersion": "232.0.20230920.171904",
+          "informationUri": "http://www.jetbrains.com/resharper/features/command-line.html"
+        }
+      },
+      "invocations": [
+        {
+          "executionSuccessful": true
+        }
+      ],
+      "versionControlProvenance": [
+        {
+          "repositoryUri": "https://github.com/feO2x/Light.GuardClauses.git",
+          "revisionId": "a067d912ad9d9a1a99223bfc999c4bac67281b6c",
+          "branch": "72-null-check-warnings"
+        }
+      ],
+      "originalUriBaseIds": {
+        "solutionDir": {
+          "uri": "file:///C:/Programming/Light.GuardClauses/Code/",
+          "description": {
+            "text": "Solution Directory"
+          }
+        }
+      },
+      "columnKind": "utf16CodeUnits"
+    }
+  ]
+}

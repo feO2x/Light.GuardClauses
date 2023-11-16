@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <LangVersion>11.0</LangVersion>
+        <TargetFrameworks>net7.0;net48</TargetFrameworks>
+        <Nullable>disable</Nullable>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Light.GuardClauses\Light.GuardClauses.csproj" />
+    </ItemGroup>
+</Project>

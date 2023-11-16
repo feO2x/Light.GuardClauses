@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Light.GuardClauses.Exceptions;
@@ -19,8 +20,7 @@ public static partial class Check
     /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static T MustNotBeNull<T>([ValidatedNotNull, NoEnumeration] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : class
+    public static T MustNotBeNull<T>([NoEnumeration] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : class
     {
         if (parameter is null)
             Throw.ArgumentNull(parameterName, message);

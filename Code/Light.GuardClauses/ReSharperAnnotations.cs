@@ -34,20 +34,6 @@ using System;
 namespace JetBrains.Annotations;
 
 /// <summary>
-/// Indicates that the value of the marked element can never be <c>null</c>.
-/// </summary>
-/// <example><code>
-/// [NotNull] object Foo() {
-///   return null; // Warning: Possible 'null' assignment
-/// }
-/// </code></example>
-[AttributeUsage(
-    AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
-    AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.Event |
-    AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.GenericParameter)]
-internal sealed class NotNullAttribute : Attribute { }
-
-/// <summary>
 /// Describes dependence between method input and output.
 /// </summary>
 /// <syntax>
@@ -94,16 +80,16 @@ internal sealed class NotNullAttribute : Attribute { }
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 internal sealed class ContractAnnotationAttribute : Attribute
 {
-    public ContractAnnotationAttribute([NotNull] string contract)
+    public ContractAnnotationAttribute(string contract)
         : this(contract, false) { }
 
-    public ContractAnnotationAttribute([NotNull] string contract, bool forceFullStates)
+    public ContractAnnotationAttribute(string contract, bool forceFullStates)
     {
         Contract = contract;
         ForceFullStates = forceFullStates;
     }
 
-    [NotNull] public string Contract { get; }
+    public string Contract { get; }
 
     public bool ForceFullStates { get; }
 }
