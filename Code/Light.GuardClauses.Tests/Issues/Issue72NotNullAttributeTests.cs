@@ -8,7 +8,7 @@ namespace Light.GuardClauses.Tests.Issues;
 public static class Issue72NotNullAttributeTests
 {
     [Fact]
-    public static void MustNotBeNull()
+    public static void CheckMustNotBeNull()
     {
         _ = TestMustNotBeNull("foo");
         _ = TestMustNotBeNullWithDelegate("foo");
@@ -28,7 +28,7 @@ public static class Issue72NotNullAttributeTests
     }
 
     [Fact]
-    public static void MustNotBeDefault()
+    public static void CheckMustNotBeDefault()
     {
         _ = TestMustNotBeDefault("foo");
         _ = TestMustNotBeDefaultWithDelegate("foo");
