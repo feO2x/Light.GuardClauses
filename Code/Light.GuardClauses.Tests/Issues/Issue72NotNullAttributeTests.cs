@@ -87,7 +87,7 @@ public static class Issue72NotNullAttributeTests
             return ((string) input).Length;
         }
     }
-    
+
     [Fact]
     public static void CheckMustHaveValue()
     {
@@ -106,5 +106,28 @@ public static class Issue72NotNullAttributeTests
             input.MustHaveValue(() => new Exception());
             return input.Value;
         }
+    }
+
+    [Fact]
+    public static void CheckMustNotBeLessThan()
+    {
+        TestMustNotBeLessThan("foo").Should().Be("foo");
+        TestMustNotBeLessThanWithDelegate("foo").Should().Be("foo");
+        return;
+
+        // I need to provoke a compiler warning
+#pragma warning disable CS8631 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match constraint type.
+        static string TestMustNotBeLessThan(string? input)
+        {
+            input.MustNotBeLessThan("bar");
+            return input;
+        }
+
+        static string TestMustNotBeLessThanWithDelegate(string? input)
+        {
+            input.MustNotBeLessThan("bar", (_, _) => new Exception());
+            return input;
+        }
+#pragma warning restore CS8631
     }
 }
