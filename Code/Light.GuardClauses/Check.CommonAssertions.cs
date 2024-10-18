@@ -110,10 +110,15 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <typeparamref name="T" /> is a reference type and <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static T MustNotBeNullReference<T>([ValidatedNotNull, NoEnumeration] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static T MustNotBeNullReference<T>([NotNull, ValidatedNotNull, NoEnumeration] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (default(T) != null)
+        {
+            // If we end up here, parameter cannot be null
+#pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
             return parameter;
+#pragma warning restore CS8777 // Parameter must have a non-null value when exiting.
+        }
 
         if (parameter is null)
             Throw.ArgumentNull(parameterName, message);
@@ -130,10 +135,15 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <typeparamref name="T" /> is a reference type and <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-    public static T MustNotBeNullReference<T>([ValidatedNotNull, NoEnumeration] this T parameter, Func<Exception> exceptionFactory)
+    public static T MustNotBeNullReference<T>([NotNull, ValidatedNotNull, NoEnumeration] this T parameter, Func<Exception> exceptionFactory)
     {
         if (default(T) != null)
+        {
+            // If we end up here, parameter cannot be null
+#pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
             return parameter;
+#pragma warning restore CS8777 // Parameter must have a non-null value when exiting.
+        }
 
         if (parameter is null)
             Throw.CustomException(exceptionFactory);

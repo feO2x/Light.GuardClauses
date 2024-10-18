@@ -46,4 +46,24 @@ public static class Issue72NotNullAttributeTests
             return input.Length;
         }
     }
+    
+    [Fact]
+    public static void CheckMustNotBeNullReference()
+    {
+        _ = TestMustNotBeNullReference("foo");
+        _ = TestMustNotBeNullReferenceWithDelegate("foo");
+        return;
+        
+        static int TestMustNotBeNullReference(string? input)
+        {
+            input.MustNotBeNullReference();
+            return input.Length;
+        }
+        
+        static int TestMustNotBeNullReferenceWithDelegate(string? input)
+        {
+            input.MustNotBeNullReference(() => new Exception());
+            return input.Length;
+        }
+    }
 }
