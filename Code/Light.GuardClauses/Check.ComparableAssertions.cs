@@ -177,7 +177,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static T MustBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T>
+    public static T MustBeGreaterThan<T>([NotNull, ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : IComparable<T>
     {
         if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) <= 0)
             Throw.MustBeGreaterThan(parameter, other, parameterName, message);
@@ -193,9 +193,9 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when the specified <paramref name="parameter" /> is less than or equal to <paramref name="other" />, or when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-    public static T MustBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
+    public static T MustBeGreaterThan<T>([NotNull, ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory) where T : IComparable<T>
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || parameter.CompareTo(other) <= 0)
             Throw.CustomException(exceptionFactory, parameter!, other);
         return parameter;
