@@ -1,6 +1,7 @@
 #nullable enable
 
 using System;
+using FluentAssertions;
 using Xunit;
 
 namespace Light.GuardClauses.Tests.Issues;
@@ -10,8 +11,8 @@ public static class Issue72NotNullAttributeTests
     [Fact]
     public static void CheckMustNotBeNull()
     {
-        _ = TestMustNotBeNull("foo");
-        _ = TestMustNotBeNullWithDelegate("foo");
+        TestMustNotBeNull("foo").Should().Be(3);
+        _ = TestMustNotBeNullWithDelegate("foo").Should().Be(3);
         return;
 
         static int TestMustNotBeNull(string? input)
@@ -30,8 +31,8 @@ public static class Issue72NotNullAttributeTests
     [Fact]
     public static void CheckMustNotBeDefault()
     {
-        _ = TestMustNotBeDefault("foo");
-        _ = TestMustNotBeDefaultWithDelegate("foo");
+        TestMustNotBeDefault("foo").Should().Be(3);
+        TestMustNotBeDefaultWithDelegate("foo").Should().Be(3);
         return;
 
         static int TestMustNotBeDefault(string? input)
@@ -50,8 +51,8 @@ public static class Issue72NotNullAttributeTests
     [Fact]
     public static void CheckMustNotBeNullReference()
     {
-        _ = TestMustNotBeNullReference("foo");
-        _ = TestMustNotBeNullReferenceWithDelegate("foo");
+        TestMustNotBeNullReference("foo").Should().Be(3);
+        TestMustNotBeNullReferenceWithDelegate("foo").Should().Be(3);
         return;
 
         static int TestMustNotBeNullReference(string? input)
@@ -70,8 +71,8 @@ public static class Issue72NotNullAttributeTests
     [Fact]
     public static void CheckMustBeOfType()
     {
-        _ = TestMustBeOfType("foo");
-        _ = TestMustBeOfTypeWithDelegate("foo");
+        TestMustBeOfType("foo").Should().Be(3);
+        TestMustBeOfTypeWithDelegate("foo").Should().Be(3);
         return;
 
         static int TestMustBeOfType(object? input)
@@ -84,6 +85,26 @@ public static class Issue72NotNullAttributeTests
         {
             input.MustBeOfType<string>(_ => new Exception());
             return ((string) input).Length;
+        }
+    }
+    
+    [Fact]
+    public static void CheckMustHaveValue()
+    {
+        TestMustHaveValue(42).Should().Be(42);
+        TestMustHaveValueWithDelegate(42).Should().Be(42);
+        return;
+
+        static int TestMustHaveValue(int? input)
+        {
+            input.MustHaveValue();
+            return input.Value;
+        }
+
+        static int TestMustHaveValueWithDelegate(int? input)
+        {
+            input.MustHaveValue(() => new Exception());
+            return input.Value;
         }
     }
 }
