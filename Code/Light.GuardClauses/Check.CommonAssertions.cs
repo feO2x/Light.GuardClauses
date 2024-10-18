@@ -54,7 +54,7 @@ public static partial class Check
     /// <exception cref="ArgumentDefaultException">Thrown when <paramref name="parameter" /> is a value type and the default value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static T MustNotBeDefault<T>([ValidatedNotNull] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static T MustNotBeDefault<T>([NotNull, ValidatedNotNull] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (default(T) is null)
         {
@@ -65,7 +65,11 @@ public static partial class Check
 
         if (EqualityComparer<T>.Default.Equals(parameter, default!))
             Throw.ArgumentDefault(parameterName, message);
+        
+        // If we end up here, we have a value type which cannot be null
+#pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
         return parameter;
+#pragma warning restore CS8777
     }
 
     /// <summary>
@@ -76,7 +80,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is the default value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-    public static T MustNotBeDefault<T>([ValidatedNotNull] this T parameter, Func<Exception> exceptionFactory)
+    public static T MustNotBeDefault<T>([NotNull, ValidatedNotNull] this T parameter, Func<Exception> exceptionFactory)
     {
         if (default(T) is null)
         {
@@ -87,7 +91,11 @@ public static partial class Check
 
         if (EqualityComparer<T>.Default.Equals(parameter, default!))
             Throw.CustomException(exceptionFactory);
+        
+        // If we end up here, we have a value type which cannot be null
+#pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
         return parameter;
+#pragma warning restore CS8777
 
     }
 
