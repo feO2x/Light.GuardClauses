@@ -305,4 +305,25 @@ public static class Issue72NotNullAttributeTests
         }
 #pragma warning restore CS8631
     }
+
+    [Fact]
+    public static void CheckMustNotBeIn()
+    {
+        TestMustNotBeIn("d").Should().Be(1);
+        TestMustNotBeInWithDelegate("d").Should().Be(1);
+
+#pragma warning disable CS8631 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match constraint type.
+        static int TestMustNotBeIn(string? input)
+        {
+            input.MustNotBeIn(Range.FromInclusive("a").ToInclusive("c")!);
+            return input.Length;
+        }
+
+        static int TestMustNotBeInWithDelegate(string? input)
+        {
+            input.MustNotBeIn(Range.FromInclusive("a").ToInclusive("c")!, (_, _) => new Exception());
+            return input.Length;
+        }
+#pragma warning restore CS8631
+    }
 }
