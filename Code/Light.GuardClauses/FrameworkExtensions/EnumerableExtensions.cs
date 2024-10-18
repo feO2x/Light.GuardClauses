@@ -5,6 +5,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using System.Runtime.CompilerServices;
 using Light.GuardClauses.Exceptions;
+using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace Light.GuardClauses.FrameworkExtensions;
 
@@ -154,7 +155,7 @@ public static class EnumerableExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("enumerable:null => halt")]
-    public static int Count([ValidatedNotNull] this IEnumerable? enumerable, string? parameterName, string? message)
+    public static int Count([NotNull, ValidatedNotNull] this IEnumerable? enumerable, string? parameterName, string? message)
     {
         if (enumerable is ICollection collection)
             return collection.Count;
@@ -230,7 +231,7 @@ public static class EnumerableExtensions
         return count;
     }
 
-    private static int DetermineCountViaEnumerating(IEnumerable? enumerable, string? parameterName, string? message)
+    private static int DetermineCountViaEnumerating([NotNull] IEnumerable? enumerable, string? parameterName, string? message)
     {
         var count = 0;
         var enumerator = enumerable.MustNotBeNull(parameterName, message).GetEnumerator();

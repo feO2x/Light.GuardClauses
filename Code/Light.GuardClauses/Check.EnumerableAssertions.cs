@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
+using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace Light.GuardClauses;
 
@@ -23,7 +24,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static TCollection MustHaveCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
+    public static TCollection MustHaveCount<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
     {
         if (parameter!.Count(parameterName, message) != count)
             Throw.InvalidCollectionCount(parameter!, count, parameterName, message);
@@ -39,7 +40,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> does not have the specified number of items, or when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static TCollection MustHaveCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, Func<TCollection?, int, Exception> exceptionFactory) where TCollection : class, IEnumerable
+    public static TCollection MustHaveCount<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, int count, Func<TCollection?, int, Exception> exceptionFactory) where TCollection : class, IEnumerable
     {
         if (parameter is null || parameter.Count() != count)
             Throw.CustomException(exceptionFactory, parameter, count);

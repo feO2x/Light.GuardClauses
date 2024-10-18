@@ -326,4 +326,24 @@ public static class Issue72NotNullAttributeTests
         }
 #pragma warning restore CS8631
     }
+
+    [Fact]
+    public static void CheckMustHaveCount()
+    {
+        TestMustHaveCount([]).Should().Be(0);
+        TestMustHaveCountWithDelegate([]).Should().Be(0);
+        return;
+
+        static int TestMustHaveCount(string[]? input)
+        {
+            input.MustHaveCount(0);
+            return input.Length;
+        }
+
+        static int TestMustHaveCountWithDelegate(string[]? input)
+        {
+            input.MustHaveCount(0, (_, _) => new Exception());
+            return input.Length;
+        }
+    }
 }
