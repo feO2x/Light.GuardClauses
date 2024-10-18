@@ -130,4 +130,26 @@ public static class Issue72NotNullAttributeTests
         }
 #pragma warning restore CS8631
     }
+
+    [Fact]
+    public static void CheckMustBeGreaterThanOrEqualTo()
+    {
+        TestMustBeGreaterThanOrEqualTo("foo").Should().Be("foo");
+        TestMustBeGreaterThanOrEqualToWithDelegate("foo").Should().Be("foo");
+        return;
+
+#pragma warning disable CS8631 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match constraint type.
+        static string TestMustBeGreaterThanOrEqualTo(string? input)
+        {
+            input.MustBeGreaterThanOrEqualTo("bar");
+            return input;
+        }
+
+        static string TestMustBeGreaterThanOrEqualToWithDelegate(string? input)
+        {
+            input.MustBeGreaterThanOrEqualTo("bar", (_, _) => new Exception());
+            return input;
+        }
+#pragma warning restore CS8631
+    }
 }
