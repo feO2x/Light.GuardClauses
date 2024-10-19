@@ -6,6 +6,9 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.Issues;
 
+// This occurs for delegates that create exceptions, and we just turn it off for these tests
+#pragma warning disable CS8622 // Nullability of reference types in type of parameter doesn't match the target delegate type.
+
 public static class Issue72NotNullAttributeTests
 {
     [Fact]
