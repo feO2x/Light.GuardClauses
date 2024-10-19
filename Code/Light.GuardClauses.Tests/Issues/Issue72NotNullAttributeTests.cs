@@ -462,4 +462,24 @@ public static class Issue72NotNullAttributeTests
             return input.Length;
         }
     }
+
+    [Fact]
+    public static void CheckMustHaveMinimumCount()
+    {
+        TestMustHaveMinimumCount([1, 2, 3]).Should().Be(3);
+        TestMustHaveMinimumCountWithDelegate([1, 2, 3]).Should().Be(3);
+        return;
+
+        static int TestMustHaveMinimumCount(int[]? input)
+        {
+            input.MustHaveMinimumCount(2);
+            return input.Length;
+        }
+
+        static int TestMustHaveMinimumCountWithDelegate(int[]? input)
+        {
+            input.MustHaveMinimumCount(2, (_, _) => new Exception());
+            return input.Length;
+        }
+    }
 }
