@@ -409,4 +409,17 @@ public static class Issue72NotNullAttributeTests
             return input.Length;
         }
     }
+
+    [Fact]
+    public static void CheckIsOneOf()
+    {
+        TestIsOneOf("foo").Should().Be(3);
+        return;
+
+        static int TestIsOneOf(string? input)
+        {
+            'o'.IsOneOf(input!);
+            return input.Length;
+        }
+    }
 }

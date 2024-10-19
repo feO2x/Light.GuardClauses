@@ -193,7 +193,8 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="items" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("items:null => halt")]
-    public static bool IsOneOf<TItem>(this TItem item, [ValidatedNotNull] IEnumerable<TItem> items)
+    // ReSharper disable once RedundantNullableFlowAttribute - the attribute has an effect, see Issue72NotNullAttribute tests 
+    public static bool IsOneOf<TItem>(this TItem item, [NotNull, ValidatedNotNull] IEnumerable<TItem> items)
     {
         if (items is ICollection<TItem> collection)
             return collection.Contains(item);
