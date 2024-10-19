@@ -349,7 +349,7 @@ public static class Issue72NotNullAttributeTests
             return input.Length;
         }
     }
-    
+
     [Fact]
     public static void CheckMustNotBeNullOrEmpty()
     {
@@ -369,7 +369,7 @@ public static class Issue72NotNullAttributeTests
             return input.Length;
         }
     }
-    
+
     [Fact]
     public static void CheckMustContain()
     {
@@ -386,6 +386,26 @@ public static class Issue72NotNullAttributeTests
         static int TestMustContainWithDelegate(int[]? input)
         {
             input.MustContain(2, (_, _) => new Exception());
+            return input.Length;
+        }
+    }
+
+    [Fact]
+    public static void CheckMustNotContain()
+    {
+        TestMustNotContain([1, 2, 3]).Should().Be(3);
+        TestMustNotContainWithDelegate([1, 2, 3]).Should().Be(3);
+        return;
+
+        static int TestMustNotContain(int[]? input)
+        {
+            input.MustNotContain(4);
+            return input.Length;
+        }
+
+        static int TestMustNotContainWithDelegate(int[]? input)
+        {
+            input.MustNotContain(4, (_, _) => new Exception());
             return input.Length;
         }
     }
