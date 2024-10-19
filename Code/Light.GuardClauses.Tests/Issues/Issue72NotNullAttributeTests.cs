@@ -482,4 +482,24 @@ public static class Issue72NotNullAttributeTests
             return input.Length;
         }
     }
+
+    [Fact]
+    public static void CheckMustHaveMaximumCount()
+    {
+        TestMustHaveMaximumCount([1, 2, 3]).Should().Be(3);
+        TestMustHaveMaximumCountWithDelegate([1, 2, 3]).Should().Be(3);
+        return;
+
+        static int TestMustHaveMaximumCount(int[]? input)
+        {
+            input.MustHaveMaximumCount(3);
+            return input.Length;
+        }
+
+        static int TestMustHaveMaximumCountWithDelegate(int[]? input)
+        {
+            input.MustHaveMaximumCount(3, (_, _) => new Exception());
+            return input.Length;
+        }
+    }
 }
