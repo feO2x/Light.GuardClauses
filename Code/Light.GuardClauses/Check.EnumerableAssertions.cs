@@ -27,8 +27,8 @@ public static partial class Check
     public static TCollection MustHaveCount<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
     {
         if (parameter!.Count(parameterName, message) != count)
-            Throw.InvalidCollectionCount(parameter!, count, parameterName, message);
-        return parameter!;
+            Throw.InvalidCollectionCount(parameter, count, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -71,7 +71,7 @@ public static partial class Check
     {
         if (parameter.Count(parameterName, message) == 0)
             Throw.EmptyCollection(parameterName, message);
-        return parameter!;
+        return parameter;
     }
 
     /// <summary>
@@ -110,8 +110,8 @@ public static partial class Check
         }
 
         if (!parameter.MustNotBeNull(parameterName, message).Contains(item))
-            Throw.MissingItem(parameter!, item, parameterName, message);
-        return parameter!;
+            Throw.MissingItem(parameter, item, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -158,8 +158,8 @@ public static partial class Check
         }
 
         if (parameter.MustNotBeNull(parameterName, message).Contains(item))
-            Throw.ExistingItem(parameter!, item, parameterName, message);
-        return parameter!;
+            Throw.ExistingItem(parameter, item, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -295,8 +295,8 @@ public static partial class Check
     public static TCollection MustHaveMinimumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
     {
         if (parameter.Count(parameterName, message) < count)
-            Throw.InvalidMinimumCollectionCount(parameter!, count, parameterName, message);
-        return parameter!;
+            Throw.InvalidMinimumCollectionCount(parameter, count, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -329,8 +329,8 @@ public static partial class Check
     public static TCollection MustHaveMaximumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
     {
         if (parameter.Count(parameterName, message) > count)
-            Throw.InvalidMaximumCollectionCount(parameter!, count, parameterName, message);
-        return parameter!;
+            Throw.InvalidMaximumCollectionCount(parameter, count, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
