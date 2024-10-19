@@ -283,8 +283,8 @@ public static partial class Check
     public static string MustMatch([ValidatedNotNull] this string? parameter, Regex regex, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!regex.MustNotBeNull(nameof(regex), message).IsMatch(parameter.MustNotBeNull(parameterName, message)))
-            Throw.StringDoesNotMatch(parameter!, regex, parameterName, message);
-        return parameter!;
+            Throw.StringDoesNotMatch(parameter, regex, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -343,8 +343,8 @@ public static partial class Check
     public static string MustContain([ValidatedNotNull] this string? parameter, string? value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!parameter.MustNotBeNull(parameterName, message).Contains(value.MustNotBeNull(nameof(value), message)))
-            Throw.StringDoesNotContain(parameter!, value!, parameterName, message);
-        return parameter!;
+            Throw.StringDoesNotContain(parameter, value, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -384,8 +384,8 @@ public static partial class Check
     public static string MustContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).IndexOf(value.MustNotBeNull(nameof(value), message), comparisonType) < 0)
-            Throw.StringDoesNotContain(parameter!, value, comparisonType, parameterName, message);
-        return parameter!;
+            Throw.StringDoesNotContain(parameter, value, comparisonType, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -425,8 +425,8 @@ public static partial class Check
     public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).Contains(value.MustNotBeNull(nameof(value), message)))
-            Throw.StringContains(parameter!, value, parameterName, message);
-        return parameter!;
+            Throw.StringContains(parameter, value, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -466,8 +466,8 @@ public static partial class Check
     public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).IndexOf(value.MustNotBeNull(nameof(value), message), comparisonType) >= 0)
-            Throw.StringContains(parameter!, value, comparisonType, parameterName, message);
-        return parameter!;
+            Throw.StringContains(parameter, value, comparisonType, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -547,8 +547,8 @@ public static partial class Check
     public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!value.MustNotBeNull(nameof(value), message).Contains(parameter.MustNotBeNull(parameterName, message)))
-            Throw.NotSubstring(parameter!, value, parameterName, message);
-        return parameter!;
+            Throw.NotSubstring(parameter, value, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -588,8 +588,8 @@ public static partial class Check
     public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (value.MustNotBeNull(nameof(value), message).IndexOf(parameter.MustNotBeNull(parameterName, message), comparisonType) == -1)
-            Throw.NotSubstring(parameter!, value, comparisonType, parameterName, message);
-        return parameter!;
+            Throw.NotSubstring(parameter, value, comparisonType, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -629,8 +629,8 @@ public static partial class Check
     public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (value.MustNotBeNull(nameof(value), message).Contains(parameter.MustNotBeNull(parameterName, message)))
-            Throw.Substring(parameter!, value, parameterName, message);
-        return parameter!;
+            Throw.Substring(parameter, value, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -671,8 +671,8 @@ public static partial class Check
     public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (value.MustNotBeNull(nameof(value), message).IndexOf(parameter.MustNotBeNull(parameterName, message), comparisonType) != -1)
-            Throw.Substring(parameter!, value, comparisonType, parameterName, message);
-        return parameter!;
+            Throw.Substring(parameter, value, comparisonType, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -733,8 +733,8 @@ public static partial class Check
     public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!parameter.MustNotBeNull(parameterName, message).IsEmailAddress())
-            Throw.InvalidEmailAddress(parameter!, parameterName, message);
-        return parameter!;
+            Throw.InvalidEmailAddress(parameter, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -768,8 +768,8 @@ public static partial class Check
     public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, Regex emailAddressPattern, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!parameter.MustNotBeNull(parameterName, message).IsEmailAddress(emailAddressPattern))
-            Throw.InvalidEmailAddress(parameter!, parameterName, message);
-        return parameter!;
+            Throw.InvalidEmailAddress(parameter, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -804,8 +804,8 @@ public static partial class Check
     public static string MustBeShorterThan([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).Length >= length)
-            Throw.StringNotShorterThan(parameter!, length, parameterName, message);
-        return parameter!;
+            Throw.StringNotShorterThan(parameter, length, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -838,8 +838,8 @@ public static partial class Check
     public static string MustBeShorterThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).Length > length)
-            Throw.StringNotShorterThanOrEqualTo(parameter!, length, parameterName, message);
-        return parameter!;
+            Throw.StringNotShorterThanOrEqualTo(parameter, length, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -865,15 +865,15 @@ public static partial class Check
     /// <param name="length">The asserted length of the string.</param>
     /// <param name="parameterName">The name of the parameter (optional).</param>
     /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
-    /// <exception cref="StringLengthException">Thrown when <paramref name="parameter"/> has a length different than <paramref name="length"/>.</exception>
+    /// <exception cref="StringLengthException">Thrown when <paramref name="parameter"/> has a length other than <paramref name="length"/>.</exception>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
     public static string MustHaveLength([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).Length != length)
-            Throw.StringLengthNotEqualTo(parameter!, length, parameterName, message);
-        return parameter!;
+            Throw.StringLengthNotEqualTo(parameter, length, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -882,7 +882,7 @@ public static partial class Check
     /// <param name="parameter">The string to be checked.</param>
     /// <param name="length">The asserted length of the string.</param>
     /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="length"/> are passed to this delegate.</param>
-    /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or when it has a length different than <paramref name="length"/>.</exception>
+    /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or when it has a length other than <paramref name="length"/>.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
     public static string MustHaveLength([ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
@@ -906,8 +906,8 @@ public static partial class Check
     public static string MustBeLongerThan([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).Length <= length)
-            Throw.StringNotLongerThan(parameter!, length, parameterName, message);
-        return parameter!;
+            Throw.StringNotLongerThan(parameter, length, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -940,8 +940,8 @@ public static partial class Check
     public static string MustBeLongerThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).Length < length)
-            Throw.StringNotLongerThanOrEqualTo(parameter!, length, parameterName, message);
-        return parameter!;
+            Throw.StringNotLongerThanOrEqualTo(parameter, length, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -974,8 +974,8 @@ public static partial class Check
     public static string MustHaveLengthIn([ValidatedNotNull] this string? parameter, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!range.IsValueWithinRange(parameter.MustNotBeNull(parameterName, message).Length))
-            Throw.StringLengthNotInRange(parameter!, range, parameterName, message);
-        return parameter!;
+            Throw.StringLengthNotInRange(parameter, range, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -1015,8 +1015,8 @@ public static partial class Check
     public static string MustBeNewLine([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!parameter.MustNotBeNull(parameterName, message).IsNewLine())
-            Throw.NotNewLine(parameter!, parameterName, message);
-        return parameter!;
+            Throw.NotNewLine(parameter, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -1085,7 +1085,7 @@ public static partial class Check
     {
         if (!parameter.MustNotBeNull(parameterName, message).IsTrimmed())
             Throw.NotTrimmed(parameter, parameterName, message);
-        return parameter!;
+        return parameter;
 
     }
 
@@ -1153,7 +1153,7 @@ public static partial class Check
     {
         if (!parameter.MustNotBeNull(parameterName, message).IsTrimmedAtStart())
             Throw.NotTrimmedAtStart(parameter, parameterName, message);
-        return parameter!;
+        return parameter;
     }
     
     /// <summary>
@@ -1220,7 +1220,7 @@ public static partial class Check
     {
         if (!parameter.MustNotBeNull(parameterName, message).IsTrimmedAtEnd())
             Throw.NotTrimmedAtEnd(parameter, parameterName, message);
-        return parameter!;
+        return parameter;
     }
     
     /// <summary>
