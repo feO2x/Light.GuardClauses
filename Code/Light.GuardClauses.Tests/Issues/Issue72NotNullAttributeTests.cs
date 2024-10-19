@@ -442,4 +442,24 @@ public static class Issue72NotNullAttributeTests
             return input.Length;
         }
     }
+
+    [Fact]
+    public static void CheckMustNotBeOneOf()
+    {
+        TestMustNotBeOneOf("bar").Should().Be(3);
+        TestMustNotBeOneOfWithDelegate("bar").Should().Be(3);
+        return;
+
+        static int TestMustNotBeOneOf(string? input)
+        {
+            'o'.MustNotBeOneOf(input!);
+            return input.Length;
+        }
+
+        static int TestMustNotBeOneOfWithDelegate(string? input)
+        {
+            'o'.MustNotBeOneOf(input!, (_, _) => new Exception());
+            return input.Length;
+        }
+    }
 }

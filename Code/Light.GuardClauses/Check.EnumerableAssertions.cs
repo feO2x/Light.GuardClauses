@@ -254,7 +254,8 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="items"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("items:null => halt")]
-    public static TItem MustNotBeOneOf<TItem>(this TItem parameter, [ValidatedNotNull] IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    // ReSharper disable once RedundantNullableFlowAttribute - the attribute has an effect, see Issue72NotNullAttribute tests
+    public static TItem MustNotBeOneOf<TItem>(this TItem parameter, [NotNull, ValidatedNotNull] IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         // ReSharper disable PossibleMultipleEnumeration
         if (parameter.IsOneOf(items.MustNotBeNull(nameof(items), message)))
@@ -272,9 +273,9 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is equal to one of the specified <paramref name="items"/>, or when <paramref name="items"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("items:null => halt")]
-    public static TItem MustNotBeOneOf<TItem, TCollection>(this TItem parameter, [ValidatedNotNull] TCollection items, Func<TItem, TCollection, Exception> exceptionFactory) where TCollection : class, IEnumerable<TItem>
+    public static TItem MustNotBeOneOf<TItem, TCollection>(this TItem parameter, [NotNull, ValidatedNotNull] TCollection items, Func<TItem, TCollection, Exception> exceptionFactory) where TCollection : class, IEnumerable<TItem>
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (items is null || parameter.IsOneOf(items))
             Throw.CustomException(exceptionFactory, parameter, items!);
         return parameter;
