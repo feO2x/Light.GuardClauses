@@ -597,4 +597,38 @@ public static class Issue72NotNullAttributeTests
             return input.Length;
         }
     }
+
+    [Fact]
+    public static void CheckMustNotContainForStrings()
+    {
+        TestMustNotContain("foo").Should().Be(3);
+        TestMustNotContainWithDelegate("foo").Should().Be(3);
+        TestMustNotContainWithStringComparison("foo").Should().Be(3);
+        TestMustNotContainWithDelegateAndStringComparison("foo").Should().Be(3);
+        return;
+
+        static int TestMustNotContain(string? input)
+        {
+            input.MustNotContain("bar");
+            return input.Length;
+        }
+
+        static int TestMustNotContainWithDelegate(string? input)
+        {
+            input.MustNotContain("bar", (_, _) => new Exception());
+            return input.Length;
+        }
+        
+        static int TestMustNotContainWithStringComparison(string? input)
+        {
+            input.MustNotContain("BAR", StringComparison.OrdinalIgnoreCase);
+            return input.Length;
+        }
+        
+        static int TestMustNotContainWithDelegateAndStringComparison(string? input)
+        {
+            input.MustNotContain("BAR", StringComparison.OrdinalIgnoreCase, (_, _, _) => new Exception());
+            return input.Length;
+        }
+    }
 }
