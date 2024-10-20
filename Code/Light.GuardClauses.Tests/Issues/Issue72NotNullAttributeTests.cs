@@ -753,4 +753,24 @@ public static class Issue72NotNullAttributeTests
             return input;
         }
     }
+
+    [Fact]
+    public static void CheckMustBeShorterThanOrEqualTo()
+    {
+        TestMustBeShorterThanOrEqualTo("foo").Should().Be("foo");
+        TestMustBeShorterThanOrEqualToWithDelegate("foo").Should().Be("foo");
+        return;
+
+        static string TestMustBeShorterThanOrEqualTo(string? input)
+        {
+            input.MustBeShorterThanOrEqualTo(3);
+            return input;
+        }
+
+        static string TestMustBeShorterThanOrEqualToWithDelegate(string? input)
+        {
+            input.MustBeShorterThanOrEqualTo(3, (_, _) => new Exception());
+            return input;
+        }
+    }
 }

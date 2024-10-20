@@ -835,7 +835,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeShorterThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustBeShorterThanOrEqualTo([NotNull, ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).Length > length)
             Throw.StringNotShorterThanOrEqualTo(parameter, length, parameterName, message);
@@ -851,7 +851,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or when it has a length greater than <paramref name="length"/>.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeShorterThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
+    public static string MustBeShorterThanOrEqualTo([NotNull, ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
     {
         if (parameter is null || parameter.Length > length)
             Throw.CustomException(exceptionFactory, parameter, length);
