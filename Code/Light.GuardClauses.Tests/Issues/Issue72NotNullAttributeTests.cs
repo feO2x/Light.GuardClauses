@@ -853,4 +853,24 @@ public static class Issue72NotNullAttributeTests
             return input;
         }
     }
+
+    [Fact]
+    public static void CheckMustBeNewLine()
+    {
+        TestMustBeNewLine("\n").Should().Be("\n");
+        TestMustBeNewLineWithDelegate("\n").Should().Be("\n");
+        return;
+
+        static string TestMustBeNewLine(string? input)
+        {
+            input.MustBeNewLine();
+            return input;
+        }
+
+        static string TestMustBeNewLineWithDelegate(string? input)
+        {
+            input.MustBeNewLine(_ => new Exception());
+            return input;
+        }
+    }
 }

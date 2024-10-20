@@ -1012,7 +1012,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeNewLine([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustBeNewLine([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!parameter.MustNotBeNull(parameterName, message).IsNewLine())
             Throw.NotNewLine(parameter, parameterName, message);
@@ -1027,7 +1027,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is not equal to "\n" or "\r\n".</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeNewLine([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+    public static string MustBeNewLine([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
     {
         if (!parameter.IsNewLine())
             Throw.CustomException(exceptionFactory, parameter);
