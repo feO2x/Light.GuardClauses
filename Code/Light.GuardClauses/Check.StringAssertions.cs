@@ -765,7 +765,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; emailAddressPattern:null => halt")]
-    public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, Regex emailAddressPattern, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustBeEmailAddress([NotNull, ValidatedNotNull] this string? parameter, Regex emailAddressPattern, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!parameter.MustNotBeNull(parameterName, message).IsEmailAddress(emailAddressPattern))
             Throw.InvalidEmailAddress(parameter, parameterName, message);
@@ -782,7 +782,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or no valid email address.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; emailAddressPattern:null => halt")]
-    public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, Regex emailAddressPattern, Func<string?, Regex, Exception> exceptionFactory)
+    public static string MustBeEmailAddress([NotNull, ValidatedNotNull] this string? parameter, Regex emailAddressPattern, Func<string?, Regex, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (emailAddressPattern is null || !parameter.IsEmailAddress(emailAddressPattern))

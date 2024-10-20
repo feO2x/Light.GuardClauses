@@ -705,6 +705,8 @@ public static class Issue72NotNullAttributeTests
     {
         TestMustBeEmailAddress("test@example.com").Should().Be("test@example.com");
         TestMustBeEmailAddressWithDelegate("test@example.com").Should().Be("test@example.com");
+        TestMustBeEmailAddressWithRegex("test@example.com").Should().Be("test@example.com");
+        TestMustBeEmailAddressWithRegexAndDelegate("test@example.com").Should().Be("test@example.com");
         return;
 
         static string TestMustBeEmailAddress(string? input)
@@ -716,6 +718,18 @@ public static class Issue72NotNullAttributeTests
         static string TestMustBeEmailAddressWithDelegate(string? input)
         {
             input.MustBeEmailAddress(_ => new Exception());
+            return input;
+        }
+        
+        static string TestMustBeEmailAddressWithRegex(string? input)
+        {
+            input.MustBeEmailAddress(new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$"));
+            return input;
+        }
+
+        static string TestMustBeEmailAddressWithRegexAndDelegate(string? input)
+        {
+            input.MustBeEmailAddress(new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$"), (_, _) => new Exception());
             return input;
         }
     }
