@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
 using System.Runtime.CompilerServices;
+using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace Light.GuardClauses;
 
@@ -28,7 +29,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustNotBeNullOrEmpty([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustNotBeNullOrEmpty([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter is null)
             Throw.ArgumentNull(parameterName, message);
@@ -46,16 +47,12 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is an empty string or null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-    public static string MustNotBeNullOrEmpty([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+    public static string MustNotBeNullOrEmpty([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
     {
-        if (string.IsNullOrEmpty(parameter))
+        if (parameter.IsNullOrEmpty())
             Throw.CustomException(exceptionFactory, parameter);
-        
-#if NETSTANDARD2_0
-        return parameter!;
-#else
+
         return parameter;
-#endif
     }
 
     /// <summary>

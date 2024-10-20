@@ -502,4 +502,24 @@ public static class Issue72NotNullAttributeTests
             return input.Length;
         }
     }
+    
+    [Fact]
+    public static void CheckMustNotBeNullOrEmptyString()
+    {
+        TestMustNotBeNullOrEmptyString("foo").Should().Be(3);
+        TestMustNotBeNullOrEmptyStringWithDelegate("foo").Should().Be(3);
+        return;
+
+        static int TestMustNotBeNullOrEmptyString(string? input)
+        {
+            input.MustNotBeNullOrEmpty();
+            return input.Length;
+        }
+
+        static int TestMustNotBeNullOrEmptyStringWithDelegate(string? input)
+        {
+            input.MustNotBeNullOrEmpty(_ => new Exception());
+            return input.Length;
+        }
+    }
 }
