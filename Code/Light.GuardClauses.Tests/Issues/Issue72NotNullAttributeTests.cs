@@ -699,4 +699,24 @@ public static class Issue72NotNullAttributeTests
             return input.Length;
         }
     }
+
+    [Fact]
+    public static void CheckMustBeEmailAddress()
+    {
+        TestMustBeEmailAddress("test@example.com").Should().Be("test@example.com");
+        TestMustBeEmailAddressWithDelegate("test@example.com").Should().Be("test@example.com");
+        return;
+
+        static string TestMustBeEmailAddress(string? input)
+        {
+            input.MustBeEmailAddress();
+            return input;
+        }
+
+        static string TestMustBeEmailAddressWithDelegate(string? input)
+        {
+            input.MustBeEmailAddress(_ => new Exception());
+            return input;
+        }
+    }
 }
