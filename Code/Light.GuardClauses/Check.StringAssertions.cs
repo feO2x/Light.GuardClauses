@@ -74,11 +74,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustNotBeNullOrWhiteSpace([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustNotBeNullOrWhiteSpace([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         parameter.MustNotBeNullOrEmpty(parameterName, message);
 
-        foreach (var character in parameter!)
+        foreach (var character in parameter)
         {
             if (!character.IsWhiteSpace())
                 return parameter;
@@ -96,7 +96,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is null, empty, or contains only white space.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory: null => halt")]
-    public static string MustNotBeNullOrWhiteSpace([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+    public static string MustNotBeNullOrWhiteSpace([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
     {
         if (parameter.IsNullOrWhiteSpace())
             Throw.CustomException(exceptionFactory, parameter);

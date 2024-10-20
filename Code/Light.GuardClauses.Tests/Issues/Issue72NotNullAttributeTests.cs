@@ -522,4 +522,24 @@ public static class Issue72NotNullAttributeTests
             return input.Length;
         }
     }
+    
+    [Fact]
+    public static void CheckMustNotBeNullOrWhiteSpace()
+    {
+        TestMustNotBeNullOrWhiteSpace("foo").Should().Be(3);
+        TestMustNotBeNullOrWhiteSpaceWithDelegate("foo").Should().Be(3);
+        return;
+
+        static int TestMustNotBeNullOrWhiteSpace(string? input)
+        {
+            input.MustNotBeNullOrWhiteSpace();
+            return input.Length;
+        }
+
+        static int TestMustNotBeNullOrWhiteSpaceWithDelegate(string? input)
+        {
+            input.MustNotBeNullOrWhiteSpace(_ => new Exception());
+            return input.Length;
+        }
+    }
 }
