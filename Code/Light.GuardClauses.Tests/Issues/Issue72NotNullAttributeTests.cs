@@ -833,4 +833,24 @@ public static class Issue72NotNullAttributeTests
             return input;
         }
     }
+
+    [Fact]
+    public static void CheckMustHaveLengthIn()
+    {
+        TestMustHaveLengthIn("foo").Should().Be("foo");
+        TestMustHaveLengthInWithDelegate("foo").Should().Be("foo");
+        return;
+
+        static string TestMustHaveLengthIn(string? input)
+        {
+            input.MustHaveLengthIn(Range.FromInclusive(2).ToInclusive(4));
+            return input;
+        }
+
+        static string TestMustHaveLengthInWithDelegate(string? input)
+        {
+            input.MustHaveLengthIn(Range.FromInclusive(2).ToInclusive(4), (_, _) => new Exception());
+            return input;
+        }
+    }
 }
