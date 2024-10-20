@@ -773,4 +773,24 @@ public static class Issue72NotNullAttributeTests
             return input;
         }
     }
+
+    [Fact]
+    public static void CheckMustHaveLength()
+    {
+        TestMustHaveLength("foo").Should().Be("foo");
+        TestMustHaveLengthWithDelegate("foo").Should().Be("foo");
+        return;
+
+        static string TestMustHaveLength(string? input)
+        {
+            input.MustHaveLength(3);
+            return input;
+        }
+
+        static string TestMustHaveLengthWithDelegate(string? input)
+        {
+            input.MustHaveLength(3, (_, _) => new Exception());
+            return input;
+        }
+    }
 }
