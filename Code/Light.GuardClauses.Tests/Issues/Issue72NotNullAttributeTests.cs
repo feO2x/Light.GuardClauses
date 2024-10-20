@@ -813,4 +813,24 @@ public static class Issue72NotNullAttributeTests
             return input;
         }
     }
+
+    [Fact]
+    public static void CheckMustBeLongerThanOrEqualTo()
+    {
+        TestMustBeLongerThanOrEqualTo("foobar").Should().Be("foobar");
+        TestMustBeLongerThanOrEqualToWithDelegate("foobar").Should().Be("foobar");
+        return;
+
+        static string TestMustBeLongerThanOrEqualTo(string? input)
+        {
+            input.MustBeLongerThanOrEqualTo(6);
+            return input;
+        }
+
+        static string TestMustBeLongerThanOrEqualToWithDelegate(string? input)
+        {
+            input.MustBeLongerThanOrEqualTo(6, (_, _) => new Exception());
+            return input;
+        }
+    }
 }
