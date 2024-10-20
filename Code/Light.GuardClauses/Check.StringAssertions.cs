@@ -1216,7 +1216,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeTrimmedAtEnd([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustBeTrimmedAtEnd([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!parameter.MustNotBeNull(parameterName, message).IsTrimmedAtEnd())
             Throw.NotTrimmedAtEnd(parameter, parameterName, message);
@@ -1232,9 +1232,9 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or not trimmed at the end. Empty strings are regarded as trimmed.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeTrimmedAtEnd([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+    public static string MustBeTrimmedAtEnd([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
     {
-        if (!parameter.IsTrimmedAtEnd(regardNullAsTrimmed: false))
+        if (parameter is null || !parameter.AsSpan().IsTrimmedAtEnd())
             Throw.CustomException(exceptionFactory, parameter);
         return parameter!;
     }
