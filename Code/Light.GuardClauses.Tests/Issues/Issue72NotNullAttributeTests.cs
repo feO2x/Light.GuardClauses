@@ -372,7 +372,7 @@ public static class Issue72NotNullAttributeTests
     }
 
     [Fact]
-    public static void CheckMustContain()
+    public static void CheckMustContainForCollections()
     {
         TestMustContain([1, 2, 3]).Should().Be(3);
         TestMustContainWithDelegate([1, 2, 3]).Should().Be(3);
@@ -560,6 +560,40 @@ public static class Issue72NotNullAttributeTests
         static int TestMustMatchWithDelegate(string? input, string pattern)
         {
             input.MustMatch(new Regex(pattern), (_, _) => new Exception());
+            return input.Length;
+        }
+    }
+
+    [Fact]
+    public static void CheckMustContainForStrings()
+    {
+        TestMustContain("foo").Should().Be(3);
+        TestMustContainWithDelegate("foo").Should().Be(3);
+        TestMustContainWithStringComparison("foo").Should().Be(3);
+        TestMustContainWithDelegateAndStringComparison("foo").Should().Be(3);
+        return;
+
+        static int TestMustContain(string? input)
+        {
+            input.MustContain("oo");
+            return input.Length;
+        }
+
+        static int TestMustContainWithDelegate(string? input)
+        {
+            input.MustContain("oo", (_, _) => new Exception());
+            return input.Length;
+        }
+        
+        static int TestMustContainWithStringComparison(string? input)
+        {
+            input.MustContain("OO", StringComparison.OrdinalIgnoreCase);
+            return input.Length;
+        }
+        
+        static int TestMustContainWithDelegateAndStringComparison(string? input)
+        {
+            input.MustContain("OO", StringComparison.OrdinalIgnoreCase, (_, _, _) => new Exception());
             return input.Length;
         }
     }
