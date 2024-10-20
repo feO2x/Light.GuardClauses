@@ -584,13 +584,13 @@ public static class Issue72NotNullAttributeTests
             input.MustContain("oo", (_, _) => new Exception());
             return input.Length;
         }
-        
+
         static int TestMustContainWithStringComparison(string? input)
         {
             input.MustContain("OO", StringComparison.OrdinalIgnoreCase);
             return input.Length;
         }
-        
+
         static int TestMustContainWithDelegateAndStringComparison(string? input)
         {
             input.MustContain("OO", StringComparison.OrdinalIgnoreCase, (_, _, _) => new Exception());
@@ -618,16 +618,50 @@ public static class Issue72NotNullAttributeTests
             input.MustNotContain("bar", (_, _) => new Exception());
             return input.Length;
         }
-        
+
         static int TestMustNotContainWithStringComparison(string? input)
         {
             input.MustNotContain("BAR", StringComparison.OrdinalIgnoreCase);
             return input.Length;
         }
-        
+
         static int TestMustNotContainWithDelegateAndStringComparison(string? input)
         {
             input.MustNotContain("BAR", StringComparison.OrdinalIgnoreCase, (_, _, _) => new Exception());
+            return input.Length;
+        }
+    }
+
+    [Fact]
+    public static void CheckMustBeSubstringOf()
+    {
+        TestMustBeSubstringOf("foo", "foobar").Should().Be(3);
+        TestMustBeSubstringOfWithDelegate("foo", "foobar").Should().Be(3);
+        TestMustBeSubstringOfWithStringComparison("OO").Should().Be(2);
+        TestMustBeSubstringOfWithDelegateAndStringComparison("OO").Should().Be(2);
+        return;
+
+        static int TestMustBeSubstringOf(string? input, string target)
+        {
+            input.MustBeSubstringOf(target);
+            return input.Length;
+        }
+
+        static int TestMustBeSubstringOfWithDelegate(string? input, string target)
+        {
+            input.MustBeSubstringOf(target, (_, _) => new Exception());
+            return input.Length;
+        }
+
+        static int TestMustBeSubstringOfWithStringComparison(string? input)
+        {
+            input.MustBeSubstringOf("foo", StringComparison.OrdinalIgnoreCase);
+            return input.Length;
+        }
+
+        static int TestMustBeSubstringOfWithDelegateAndStringComparison(string? input)
+        {
+            input.MustBeSubstringOf("foo", StringComparison.OrdinalIgnoreCase, (_, _, _) => new Exception());
             return input.Length;
         }
     }
