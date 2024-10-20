@@ -873,4 +873,24 @@ public static class Issue72NotNullAttributeTests
             return input;
         }
     }
+
+    [Fact]
+    public static void CheckMustBeTrimmed()
+    {
+        TestMustBeTrimmed("foo").Should().Be("foo");
+        TestMustBeTrimmedWithDelegate("foo").Should().Be("foo");
+        return;
+
+        static string TestMustBeTrimmed(string? input)
+        {
+            input.MustBeTrimmed();
+            return input;
+        }
+
+        static string TestMustBeTrimmedWithDelegate(string? input)
+        {
+            input.MustBeTrimmed(_ => new Exception());
+            return input;
+        }
+    }
 }
