@@ -501,7 +501,8 @@ public static partial class Check
     /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("string:null => halt; value:null => halt")]
-    public static bool Contains([ValidatedNotNull] this string @string, string value, StringComparison comparisonType) =>
+    // ReSharper disable once RedundantNullableFlowAttribute
+    public static bool Contains([NotNull, ValidatedNotNull] this string @string, string value, StringComparison comparisonType) =>
         @string.MustNotBeNull(nameof(@string)).IndexOf(value.MustNotBeNull(nameof(value)), comparisonType) >= 0;
 
     /// <summary>
@@ -513,7 +514,8 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="value" /> or <paramref name="other" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("value:null => halt; other:null => halt")]
-    public static bool IsSubstringOf([ValidatedNotNull] this string value, [ValidatedNotNull] string other) =>
+    // ReSharper disable once RedundantNullableFlowAttribute
+    public static bool IsSubstringOf([NotNull, ValidatedNotNull] this string value, [ValidatedNotNull] string other) =>
         other.MustNotBeNull(nameof(other)).Contains(value);
 
     /// <summary>
@@ -527,7 +529,8 @@ public static partial class Check
     /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("value:null => halt; other:null => halt")]
-    public static bool IsSubstringOf(this string value, string other, StringComparison comparisonType) =>
+    // ReSharper disable once RedundantNullableFlowAttribute
+    public static bool IsSubstringOf([NotNull] this string value, string other, StringComparison comparisonType) =>
         other.MustNotBeNull(nameof(other)).IndexOf(value, comparisonType) != -1;
 
     /// <summary>
