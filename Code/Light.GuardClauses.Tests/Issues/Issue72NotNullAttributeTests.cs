@@ -665,4 +665,38 @@ public static class Issue72NotNullAttributeTests
             return input.Length;
         }
     }
+
+    [Fact]
+    public static void CheckMustNotBeSubstringOf()
+    {
+        TestMustNotBeSubstringOf("foo", "bar").Should().Be(3);
+        TestMustNotBeSubstringOfWithDelegate("foo", "bar").Should().Be(3);
+        TestMustNotBeSubstringOfWithStringComparison("FOO").Should().Be(3);
+        TestMustNotBeSubstringOfWithDelegateAndStringComparison("FOO").Should().Be(3);
+        return;
+
+        static int TestMustNotBeSubstringOf(string? input, string target)
+        {
+            input.MustNotBeSubstringOf(target);
+            return input.Length;
+        }
+
+        static int TestMustNotBeSubstringOfWithDelegate(string? input, string target)
+        {
+            input.MustNotBeSubstringOf(target, (_, _) => new Exception());
+            return input.Length;
+        }
+
+        static int TestMustNotBeSubstringOfWithStringComparison(string? input)
+        {
+            input.MustNotBeSubstringOf("bar", StringComparison.OrdinalIgnoreCase);
+            return input.Length;
+        }
+
+        static int TestMustNotBeSubstringOfWithDelegateAndStringComparison(string? input)
+        {
+            input.MustNotBeSubstringOf("bar", StringComparison.OrdinalIgnoreCase, (_, _, _) => new Exception());
+            return input.Length;
+        }
+    }
 }
