@@ -1,6 +1,7 @@
 #nullable enable
 
 using System;
+using System.Text.RegularExpressions;
 using FluentAssertions;
 using Xunit;
 
@@ -502,7 +503,7 @@ public static class Issue72NotNullAttributeTests
             return input.Length;
         }
     }
-    
+
     [Fact]
     public static void CheckMustNotBeNullOrEmptyString()
     {
@@ -522,7 +523,7 @@ public static class Issue72NotNullAttributeTests
             return input.Length;
         }
     }
-    
+
     [Fact]
     public static void CheckMustNotBeNullOrWhiteSpace()
     {
@@ -539,6 +540,26 @@ public static class Issue72NotNullAttributeTests
         static int TestMustNotBeNullOrWhiteSpaceWithDelegate(string? input)
         {
             input.MustNotBeNullOrWhiteSpace(_ => new Exception());
+            return input.Length;
+        }
+    }
+
+    [Fact]
+    public static void CheckMustMatch()
+    {
+        TestMustMatch("foo", "^f.*").Should().Be(3);
+        TestMustMatchWithDelegate("foo", "^f.*").Should().Be(3);
+        return;
+
+        static int TestMustMatch(string? input, string pattern)
+        {
+            input.MustMatch(new Regex(pattern));
+            return input.Length;
+        }
+
+        static int TestMustMatchWithDelegate(string? input, string pattern)
+        {
+            input.MustMatch(new Regex(pattern), (_, _) => new Exception());
             return input.Length;
         }
     }
