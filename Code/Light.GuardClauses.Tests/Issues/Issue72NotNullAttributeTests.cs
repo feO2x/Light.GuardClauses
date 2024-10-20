@@ -720,7 +720,7 @@ public static class Issue72NotNullAttributeTests
             input.MustBeEmailAddress(_ => new Exception());
             return input;
         }
-        
+
         static string TestMustBeEmailAddressWithRegex(string? input)
         {
             input.MustBeEmailAddress(new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$"));
@@ -730,6 +730,26 @@ public static class Issue72NotNullAttributeTests
         static string TestMustBeEmailAddressWithRegexAndDelegate(string? input)
         {
             input.MustBeEmailAddress(new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$"), (_, _) => new Exception());
+            return input;
+        }
+    }
+
+    [Fact]
+    public static void CheckMustBeShorterThan()
+    {
+        TestMustBeShorterThan("foo").Should().Be("foo");
+        TestMustBeShorterThanWithDelegate("foo").Should().Be("foo");
+        return;
+
+        static string TestMustBeShorterThan(string? input)
+        {
+            input.MustBeShorterThan(5);
+            return input;
+        }
+
+        static string TestMustBeShorterThanWithDelegate(string? input)
+        {
+            input.MustBeShorterThan(5, (_, _) => new Exception());
             return input;
         }
     }
