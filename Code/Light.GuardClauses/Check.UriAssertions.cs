@@ -236,7 +236,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> or <paramref name="schemes"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; schemes:null => halt")]
-    public static Uri MustHaveOneSchemeOf([ValidatedNotNull] this Uri? parameter, IEnumerable<string> schemes, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static Uri MustHaveOneSchemeOf([NotNull, ValidatedNotNull] this Uri? parameter, IEnumerable<string> schemes, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         // ReSharper disable PossibleMultipleEnumeration
         parameter.MustBeAbsoluteUri(parameterName, message);
@@ -268,7 +268,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Throw when <paramref name="schemes" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static Uri MustHaveOneSchemeOf<TCollection>([ValidatedNotNull] this Uri? parameter, TCollection schemes, Func<Uri?, TCollection, Exception> exceptionFactory) where TCollection : class, IEnumerable<string>
+    public static Uri MustHaveOneSchemeOf<TCollection>([NotNull, ValidatedNotNull] this Uri? parameter, TCollection schemes, Func<Uri?, TCollection, Exception> exceptionFactory) where TCollection : class, IEnumerable<string>
     {
         if (parameter is null || !parameter.IsAbsoluteUri)
             Throw.CustomException(exceptionFactory, parameter, schemes);
@@ -280,7 +280,7 @@ public static partial class Check
             return parameter;
         }
 
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (schemes is null || !schemes.Contains(parameter.Scheme))
             Throw.CustomException(exceptionFactory, parameter, schemes!);
         return parameter;

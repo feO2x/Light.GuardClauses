@@ -1184,4 +1184,24 @@ public static class Issue72NotNullAttributeTests
             return input;
         }
     }
+    
+    [Fact]
+    public static void CheckMustHaveOneSchemeOf()
+    {
+        TestMustHaveOneSchemeOf(new Uri("https://example.com")).Should().Be(new Uri("https://example.com"));
+        TestMustHaveOneSchemeOfWithDelegate(new Uri("https://example.com")).Should().Be(new Uri("https://example.com"));
+        return;
+
+        static Uri TestMustHaveOneSchemeOf(Uri? input)
+        {
+            input.MustHaveOneSchemeOf(["http", "https"]);
+            return input;
+        }
+
+        static Uri TestMustHaveOneSchemeOfWithDelegate(Uri? input)
+        {
+            input.MustHaveOneSchemeOf(new[] { "http", "https" }, (_, _) => new Exception());
+            return input;
+        }
+    }
 }
