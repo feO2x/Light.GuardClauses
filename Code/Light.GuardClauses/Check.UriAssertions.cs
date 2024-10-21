@@ -55,8 +55,8 @@ public static partial class Check
     public static Uri MustBeRelativeUri([NotNull, ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).IsAbsoluteUri)
-            Throw.MustBeRelativeUri(parameter!, parameterName, message);
-        return parameter!;
+            Throw.MustBeRelativeUri(parameter, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -89,8 +89,8 @@ public static partial class Check
     public static Uri MustHaveScheme([NotNull, ValidatedNotNull] this Uri? parameter, string scheme, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (string.Equals(parameter.MustBeAbsoluteUri(parameterName, message).Scheme, scheme) == false)
-            Throw.UriMustHaveScheme(parameter!, scheme, parameterName, message);
-        return parameter!;
+            Throw.UriMustHaveScheme(parameter, scheme, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -110,7 +110,7 @@ public static partial class Check
     {
         if (string.Equals(parameter.MustBeAbsoluteUri(exceptionFactory).Scheme, scheme) == false)
             Throw.CustomException(exceptionFactory, parameter);
-        return parameter!;
+        return parameter;
     }
 
     /// <summary>
@@ -200,9 +200,9 @@ public static partial class Check
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
     public static Uri MustBeHttpOrHttpsUrl([NotNull, ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
-        if (parameter.MustBeAbsoluteUri(parameterName, message).Scheme.Equals("https") == false && parameter!.Scheme.Equals("http") == false)
+        if (parameter.MustBeAbsoluteUri(parameterName, message).Scheme.Equals("https") == false && parameter.Scheme.Equals("http") == false)
             Throw.UriMustHaveOneSchemeOf(parameter, new[] { "https", "http" }, parameterName, message);
-        return parameter!;
+        return parameter;
     }
 
     /// <summary>
@@ -219,9 +219,9 @@ public static partial class Check
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
     public static Uri MustBeHttpOrHttpsUrl([NotNull, ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
     {
-        if (parameter.MustBeAbsoluteUri(exceptionFactory).Scheme.Equals("https") == false && parameter!.Scheme.Equals("http") == false)
+        if (parameter.MustBeAbsoluteUri(exceptionFactory).Scheme.Equals("https") == false && parameter.Scheme.Equals("http") == false)
             Throw.CustomException(exceptionFactory, parameter);
-        return parameter!;
+        return parameter;
     }
 
     /// <summary>
@@ -243,12 +243,12 @@ public static partial class Check
 
         if (schemes is ICollection<string> collection)
         {
-            if (!collection.Contains(parameter!.Scheme))
+            if (!collection.Contains(parameter.Scheme))
                 Throw.UriMustHaveOneSchemeOf(parameter, schemes, parameterName, message);
             return parameter;
         }
 
-        if (!schemes.MustNotBeNull(nameof(schemes), message).Contains(parameter!.Scheme))
+        if (!schemes.MustNotBeNull(nameof(schemes), message).Contains(parameter.Scheme))
             Throw.UriMustHaveOneSchemeOf(parameter, schemes, parameterName, message);
         return parameter;
         // ReSharper restore PossibleMultipleEnumeration
