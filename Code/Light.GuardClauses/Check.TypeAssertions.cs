@@ -151,7 +151,9 @@ public static partial class Check
     /// <param name="baseClass">The base class that <paramref name="type" /> should derive from.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="baseClass" /> is null.</exception>
     [ContractAnnotation("type:null => halt; baseClass:null => halt")]
-    public static bool DerivesFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type baseClass)
+    // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+    public static bool DerivesFrom([NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type baseClass)
+    // ReSharper restore RedundantNullableFlowAttribute
     {
         baseClass.MustNotBeNull(nameof(baseClass));
 
@@ -176,7 +178,9 @@ public static partial class Check
     /// <param name="typeComparer">The equality comparer used to compare the types.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="baseClass" />, or <paramref name="typeComparer" /> is null.</exception>
     [ContractAnnotation("type:null => halt; baseClass:null => halt; typeComparer:null => halt")]
-    public static bool DerivesFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type baseClass, [ValidatedNotNull] IEqualityComparer<Type> typeComparer)
+    // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+    public static bool DerivesFrom([NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type baseClass, [NotNull, ValidatedNotNull] IEqualityComparer<Type> typeComparer)
+    // ReSharper restore RedundantNullableFlowAttribute
     {
         baseClass.MustNotBeNull(nameof(baseClass));
         typeComparer.MustNotBeNull(nameof(typeComparer));
