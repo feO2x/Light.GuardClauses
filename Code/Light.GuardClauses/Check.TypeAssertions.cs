@@ -279,8 +279,10 @@ public static partial class Check
 #if NET8_0
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
 #endif
-        [ValidatedNotNull] this Type type,
-        [ValidatedNotNull] Type otherType) =>
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type,
+        [NotNull, ValidatedNotNull] Type otherType) =>
+        // ReSharper restore RedundantNullableFlowAttribute
         type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType);
 
 
@@ -298,9 +300,11 @@ public static partial class Check
 #if NET8_0
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
 #endif        
-        [ValidatedNotNull] this Type type,
-        [ValidatedNotNull] Type otherType,
-        [ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type,
+        [NotNull, ValidatedNotNull] Type otherType,
+        [NotNull, ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
+        // ReSharper restore RedundantNullableFlowAttribute
         typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type, otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType, typeComparer);
 
 

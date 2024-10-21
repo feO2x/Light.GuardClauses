@@ -943,13 +943,13 @@ public static class Issue72NotNullAttributeTests
         TestImplements(typeof(FileInfo), typeof(ISerializable)).Should().Be((typeof(FileInfo), typeof(ISerializable)));
         TestImplementsWithComparer(typeof(FileInfo), typeof(ISerializable)).Should().Be((typeof(FileInfo), typeof(ISerializable), EqualityComparer<Type>.Default));
         return;
-        
+
         static (Type Type, Type InterfaceType) TestImplements(Type? type, Type? interfaceType)
         {
             type!.Implements(interfaceType!);
             return (type, interfaceType);
         }
-        
+
         static (Type Type, Type InterfaceType, IEqualityComparer<Type> Comparer) TestImplementsWithComparer(Type? type, Type? interfaceType)
         {
             type!.Implements(interfaceType!, EqualityComparer<Type>.Default);
@@ -969,7 +969,7 @@ public static class Issue72NotNullAttributeTests
             type!.IsOrImplements(interfaceType!);
             return (type, interfaceType);
         }
-        
+
         static (Type Type, Type InterfaceType, IEqualityComparer<Type> Comparer) TestIsOrImplementsWithComparer(Type? type, Type? interfaceType)
         {
             type!.IsOrImplements(interfaceType!, EqualityComparer<Type>.Default);
@@ -983,17 +983,37 @@ public static class Issue72NotNullAttributeTests
         TestDerivesFrom(typeof(FileStream), typeof(Stream)).Should().Be((typeof(FileStream), typeof(Stream)));
         TestDerivesFromWithTypeComparer(typeof(FileStream), typeof(Stream)).Should().Be((typeof(FileStream), typeof(Stream)));
         return;
-        
+
         static (Type Type, Type BaseType) TestDerivesFrom(Type? type, Type? baseType)
         {
             type!.DerivesFrom(baseType!);
             return (type, baseType);
         }
-        
+
         static (Type Type, Type BaseType) TestDerivesFromWithTypeComparer(Type? type, Type? baseType)
         {
             type!.DerivesFrom(baseType!, EqualityComparer<Type>.Default);
             return (type, baseType);
+        }
+    }
+
+    [Fact]
+    public static void CheckIsOrInheritsFrom()
+    {
+        TestIsOrInheritsFrom(typeof(FileStream), typeof(Stream)).Should().Be((typeof(FileStream), typeof(Stream)));
+        TestIsOrInheritsFromWithComparer(typeof(FileStream), typeof(Stream)).Should().Be((typeof(FileStream), typeof(Stream), EqualityComparer<Type>.Default));
+        return;
+
+        static (Type Type, Type BaseType) TestIsOrInheritsFrom(Type? type, Type? baseType)
+        {
+            type!.IsOrInheritsFrom(baseType!);
+            return (type, baseType);
+        }
+
+        static (Type Type, Type BaseType, IEqualityComparer<Type> Comparer) TestIsOrInheritsFromWithComparer(Type? type, Type? baseType)
+        {
+            type!.IsOrInheritsFrom(baseType!, EqualityComparer<Type>.Default);
+            return (type, baseType, EqualityComparer<Type>.Default);
         }
     }
 }
