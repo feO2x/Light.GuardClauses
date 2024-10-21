@@ -1,6 +1,9 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using FluentAssertions;
 using Xunit;
@@ -931,6 +934,26 @@ public static class Issue72NotNullAttributeTests
         {
             input.MustBeTrimmedAtEnd(_ => new Exception());
             return input;
+        }
+    }
+
+    [Fact]
+    public static void CheckImplements()
+    {
+        TestImplements(typeof(FileInfo), typeof(ISerializable)).Should().Be((typeof(FileInfo), typeof(ISerializable)));
+        TestImplementsWithComparer(typeof(FileInfo), typeof(ISerializable)).Should().Be((typeof(FileInfo), typeof(ISerializable), EqualityComparer<Type>.Default));
+        return;
+        
+        static (Type Type, Type InterfaceType) TestImplements(Type? type, Type? interfaceType)
+        {
+            type!.Implements(interfaceType!);
+            return (type, interfaceType);
+        }
+        
+        static (Type Type, Type InterfaceType, IEqualityComparer<Type> Comparer) TestImplementsWithComparer(Type? type, Type? interfaceType)
+        {
+            type!.Implements(interfaceType!, EqualityComparer<Type>.Default);
+            return (type, interfaceType, EqualityComparer<Type>.Default);
         }
     }
 }

@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 #if NET8_0
 using System.Diagnostics.CodeAnalysis;
 #endif
+using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace Light.GuardClauses;
 
@@ -48,9 +49,10 @@ public static partial class Check
 #if NET8_0
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
 #endif
-        [ValidatedNotNull]
-        this Type type,
-        [ValidatedNotNull] Type interfaceType
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type,
+        [NotNull, ValidatedNotNull] Type interfaceType
+        // ReSharper restore RedundantNullableFlowAttribute
     )
     {
         type.MustNotBeNull();
@@ -79,10 +81,11 @@ public static partial class Check
 #if NET8_0
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
 #endif
-        [ValidatedNotNull]
-        this Type type,
-        [ValidatedNotNull] Type interfaceType,
-        [ValidatedNotNull] IEqualityComparer<Type> typeComparer
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type,
+        [NotNull, ValidatedNotNull] Type interfaceType,
+        [NotNull, ValidatedNotNull] IEqualityComparer<Type> typeComparer
+        // ReSharper restore RedundantNullableFlowAttribute
     )
     {
         type.MustNotBeNull();
