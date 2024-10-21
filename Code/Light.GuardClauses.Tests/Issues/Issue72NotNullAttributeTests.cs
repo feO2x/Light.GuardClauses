@@ -956,4 +956,24 @@ public static class Issue72NotNullAttributeTests
             return (type, interfaceType, EqualityComparer<Type>.Default);
         }
     }
+
+    [Fact]
+    public static void CheckIsOrImplements()
+    {
+        TestIsOrImplements(typeof(FileInfo), typeof(ISerializable)).Should().Be((typeof(FileInfo), typeof(ISerializable)));
+        TestIsOrImplementsWithComparer(typeof(FileInfo), typeof(ISerializable)).Should().Be((typeof(FileInfo), typeof(ISerializable), EqualityComparer<Type>.Default));
+        return;
+
+        static (Type Type, Type InterfaceType) TestIsOrImplements(Type? type, Type? interfaceType)
+        {
+            type!.IsOrImplements(interfaceType!);
+            return (type, interfaceType);
+        }
+        
+        static (Type Type, Type InterfaceType, IEqualityComparer<Type> Comparer) TestIsOrImplementsWithComparer(Type? type, Type? interfaceType)
+        {
+            type!.IsOrImplements(interfaceType!, EqualityComparer<Type>.Default);
+            return (type, interfaceType, EqualityComparer<Type>.Default);
+        }
+    }
 }
