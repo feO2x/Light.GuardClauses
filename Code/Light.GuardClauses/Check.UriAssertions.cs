@@ -198,7 +198,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static Uri MustBeHttpOrHttpsUrl([ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static Uri MustBeHttpOrHttpsUrl([NotNull, ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustBeAbsoluteUri(parameterName, message).Scheme.Equals("https") == false && parameter!.Scheme.Equals("http") == false)
             Throw.UriMustHaveOneSchemeOf(parameter, new[] { "https", "http" }, parameterName, message);
@@ -217,7 +217,7 @@ public static partial class Check
     /// </exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static Uri MustBeHttpOrHttpsUrl([ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
+    public static Uri MustBeHttpOrHttpsUrl([NotNull, ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
     {
         if (parameter.MustBeAbsoluteUri(exceptionFactory).Scheme.Equals("https") == false && parameter!.Scheme.Equals("http") == false)
             Throw.CustomException(exceptionFactory, parameter);

@@ -1164,4 +1164,24 @@ public static class Issue72NotNullAttributeTests
             return input;
         }
     }
+
+    [Fact]
+    public static void CheckMustBeHttpOrHttpsUrl()
+    {
+        TestMustBeHttpOrHttpsUrl(new Uri("https://example.com")).Should().Be(new Uri("https://example.com"));
+        TestMustBeHttpOrHttpsUrlWithDelegate(new Uri("https://example.com")).Should().Be(new Uri("https://example.com"));
+        return;
+
+        static Uri TestMustBeHttpOrHttpsUrl(Uri? input)
+        {
+            input.MustBeHttpOrHttpsUrl();
+            return input;
+        }
+
+        static Uri TestMustBeHttpOrHttpsUrlWithDelegate(Uri? input)
+        {
+            input.MustBeHttpOrHttpsUrl(_ => new Exception());
+            return input;
+        }
+    }
 }
