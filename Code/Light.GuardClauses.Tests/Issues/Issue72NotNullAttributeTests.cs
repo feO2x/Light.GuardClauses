@@ -1077,4 +1077,24 @@ public static class Issue72NotNullAttributeTests
             return input;
         }
     }
+
+    [Fact]
+    public static void CheckMustBeRelativeUri()
+    {
+        TestMustBeRelativeUri(new Uri("/relative/path", UriKind.Relative)).Should().Be(new Uri("/relative/path", UriKind.Relative));
+        TestMustBeRelativeUriWithDelegate(new Uri("/relative/path", UriKind.Relative)).Should().Be(new Uri("/relative/path", UriKind.Relative));
+        return;
+
+        static Uri TestMustBeRelativeUri(Uri? input)
+        {
+            input.MustBeRelativeUri();
+            return input;
+        }
+
+        static Uri TestMustBeRelativeUriWithDelegate(Uri? input)
+        {
+            input.MustBeRelativeUri(_ => new Exception());
+            return input;
+        }
+    }
 }

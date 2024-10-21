@@ -52,7 +52,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static Uri MustBeRelativeUri([ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static Uri MustBeRelativeUri([NotNull, ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).IsAbsoluteUri)
             Throw.MustBeRelativeUri(parameter!, parameterName, message);
@@ -67,7 +67,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is an absolute URI, or when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static Uri MustBeRelativeUri([ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
+    public static Uri MustBeRelativeUri([NotNull, ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
     {
         if (parameter is null || parameter.IsAbsoluteUri)
             Throw.CustomException(exceptionFactory, parameter);
