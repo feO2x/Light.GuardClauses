@@ -1097,4 +1097,31 @@ public static class Issue72NotNullAttributeTests
             return input;
         }
     }
+
+    [Fact]
+    public static void CheckMustHaveScheme()
+    {
+        TestMustHaveScheme(new Uri("https://example.com"), "https").Should().Be(new Uri("https://example.com"));
+        TestMustHaveSchemeWithDelegate(new Uri("https://example.com"), "https").Should().Be(new Uri("https://example.com"));
+        TestMustHaveSchemeWithSecondDelegate(new Uri("https://example.com"), "https").Should().Be(new Uri("https://example.com"));
+        return;
+
+        static Uri TestMustHaveScheme(Uri? input, string scheme)
+        {
+            input.MustHaveScheme(scheme);
+            return input;
+        }
+
+        static Uri TestMustHaveSchemeWithDelegate(Uri? input, string scheme)
+        {
+            input.MustHaveScheme(scheme, _ => new Exception());
+            return input;
+        }
+
+        static Uri TestMustHaveSchemeWithSecondDelegate(Uri? input, string scheme)
+        {
+            input.MustHaveScheme(scheme, (_, _) => new Exception());
+            return input;
+        }
+    }
 }
