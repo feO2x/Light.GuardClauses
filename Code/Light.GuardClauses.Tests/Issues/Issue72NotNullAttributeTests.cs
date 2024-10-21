@@ -1057,4 +1057,24 @@ public static class Issue72NotNullAttributeTests
             return (type, baseType, EqualityComparer<Type>.Default);
         }
     }
+
+    [Fact]
+    public static void CheckMustBeAbsoluteUri()
+    {
+        TestMustBeAbsoluteUri(new Uri("https://example.com")).Should().Be(new Uri("https://example.com"));
+        TestMustBeAbsoluteUriWithDelegate(new Uri("https://example.com")).Should().Be(new Uri("https://example.com"));
+        return;
+
+        static Uri TestMustBeAbsoluteUri(Uri? input)
+        {
+            input.MustBeAbsoluteUri();
+            return input;
+        }
+
+        static Uri TestMustBeAbsoluteUriWithDelegate(Uri? input)
+        {
+            input.MustBeAbsoluteUri(_ => new Exception());
+            return input;
+        }
+    }
 }

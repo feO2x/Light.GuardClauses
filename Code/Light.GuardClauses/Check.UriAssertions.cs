@@ -4,6 +4,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using Light.GuardClauses.Exceptions;
 using System.Runtime.CompilerServices;
+using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace Light.GuardClauses;
 
@@ -19,11 +20,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static Uri MustBeAbsoluteUri([ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static Uri MustBeAbsoluteUri([NotNull, ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).IsAbsoluteUri == false)
-            Throw.MustBeAbsoluteUri(parameter!, parameterName, message);
-        return parameter!;
+            Throw.MustBeAbsoluteUri(parameter, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -34,7 +35,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is not an absolute URI, or when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static Uri MustBeAbsoluteUri([ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
+    public static Uri MustBeAbsoluteUri([NotNull, ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
     {
         if (parameter is null || parameter.IsAbsoluteUri == false)
             Throw.CustomException(exceptionFactory, parameter);
