@@ -144,7 +144,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Throw when <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static Uri MustBeHttpsUrl([ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => parameter.MustHaveScheme("https", parameterName, message);
+    public static Uri MustBeHttpsUrl([NotNull, ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => parameter.MustHaveScheme("https", parameterName, message);
 
     /// <summary>
     /// Ensures that the specified URI has the "https" scheme, or otherwise throws your custom exception.
@@ -158,7 +158,7 @@ public static partial class Check
     /// </exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static Uri MustBeHttpsUrl([ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory) => parameter.MustHaveScheme("https", exceptionFactory);
+    public static Uri MustBeHttpsUrl([NotNull, ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory) => parameter.MustHaveScheme("https", exceptionFactory);
 
     /// <summary>
     /// Ensures that the specified URI has the "http" scheme, or otherwise throws an <see cref="InvalidUriSchemeException" />.
