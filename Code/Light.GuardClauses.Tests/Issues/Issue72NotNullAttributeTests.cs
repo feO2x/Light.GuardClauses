@@ -998,6 +998,26 @@ public static class Issue72NotNullAttributeTests
     }
 
     [Fact]
+    public static void CheckIsOrDerivesFrom()
+    {
+        TestIsOrDerivesFrom(typeof(FileStream), typeof(Stream)).Should().Be((typeof(FileStream), typeof(Stream)));
+        TestIsOrDerivesFromWithComparer(typeof(FileStream), typeof(Stream)).Should().Be((typeof(FileStream), typeof(Stream), EqualityComparer<Type>.Default));
+        return;
+
+        static (Type Type, Type BaseType) TestIsOrDerivesFrom(Type? type, Type? baseType)
+        {
+            type!.IsOrDerivesFrom(baseType!);
+            return (type, baseType);
+        }
+
+        static (Type Type, Type BaseType, IEqualityComparer<Type> Comparer) TestIsOrDerivesFromWithComparer(Type? type, Type? baseType)
+        {
+            type!.IsOrDerivesFrom(baseType!, EqualityComparer<Type>.Default);
+            return (type, baseType, EqualityComparer<Type>.Default);
+        }
+    }
+
+    [Fact]
     public static void CheckInheritsFrom()
     {
         TestInheritsFrom(typeof(FileStream), typeof(Stream)).Should().Be((typeof(FileStream), typeof(Stream)));

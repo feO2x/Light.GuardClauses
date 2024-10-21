@@ -206,7 +206,9 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("type:null => halt; otherType:null => halt")]
-    public static bool IsOrDerivesFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType) =>
+    // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+    public static bool IsOrDerivesFrom([NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type otherType) => 
+        // ReSharper restore RedundantNullableFlowAttribute
         type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.DerivesFrom(otherType);
 
     /// <summary>
@@ -219,7 +221,9 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="otherType" />, or <paramref name="typeComparer" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("type:null => halt; otherType:null => halt; typeComparer:null => halt")]
-    public static bool IsOrDerivesFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType, [ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
+    // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+    public static bool IsOrDerivesFrom([NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type otherType, [NotNull, ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
+        // ReSharper restore RedundantNullableFlowAttribute
         typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type, otherType.MustNotBeNull(nameof(otherType))) || type.DerivesFrom(otherType, typeComparer);
 
 
