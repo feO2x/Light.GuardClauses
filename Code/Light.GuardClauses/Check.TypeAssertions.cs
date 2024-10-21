@@ -235,9 +235,11 @@ public static partial class Check
     public static bool InheritsFrom(
 #if NET8_0
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
-#endif        
-        [ValidatedNotNull] this Type type,
-        [ValidatedNotNull] Type baseClassOrInterfaceType) =>
+#endif
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type,
+        [NotNull, ValidatedNotNull] Type baseClassOrInterfaceType) =>
+        // ReSharper restore RedundantNullableFlowAttribute
         baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType))
                                 .IsInterface ?
             type.Implements(baseClassOrInterfaceType) :
@@ -256,10 +258,12 @@ public static partial class Check
     public static bool InheritsFrom(
 #if NET8_0
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
-#endif        
-        [ValidatedNotNull] this Type type,
-        [ValidatedNotNull] Type baseClassOrInterfaceType,
-        [ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
+#endif
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type,
+        [NotNull, ValidatedNotNull] Type baseClassOrInterfaceType,
+        [NotNull, ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
+        // ReSharper restore RedundantNullableFlowAttribute
         baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType))
                                 .IsInterface ?
             type.Implements(baseClassOrInterfaceType, typeComparer) :
