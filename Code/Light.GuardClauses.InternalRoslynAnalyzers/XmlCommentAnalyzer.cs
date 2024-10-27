@@ -37,7 +37,7 @@ namespace Light.GuardClauses.InternalRoslynAnalyzers
             if (methodSymbol.DeclaringSyntaxReferences.Length != 1 ||
                 !(methodSymbol.DeclaringSyntaxReferences[0].GetSyntax() is MethodDeclarationSyntax methodDeclarationSyntax) ||
                 !(methodDeclarationSyntax.DescendantTrivia()
-                                         .SingleOrDefault(trivia => trivia.Kind() == SyntaxKind.SingleLineDocumentationCommentTrivia)
+                                         .SingleOrDefault(trivia => trivia.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia))
                                          .GetStructure() is DocumentationCommentTriviaSyntax documentationSyntax))
                 return;
 
