@@ -9,7 +9,7 @@
         <Company>Kenny Pflug</Company>
         <Nullable>enable</Nullable>
         <IsAotCompatible Condition="'$(TargetFramework)' == 'net8.0'">true</IsAotCompatible>
-        <Copyright>Copyright © Kenny Pflug 2016, 2023</Copyright>
+        <Copyright>Copyright © Kenny Pflug 2016, 2024</Copyright>
         <LangVersion>12</LangVersion>
         <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
         <IsPackable>true</IsPackable>
@@ -26,12 +26,12 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageReleaseNotes>
-Light.GuardClauses 11.0.0
+Light.GuardClauses 12.0.0
 --------------------------------
 
-- Light.GuardClauses now targets .NET 8 and is AOT-compatible
-- breaking: EnumInfo&lt;T&gt; no longer has the UnderlyingType property
-- In AOT scenarios, avoid the Type-related assertions, they are marked with the DynamicallyAccessedMembersAttribute
+- Added support for NotNullAttribute
+- Added Range.InclusiveBetween and Range.ExclusiveBetween to create Range instances even more easily
+- breaking: String assertions that use a StringComparison parameter now throw an ArgumentException instead of forwarding an invalid value to the exception factory
         </PackageReleaseNotes>
     </PropertyGroup>
     
@@ -39,7 +39,7 @@ Light.GuardClauses 11.0.0
         <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" Condition="'$(TargetFramework)' != 'net8.0'" />
         <PackageReference Include="System.Memory" Version="4.5.5" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
         <PackageReference Include="Nullable" Version="1.3.1" PrivateAssets="all" />
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>

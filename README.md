@@ -2,8 +2,8 @@
 **A lightweight .NET library for expressive Guard Clauses.** 
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/blob/master/LICENSE)
-[![NuGet](https://img.shields.io/badge/NuGet-11.0.0-blue.svg?style=for-the-badge)](https://www.nuget.org/packages/Light.GuardClauses/)
-[![Source Code](https://img.shields.io/badge/Source%20Code-11.0.0-blue.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/blob/master/Light.GuardClauses.SingleFile.cs)
+[![NuGet](https://img.shields.io/badge/NuGet-12.0.0-blue.svg?style=for-the-badge)](https://www.nuget.org/packages/Light.GuardClauses/)
+[![Source Code](https://img.shields.io/badge/Source%20Code-12.0.0-blue.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/blob/master/Light.GuardClauses.SingleFile.cs)
 [![Documentation](https://img.shields.io/badge/Docs-Wiki-yellowgreen.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/wiki)
 [![Documentation](https://img.shields.io/badge/Docs-Changelog-yellowgreen.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/releases)
 
@@ -60,7 +60,7 @@ public class ConsoleWriter
 public void SetMovieRating(Guid movieId, int numberOfStars)
 {
     movieId.MustNotBeEmpty();
-    numberOfStars.MustBeIn(Range.FromInclusive(0).ToInclusive(5));
+    numberOfStars.MustBeIn(Range.InclusiveBetween(0, 5));
     
     var movie = _movieRepo.GetById(movieId);
     movie.AddRating(numberOfStars);
@@ -114,7 +114,7 @@ Light.GuardClauses is available as a [NuGet package](https://www.nuget.org/packa
 
 - **dotnet CLI**: `dotnet add package Light.GuardClauses`
 - **Visual Studio Package Manager Console**: `Install-Package Light.GuardClauses`
-- **Package Reference in csproj**: `<PackageReference Include="Light.GuardClauses" Version="11.0.0" />`
+- **Package Reference in csproj**: `<PackageReference Include="Light.GuardClauses" Version="12.0.0" />`
 
 Also, you can incorporate Light.GuardClauses as a **single source file** where the API is changed to `internal`. This is especially interesting for framework / library developers that do not want to have a dependency on the Light.GuardClauses DLL. You can grab the default .NET Standard 2.0 version in [Light.GuardClauses.SingleFile.cs](https://github.com/feO2x/Light.GuardClauses/blob/master/Light.GuardClauses.SingleFile.cs) or you can use the [Light.GuardClauses.SourceCodeTransformation](https://github.com/feO2x/Light.GuardClauses/tree/master/Code/Light.GuardClauses.SourceCodeTransformation) project to create your custom file. You can learn more about it [here](https://github.com/feO2x/Light.GuardClauses/wiki/Including-Light.GuardClauses-as-source-code).
 
