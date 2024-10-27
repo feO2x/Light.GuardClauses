@@ -237,6 +237,10 @@ public static class EnumerableExtensions
         var enumerator = enumerable.MustNotBeNull(nameof(enumerable)).GetEnumerator();
         while (enumerator.MoveNext())
             count++;
+        if (enumerator is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
         return count;
     }
 
@@ -246,6 +250,10 @@ public static class EnumerableExtensions
         var enumerator = enumerable.MustNotBeNull(parameterName, message).GetEnumerator();
         while (enumerator.MoveNext())
             count++;
+        if (enumerator is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
         return count;
     }
 
