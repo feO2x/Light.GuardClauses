@@ -278,6 +278,14 @@ public static class Throw
         throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must start with \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
     
     /// <summary>
+    /// Throws the default <see cref="SubstringException"/> indicating that a string does start with another one, using the optional parameter name and message.
+    /// </summary>
+    [ContractAnnotation("=> halt")]
+    [DoesNotReturn]
+    public static void StringStartsWith(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
+        throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not start with \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+    
+    /// <summary>
     /// Throws the default <see cref="SubstringException"/> indicating that a string does not end with another one, using the optional parameter name and message.
     /// </summary>
     [ContractAnnotation("=> halt")]
