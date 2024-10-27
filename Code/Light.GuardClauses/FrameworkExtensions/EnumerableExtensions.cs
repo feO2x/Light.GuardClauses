@@ -181,7 +181,8 @@ public static class EnumerableExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("enumerable:null => halt")]
-    public static int GetCount<T>(this IEnumerable<T> enumerable)
+    // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+    public static int GetCount<T>([NotNull, ValidatedNotNull] this IEnumerable<T> enumerable)
     {
         if (enumerable is ICollection collection)
             return collection.Count;
@@ -202,7 +203,7 @@ public static class EnumerableExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("enumerable:null => halt")]
-    public static int GetCount<T>(this IEnumerable<T> enumerable, string? parameterName, string? message = null)
+    public static int GetCount<T>([NotNull, ValidatedNotNull] this IEnumerable<T> enumerable, string? parameterName, string? message = null)
     {
         if (enumerable is ICollection collection)
             return collection.Count;

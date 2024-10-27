@@ -1351,4 +1351,24 @@ public static class Issue72NotNullAttributeTests
             return collection.Count;
         }
     }
+
+    [Fact]
+    public static void CheckGetCount()
+    {
+        TestGetCount([1, 2, 3]).Should().Be(3);
+        TestGetCountWithParameterNameAndMessage([1, 2, 3]).Should().Be(3);
+        return;
+        
+        static int TestGetCount<T>(ICollection<T>? collection)
+        {
+            collection!.GetCount();
+            return collection.Count;
+        }
+
+        static int TestGetCountWithParameterNameAndMessage<T>(ICollection<T>? collection)
+        {
+            collection!.GetCount(nameof(collection), "The collection must not be null");
+            return collection.Count;
+        }
+    }
 }
