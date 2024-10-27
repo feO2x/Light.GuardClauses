@@ -1,11 +1,11 @@
 /* ------------------------------
-   Light.GuardClauses 10.3.0
+   Light.GuardClauses 12.0.0
    ------------------------------
 
 License information for Light.GuardClauses
 
 The MIT License (MIT)
-Copyright (c) 2016, 2023 Kenny Pflug mailto:kenny.pflug@live.de
+Copyright (c) 2016, 2024 Kenny Pflug mailto:kenny.pflug@live.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -40,6 +40,7 @@ using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
+using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 #nullable enable annotations
 namespace Light.GuardClauses
@@ -58,7 +59,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeNull<T>([ValidatedNotNull, NoEnumeration] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static T MustNotBeNull<T>([NotNull, ValidatedNotNull, NoEnumeration] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : class
         {
             if (parameter is null)
@@ -74,7 +75,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeNull<T>([ValidatedNotNull, NoEnumeration] this T? parameter, Func<Exception> exceptionFactory)
+        public static T MustNotBeNull<T>([NotNull, ValidatedNotNull, NoEnumeration] this T? parameter, Func<Exception> exceptionFactory)
             where T : class
         {
             if (parameter is null)
@@ -93,7 +94,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentDefaultException">Thrown when <paramref name = "parameter"/> is a value type and the default value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeDefault<T>([ValidatedNotNull] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static T MustNotBeDefault<T>([NotNull, ValidatedNotNull] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (default(T)is null)
             {
@@ -104,7 +105,11 @@ namespace Light.GuardClauses
 
             if (EqualityComparer<T>.Default.Equals(parameter, default !))
                 Throw.ArgumentDefault(parameterName, message);
+            // If we end up here, we have a value type which cannot be null
+#pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
+
             return parameter;
+#pragma warning restore CS8777
         }
 
         /// <summary>
@@ -115,7 +120,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is the default value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeDefault<T>([ValidatedNotNull] this T parameter, Func<Exception> exceptionFactory)
+        public static T MustNotBeDefault<T>([NotNull, ValidatedNotNull] this T parameter, Func<Exception> exceptionFactory)
         {
             if (default(T)is null)
             {
@@ -126,7 +131,11 @@ namespace Light.GuardClauses
 
             if (EqualityComparer<T>.Default.Equals(parameter, default !))
                 Throw.CustomException(exceptionFactory);
+            // If we end up here, we have a value type which cannot be null
+#pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
+
             return parameter;
+#pragma warning restore CS8777
         }
 
         /// <summary>
@@ -140,10 +149,18 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <typeparamref name = "T"/> is a reference type and <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeNullReference<T>([ValidatedNotNull, NoEnumeration] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static T MustNotBeNullReference<T>([NotNull, ValidatedNotNull, NoEnumeration] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (default(T) != null)
+            {
+                // If we end up here, parameter cannot be null
+#pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
+
                 return parameter;
+#pragma warning restore CS8777 // Parameter must have a non-null value when exiting.
+
+            }
+
             if (parameter is null)
                 Throw.ArgumentNull(parameterName, message);
             return parameter;
@@ -159,10 +176,18 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <typeparamref name = "T"/> is a reference type and <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeNullReference<T>([ValidatedNotNull, NoEnumeration] this T parameter, Func<Exception> exceptionFactory)
+        public static T MustNotBeNullReference<T>([NotNull, ValidatedNotNull, NoEnumeration] this T parameter, Func<Exception> exceptionFactory)
         {
             if (default(T) != null)
+            {
+                // If we end up here, parameter cannot be null
+#pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
+
                 return parameter;
+#pragma warning restore CS8777 // Parameter must have a non-null value when exiting.
+
+            }
+
             if (parameter is null)
                 Throw.CustomException(exceptionFactory);
             return parameter;
@@ -178,7 +203,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeOfType<T>([ValidatedNotNull, NoEnumeration] this object? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static T MustBeOfType<T>([NotNull, ValidatedNotNull, NoEnumeration] this object? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message)is T castValue)
                 return castValue;
@@ -194,7 +219,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> cannot be cast to <typeparamref name = "T"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustBeOfType<T>([ValidatedNotNull, NoEnumeration] this object? parameter, Func<object?, Exception> exceptionFactory)
+        public static T MustBeOfType<T>([NotNull, ValidatedNotNull, NoEnumeration] this object? parameter, Func<object?, Exception> exceptionFactory)
         {
             if (parameter is T castValue)
                 return castValue;
@@ -211,7 +236,7 @@ namespace Light.GuardClauses
         /// <param name = "parameter">The enum value to be checked.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsValidEnumValue<T>(this T parameter)
-            where T : Enum => EnumInfo<T>.IsValidEnumValue(parameter);
+            where T : struct, Enum => EnumInfo<T>.IsValidEnumValue(parameter);
         /// <summary>
         /// Ensures that the specified enum value is valid, or otherwise throws an <see cref = "EnumValueNotDefinedException"/>. An enum value
         /// is valid when the specified value is one of the constants defined in the enum, or a valid flags combination when the enum type
@@ -224,7 +249,7 @@ namespace Light.GuardClauses
         /// <exception cref = "EnumValueNotDefinedException">Thrown when <paramref name = "parameter"/> is no valid enum value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MustBeValidEnumValue<T>(this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
-            where T : Enum
+            where T : struct, Enum
         {
             if (!EnumInfo<T>.IsValidEnumValue(parameter))
                 Throw.EnumValueNotDefined(parameter, parameterName, message);
@@ -243,7 +268,7 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("exceptionFactory:null => halt")]
         public static T MustBeValidEnumValue<T>(this T parameter, Func<T, Exception> exceptionFactory)
-            where T : Enum
+            where T : struct, Enum
         {
             if (!EnumInfo<T>.IsValidEnumValue(parameter))
                 Throw.CustomException(exceptionFactory, parameter);
@@ -363,7 +388,7 @@ namespace Light.GuardClauses
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "NullableHasNoValueException">Thrown when <paramref name = "parameter"/> has no value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T MustHaveValue<T>([NoEnumeration] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static T MustHaveValue<T>([NotNull, NoEnumeration] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : struct
         {
             if (!parameter.HasValue)
@@ -379,7 +404,7 @@ namespace Light.GuardClauses
         /// <exception cref = "NullableHasNoValueException">Thrown when <paramref name = "parameter"/> has no value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("exceptionFactory:null => halt")]
-        public static T MustHaveValue<T>([NoEnumeration] this T? parameter, Func<Exception> exceptionFactory)
+        public static T MustHaveValue<T>([NotNull, NoEnumeration] this T? parameter, Func<Exception> exceptionFactory)
             where T : struct
         {
             if (!parameter.HasValue)
@@ -705,427 +730,6 @@ namespace Light.GuardClauses
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsLessThanOrApproximately(this float value, float other) => value < other || value.IsApproximately(other);
-        /*
-     * -------------------------------------
-     * Must Not Be Less Than
-     * Must Be Greater Than or Equal To
-     * -------------------------------------
-     */
-        /// <summary>
-        /// Ensures that the specified <paramref name = "parameter"/> is not less than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "other">The boundary value that must be less than or equal to <paramref name = "parameter"/>.</param>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref = "ArgumentOutOfRangeException">Thrown when the specified <paramref name = "parameter"/> is less than <paramref name = "other"/>.</exception>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeLessThan<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
-            where T : IComparable<T>
-        {
-            if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) < 0)
-                Throw.MustNotBeLessThan(parameter, other, parameterName, message);
-            return parameter;
-        }
-
-        /// <summary>
-        /// Ensures that the specified <paramref name = "parameter"/> is not less than the given <paramref name = "other"/> value, or otherwise throws your custom exception.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "other">The boundary value that must be less than or equal to <paramref name = "parameter"/>.</param>
-        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
-        /// <exception cref = "Exception">Your custom exception thrown when the specified <paramref name = "parameter"/> is less than <paramref name = "other"/>, or when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeLessThan<T>([ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory)
-            where T : IComparable<T>
-        {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
-            if (parameter is null || parameter.CompareTo(other) < 0)
-                Throw.CustomException(exceptionFactory, parameter!, other);
-            return parameter;
-        }
-
-        /// <summary>
-        /// Ensures that the specified <paramref name = "parameter"/> is not less than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "other">The boundary value that must be less than or equal to <paramref name = "parameter"/>.</param>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref = "ArgumentOutOfRangeException">Thrown when the specified <paramref name = "parameter"/> is less than <paramref name = "other"/>.</exception>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeGreaterThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
-            where T : IComparable<T>
-        {
-            if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) < 0)
-                Throw.MustBeGreaterThanOrEqualTo(parameter, other, parameterName, message);
-            return parameter;
-        }
-
-        /// <summary>
-        /// Ensures that the specified <paramref name = "parameter"/> is not less than the given <paramref name = "other"/> value, or otherwise throws your custom exception.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "other">The boundary value that must be less than or equal to <paramref name = "parameter"/>.</param>
-        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
-        /// <exception cref = "Exception">Your custom exception thrown when the specified <paramref name = "parameter"/> is less than <paramref name = "other"/>, or when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustBeGreaterThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory)
-            where T : IComparable<T>
-        {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
-            if (parameter is null || parameter.CompareTo(other) < 0)
-                Throw.CustomException(exceptionFactory, parameter!, other);
-            return parameter;
-        }
-
-        /*
-     * -------------------------------------
-     * Must Be Less Than
-     * Must Not Be Greater Than or Equal To
-     * -------------------------------------
-     */
-        /// <summary>
-        /// Ensures that the specified <paramref name = "parameter"/> is less than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "other">The boundary value that must be greater than <paramref name = "parameter"/>.</param>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref = "ArgumentOutOfRangeException">Thrown when the specified <paramref name = "parameter"/> is not less than <paramref name = "other"/>.</exception>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeLessThan<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
-            where T : IComparable<T>
-        {
-            if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) >= 0)
-                Throw.MustBeLessThan(parameter, other, parameterName, message);
-            return parameter;
-        }
-
-        /// <summary>
-        /// Ensures that the specified <paramref name = "parameter"/> is less than the given <paramref name = "other"/> value, or otherwise throws your custom exception.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "other">The boundary value that must be greater than <paramref name = "parameter"/>.</param>
-        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
-        /// <exception cref = "Exception">Your custom exception thrown when the specified <paramref name = "parameter"/> is not less than <paramref name = "other"/>, or when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustBeLessThan<T>([ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory)
-            where T : IComparable<T>
-        {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
-            if (parameter is null || parameter.CompareTo(other) >= 0)
-                Throw.CustomException(exceptionFactory, parameter!, other);
-            return parameter;
-        }
-
-        /// <summary>
-        /// Ensures that the specified <paramref name = "parameter"/> is less than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "other">The boundary value that must be greater than <paramref name = "parameter"/>.</param>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref = "ArgumentOutOfRangeException">Thrown when the specified <paramref name = "parameter"/> is not less than <paramref name = "other"/>.</exception>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeGreaterThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
-            where T : IComparable<T>
-        {
-            if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) >= 0)
-                Throw.MustNotBeGreaterThanOrEqualTo(parameter, other, parameterName, message);
-            return parameter;
-        }
-
-        /// <summary>
-        /// Ensures that the specified <paramref name = "parameter"/> is less than the given <paramref name = "other"/> value, or otherwise throws your custom exception.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "other">The boundary value that must be greater than <paramref name = "parameter"/>.</param>
-        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
-        /// <exception cref = "Exception">Your custom exception thrown when the specified <paramref name = "parameter"/> is not less than <paramref name = "other"/>, or when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeGreaterThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory)
-            where T : IComparable<T>
-        {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
-            if (parameter is null || parameter.CompareTo(other) >= 0)
-                Throw.CustomException(exceptionFactory, parameter!, other);
-            return parameter;
-        }
-
-        /*
-     * -------------------------------------
-     * Must Be Greater Than
-     * Must Not Be Less Than or Equal To
-     * -------------------------------------
-     */
-        /// <summary>
-        /// Ensures that the specified <paramref name = "parameter"/> is greater than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "other">The boundary value that must be less than <paramref name = "parameter"/>.</param>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref = "ArgumentOutOfRangeException">Thrown when the specified <paramref name = "parameter"/> is less than or equal to <paramref name = "other"/>.</exception>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
-            where T : IComparable<T>
-        {
-            if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) <= 0)
-                Throw.MustBeGreaterThan(parameter, other, parameterName, message);
-            return parameter;
-        }
-
-        /// <summary>
-        /// Ensures that the specified <paramref name = "parameter"/> is greater than the given <paramref name = "other"/> value, or otherwise throws your custom exception.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "other">The boundary value that must be less than <paramref name = "parameter"/>.</param>
-        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
-        /// <exception cref = "Exception">Your custom exception thrown when the specified <paramref name = "parameter"/> is less than or equal to <paramref name = "other"/>, or when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory)
-            where T : IComparable<T>
-        {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
-            if (parameter is null || parameter.CompareTo(other) <= 0)
-                Throw.CustomException(exceptionFactory, parameter!, other);
-            return parameter;
-        }
-
-        /// <summary>
-        /// Ensures that the specified <paramref name = "parameter"/> is greater than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "other">The boundary value that must be less than <paramref name = "parameter"/>.</param>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref = "ArgumentOutOfRangeException">Thrown when the specified <paramref name = "parameter"/> is less than or equal to <paramref name = "other"/>.</exception>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeLessThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
-            where T : IComparable<T>
-        {
-            if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) <= 0)
-                Throw.MustNotBeLessThanOrEqualTo(parameter, other, parameterName, message);
-            return parameter;
-        }
-
-        /// <summary>
-        /// Ensures that the specified <paramref name = "parameter"/> is greater than the given <paramref name = "other"/> value, or otherwise throws your custom exception.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "other">The boundary value that must be less than <paramref name = "parameter"/>.</param>
-        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
-        /// <exception cref = "Exception">Your custom exception thrown when the specified <paramref name = "parameter"/> is less than or equal to <paramref name = "other"/>, or when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeLessThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory)
-            where T : IComparable<T>
-        {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
-            if (parameter is null || parameter.CompareTo(other) <= 0)
-                Throw.CustomException(exceptionFactory, parameter!, other);
-            return parameter;
-        }
-
-        /*
-     * -------------------------------------
-     * Must Not Be Greater Than
-     * Must Be Less Than or Equal To
-     * -------------------------------------
-     */
-        /// <summary>
-        /// Ensures that the specified <paramref name = "parameter"/> is not greater than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "other">The boundary value that must be greater than or equal to <paramref name = "parameter"/>.</param>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref = "ArgumentOutOfRangeException">Thrown when the specified <paramref name = "parameter"/> is greater than <paramref name = "other"/>.</exception>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
-            where T : IComparable<T>
-        {
-            if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) > 0)
-                Throw.MustNotBeGreaterThan(parameter, other, parameterName, message);
-            return parameter;
-        }
-
-        /// <summary>
-        /// Ensures that the specified <paramref name = "parameter"/> is not greater than the given <paramref name = "other"/> value, or otherwise throws your custom exception.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "other">The boundary value that must be greater than or equal to <paramref name = "parameter"/>.</param>
-        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
-        /// <exception cref = "Exception">Your custom exception thrown when the specified <paramref name = "parameter"/> is greater than <paramref name = "other"/>, or when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeGreaterThan<T>([ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory)
-            where T : IComparable<T>
-        {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
-            if (parameter is null || parameter.CompareTo(other) > 0)
-                Throw.CustomException(exceptionFactory, parameter!, other);
-            return parameter;
-        }
-
-        /// <summary>
-        /// Ensures that the specified <paramref name = "parameter"/> is not greater than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "other">The boundary value that must be greater than or equal to <paramref name = "parameter"/>.</param>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref = "ArgumentOutOfRangeException">Thrown when the specified <paramref name = "parameter"/> is greater than <paramref name = "other"/>.</exception>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeLessThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
-            where T : IComparable<T>
-        {
-            if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) > 0)
-                Throw.MustBeLessThanOrEqualTo(parameter, other, parameterName, message);
-            return parameter;
-        }
-
-        /// <summary>
-        /// Ensures that the specified <paramref name = "parameter"/> is not greater than the given <paramref name = "other"/> value, or otherwise throws your custom exception.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "other">The boundary value that must be greater than or equal to <paramref name = "parameter"/>.</param>
-        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
-        /// <exception cref = "Exception">Your custom exception thrown when the specified <paramref name = "parameter"/> is greater than <paramref name = "other"/>, or when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustBeLessThanOrEqualTo<T>([ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory)
-            where T : IComparable<T>
-        {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
-            if (parameter is null || parameter.CompareTo(other) > 0)
-                Throw.CustomException(exceptionFactory, parameter!, other);
-            return parameter;
-        }
-
-        /*
-     * -------------------------------------
-     * Ranges
-     * -------------------------------------
-     */
-        /// <summary>
-        /// Checks if the value is within the specified range.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "range">The range where <paramref name = "parameter"/> must be in-between.</param>
-        /// <returns>True if the parameter is within the specified range, else false.</returns>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsIn<T>([ValidatedNotNull] this T parameter, Range<T> range)
-            where T : IComparable<T> => range.IsValueWithinRange(parameter);
-        /// <summary>
-        /// Checks if the value is not within the specified range.
-        /// </summary>
-        /// <param name = "parameter">The comparable to be checked.</param>
-        /// <param name = "range">The range where <paramref name = "parameter"/> must not be in-between.</param>
-        /// <returns>True if the parameter is not within the specified range, else false.</returns>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsNotIn<T>([ValidatedNotNull] this T parameter, Range<T> range)
-            where T : IComparable<T> => !range.IsValueWithinRange(parameter);
-        /// <summary>
-        /// Ensures that <paramref name = "parameter"/> is within the specified range, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
-        /// </summary>
-        /// <typeparam name = "T">The type of the parameter to be checked.</typeparam>
-        /// <param name = "parameter">The parameter to be checked.</param>
-        /// <param name = "range">The range where <paramref name = "parameter"/> must be in-between.</param>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref = "ArgumentOutOfRangeException">Thrown when <paramref name = "parameter"/> is not within <paramref name = "range"/>.</exception>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustBeIn<T>([ValidatedNotNull] this T parameter, Range<T> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
-            where T : IComparable<T>
-        {
-            if (!range.IsValueWithinRange(parameter.MustNotBeNullReference(parameterName, message)))
-                Throw.MustBeInRange(parameter, range, parameterName, message);
-            return parameter;
-        }
-
-        /// <summary>
-        /// Ensures that <paramref name = "parameter"/> is within the specified range, or otherwise throws your custom exception.
-        /// </summary>
-        /// <param name = "parameter">The parameter to be checked.</param>
-        /// <param name = "range">The range where <paramref name = "parameter"/> must be in-between.</param>
-        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "range"/> are passed to this delegate.</param>
-        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is not within <paramref name = "range"/>, or when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustBeIn<T>([ValidatedNotNull] this T parameter, Range<T> range, Func<T, Range<T>, Exception> exceptionFactory)
-            where T : IComparable<T>
-        {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
-            if (parameter is null || !range.IsValueWithinRange(parameter))
-                Throw.CustomException(exceptionFactory, parameter!, range);
-            return parameter;
-        }
-
-        /// <summary>
-        /// Ensures that <paramref name = "parameter"/> is not within the specified range, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
-        /// </summary>
-        /// <typeparam name = "T">The type of the parameter to be checked.</typeparam>
-        /// <param name = "parameter">The parameter to be checked.</param>
-        /// <param name = "range">The range where <paramref name = "parameter"/> must not be in-between.</param>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref = "ArgumentOutOfRangeException">Thrown when <paramref name = "parameter"/> is within <paramref name = "range"/>.</exception>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static T MustNotBeIn<T>([ValidatedNotNull] this T parameter, Range<T> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
-            where T : IComparable<T>
-        {
-            if (range.IsValueWithinRange(parameter.MustNotBeNullReference(parameterName, message)))
-                Throw.MustNotBeInRange(parameter, range, parameterName, message);
-            return parameter;
-        }
-
-        /// <summary>
-        /// Ensures that <paramref name = "parameter"/> is not within the specified range, or otherwise throws your custom exception.
-        /// </summary>
-        /// <param name = "parameter">The parameter to be checked.</param>
-        /// <param name = "range">The range where <paramref name = "parameter"/> must not be in-between.</param>
-        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "range"/> are passed to this delegate.</param>
-        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is within <paramref name = "range"/>, or when <paramref name = "parameter"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static T MustNotBeIn<T>([ValidatedNotNull] this T parameter, Range<T> range, Func<T, Range<T>, Exception> exceptionFactory)
-            where T : IComparable<T>
-        {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
-            if (parameter is null || range.IsValueWithinRange(parameter))
-                Throw.CustomException(exceptionFactory, parameter!, range);
-            return parameter;
-        }
-
         /// <summary>
         /// Ensures that the specified <paramref name = "parameter"/> uses <see cref = "DateTimeKind.Utc"/>, or otherwise throws an <see cref = "InvalidDateTimeException"/>.
         /// </summary>
@@ -1227,12 +831,12 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustHaveCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static TCollection MustHaveCount<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where TCollection : class, IEnumerable
         {
             if (parameter!.Count(parameterName, message) != count)
-                Throw.InvalidCollectionCount(parameter!, count, parameterName, message);
-            return parameter!;
+                Throw.InvalidCollectionCount(parameter, count, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -1244,7 +848,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> does not have the specified number of items, or when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustHaveCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, Func<TCollection?, int, Exception> exceptionFactory)
+        public static TCollection MustHaveCount<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, int count, Func<TCollection?, int, Exception> exceptionFactory)
             where TCollection : class, IEnumerable
         {
             if (parameter is null || parameter.Count() != count)
@@ -1270,12 +874,12 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustNotBeNullOrEmpty<TCollection>([ValidatedNotNull] this TCollection? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static TCollection MustNotBeNullOrEmpty<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where TCollection : class, IEnumerable
         {
             if (parameter.Count(parameterName, message) == 0)
                 Throw.EmptyCollection(parameterName, message);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -1286,7 +890,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Thrown when <paramref name = "parameter"/> has no items, or when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustNotBeNullOrEmpty<TCollection>([ValidatedNotNull] this TCollection? parameter, Func<TCollection?, Exception> exceptionFactory)
+        public static TCollection MustNotBeNullOrEmpty<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, Func<TCollection?, Exception> exceptionFactory)
             where TCollection : class, IEnumerable
         {
             if (parameter is null || parameter.Count() == 0)
@@ -1305,7 +909,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustContain<TCollection, TItem>([ValidatedNotNull] this TCollection? parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static TCollection MustContain<TCollection, TItem>([NotNull, ValidatedNotNull] this TCollection? parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where TCollection : class, IEnumerable<TItem>
         {
             if (parameter is ICollection<TItem> collection)
@@ -1316,8 +920,8 @@ namespace Light.GuardClauses
             }
 
             if (!parameter.MustNotBeNull(parameterName, message).Contains(item))
-                Throw.MissingItem(parameter!, item, parameterName, message);
-            return parameter!;
+                Throw.MissingItem(parameter, item, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -1329,7 +933,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> does not contain <paramref name = "item"/>, or when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustContain<TCollection, TItem>([ValidatedNotNull] this TCollection? parameter, TItem item, Func<TCollection?, TItem, Exception> exceptionFactory)
+        public static TCollection MustContain<TCollection, TItem>([NotNull, ValidatedNotNull] this TCollection? parameter, TItem item, Func<TCollection?, TItem, Exception> exceptionFactory)
             where TCollection : class, IEnumerable<TItem>
         {
             if (parameter is ICollection<TItem> collection)
@@ -1355,7 +959,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustNotContain<TCollection, TItem>([ValidatedNotNull] this TCollection? parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static TCollection MustNotContain<TCollection, TItem>([NotNull, ValidatedNotNull] this TCollection? parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where TCollection : class, IEnumerable<TItem>
         {
             if (parameter is ICollection<TItem> collection)
@@ -1366,8 +970,8 @@ namespace Light.GuardClauses
             }
 
             if (parameter.MustNotBeNull(parameterName, message).Contains(item))
-                Throw.ExistingItem(parameter!, item, parameterName, message);
-            return parameter!;
+                Throw.ExistingItem(parameter, item, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -1379,7 +983,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> contains <paramref name = "item"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustNotContain<TCollection, TItem>([ValidatedNotNull] this TCollection? parameter, TItem item, Func<TCollection?, TItem, Exception> exceptionFactory)
+        public static TCollection MustNotContain<TCollection, TItem>([NotNull, ValidatedNotNull] this TCollection? parameter, TItem item, Func<TCollection?, TItem, Exception> exceptionFactory)
             where TCollection : class, IEnumerable<TItem>
         {
             if (parameter is ICollection<TItem> collection)
@@ -1402,7 +1006,8 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "items"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("items:null => halt")]
-        public static bool IsOneOf<TItem>(this TItem item, [ValidatedNotNull] IEnumerable<TItem> items)
+        // ReSharper disable once RedundantNullableFlowAttribute - the attribute has an effect, see Issue72NotNullAttribute tests
+        public static bool IsOneOf<TItem>(this TItem item, [NotNull, ValidatedNotNull] IEnumerable<TItem> items)
         {
             if (items is ICollection<TItem> collection)
                 return collection.Contains(item);
@@ -1422,7 +1027,8 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "items"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("items:null => halt")]
-        public static TItem MustBeOneOf<TItem>(this TItem parameter, [ValidatedNotNull] IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        // ReSharper disable once RedundantNullableFlowAttribute - the attribute has an effect, see Issue72NotNullAttribute tests
+        public static TItem MustBeOneOf<TItem>(this TItem parameter, [NotNull, ValidatedNotNull] IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             if (!parameter.IsOneOf(items.MustNotBeNull(nameof(items), message)))
@@ -1440,10 +1046,10 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is not equal to one of the specified <paramref name = "items"/>, or when <paramref name = "items"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("items:null => halt")]
-        public static TItem MustBeOneOf<TItem, TCollection>(this TItem parameter, [ValidatedNotNull] TCollection items, Func<TItem, TCollection, Exception> exceptionFactory)
+        public static TItem MustBeOneOf<TItem, TCollection>(this TItem parameter, [NotNull, ValidatedNotNull] TCollection items, Func<TItem, TCollection, Exception> exceptionFactory)
             where TCollection : class, IEnumerable<TItem>
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (items is null || !parameter.IsOneOf(items))
                 Throw.CustomException(exceptionFactory, parameter, items!);
             return parameter;
@@ -1460,7 +1066,8 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "items"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("items:null => halt")]
-        public static TItem MustNotBeOneOf<TItem>(this TItem parameter, [ValidatedNotNull] IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        // ReSharper disable once RedundantNullableFlowAttribute - the attribute has an effect, see Issue72NotNullAttribute tests
+        public static TItem MustNotBeOneOf<TItem>(this TItem parameter, [NotNull, ValidatedNotNull] IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             if (parameter.IsOneOf(items.MustNotBeNull(nameof(items), message)))
@@ -1478,10 +1085,10 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is equal to one of the specified <paramref name = "items"/>, or when <paramref name = "items"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("items:null => halt")]
-        public static TItem MustNotBeOneOf<TItem, TCollection>(this TItem parameter, [ValidatedNotNull] TCollection items, Func<TItem, TCollection, Exception> exceptionFactory)
+        public static TItem MustNotBeOneOf<TItem, TCollection>(this TItem parameter, [NotNull, ValidatedNotNull] TCollection items, Func<TItem, TCollection, Exception> exceptionFactory)
             where TCollection : class, IEnumerable<TItem>
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (items is null || parameter.IsOneOf(items))
                 Throw.CustomException(exceptionFactory, parameter, items!);
             return parameter;
@@ -1498,12 +1105,12 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustHaveMinimumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static TCollection MustHaveMinimumCount<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where TCollection : class, IEnumerable
         {
             if (parameter.Count(parameterName, message) < count)
-                Throw.InvalidMinimumCollectionCount(parameter!, count, parameterName, message);
-            return parameter!;
+                Throw.InvalidMinimumCollectionCount(parameter, count, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -1515,7 +1122,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> does not contain at least the specified number of items, or when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustHaveMinimumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, Func<TCollection?, int, Exception> exceptionFactory)
+        public static TCollection MustHaveMinimumCount<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, int count, Func<TCollection?, int, Exception> exceptionFactory)
             where TCollection : class, IEnumerable
         {
             if (parameter is null || parameter.Count() < count)
@@ -1534,12 +1141,12 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustHaveMaximumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static TCollection MustHaveMaximumCount<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where TCollection : class, IEnumerable
         {
             if (parameter.Count(parameterName, message) > count)
-                Throw.InvalidMaximumCollectionCount(parameter!, count, parameterName, message);
-            return parameter!;
+                Throw.InvalidMaximumCollectionCount(parameter, count, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -1551,7 +1158,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> does not contain at most the specified number of items, or when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static TCollection MustHaveMaximumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, Func<TCollection?, int, Exception> exceptionFactory)
+        public static TCollection MustHaveMaximumCount<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, int count, Func<TCollection?, int, Exception> exceptionFactory)
             where TCollection : class, IEnumerable
         {
             if (parameter is null || parameter.Count() > count)
@@ -1870,6 +1477,269 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Checks if the two specified types are equivalent. This is true when both types are equal or
+        /// when one type is a constructed generic type and the other type is the corresponding generic type definition.
+        /// </summary>
+        /// <param name = "type">The first type to be checked.</param>
+        /// <param name = "other">The other type to be checked.</param>
+        /// <returns>
+        /// True if both types are null, or if both are equal, or if one type
+        /// is a constructed generic type and the other one is the corresponding generic type definition, else false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsEquivalentTypeTo(this Type? type, Type? other) => ReferenceEquals(type, other) || !(type is null) && !(other is null) && (type == other || type.IsConstructedGenericType != other.IsConstructedGenericType && CheckTypeEquivalency(type, other));
+        private static bool CheckTypeEquivalency(Type type, Type other)
+        {
+            if (type.IsConstructedGenericType)
+                return type.GetGenericTypeDefinition() == other;
+            return other.GetGenericTypeDefinition() == type;
+        }
+
+        /// <summary>
+        /// Checks if the type implements the specified interface type. Internally, this method uses <see cref = "IsEquivalentTypeTo"/>
+        /// so that constructed generic types and their corresponding generic type definitions are regarded as equal.
+        /// </summary>
+        /// <param name = "type">The type to be checked.</param>
+        /// <param name = "interfaceType">The interface type that <paramref name = "type"/> should implement.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "interfaceType"/> is null.</exception>
+        [ContractAnnotation("type:null => halt; interfaceType:null => halt")]
+        public static bool Implements(
+#if NET8_0
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
+#endif
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type interfaceType// ReSharper restore RedundantNullableFlowAttribute
+        )
+        {
+            type.MustNotBeNull();
+            interfaceType.MustNotBeNull();
+            var implementedInterfaces = type.GetInterfaces();
+            for (var i = 0; i < implementedInterfaces.Length; ++i)
+            {
+                if (interfaceType.IsEquivalentTypeTo(implementedInterfaces[i]))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if the type implements the specified interface type. This overload uses the specified <paramref name = "typeComparer"/>
+        /// to compare the interface types.
+        /// </summary>
+        /// <param name = "type">The type to be checked.</param>
+        /// <param name = "interfaceType">The interface type that <paramref name = "type"/> should implement.</param>
+        /// <param name = "typeComparer">The equality comparer used to compare the interface types.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/>, or <paramref name = "interfaceType"/>, or <paramref name = "typeComparer"/> is null.</exception>
+        [ContractAnnotation("type:null => halt; interfaceType:null => halt; typeComparer:null => halt")]
+        public static bool Implements(
+#if NET8_0
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
+#endif
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type interfaceType, [NotNull, ValidatedNotNull] IEqualityComparer<Type> typeComparer// ReSharper restore RedundantNullableFlowAttribute
+        )
+        {
+            type.MustNotBeNull();
+            interfaceType.MustNotBeNull();
+            typeComparer.MustNotBeNull();
+            var implementedInterfaces = type.GetInterfaces();
+            for (var i = 0; i < implementedInterfaces.Length; ++i)
+            {
+                if (typeComparer.Equals(implementedInterfaces[i], interfaceType))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if the given <paramref name = "type"/> is equal to the specified <paramref name = "otherType"/> or if it implements it. Internally, this
+        /// method uses <see cref = "IsEquivalentTypeTo"/> so that constructed generic types and their corresponding generic type definitions are regarded as equal.
+        /// </summary>
+        /// <param name = "type">The type to be checked.</param>
+        /// <param name = "otherType">The type that is equivalent to <paramref name = "type"/> or the interface type that <paramref name = "type"/> implements.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "otherType"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("type:null => halt; otherType:null => halt")]
+        public static bool IsOrImplements(
+#if NET8_0
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
+#endif
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type otherType) => // ReSharper restore RedundantNullableFlowAttribute
+        type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.Implements(otherType);
+        /// <summary>
+        /// Checks if the given <paramref name = "type"/> is equal to the specified <paramref name = "otherType"/> or if it implements it. This overload uses the specified <paramref name = "typeComparer"/>
+        /// to compare the types.
+        /// </summary>
+        /// ,
+        /// <param name = "type">The type to be checked.</param>
+        /// <param name = "otherType">The type that is equivalent to <paramref name = "type"/> or the interface type that <paramref name = "type"/> implements.</param>
+        /// <param name = "typeComparer">The equality comparer used to compare the interface types.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "otherType"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("type:null => halt; otherType:null => halt")]
+        public static bool IsOrImplements(
+#if NET8_0
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
+#endif
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type otherType, [NotNull, ValidatedNotNull] IEqualityComparer<Type> typeComparer) => // ReSharper restore RedundantNullableFlowAttribute
+        typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type.MustNotBeNull(nameof(type)), otherType.MustNotBeNull(nameof(otherType))) || type.Implements(otherType, typeComparer);
+        /// <summary>
+        /// Checks if the specified type derives from the other type. Internally, this method uses <see cref = "IsEquivalentTypeTo"/>
+        /// by default so that constructed generic types and their corresponding generic type definitions are regarded as equal.
+        /// </summary>
+        /// <param name = "type">The type info to be checked.</param>
+        /// <param name = "baseClass">The base class that <paramref name = "type"/> should derive from.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "baseClass"/> is null.</exception>
+        [ContractAnnotation("type:null => halt; baseClass:null => halt")]
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        public static bool DerivesFrom([NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type baseClass)
+        // ReSharper restore RedundantNullableFlowAttribute
+        {
+            baseClass.MustNotBeNull(nameof(baseClass));
+            var currentBaseType = type.MustNotBeNull(nameof(type)).BaseType;
+            while (currentBaseType != null)
+            {
+                if (currentBaseType.IsEquivalentTypeTo(baseClass))
+                    return true;
+                currentBaseType = currentBaseType.BaseType;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if the specified type derives from the other type. This overload uses the specified <paramref name = "typeComparer"/>
+        /// to compare the types.
+        /// </summary>
+        /// <param name = "type">The type info to be checked.</param>
+        /// <param name = "baseClass">The base class that <paramref name = "type"/> should derive from.</param>
+        /// <param name = "typeComparer">The equality comparer used to compare the types.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/>, or <paramref name = "baseClass"/>, or <paramref name = "typeComparer"/> is null.</exception>
+        [ContractAnnotation("type:null => halt; baseClass:null => halt; typeComparer:null => halt")]
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        public static bool DerivesFrom([NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type baseClass, [NotNull, ValidatedNotNull] IEqualityComparer<Type> typeComparer)
+        // ReSharper restore RedundantNullableFlowAttribute
+        {
+            baseClass.MustNotBeNull(nameof(baseClass));
+            typeComparer.MustNotBeNull(nameof(typeComparer));
+            var currentBaseType = type.MustNotBeNull(nameof(type)).BaseType;
+            while (currentBaseType != null)
+            {
+                if (typeComparer.Equals(currentBaseType, baseClass))
+                    return true;
+                currentBaseType = currentBaseType.BaseType;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if the given <paramref name = "type"/> is equal to the specified <paramref name = "otherType"/> or if it derives from it. Internally, this
+        /// method uses <see cref = "IsEquivalentTypeTo"/> so that constructed generic types and their corresponding generic type definitions are regarded as equal.
+        /// </summary>
+        /// <param name = "type">The type to be checked.</param>
+        /// <param name = "otherType">The type that is equivalent to <paramref name = "type"/> or the base class type where <paramref name = "type"/> derives from.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "otherType"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("type:null => halt; otherType:null => halt")]
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        public static bool IsOrDerivesFrom([NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type otherType) => // ReSharper restore RedundantNullableFlowAttribute
+        type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.DerivesFrom(otherType);
+        /// <summary>
+        /// Checks if the given <paramref name = "type"/> is equal to the specified <paramref name = "otherType"/> or if it derives from it. This overload uses the specified <paramref name = "typeComparer"/>
+        /// to compare the types.
+        /// </summary>
+        /// <param name = "type">The type to be checked.</param>
+        /// <param name = "otherType">The type that is equivalent to <paramref name = "type"/> or the base class type where <paramref name = "type"/> derives from.</param>
+        /// <param name = "typeComparer">The equality comparer used to compare the types.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/>, or <paramref name = "otherType"/>, or <paramref name = "typeComparer"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("type:null => halt; otherType:null => halt; typeComparer:null => halt")]
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        public static bool IsOrDerivesFrom([NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type otherType, [NotNull, ValidatedNotNull] IEqualityComparer<Type> typeComparer) => // ReSharper restore RedundantNullableFlowAttribute
+        typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type, otherType.MustNotBeNull(nameof(otherType))) || type.DerivesFrom(otherType, typeComparer);
+        /// <summary>
+        /// Checks if the given type derives from the specified base class or interface type. Internally, this method uses <see cref = "IsEquivalentTypeTo"/>
+        /// so that constructed generic types and their corresponding generic type definitions are regarded as equal.
+        /// </summary>
+        /// <param name = "type">The type to be checked.</param>
+        /// <param name = "baseClassOrInterfaceType">The type describing an interface or base class that <paramref name = "type"/> should derive from or implement.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "baseClassOrInterfaceType"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt")]
+        public static bool InheritsFrom(
+#if NET8_0
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
+#endif
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type baseClassOrInterfaceType) => // ReSharper restore RedundantNullableFlowAttribute
+        baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType)).IsInterface ? type.Implements(baseClassOrInterfaceType) : type.DerivesFrom(baseClassOrInterfaceType);
+        /// <summary>
+        /// Checks if the given type derives from the specified base class or interface type. This overload uses the specified <paramref name = "typeComparer"/>
+        /// to compare the types.
+        /// </summary>
+        /// <param name = "type">The type to be checked.</param>
+        /// <param name = "baseClassOrInterfaceType">The type describing an interface or base class that <paramref name = "type"/> should derive from or implement.</param>
+        /// <param name = "typeComparer">The equality comparer used to compare the types.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/>, or <paramref name = "baseClassOrInterfaceType"/>, or <paramref name = "typeComparer"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt; typeComparer:null => halt")]
+        public static bool InheritsFrom(
+#if NET8_0
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
+#endif
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type baseClassOrInterfaceType, [NotNull, ValidatedNotNull] IEqualityComparer<Type> typeComparer) => // ReSharper restore RedundantNullableFlowAttribute
+        baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType)).IsInterface ? type.Implements(baseClassOrInterfaceType, typeComparer) : type.DerivesFrom(baseClassOrInterfaceType, typeComparer);
+        /// <summary>
+        /// Checks if the given <paramref name = "type"/> is equal to the specified <paramref name = "otherType"/> or if it derives from it or implements it.
+        /// Internally, this method uses <see cref = "IsEquivalentTypeTo"/> so that constructed generic types and their corresponding generic type definitions
+        /// are regarded as equal.
+        /// </summary>
+        /// <param name = "type">The type to be checked.</param>
+        /// <param name = "otherType">The type that is equivalent to <paramref name = "type"/> or the base class type where <paramref name = "type"/> derives from.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "otherType"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("type:null => halt; otherType:null => halt")]
+        public static bool IsOrInheritsFrom(
+#if NET8_0
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
+#endif
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type otherType) => // ReSharper restore RedundantNullableFlowAttribute
+        type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType);
+        /// <summary>
+        /// Checks if the given <paramref name = "type"/> is equal to the specified <paramref name = "otherType"/> or if it derives from it or implements it.
+        /// This overload uses the specified <paramref name = "typeComparer"/> to compare the types.
+        /// </summary>
+        /// <param name = "type">The type to be checked.</param>
+        /// <param name = "otherType">The type that is equivalent to <paramref name = "type"/> or the base class type where <paramref name = "type"/> derives from.</param>
+        /// <param name = "typeComparer">The equality comparer used to compare the types.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "otherType"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("type:null => halt; otherType:null => halt; typeComparer:null => halt")]
+        public static bool IsOrInheritsFrom(
+#if NET8_0
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
+#endif
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type otherType, [NotNull, ValidatedNotNull] IEqualityComparer<Type> typeComparer) => // ReSharper restore RedundantNullableFlowAttribute
+        typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type, otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType, typeComparer);
+        /// <summary>
+        /// Checks if the given <paramref name = "type"/> is a generic type that has open generic parameters,
+        /// but is no generic type definition.
+        /// </summary>
+        /// <param name = "type">The type to be checked.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("type:null => halt")]
+        // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        public static bool IsOpenConstructedGenericType([NotNull, ValidatedNotNull] this Type type) => type.MustNotBeNull(nameof(type)).IsGenericType && type.ContainsGenericParameters && type.IsGenericTypeDefinition == false;
+        /// <summary>
         /// Checks if the specified string is null or empty.
         /// </summary>
         /// <param name = "string">The string to be checked.</param>
@@ -1886,7 +1756,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotBeNullOrEmpty([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustNotBeNullOrEmpty([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter is null)
                 Throw.ArgumentNull(parameterName, message);
@@ -1903,15 +1773,11 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is an empty string or null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-        public static string MustNotBeNullOrEmpty([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        public static string MustNotBeNullOrEmpty([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
         {
-            if (string.IsNullOrEmpty(parameter))
+            if (parameter.IsNullOrEmpty())
                 Throw.CustomException(exceptionFactory, parameter);
-#if NETSTANDARD2_0
-        return parameter!;
-#else
             return parameter;
-#endif
         }
 
         /// <summary>
@@ -1932,10 +1798,10 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotBeNullOrWhiteSpace([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustNotBeNullOrWhiteSpace([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             parameter.MustNotBeNullOrEmpty(parameterName, message);
-            foreach (var character in parameter!)
+            foreach (var character in parameter)
             {
                 if (!character.IsWhiteSpace())
                     return parameter;
@@ -1953,7 +1819,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null, empty, or contains only white space.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory: null => halt")]
-        public static string MustNotBeNullOrWhiteSpace([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        public static string MustNotBeNullOrWhiteSpace([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
         {
             if (parameter.IsNullOrWhiteSpace())
                 Throw.CustomException(exceptionFactory, parameter);
@@ -2008,10 +1874,10 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is not equal to <paramref name = "other"/>.</exception>
         /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string? MustBe(this string? parameter, string? other, StringComparison comparisonType, Func<string?, string?, Exception> exceptionFactory)
+        public static string? MustBe(this string? parameter, string? other, StringComparison comparisonType, Func<string?, string?, StringComparison, Exception> exceptionFactory)
         {
             if (!string.Equals(parameter, other, comparisonType))
-                Throw.CustomException(exceptionFactory, parameter, other);
+                Throw.CustomException(exceptionFactory, parameter, other, comparisonType);
             return parameter;
         }
 
@@ -2024,7 +1890,7 @@ namespace Light.GuardClauses
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "ValuesNotEqualException">Thrown when <paramref name = "parameter"/> is not equal to <paramref name = "other"/>.</exception>
-        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparisonType"/> enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string? MustBe(this string? parameter, string? other, StringComparisonType comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
@@ -2041,11 +1907,11 @@ namespace Light.GuardClauses
         /// <param name = "comparisonType">The enum value specifying how the two strings should be compared.</param>
         /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is not equal to <paramref name = "other"/>.</exception>
-        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
-        public static string? MustBe(this string? parameter, string? other, StringComparisonType comparisonType, Func<string?, string?, Exception> exceptionFactory)
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparisonType"/> enum.</exception>
+        public static string? MustBe(this string? parameter, string? other, StringComparisonType comparisonType, Func<string?, string?, StringComparisonType, Exception> exceptionFactory)
         {
             if (!parameter.Equals(other, comparisonType))
-                Throw.CustomException(exceptionFactory, parameter, other);
+                Throw.CustomException(exceptionFactory, parameter, other, comparisonType);
             return parameter;
         }
 
@@ -2073,7 +1939,7 @@ namespace Light.GuardClauses
         /// <param name = "parameter">The first string to be compared.</param>
         /// <param name = "other">The second string to be compared.</param>
         /// <param name = "comparisonType">The enum value specifying how the two strings should be compared.</param>
-        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/>, <paramref name = "other"/>, and <paramref name = "comparisonType"/> are passed to this delegate.</param>
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is equal to <paramref name = "other"/>.</exception>
         /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2093,7 +1959,7 @@ namespace Light.GuardClauses
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
         /// <exception cref = "ValuesEqualException">Thrown when <paramref name = "parameter"/> is equal to <paramref name = "other"/>.</exception>
-        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparisonType"/> enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string? MustNotBe(this string? parameter, string? other, StringComparisonType comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
@@ -2108,14 +1974,14 @@ namespace Light.GuardClauses
         /// <param name = "parameter">The first string to be compared.</param>
         /// <param name = "other">The second string to be compared.</param>
         /// <param name = "comparisonType">The enum value specifying how the two strings should be compared.</param>
-        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/>, <paramref name = "other"/>, and <paramref name = "comparisonType"/> are passed to this delegate.</param>
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is equal to <paramref name = "other"/>.</exception>
-        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.</exception>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparisonType"/> enum.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string? MustNotBe(this string? parameter, string? other, StringComparisonType comparisonType, Func<string?, string?, Exception> exceptionFactory)
+        public static string? MustNotBe(this string? parameter, string? other, StringComparisonType comparisonType, Func<string?, string?, StringComparisonType, Exception> exceptionFactory)
         {
             if (parameter.Equals(other, comparisonType))
-                Throw.CustomException(exceptionFactory, parameter, other);
+                Throw.CustomException(exceptionFactory, parameter, other, comparisonType);
             return parameter;
         }
 
@@ -2130,11 +1996,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> or <paramref name = "regex"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; regex:null => halt")]
-        public static string MustMatch([ValidatedNotNull] this string? parameter, Regex regex, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustMatch([NotNull, ValidatedNotNull] this string? parameter, Regex regex, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!regex.MustNotBeNull(nameof(regex), message).IsMatch(parameter.MustNotBeNull(parameterName, message)))
-                Throw.StringDoesNotMatch(parameter!, regex, parameterName, message);
-            return parameter!;
+                Throw.StringDoesNotMatch(parameter, regex, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -2149,7 +2015,7 @@ namespace Light.GuardClauses
         /// or when <paramref name = "regex"/> is null.
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string MustMatch([ValidatedNotNull] this string? parameter, Regex regex, Func<string?, Regex, Exception> exceptionFactory)
+        public static string MustMatch([NotNull, ValidatedNotNull] this string? parameter, Regex regex, Func<string?, Regex, Exception> exceptionFactory)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (parameter is null || regex is null || !regex.IsMatch(parameter))
@@ -2189,11 +2055,14 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> or <paramref name = "value"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustContain([ValidatedNotNull] this string? parameter, string? value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustContain([NotNull, ValidatedNotNull] this string? parameter, string? value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.MustNotBeNull(parameterName, message).Contains(value.MustNotBeNull(nameof(value), message)))
-                Throw.StringDoesNotContain(parameter!, value!, parameterName, message);
-            return parameter!;
+            {
+                Throw.StringDoesNotContain(parameter, value, parameterName, message);
+            }
+
+            return parameter;
         }
 
         /// <summary>
@@ -2209,11 +2078,14 @@ namespace Light.GuardClauses
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustContain([ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
+        public static string MustContain([NotNull, ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (parameter is null || value is null || !parameter.Contains(value))
+            {
                 Throw.CustomException(exceptionFactory, parameter, value!);
+            }
+
             return parameter;
         }
 
@@ -2230,11 +2102,14 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustContain([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).IndexOf(value.MustNotBeNull(nameof(value), message), comparisonType) < 0)
-                Throw.StringDoesNotContain(parameter!, value, comparisonType, parameterName, message);
-            return parameter!;
+            {
+                Throw.StringDoesNotContain(parameter, value, comparisonType, parameterName, message);
+            }
+
+            return parameter;
         }
 
         /// <summary>
@@ -2247,16 +2122,19 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">
         /// Your custom exception thrown when <paramref name = "parameter"/> does not contain <paramref name = "value"/>,
         /// or when <paramref name = "parameter"/> is null,
-        /// or when <paramref name = "value"/> is null,
-        /// or when <paramref name = "comparisonType"/> is not a valid value from the <see cref = "StringComparison"/> enum.
+        /// or when <paramref name = "value"/> is null.
         /// </exception>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
+        public static string MustContain([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
-            if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) < 0)
+            if (parameter is null || value is null || parameter.IndexOf(value, comparisonType) < 0)
+            {
                 Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
+            }
+
             return parameter;
         }
 
@@ -2271,11 +2149,14 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> or <paramref name = "value"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustNotContain([NotNull, ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Contains(value.MustNotBeNull(nameof(value), message)))
-                Throw.StringContains(parameter!, value, parameterName, message);
-            return parameter!;
+            {
+                Throw.StringContains(parameter, value, parameterName, message);
+            }
+
+            return parameter;
         }
 
         /// <summary>
@@ -2283,7 +2164,7 @@ namespace Light.GuardClauses
         /// </summary>
         /// <param name = "parameter">The string to be checked.</param>
         /// <param name = "value">The string that must not be part of <paramref name = "parameter"/>.</param>
-        /// <param name = "exceptionFactory">The delegate that creates your custom exception (optional). <paramref name = "parameter"/> and <paramref name = "value"/> are passed to this </param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception (optional). <paramref name = "parameter"/> and <paramref name = "value"/> are passed to this delegate.</param>
         /// <exception cref = "Exception">
         /// Your custom exception thrown when <paramref name = "parameter"/> contains <paramref name = "value"/>,
         /// or when <paramref name = "parameter"/> is null,
@@ -2291,7 +2172,7 @@ namespace Light.GuardClauses
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
+        public static string MustNotContain([NotNull, ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (parameter is null || value is null || parameter.Contains(value))
@@ -2312,11 +2193,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustNotContain([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).IndexOf(value.MustNotBeNull(nameof(value), message), comparisonType) >= 0)
-                Throw.StringContains(parameter!, value, comparisonType, parameterName, message);
-            return parameter!;
+                Throw.StringContains(parameter, value, comparisonType, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -2329,15 +2210,15 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">
         /// Your custom exception thrown when <paramref name = "parameter"/> contains <paramref name = "value"/>,
         /// or when <paramref name = "parameter"/> is null,
-        /// or when <paramref name = "value"/> is null,
-        /// or when <paramref name = "comparisonType"/> is not a valid value of the <see cref = "StringComparison"/> enum.
+        /// or when <paramref name = "value"/> is null.
         /// </exception>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
+        public static string MustNotContain([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
-            if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) >= 0)
+            if (parameter is null || value is null || parameter.IndexOf(value, comparisonType) >= 0)
                 Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
             return parameter;
         }
@@ -2353,7 +2234,8 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("string:null => halt; value:null => halt")]
-        public static bool Contains([ValidatedNotNull] this string @string, string value, StringComparison comparisonType) => @string.MustNotBeNull(nameof(@string)).IndexOf(value.MustNotBeNull(nameof(value)), comparisonType) >= 0;
+        // ReSharper disable once RedundantNullableFlowAttribute
+        public static bool Contains([NotNull, ValidatedNotNull] this string @string, string value, StringComparison comparisonType) => @string.MustNotBeNull(nameof(@string)).IndexOf(value.MustNotBeNull(nameof(value)), comparisonType) >= 0;
         /// <summary>
         /// Checks if the string is a substring of the other string.
         /// </summary>
@@ -2363,7 +2245,9 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "value"/> or <paramref name = "other"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("value:null => halt; other:null => halt")]
-        public static bool IsSubstringOf([ValidatedNotNull] this string value, [ValidatedNotNull] string other) => other.MustNotBeNull(nameof(other)).Contains(value);
+        // ReSharper disable RedundantNullableFlowAttribute
+        public static bool IsSubstringOf([NotNull, ValidatedNotNull] this string value, [NotNull, ValidatedNotNull] string other) => other.MustNotBeNull(nameof(other)).Contains(value);
+        // ReSharper restore RedundantNullableFlowAttribute
         /// <summary>
         /// Checks if the string is a substring of the other string.
         /// </summary>
@@ -2375,7 +2259,9 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("value:null => halt; other:null => halt")]
-        public static bool IsSubstringOf(this string value, string other, StringComparison comparisonType) => other.MustNotBeNull(nameof(other)).IndexOf(value, comparisonType) != -1;
+        // ReSharper disable RedundantNullableFlowAttribute
+        public static bool IsSubstringOf([NotNull, ValidatedNotNull] this string value, [NotNull, ValidatedNotNull] string other, StringComparison comparisonType) => other.MustNotBeNull(nameof(other)).IndexOf(value, comparisonType) != -1;
+        // ReSharper disable RedundantNullableFlowAttribute
         /// <summary>
         /// Ensures that the string is a substring of the specified other string, or otherwise throws a <see cref = "SubstringException"/>.
         /// </summary>
@@ -2387,11 +2273,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> or <paramref name = "value"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!value.MustNotBeNull(nameof(value), message).Contains(parameter.MustNotBeNull(parameterName, message)))
-                Throw.NotSubstring(parameter!, value, parameterName, message);
-            return parameter!;
+                Throw.NotSubstring(parameter, value, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -2407,7 +2293,7 @@ namespace Light.GuardClauses
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
+        public static string MustBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (parameter is null || value is null || !value.Contains(parameter))
@@ -2428,11 +2314,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (value.MustNotBeNull(nameof(value), message).IndexOf(parameter.MustNotBeNull(parameterName, message), comparisonType) == -1)
-                Throw.NotSubstring(parameter!, value, comparisonType, parameterName, message);
-            return parameter!;
+                Throw.NotSubstring(parameter, value, comparisonType, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -2445,15 +2331,15 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">
         /// Your custom exception thrown when <paramref name = "value"/> does not contain <paramref name = "parameter"/>,
         /// or when <paramref name = "parameter"/> is null,
-        /// or when <paramref name = "value"/> is null,
-        /// or when <paramref name = "comparisonType"/> is not a valid value of the <see cref = "StringComparison"/> enum.
+        /// or when <paramref name = "value"/> is null.
         /// </exception>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
+        public static string MustBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
-            if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || value.IndexOf(parameter, comparisonType) == -1)
+            if (parameter is null || value is null || value.IndexOf(parameter, comparisonType) == -1)
                 Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
             return parameter;
         }
@@ -2469,11 +2355,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> or <paramref name = "value"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustNotBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (value.MustNotBeNull(nameof(value), message).Contains(parameter.MustNotBeNull(parameterName, message)))
-                Throw.Substring(parameter!, value, parameterName, message);
-            return parameter!;
+                Throw.Substring(parameter, value, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -2490,7 +2376,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> or <paramref name = "value"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
+        public static string MustNotBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (parameter is null || value is null || value.Contains(parameter))
@@ -2511,11 +2397,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustNotBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (value.MustNotBeNull(nameof(value), message).IndexOf(parameter.MustNotBeNull(parameterName, message), comparisonType) != -1)
-                Throw.Substring(parameter!, value, comparisonType, parameterName, message);
-            return parameter!;
+                Throw.Substring(parameter, value, comparisonType, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -2524,7 +2410,7 @@ namespace Light.GuardClauses
         /// <param name = "parameter">The string to be checked.</param>
         /// <param name = "value">The other string that must not contain <paramref name = "parameter"/>.</param>
         /// <param name = "comparisonType">One of the enumeration values that specifies the rules for the search.</param>
-        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "value"/> are passed to this delegate.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/>, <paramref name = "value"/>, and <paramref name = "comparisonType"/> are passed to this delegate.</param>
         /// <exception cref = "Exception">
         /// Your custom exception thrown when <paramref name = "value"/> contains <paramref name = "parameter"/>,
         /// or when <paramref name = "parameter"/> is null,
@@ -2533,11 +2419,294 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-        public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
+        public static string MustNotBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
-            if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || value.IndexOf(parameter, comparisonType) != -1)
+            if (parameter is null || value is null || value.IndexOf(parameter, comparisonType) != -1)
                 Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string starts with the specified value, or otherwise throws a <see cref = "SubstringException"/>.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "value">The other string <paramref name = "parameter"/> must start with.</param>
+        /// <param name = "comparisonType">One of the enumeration values that specifies the rules for the search (optional). The default value is <see cref = "StringComparison.CurrentCulture"/>.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "SubstringException">Thrown when <paramref name = "parameter"/> does not start with <paramref name = "value"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> or <paramref name = "value"/> is null.</exception>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
+        public static string MustStartWith([NotNull, ValidatedNotNull] this string? parameter, [NotNull, ValidatedNotNull] string value, StringComparison comparisonType = StringComparison.CurrentCulture, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.MustNotBeNull(parameterName, message).StartsWith(value, comparisonType))
+            {
+                Throw.StringDoesNotStartWith(parameter, value, comparisonType, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string starts with the specified value, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "value">The other string <paramref name = "parameter"/> must start with.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "value"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">
+        /// Your custom exception thrown when <paramref name = "parameter"/> does not start with <paramref name = "value"/>,
+        /// or when <paramref name = "parameter"/> is null,
+        /// or when <paramref name = "value"/> is null.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt; exceptionFactory:null => halt")]
+        public static string MustStartWith([NotNull, ValidatedNotNull] this string? parameter, [NotNull, ValidatedNotNull] string value, [NotNull, ValidatedNotNull] Func<string?, string, Exception> exceptionFactory)
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract -- caller might have NRTs turned off
+            if (parameter is null || value is null || !parameter.StartsWith(value))
+            {
+                Throw.CustomException(exceptionFactory, parameter, value!);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string starts with the specified value, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "value">The other string <paramref name = "parameter"/> must start with.</param>
+        /// <param name = "comparisonType">One of the enumeration values that specifies the rules for the search.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/>, <paramref name = "value"/>, and <paramref name = "comparisonType"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">
+        /// Your custom exception thrown when <paramref name = "parameter"/> does not start with <paramref name = "value"/>,
+        /// or when <paramref name = "parameter"/> is null,
+        /// or when <paramref name = "value"/> is null.
+        /// </exception>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt; exceptionFactory:null => halt")]
+        public static string MustStartWith([NotNull, ValidatedNotNull] this string? parameter, [NotNull, ValidatedNotNull] string value, StringComparison comparisonType, [NotNull, ValidatedNotNull] Func<string?, string, StringComparison, Exception> exceptionFactory)
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract -- caller might have NRTs turned off
+            if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || !parameter.StartsWith(value, comparisonType))
+            {
+                Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string does not start with the specified value, or otherwise throws a <see cref = "SubstringException"/>.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "value">The other string that <paramref name = "parameter"/> must not start with.</param>
+        /// <param name = "comparisonType">One of the enumeration values that specifies the rules for the search (optional). The default value is <see cref = "StringComparison.CurrentCulture"/>.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "SubstringException">Thrown when <paramref name = "parameter"/> starts with <paramref name = "value"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> or <paramref name = "value"/> is null.</exception>
+        public static string MustNotStartWith([NotNull, ValidatedNotNull] this string? parameter, [NotNull, ValidatedNotNull] string value, StringComparison comparisonType = StringComparison.CurrentCulture, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (parameter.MustNotBeNull(parameterName, message).StartsWith(value, comparisonType))
+            {
+                Throw.StringStartsWith(parameter, value, comparisonType, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string does not start with the specified value, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "value">The other string that <paramref name = "parameter"/> must not start with.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "value"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">
+        /// Your custom exception thrown when <paramref name = "parameter"/> does not start with <paramref name = "value"/>,
+        /// or when <paramref name = "parameter"/> is null,
+        /// or when <paramref name = "value"/> is null.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt; exceptionFactory:null => halt")]
+        public static string MustNotStartWith([NotNull, ValidatedNotNull] this string? parameter, [NotNull, ValidatedNotNull] string value, [NotNull, ValidatedNotNull] Func<string?, string, Exception> exceptionFactory)
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract -- caller might have NRTs turned off
+            if (parameter is null || value is null || parameter.StartsWith(value))
+            {
+                Throw.CustomException(exceptionFactory, parameter, value!);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string does not start with the specified value, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "value">The other string that <paramref name = "parameter"/> must not start with.</param>
+        /// <param name = "comparisonType">One of the enumeration values that specifies the rules for the search.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/>, <paramref name = "value"/>, and <paramref name = "comparisonType"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">
+        /// Your custom exception thrown when <paramref name = "parameter"/> does not start with <paramref name = "value"/>,
+        /// or when <paramref name = "parameter"/> is null,
+        /// or when <paramref name = "value"/> is null.
+        /// </exception>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt; exceptionFactory:null => halt")]
+        public static string MustNotStartWith([NotNull, ValidatedNotNull] this string? parameter, [NotNull, ValidatedNotNull] string value, StringComparison comparisonType, [NotNull, ValidatedNotNull] Func<string?, string, StringComparison, Exception> exceptionFactory)
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract -- caller might have NRTs turned off
+            if (parameter is null || value is null || parameter.StartsWith(value, comparisonType))
+            {
+                Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string ends with the specified value, or otherwise throws a <see cref = "SubstringException"/>.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "value">The other string <paramref name = "parameter"/> must end with.</param>
+        /// <param name = "comparisonType">One of the enumeration values that specifies the rules for the search (optional). The default value is <see cref = "StringComparison.CurrentCulture"/>.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "SubstringException">Thrown when <paramref name = "parameter"/> does not end with <paramref name = "value"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> or <paramref name = "value"/> is null.</exception>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
+        public static string MustEndWith([NotNull, ValidatedNotNull] this string? parameter, [NotNull, ValidatedNotNull] string value, StringComparison comparisonType = StringComparison.CurrentCulture, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.MustNotBeNull(parameterName, message).EndsWith(value, comparisonType))
+            {
+                Throw.StringDoesNotEndWith(parameter, value, comparisonType, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string ends with the specified value, or otherwise throws a <see cref = "SubstringException"/>.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "value">The other string <paramref name = "parameter"/> must end with.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "value"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">
+        /// Your custom exception thrown when <paramref name = "parameter"/> does not end with <paramref name = "value"/>,
+        /// or when <paramref name = "parameter"/> is null,
+        /// or when <paramref name = "value"/> is null.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt; exceptionFactory:null => halt")]
+        public static string MustEndWith([NotNull, ValidatedNotNull] this string? parameter, [NotNull, ValidatedNotNull] string value, [NotNull, ValidatedNotNull] Func<string?, string, Exception> exceptionFactory)
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract -- caller might have NRTs turned off
+            if (parameter is null || value is null || !parameter.EndsWith(value))
+            {
+                Throw.CustomException(exceptionFactory, parameter, value!);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string ends with the specified value, or otherwise throws a <see cref = "SubstringException"/>.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "value">The other string <paramref name = "parameter"/> must end with.</param>
+        /// <param name = "comparisonType">One of the enumeration values that specifies the rules for the search.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/>, <paramref name = "value"/>, and <paramref name = "comparisonType"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">
+        /// Your custom exception thrown when <paramref name = "parameter"/> does not end with <paramref name = "value"/>,
+        /// or when <paramref name = "parameter"/> is null,
+        /// or when <paramref name = "value"/> is null.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt; exceptionFactory:null => halt")]
+        public static string MustEndWith([NotNull, ValidatedNotNull] this string? parameter, [NotNull, ValidatedNotNull] string value, StringComparison comparisonType, [NotNull, ValidatedNotNull] Func<string?, string, StringComparison, Exception> exceptionFactory)
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract -- caller might have NRTs turned off
+            if (parameter is null || value is null || !parameter.EndsWith(value, comparisonType))
+            {
+                Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string does not end with the specified value, or otherwise throws a <see cref = "SubstringException"/>.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "value">The other string <paramref name = "parameter"/> must not end with.</param>
+        /// <param name = "comparisonType">One of the enumeration values that specifies the rules for the search (optional). The default value is <see cref = "StringComparison.CurrentCulture"/>.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "SubstringException">Thrown when <paramref name = "parameter"/> ends with <paramref name = "value"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> or <paramref name = "value"/> is null.</exception>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "comparisonType"/> is not a valid <see cref = "StringComparison"/> value.</exception>
+        public static string MustNotEndWith([NotNull, ValidatedNotNull] this string? parameter, [NotNull, ValidatedNotNull] string value, StringComparison comparisonType = StringComparison.CurrentCulture, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (parameter.MustNotBeNull(parameterName, message).EndsWith(value, comparisonType))
+            {
+                Throw.StringEndsWith(parameter, value, comparisonType, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string does not end with the specified value, or otherwise throws a <see cref = "SubstringException"/>.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "value">The other string <paramref name = "parameter"/> must not end with.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "value"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">
+        /// Your custom exception thrown when <paramref name = "parameter"/> ends with <paramref name = "value"/>,
+        /// or when <paramref name = "parameter"/> is null,
+        /// or when <paramref name = "value"/> is null.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt; exceptionFactory:null => halt")]
+        public static string MustNotEndWith([NotNull, ValidatedNotNull] this string? parameter, [NotNull, ValidatedNotNull] string value, [NotNull, ValidatedNotNull] Func<string?, string, Exception> exceptionFactory)
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract -- caller might have NRTs turned off
+            if (parameter is null || value is null || parameter.EndsWith(value))
+            {
+                Throw.CustomException(exceptionFactory, parameter, value!);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string does not end with the specified value, or otherwise throws a <see cref = "SubstringException"/>.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "value">The other string <paramref name = "parameter"/> must not end with.</param>
+        /// <param name = "comparisonType">One of the enumeration values that specifies the rules for the search.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/>, <paramref name = "value"/>, and <paramref name = "comparisonType"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">
+        /// Your custom exception thrown when <paramref name = "parameter"/> ends with <paramref name = "value"/>,
+        /// or when <paramref name = "parameter"/> is null,
+        /// or when <paramref name = "value"/> is null.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt; exceptionFactory:null => halt")]
+        public static string MustNotEndWith([NotNull, ValidatedNotNull] this string? parameter, [NotNull, ValidatedNotNull] string value, StringComparison comparisonType, [NotNull, ValidatedNotNull] Func<string?, string, StringComparison, Exception> exceptionFactory)
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract -- caller might have NRTs turned off
+            if (parameter is null || value is null || parameter.EndsWith(value, comparisonType))
+            {
+                Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
+            }
+
             return parameter;
         }
 
@@ -2569,11 +2738,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustBeEmailAddress([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.MustNotBeNull(parameterName, message).IsEmailAddress())
-                Throw.InvalidEmailAddress(parameter!, parameterName, message);
-            return parameter!;
+                Throw.InvalidEmailAddress(parameter, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -2585,7 +2754,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or no valid email address.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        public static string MustBeEmailAddress([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
         {
             if (!parameter.IsEmailAddress())
                 Throw.CustomException(exceptionFactory, parameter);
@@ -2604,11 +2773,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; emailAddressPattern:null => halt")]
-        public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, Regex emailAddressPattern, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustBeEmailAddress([NotNull, ValidatedNotNull] this string? parameter, Regex emailAddressPattern, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.MustNotBeNull(parameterName, message).IsEmailAddress(emailAddressPattern))
-                Throw.InvalidEmailAddress(parameter!, parameterName, message);
-            return parameter!;
+                Throw.InvalidEmailAddress(parameter, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -2621,7 +2790,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or no valid email address.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; emailAddressPattern:null => halt")]
-        public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, Regex emailAddressPattern, Func<string?, Regex, Exception> exceptionFactory)
+        public static string MustBeEmailAddress([NotNull, ValidatedNotNull] this string? parameter, Regex emailAddressPattern, Func<string?, Regex, Exception> exceptionFactory)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (emailAddressPattern is null || !parameter.IsEmailAddress(emailAddressPattern))
@@ -2640,11 +2809,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeShorterThan([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustBeShorterThan([NotNull, ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Length >= length)
-                Throw.StringNotShorterThan(parameter!, length, parameterName, message);
-            return parameter!;
+                Throw.StringNotShorterThan(parameter, length, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -2656,7 +2825,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or when it has a length greater than or equal to <paramref name = "length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeShorterThan([ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
+        public static string MustBeShorterThan([NotNull, ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
         {
             if (parameter is null || parameter.Length >= length)
                 Throw.CustomException(exceptionFactory, parameter, length);
@@ -2674,11 +2843,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeShorterThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustBeShorterThanOrEqualTo([NotNull, ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Length > length)
-                Throw.StringNotShorterThanOrEqualTo(parameter!, length, parameterName, message);
-            return parameter!;
+                Throw.StringNotShorterThanOrEqualTo(parameter, length, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -2690,7 +2859,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or when it has a length greater than <paramref name = "length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeShorterThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
+        public static string MustBeShorterThanOrEqualTo([NotNull, ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
         {
             if (parameter is null || parameter.Length > length)
                 Throw.CustomException(exceptionFactory, parameter, length);
@@ -2704,15 +2873,15 @@ namespace Light.GuardClauses
         /// <param name = "length">The asserted length of the string.</param>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
-        /// <exception cref = "StringLengthException">Thrown when <paramref name = "parameter"/> has a length different than <paramref name = "length"/>.</exception>
+        /// <exception cref = "StringLengthException">Thrown when <paramref name = "parameter"/> has a length other than <paramref name = "length"/>.</exception>
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustHaveLength([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustHaveLength([NotNull, ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Length != length)
-                Throw.StringLengthNotEqualTo(parameter!, length, parameterName, message);
-            return parameter!;
+                Throw.StringLengthNotEqualTo(parameter, length, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -2721,10 +2890,10 @@ namespace Light.GuardClauses
         /// <param name = "parameter">The string to be checked.</param>
         /// <param name = "length">The asserted length of the string.</param>
         /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "length"/> are passed to this delegate.</param>
-        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or when it has a length different than <paramref name = "length"/>.</exception>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or when it has a length other than <paramref name = "length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustHaveLength([ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
+        public static string MustHaveLength([NotNull, ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
         {
             if (parameter is null || parameter.Length != length)
                 Throw.CustomException(exceptionFactory, parameter, length);
@@ -2742,11 +2911,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeLongerThan([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustBeLongerThan([NotNull, ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Length <= length)
-                Throw.StringNotLongerThan(parameter!, length, parameterName, message);
-            return parameter!;
+                Throw.StringNotLongerThan(parameter, length, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -2758,7 +2927,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or when it has a length shorter than or equal to <paramref name = "length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeLongerThan([ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
+        public static string MustBeLongerThan([NotNull, ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
         {
             if (parameter is null || parameter.Length <= length)
                 Throw.CustomException(exceptionFactory, parameter, length);
@@ -2776,11 +2945,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeLongerThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustBeLongerThanOrEqualTo([NotNull, ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).Length < length)
-                Throw.StringNotLongerThanOrEqualTo(parameter!, length, parameterName, message);
-            return parameter!;
+                Throw.StringNotLongerThanOrEqualTo(parameter, length, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -2792,7 +2961,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or when it has a length shorter than <paramref name = "length"/>.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeLongerThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
+        public static string MustBeLongerThanOrEqualTo([NotNull, ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
         {
             if (parameter is null || parameter.Length < length)
                 Throw.CustomException(exceptionFactory, parameter, length);
@@ -2810,11 +2979,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustHaveLengthIn([ValidatedNotNull] this string? parameter, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustHaveLengthIn([NotNull, ValidatedNotNull] this string? parameter, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!range.IsValueWithinRange(parameter.MustNotBeNull(parameterName, message).Length))
-                Throw.StringLengthNotInRange(parameter!, range, parameterName, message);
-            return parameter!;
+                Throw.StringLengthNotInRange(parameter, range, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -2826,7 +2995,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or its length is not within the specified range.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustHaveLengthIn([ValidatedNotNull] this string? parameter, Range<int> range, Func<string?, Range<int>, Exception> exceptionFactory)
+        public static string MustHaveLengthIn([NotNull, ValidatedNotNull] this string? parameter, Range<int> range, Func<string?, Range<int>, Exception> exceptionFactory)
         {
             if (parameter is null || !range.IsValueWithinRange(parameter.Length))
                 Throw.CustomException(exceptionFactory, parameter, range);
@@ -2850,11 +3019,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeNewLine([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustBeNewLine([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.MustNotBeNull(parameterName, message).IsNewLine())
-                Throw.NotNewLine(parameter!, parameterName, message);
-            return parameter!;
+                Throw.NotNewLine(parameter, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -2865,7 +3034,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is not equal to "\n" or "\r\n".</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeNewLine([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        public static string MustBeNewLine([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
         {
             if (!parameter.IsNewLine())
                 Throw.CustomException(exceptionFactory, parameter);
@@ -2912,11 +3081,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeTrimmed([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustBeTrimmed([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.MustNotBeNull(parameterName, message).IsTrimmed())
                 Throw.NotTrimmed(parameter, parameterName, message);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2928,11 +3097,11 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or not trimmed. Empty strings are regarded as trimmed.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeTrimmed([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        public static string MustBeTrimmed([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
         {
-            if (!parameter.IsTrimmed(regardNullAsTrimmed: false))
+            if (parameter is null || !parameter.AsSpan().IsTrimmed())
                 Throw.CustomException(exceptionFactory, parameter);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2975,11 +3144,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeTrimmedAtStart([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustBeTrimmedAtStart([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.MustNotBeNull(parameterName, message).IsTrimmedAtStart())
                 Throw.NotTrimmedAtStart(parameter, parameterName, message);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -2991,11 +3160,11 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or not trimmed at the start. Empty strings are regarded as trimmed.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeTrimmedAtStart([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        public static string MustBeTrimmedAtStart([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
         {
-            if (!parameter.IsTrimmedAtStart(regardNullAsTrimmed: false))
+            if (parameter is null || !parameter.AsSpan().IsTrimmedAtStart())
                 Throw.CustomException(exceptionFactory, parameter);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -3038,11 +3207,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeTrimmedAtEnd([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static string MustBeTrimmedAtEnd([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.MustNotBeNull(parameterName, message).IsTrimmedAtEnd())
                 Throw.NotTrimmedAtEnd(parameter, parameterName, message);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -3054,217 +3223,13 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or not trimmed at the end. Empty strings are regarded as trimmed.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static string MustBeTrimmedAtEnd([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        public static string MustBeTrimmedAtEnd([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
         {
-            if (!parameter.IsTrimmedAtEnd(regardNullAsTrimmed: false))
+            if (parameter is null || !parameter.AsSpan().IsTrimmedAtEnd())
                 Throw.CustomException(exceptionFactory, parameter);
-            return parameter!;
+            return parameter;
         }
 
-        /// <summary>
-        /// Checks if the two specified types are equivalent. This is true when both types are equal or
-        /// when one type is a constructed generic type and the other type is the corresponding generic type definition.
-        /// </summary>
-        /// <param name = "type">The first type to be checked.</param>
-        /// <param name = "other">The other type to be checked.</param>
-        /// <returns>
-        /// True if both types are null, or if both are equal, or if one type
-        /// is a constructed generic type and the other one is the corresponding generic type definition, else false.
-        /// </returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsEquivalentTypeTo(this Type? type, Type? other) => ReferenceEquals(type, other) || !(type is null) && !(other is null) && (type == other || type.IsConstructedGenericType != other.IsConstructedGenericType && CheckTypeEquivalency(type, other));
-        private static bool CheckTypeEquivalency(Type type, Type other)
-        {
-            if (type.IsConstructedGenericType)
-                return type.GetGenericTypeDefinition() == other;
-            return other.GetGenericTypeDefinition() == type;
-        }
-
-        /// <summary>
-        /// Checks if the type implements the specified interface type. Internally, this method uses <see cref = "IsEquivalentTypeTo"/>
-        /// so that constructed generic types and their corresponding generic type definitions are regarded as equal.
-        /// </summary>
-        /// <param name = "type">The type to be checked.</param>
-        /// <param name = "interfaceType">The interface type that <paramref name = "type"/> should implement.</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "interfaceType"/> is null.</exception>
-        [ContractAnnotation("type:null => halt; interfaceType:null => halt")]
-        public static bool Implements([ValidatedNotNull] this Type type, [ValidatedNotNull] Type interfaceType)
-        {
-            interfaceType.MustNotBeNull(nameof(interfaceType));
-            var implementedInterfaces = type.MustNotBeNull(nameof(type)).GetInterfaces();
-            for (var i = 0; i < implementedInterfaces.Length; ++i)
-            {
-                if (interfaceType.IsEquivalentTypeTo(implementedInterfaces[i]))
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Checks if the type implements the specified interface type. This overload uses the specified <paramref name = "typeComparer"/>
-        /// to compare the interface types.
-        /// </summary>
-        /// <param name = "type">The type to be checked.</param>
-        /// <param name = "interfaceType">The interface type that <paramref name = "type"/> should implement.</param>
-        /// <param name = "typeComparer">The equality comparer used to compare the interface types.</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/>, or <paramref name = "interfaceType"/>, or <paramref name = "typeComparer"/> is null.</exception>
-        [ContractAnnotation("type:null => halt; interfaceType:null => halt; typeComparer:null => halt")]
-        public static bool Implements([ValidatedNotNull] this Type type, [ValidatedNotNull] Type interfaceType, [ValidatedNotNull] IEqualityComparer<Type> typeComparer)
-        {
-            interfaceType.MustNotBeNull(nameof(interfaceType));
-            typeComparer.MustNotBeNull(nameof(typeComparer));
-            var implementedInterfaces = type.MustNotBeNull(nameof(type)).GetInterfaces();
-            for (var i = 0; i < implementedInterfaces.Length; ++i)
-            {
-                if (typeComparer.Equals(implementedInterfaces[i], interfaceType))
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Checks if the given <paramref name = "type"/> is equal to the specified <paramref name = "otherType"/> or if it implements it. Internally, this
-        /// method uses <see cref = "IsEquivalentTypeTo"/> so that constructed generic types and their corresponding generic type definitions are regarded as equal.
-        /// </summary>
-        /// <param name = "type">The type to be checked.</param>
-        /// <param name = "otherType">The type that is equivalent to <paramref name = "type"/> or the interface type that <paramref name = "type"/> implements.</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "otherType"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("type:null => halt; otherType:null => halt")]
-        public static bool IsOrImplements([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType) => type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.Implements(otherType);
-        /// <summary>
-        /// Checks if the given <paramref name = "type"/> is equal to the specified <paramref name = "otherType"/> or if it implements it. This overload uses the specified <paramref name = "typeComparer"/>
-        /// to compare the types.
-        /// </summary>
-        /// ,
-        /// <param name = "type">The type to be checked.</param>
-        /// <param name = "otherType">The type that is equivalent to <paramref name = "type"/> or the interface type that <paramref name = "type"/> implements.</param>
-        /// <param name = "typeComparer">The equality comparer used to compare the interface types.</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "otherType"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("type:null => halt; otherType:null => halt")]
-        public static bool IsOrImplements([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType, [ValidatedNotNull] IEqualityComparer<Type> typeComparer) => typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type.MustNotBeNull(nameof(type)), otherType.MustNotBeNull(nameof(otherType))) || type.Implements(otherType, typeComparer);
-        /// <summary>
-        /// Checks if the specified type derives from the other type. Internally, this method uses <see cref = "IsEquivalentTypeTo"/>
-        /// by default so that constructed generic types and their corresponding generic type definitions are regarded as equal.
-        /// </summary>
-        /// <param name = "type">The type info to be checked.</param>
-        /// <param name = "baseClass">The base class that <paramref name = "type"/> should derive from.</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "baseClass"/> is null.</exception>
-        [ContractAnnotation("type:null => halt; baseClass:null => halt")]
-        public static bool DerivesFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type baseClass)
-        {
-            baseClass.MustNotBeNull(nameof(baseClass));
-            var currentBaseType = type.MustNotBeNull(nameof(type)).BaseType;
-            while (currentBaseType != null)
-            {
-                if (currentBaseType.IsEquivalentTypeTo(baseClass))
-                    return true;
-                currentBaseType = currentBaseType.BaseType;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Checks if the specified type derives from the other type. This overload uses the specified <paramref name = "typeComparer"/>
-        /// to compare the types.
-        /// </summary>
-        /// <param name = "type">The type info to be checked.</param>
-        /// <param name = "baseClass">The base class that <paramref name = "type"/> should derive from.</param>
-        /// <param name = "typeComparer">The equality comparer used to compare the types.</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/>, or <paramref name = "baseClass"/>, or <paramref name = "typeComparer"/> is null.</exception>
-        [ContractAnnotation("type:null => halt; baseClass:null => halt; typeComparer:null => halt")]
-        public static bool DerivesFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type baseClass, [ValidatedNotNull] IEqualityComparer<Type> typeComparer)
-        {
-            baseClass.MustNotBeNull(nameof(baseClass));
-            typeComparer.MustNotBeNull(nameof(typeComparer));
-            var currentBaseType = type.MustNotBeNull(nameof(type)).BaseType;
-            while (currentBaseType != null)
-            {
-                if (typeComparer.Equals(currentBaseType, baseClass))
-                    return true;
-                currentBaseType = currentBaseType.BaseType;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Checks if the given <paramref name = "type"/> is equal to the specified <paramref name = "otherType"/> or if it derives from it. Internally, this
-        /// method uses <see cref = "IsEquivalentTypeTo"/> so that constructed generic types and their corresponding generic type definitions are regarded as equal.
-        /// </summary>
-        /// <param name = "type">The type to be checked.</param>
-        /// <param name = "otherType">The type that is equivalent to <paramref name = "type"/> or the base class type where <paramref name = "type"/> derives from.</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "otherType"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("type:null => halt; otherType:null => halt")]
-        public static bool IsOrDerivesFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType) => type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.DerivesFrom(otherType);
-        /// <summary>
-        /// Checks if the given <paramref name = "type"/> is equal to the specified <paramref name = "otherType"/> or if it derives from it. This overload uses the specified <paramref name = "typeComparer"/>
-        /// to compare the types.
-        /// </summary>
-        /// <param name = "type">The type to be checked.</param>
-        /// <param name = "otherType">The type that is equivalent to <paramref name = "type"/> or the base class type where <paramref name = "type"/> derives from.</param>
-        /// <param name = "typeComparer">The equality comparer used to compare the types.</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/>, or <paramref name = "otherType"/>, or <paramref name = "typeComparer"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("type:null => halt; otherType:null => halt; typeComparer:null => halt")]
-        public static bool IsOrDerivesFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType, [ValidatedNotNull] IEqualityComparer<Type> typeComparer) => typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type, otherType.MustNotBeNull(nameof(otherType))) || type.DerivesFrom(otherType, typeComparer);
-        /// <summary>
-        /// Checks if the given type derives from the specified base class or interface type. Internally, this method uses <see cref = "IsEquivalentTypeTo"/>
-        /// so that constructed generic types and their corresponding generic type definitions are regarded as equal.
-        /// </summary>
-        /// <param name = "type">The type to be checked.</param>
-        /// <param name = "baseClassOrInterfaceType">The type describing an interface or base class that <paramref name = "type"/> should derive from or implement.</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "baseClassOrInterfaceType"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt")]
-        public static bool InheritsFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type baseClassOrInterfaceType) => baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType)).IsInterface ? type.Implements(baseClassOrInterfaceType) : type.DerivesFrom(baseClassOrInterfaceType);
-        /// <summary>
-        /// Checks if the given type derives from the specified base class or interface type. This overload uses the specified <paramref name = "typeComparer"/>
-        /// to compare the types.
-        /// </summary>
-        /// <param name = "type">The type to be checked.</param>
-        /// <param name = "baseClassOrInterfaceType">The type describing an interface or base class that <paramref name = "type"/> should derive from or implement.</param>
-        /// <param name = "typeComparer">The equality comparer used to compare the types.</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/>, or <paramref name = "baseClassOrInterfaceType"/>, or <paramref name = "typeComparer"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt; typeComparer:null => halt")]
-        public static bool InheritsFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type baseClassOrInterfaceType, [ValidatedNotNull] IEqualityComparer<Type> typeComparer) => baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType)).IsInterface ? type.Implements(baseClassOrInterfaceType, typeComparer) : type.DerivesFrom(baseClassOrInterfaceType, typeComparer);
-        /// <summary>
-        /// Checks if the given <paramref name = "type"/> is equal to the specified <paramref name = "otherType"/> or if it derives from it or implements it.
-        /// Internally, this method uses <see cref = "IsEquivalentTypeTo"/> so that constructed generic types and their corresponding generic type definitions
-        /// are regarded as equal.
-        /// </summary>
-        /// <param name = "type">The type to be checked.</param>
-        /// <param name = "otherType">The type that is equivalent to <paramref name = "type"/> or the base class type where <paramref name = "type"/> derives from.</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "otherType"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("type:null => halt; otherType:null => halt")]
-        public static bool IsOrInheritsFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType) => type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType);
-        /// <summary>
-        /// Checks if the given <paramref name = "type"/> is equal to the specified <paramref name = "otherType"/> or if it derives from it or implements it.
-        /// This overload uses the specified <paramref name = "typeComparer"/> to compare the types.
-        /// </summary>
-        /// <param name = "type">The type to be checked.</param>
-        /// <param name = "otherType">The type that is equivalent to <paramref name = "type"/> or the base class type where <paramref name = "type"/> derives from.</param>
-        /// <param name = "typeComparer">The equality comparer used to compare the types.</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "otherType"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("type:null => halt; otherType:null => halt; typeComparer:null => halt")]
-        public static bool IsOrInheritsFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType, [ValidatedNotNull] IEqualityComparer<Type> typeComparer) => typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type, otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType, typeComparer);
-        /// <summary>
-        /// Checks if the given <paramref name = "type"/> is a generic type that has open generic parameters,
-        /// but is no generic type definition.
-        /// </summary>
-        /// <param name = "type">The type to be checked.</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("type:null => halt")]
-        public static bool IsOpenConstructedGenericType([ValidatedNotNull] this Type type) => type.MustNotBeNull(nameof(type)).IsGenericType && type.ContainsGenericParameters && type.IsGenericTypeDefinition == false;
         /// <summary>
         /// Ensures that the specified URI is an absolute one, or otherwise throws a <see cref = "RelativeUriException"/>.
         /// </summary>
@@ -3275,11 +3240,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeAbsoluteUri([ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static Uri MustBeAbsoluteUri([NotNull, ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).IsAbsoluteUri == false)
-                Throw.MustBeAbsoluteUri(parameter!, parameterName, message);
-            return parameter!;
+                Throw.MustBeAbsoluteUri(parameter, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -3290,7 +3255,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is not an absolute URI, or when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeAbsoluteUri([ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
+        public static Uri MustBeAbsoluteUri([NotNull, ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
         {
             if (parameter is null || parameter.IsAbsoluteUri == false)
                 Throw.CustomException(exceptionFactory, parameter);
@@ -3307,11 +3272,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeRelativeUri([ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static Uri MustBeRelativeUri([NotNull, ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (parameter.MustNotBeNull(parameterName, message).IsAbsoluteUri)
-                Throw.MustBeRelativeUri(parameter!, parameterName, message);
-            return parameter!;
+                Throw.MustBeRelativeUri(parameter, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -3322,7 +3287,7 @@ namespace Light.GuardClauses
         /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is an absolute URI, or when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeRelativeUri([ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
+        public static Uri MustBeRelativeUri([NotNull, ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
         {
             if (parameter is null || parameter.IsAbsoluteUri)
                 Throw.CustomException(exceptionFactory, parameter);
@@ -3341,11 +3306,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Throw when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustHaveScheme([ValidatedNotNull] this Uri? parameter, string scheme, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static Uri MustHaveScheme([NotNull, ValidatedNotNull] this Uri? parameter, string scheme, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (string.Equals(parameter.MustBeAbsoluteUri(parameterName, message).Scheme, scheme) == false)
-                Throw.UriMustHaveScheme(parameter!, scheme, parameterName, message);
-            return parameter!;
+                Throw.UriMustHaveScheme(parameter, scheme, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
@@ -3361,11 +3326,11 @@ namespace Light.GuardClauses
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustHaveScheme([ValidatedNotNull] this Uri? parameter, string scheme, Func<Uri?, Exception> exceptionFactory)
+        public static Uri MustHaveScheme([NotNull, ValidatedNotNull] this Uri? parameter, string scheme, Func<Uri?, Exception> exceptionFactory)
         {
             if (string.Equals(parameter.MustBeAbsoluteUri(exceptionFactory).Scheme, scheme) == false)
                 Throw.CustomException(exceptionFactory, parameter);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -3381,7 +3346,7 @@ namespace Light.GuardClauses
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustHaveScheme([ValidatedNotNull] this Uri? parameter, string scheme, Func<Uri?, string, Exception> exceptionFactory)
+        public static Uri MustHaveScheme([NotNull, ValidatedNotNull] this Uri? parameter, string scheme, Func<Uri?, string, Exception> exceptionFactory)
         {
             if (parameter is null || !parameter.IsAbsoluteUri || parameter.Scheme.Equals(scheme) == false)
                 Throw.CustomException(exceptionFactory, parameter, scheme);
@@ -3399,7 +3364,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Throw when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpsUrl([ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => parameter.MustHaveScheme("https", parameterName, message);
+        public static Uri MustBeHttpsUrl([NotNull, ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => parameter.MustHaveScheme("https", parameterName, message);
         /// <summary>
         /// Ensures that the specified URI has the "https" scheme, or otherwise throws your custom exception.
         /// </summary>
@@ -3412,7 +3377,7 @@ namespace Light.GuardClauses
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpsUrl([ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory) => parameter.MustHaveScheme("https", exceptionFactory);
+        public static Uri MustBeHttpsUrl([NotNull, ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory) => parameter.MustHaveScheme("https", exceptionFactory);
         /// <summary>
         /// Ensures that the specified URI has the "http" scheme, or otherwise throws an <see cref = "InvalidUriSchemeException"/>.
         /// </summary>
@@ -3424,7 +3389,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Throw when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpUrl([ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => parameter.MustHaveScheme("http", parameterName, message);
+        public static Uri MustBeHttpUrl([NotNull, ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => parameter.MustHaveScheme("http", parameterName, message);
         /// <summary>
         /// Ensures that the specified URI has the "http" scheme, or otherwise throws your custom exception.
         /// </summary>
@@ -3437,7 +3402,7 @@ namespace Light.GuardClauses
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpUrl([ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory) => parameter.MustHaveScheme("http", exceptionFactory);
+        public static Uri MustBeHttpUrl([NotNull, ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory) => parameter.MustHaveScheme("http", exceptionFactory);
         /// <summary>
         /// Ensures that the specified URI has the "http" or "https" scheme, or otherwise throws an <see cref = "InvalidUriSchemeException"/>.
         /// </summary>
@@ -3449,11 +3414,11 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Throw when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpOrHttpsUrl([ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static Uri MustBeHttpOrHttpsUrl([NotNull, ValidatedNotNull] this Uri? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
-            if (parameter.MustBeAbsoluteUri(parameterName, message).Scheme.Equals("https") == false && parameter!.Scheme.Equals("http") == false)
+            if (parameter.MustBeAbsoluteUri(parameterName, message).Scheme.Equals("https") == false && parameter.Scheme.Equals("http") == false)
                 Throw.UriMustHaveOneSchemeOf(parameter, new[] { "https", "http" }, parameterName, message);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -3468,11 +3433,11 @@ namespace Light.GuardClauses
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustBeHttpOrHttpsUrl([ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
+        public static Uri MustBeHttpOrHttpsUrl([NotNull, ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
         {
-            if (parameter.MustBeAbsoluteUri(exceptionFactory).Scheme.Equals("https") == false && parameter!.Scheme.Equals("http") == false)
+            if (parameter.MustBeAbsoluteUri(exceptionFactory).Scheme.Equals("https") == false && parameter.Scheme.Equals("http") == false)
                 Throw.CustomException(exceptionFactory, parameter);
-            return parameter!;
+            return parameter;
         }
 
         /// <summary>
@@ -3487,18 +3452,18 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Throw when <paramref name = "parameter"/> or <paramref name = "schemes"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; schemes:null => halt")]
-        public static Uri MustHaveOneSchemeOf([ValidatedNotNull] this Uri? parameter, IEnumerable<string> schemes, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        public static Uri MustHaveOneSchemeOf([NotNull, ValidatedNotNull] this Uri? parameter, IEnumerable<string> schemes, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             // ReSharper disable PossibleMultipleEnumeration
             parameter.MustBeAbsoluteUri(parameterName, message);
             if (schemes is ICollection<string> collection)
             {
-                if (!collection.Contains(parameter!.Scheme))
+                if (!collection.Contains(parameter.Scheme))
                     Throw.UriMustHaveOneSchemeOf(parameter, schemes, parameterName, message);
                 return parameter;
             }
 
-            if (!schemes.MustNotBeNull(nameof(schemes), message).Contains(parameter!.Scheme))
+            if (!schemes.MustNotBeNull(nameof(schemes), message).Contains(parameter.Scheme))
                 Throw.UriMustHaveOneSchemeOf(parameter, schemes, parameterName, message);
             return parameter;
         // ReSharper restore PossibleMultipleEnumeration
@@ -3518,7 +3483,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Throw when <paramref name = "schemes"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-        public static Uri MustHaveOneSchemeOf<TCollection>([ValidatedNotNull] this Uri? parameter, TCollection schemes, Func<Uri?, TCollection, Exception> exceptionFactory)
+        public static Uri MustHaveOneSchemeOf<TCollection>([NotNull, ValidatedNotNull] this Uri? parameter, TCollection schemes, Func<Uri?, TCollection, Exception> exceptionFactory)
             where TCollection : class, IEnumerable<string>
         {
             if (parameter is null || !parameter.IsAbsoluteUri)
@@ -3530,102 +3495,431 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
             if (schemes is null || !schemes.Contains(parameter.Scheme))
                 Throw.CustomException(exceptionFactory, parameter, schemes!);
             return parameter;
         }
-    }
 
-    /// <summary>
-    /// Provides meta-information about enum values and the flag bitmask if the enum is marked with the <see cref = "FlagsAttribute"/>.
-    /// Can be used to validate that an enum value is valid.
-    /// </summary>
-    /// <typeparam name = "T">The type of the enum.</typeparam>
-    internal static class EnumInfo<T>
-        where T : Enum
-    {
-        // ReSharper disable StaticMemberInGenericType
+        /*
+     * -------------------------------------
+     * Must Not Be Less Than
+     * Must Be Greater Than or Equal To
+     * -------------------------------------
+     */
         /// <summary>
-        /// Gets the value indicating whether the enum type is marked with the flags attribute.
+        /// Ensures that the specified <paramref name = "parameter"/> is not less than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
         /// </summary>
-        public static readonly bool IsFlagsEnum = typeof(T).GetCustomAttribute(Types.FlagsAttributeType) != null;
-        /// <summary>
-        /// Gets the flags pattern when <see cref = "IsFlagsEnum"/> is true. If the enum is not a flags enum, then 0UL is returned.
-        /// </summary>
-        public static readonly ulong FlagsPattern;
-        private static readonly int EnumSize = Unsafe.SizeOf<T>();
-        private static readonly T[] EnumConstantsArray;
-        /// <summary>
-        /// Gets the underlying type that is used for the enum (<see cref = "int "/> for default enums).
-        /// </summary>
-        public static readonly Type UnderlyingType;
-        /// <summary>
-        /// Gets the values of the enum as a read-only collection.
-        /// </summary>
-        public static ReadOnlyMemory<T> EnumConstants { get; }
-
-        static EnumInfo()
-        {
-            EnumConstantsArray = (T[])Enum.GetValues(typeof(T));
-            var fields = typeof(T).GetFields();
-            UnderlyingType = fields[0].FieldType;
-            EnumConstants = new ReadOnlyMemory<T>(EnumConstantsArray);
-            if (!IsFlagsEnum)
-                return;
-            for (var i = 0; i < EnumConstantsArray.Length; ++i)
-            {
-                var convertedValue = ConvertToUInt64(EnumConstantsArray[i]);
-                FlagsPattern |= convertedValue;
-            }
-        }
-
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "other">The boundary value that must be less than or equal to <paramref name = "parameter"/>.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ArgumentOutOfRangeException">Thrown when the specified <paramref name = "parameter"/> is less than <paramref name = "other"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool IsValidFlagsValue(T enumValue)
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static T MustNotBeLessThan<T>([NotNull, ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where T : IComparable<T>
         {
-            var convertedValue = ConvertToUInt64(enumValue);
-            return (FlagsPattern & convertedValue) == convertedValue;
-        }
-
-        private static bool IsValidValue(T parameter)
-        {
-            var comparer = EqualityComparer<T>.Default;
-            for (var i = 0; i < EnumConstantsArray.Length; ++i)
-                if (comparer.Equals(EnumConstantsArray[i], parameter))
-                    return true;
-            return false;
+            if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) < 0)
+                Throw.MustNotBeLessThan(parameter, other, parameterName, message);
+            return parameter;
         }
 
         /// <summary>
-        /// Checks if the specified enum value is valid. This is true if either the enum is a standard enum and the enum value corresponds
-        /// to one of the enum constant values or if the enum type is marked with the <see cref = "FlagsAttribute"/> and the given value
-        /// is a valid combination of bits for this type.
+        /// Ensures that the specified <paramref name = "parameter"/> is not less than the given <paramref name = "other"/> value, or otherwise throws your custom exception.
         /// </summary>
-        /// <param name = "enumValue">The enum value to be checked.</param>
-        /// <returns>True if either the enum value is </returns>
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "other">The boundary value that must be less than or equal to <paramref name = "parameter"/>.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when the specified <paramref name = "parameter"/> is less than <paramref name = "other"/>, or when <paramref name = "parameter"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsValidEnumValue(T enumValue) => IsFlagsEnum ? IsValidFlagsValue(enumValue) : IsValidValue(enumValue);
-        private static ulong ConvertToUInt64(T value)
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static T MustNotBeLessThan<T>([NotNull, ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory)
+            where T : IComparable<T>
         {
-            switch (EnumSize)
-            {
-                case 1:
-                    return Unsafe.As<T, byte>(ref value);
-                case 2:
-                    return Unsafe.As<T, ushort>(ref value);
-                case 4:
-                    return Unsafe.As<T, uint>(ref value);
-                case 8:
-                    return Unsafe.As<T, ulong>(ref value);
-                default:
-                    ThrowUnknownEnumSize();
-                    return default;
-            }
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract -- caller might have NRTs off
+            if (parameter is null || parameter.CompareTo(other) < 0)
+                Throw.CustomException(exceptionFactory, parameter!, other);
+            return parameter;
         }
 
-        private static void ThrowUnknownEnumSize()
+        /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> is not less than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
+        /// </summary>
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "other">The boundary value that must be less than or equal to <paramref name = "parameter"/>.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ArgumentOutOfRangeException">Thrown when the specified <paramref name = "parameter"/> is less than <paramref name = "other"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static T MustBeGreaterThanOrEqualTo<T>([NotNull, ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where T : IComparable<T>
         {
-            throw new InvalidOperationException($"The enum type \"{typeof(T)}\" has an unknown size of {EnumSize}. This means that the underlying enum type is not one of the supported ones.");
+            if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) < 0)
+                Throw.MustBeGreaterThanOrEqualTo(parameter, other, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> is not less than the given <paramref name = "other"/> value, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "other">The boundary value that must be less than or equal to <paramref name = "parameter"/>.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when the specified <paramref name = "parameter"/> is less than <paramref name = "other"/>, or when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static T MustBeGreaterThanOrEqualTo<T>([NotNull, ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory)
+            where T : IComparable<T>
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
+            if (parameter is null || parameter.CompareTo(other) < 0)
+                Throw.CustomException(exceptionFactory, parameter!, other);
+            return parameter;
+        }
+
+        /*
+     * -------------------------------------
+     * Must Be Less Than
+     * Must Not Be Greater Than or Equal To
+     * -------------------------------------
+     */
+        /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> is less than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
+        /// </summary>
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "other">The boundary value that must be greater than <paramref name = "parameter"/>.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ArgumentOutOfRangeException">Thrown when the specified <paramref name = "parameter"/> is not less than <paramref name = "other"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static T MustBeLessThan<T>([NotNull, ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where T : IComparable<T>
+        {
+            if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) >= 0)
+                Throw.MustBeLessThan(parameter, other, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> is less than the given <paramref name = "other"/> value, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "other">The boundary value that must be greater than <paramref name = "parameter"/>.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when the specified <paramref name = "parameter"/> is not less than <paramref name = "other"/>, or when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static T MustBeLessThan<T>([NotNull, ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory)
+            where T : IComparable<T>
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
+            if (parameter is null || parameter.CompareTo(other) >= 0)
+                Throw.CustomException(exceptionFactory, parameter!, other);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> is less than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
+        /// </summary>
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "other">The boundary value that must be greater than <paramref name = "parameter"/>.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ArgumentOutOfRangeException">Thrown when the specified <paramref name = "parameter"/> is not less than <paramref name = "other"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static T MustNotBeGreaterThanOrEqualTo<T>([NotNull, ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where T : IComparable<T>
+        {
+            if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) >= 0)
+                Throw.MustNotBeGreaterThanOrEqualTo(parameter, other, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> is less than the given <paramref name = "other"/> value, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "other">The boundary value that must be greater than <paramref name = "parameter"/>.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when the specified <paramref name = "parameter"/> is not less than <paramref name = "other"/>, or when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static T MustNotBeGreaterThanOrEqualTo<T>([NotNull, ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory)
+            where T : IComparable<T>
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
+            if (parameter is null || parameter.CompareTo(other) >= 0)
+                Throw.CustomException(exceptionFactory, parameter!, other);
+            return parameter;
+        }
+
+        /*
+     * -------------------------------------
+     * Must Be Greater Than
+     * Must Not Be Less Than or Equal To
+     * -------------------------------------
+     */
+        /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> is greater than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
+        /// </summary>
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "other">The boundary value that must be less than <paramref name = "parameter"/>.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ArgumentOutOfRangeException">Thrown when the specified <paramref name = "parameter"/> is less than or equal to <paramref name = "other"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static T MustBeGreaterThan<T>([NotNull, ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where T : IComparable<T>
+        {
+            if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) <= 0)
+                Throw.MustBeGreaterThan(parameter, other, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> is greater than the given <paramref name = "other"/> value, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "other">The boundary value that must be less than <paramref name = "parameter"/>.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when the specified <paramref name = "parameter"/> is less than or equal to <paramref name = "other"/>, or when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static T MustBeGreaterThan<T>([NotNull, ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory)
+            where T : IComparable<T>
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
+            if (parameter is null || parameter.CompareTo(other) <= 0)
+                Throw.CustomException(exceptionFactory, parameter!, other);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> is greater than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
+        /// </summary>
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "other">The boundary value that must be less than <paramref name = "parameter"/>.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ArgumentOutOfRangeException">Thrown when the specified <paramref name = "parameter"/> is less than or equal to <paramref name = "other"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static T MustNotBeLessThanOrEqualTo<T>([NotNull, ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where T : IComparable<T>
+        {
+            if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) <= 0)
+                Throw.MustNotBeLessThanOrEqualTo(parameter, other, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> is greater than the given <paramref name = "other"/> value, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "other">The boundary value that must be less than <paramref name = "parameter"/>.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when the specified <paramref name = "parameter"/> is less than or equal to <paramref name = "other"/>, or when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static T MustNotBeLessThanOrEqualTo<T>([NotNull, ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory)
+            where T : IComparable<T>
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
+            if (parameter is null || parameter.CompareTo(other) <= 0)
+                Throw.CustomException(exceptionFactory, parameter!, other);
+            return parameter;
+        }
+
+        /*
+     * -------------------------------------
+     * Must Not Be Greater Than
+     * Must Be Less Than or Equal To
+     * -------------------------------------
+     */
+        /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> is not greater than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
+        /// </summary>
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "other">The boundary value that must be greater than or equal to <paramref name = "parameter"/>.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ArgumentOutOfRangeException">Thrown when the specified <paramref name = "parameter"/> is greater than <paramref name = "other"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static T MustNotBeGreaterThan<T>([NotNull, ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where T : IComparable<T>
+        {
+            if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) > 0)
+                Throw.MustNotBeGreaterThan(parameter, other, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> is not greater than the given <paramref name = "other"/> value, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "other">The boundary value that must be greater than or equal to <paramref name = "parameter"/>.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when the specified <paramref name = "parameter"/> is greater than <paramref name = "other"/>, or when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static T MustNotBeGreaterThan<T>([NotNull, ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory)
+            where T : IComparable<T>
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
+            if (parameter is null || parameter.CompareTo(other) > 0)
+                Throw.CustomException(exceptionFactory, parameter!, other);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> is not greater than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
+        /// </summary>
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "other">The boundary value that must be greater than or equal to <paramref name = "parameter"/>.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ArgumentOutOfRangeException">Thrown when the specified <paramref name = "parameter"/> is greater than <paramref name = "other"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static T MustBeLessThanOrEqualTo<T>([NotNull, ValidatedNotNull] this T parameter, T other, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where T : IComparable<T>
+        {
+            if (parameter.MustNotBeNullReference(parameterName, message).CompareTo(other) > 0)
+                Throw.MustBeLessThanOrEqualTo(parameter, other, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> is not greater than the given <paramref name = "other"/> value, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "other">The boundary value that must be greater than or equal to <paramref name = "parameter"/>.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "other"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when the specified <paramref name = "parameter"/> is greater than <paramref name = "other"/>, or when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static T MustBeLessThanOrEqualTo<T>([NotNull, ValidatedNotNull] this T parameter, T other, Func<T, T, Exception> exceptionFactory)
+            where T : IComparable<T>
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
+            if (parameter is null || parameter.CompareTo(other) > 0)
+                Throw.CustomException(exceptionFactory, parameter!, other);
+            return parameter;
+        }
+
+        /*
+     * -------------------------------------
+     * Ranges
+     * -------------------------------------
+     */
+        /// <summary>
+        /// Checks if the value is within the specified range.
+        /// </summary>
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "range">The range where <paramref name = "parameter"/> must be in-between.</param>
+        /// <returns>True if the parameter is within the specified range, else false.</returns>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsIn<T>([NotNull, ValidatedNotNull] this T parameter, Range<T> range)
+            where T : IComparable<T> => range.IsValueWithinRange(parameter);
+        /// <summary>
+        /// Checks if the value is not within the specified range.
+        /// </summary>
+        /// <param name = "parameter">The comparable to be checked.</param>
+        /// <param name = "range">The range where <paramref name = "parameter"/> must not be in-between.</param>
+        /// <returns>True if the parameter is not within the specified range, else false.</returns>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsNotIn<T>([NotNull, ValidatedNotNull] this T parameter, Range<T> range)
+            where T : IComparable<T> => !range.IsValueWithinRange(parameter);
+        /// <summary>
+        /// Ensures that <paramref name = "parameter"/> is within the specified range, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
+        /// </summary>
+        /// <typeparam name = "T">The type of the parameter to be checked.</typeparam>
+        /// <param name = "parameter">The parameter to be checked.</param>
+        /// <param name = "range">The range where <paramref name = "parameter"/> must be in-between.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ArgumentOutOfRangeException">Thrown when <paramref name = "parameter"/> is not within <paramref name = "range"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static T MustBeIn<T>([NotNull, ValidatedNotNull] this T parameter, Range<T> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where T : IComparable<T>
+        {
+            if (!range.IsValueWithinRange(parameter.MustNotBeNullReference(parameterName, message)))
+                Throw.MustBeInRange(parameter, range, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that <paramref name = "parameter"/> is within the specified range, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The parameter to be checked.</param>
+        /// <param name = "range">The range where <paramref name = "parameter"/> must be in-between.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "range"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is not within <paramref name = "range"/>, or when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static T MustBeIn<T>([NotNull, ValidatedNotNull] this T parameter, Range<T> range, Func<T, Range<T>, Exception> exceptionFactory)
+            where T : IComparable<T>
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
+            if (parameter is null || !range.IsValueWithinRange(parameter))
+                Throw.CustomException(exceptionFactory, parameter!, range);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that <paramref name = "parameter"/> is not within the specified range, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
+        /// </summary>
+        /// <typeparam name = "T">The type of the parameter to be checked.</typeparam>
+        /// <param name = "parameter">The parameter to be checked.</param>
+        /// <param name = "range">The range where <paramref name = "parameter"/> must not be in-between.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ArgumentOutOfRangeException">Thrown when <paramref name = "parameter"/> is within <paramref name = "range"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static T MustNotBeIn<T>([NotNull, ValidatedNotNull] this T parameter, Range<T> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where T : IComparable<T>
+        {
+            if (range.IsValueWithinRange(parameter.MustNotBeNullReference(parameterName, message)))
+                Throw.MustNotBeInRange(parameter, range, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that <paramref name = "parameter"/> is not within the specified range, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The parameter to be checked.</param>
+        /// <param name = "range">The range where <paramref name = "parameter"/> must not be in-between.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "range"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is within <paramref name = "range"/>, or when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static T MustNotBeIn<T>([NotNull, ValidatedNotNull] this T parameter, Range<T> range, Func<T, Range<T>, Exception> exceptionFactory)
+            where T : IComparable<T>
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
+            if (parameter is null || range.IsValueWithinRange(parameter))
+                Throw.CustomException(exceptionFactory, parameter!, range);
+            return parameter;
         }
     }
 
@@ -3659,79 +3953,6 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetHashCode(Type type) => // ReSharper disable once ConditionIsAlwaysTrueOrFalse
         type is null ? 0 : type.IsConstructedGenericType ? type.GetGenericTypeDefinition().GetHashCode() : type.GetHashCode();
-    }
-
-    /// <summary>
-    /// Represents an <see cref = "IEqualityComparer{T}"/> that compares strings using the
-    /// ordinal sort rules, ignoring the case and the white space characters.
-    /// </summary>
-    internal sealed class OrdinalIgnoreCaseIgnoreWhiteSpaceComparer : IEqualityComparer<string>
-    {
-        /// <summary>
-        /// Checks if the two strings are equal using ordinal sorting rules as well as ignoring the case and
-        /// the white space of the provided strings.
-        /// </summary>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "x"/> or <paramref name = "y"/> are null.</exception>
-        public bool Equals(string? x, string? y)
-        {
-            x.MustNotBeNull(nameof(x));
-            y.MustNotBeNull(nameof(y));
-            return x.EqualsOrdinalIgnoreCaseIgnoreWhiteSpace(y);
-        }
-
-        /// <summary>
-        /// Gets the hash code for the specified string. The hash code is created only from the non-white space characters
-        /// which are interpreted as case-insensitive.
-        /// </summary>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "string"/> is null.</exception>
-        public int GetHashCode(string @string)
-        {
-            @string.MustNotBeNull(nameof(@string));
-            var hashBuilder = MultiplyAddHashBuilder.Create();
-            foreach (var character in @string)
-            {
-                if (!character.IsWhiteSpace())
-                    hashBuilder.CombineIntoHash(char.ToLowerInvariant(character));
-            }
-
-            return hashBuilder.BuildHash();
-        }
-    }
-
-    /// <summary>
-    /// Represents an <see cref = "IEqualityComparer{T}"/> that compares strings using the
-    /// ordinal sort rules and ignoring the white space characters.
-    /// </summary>
-    internal sealed class OrdinalIgnoreWhiteSpaceComparer : IEqualityComparer<string>
-    {
-        /// <summary>
-        /// Checks if the two strings are equal using ordinal sorting rules as well as ignoring the white space
-        /// of the provided strings.
-        /// </summary>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "x"/> or <paramref name = "y"/> are null.</exception>
-        public bool Equals(string? x, string? y)
-        {
-            x.MustNotBeNull(nameof(x));
-            y.MustNotBeNull(nameof(y));
-            return x.EqualsOrdinalIgnoreWhiteSpace(y);
-        }
-
-        /// <summary>
-        /// Gets the hash code for the specified string. The hash code is created only from the non-white space characters.
-        /// </summary>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "string"/> is null.</exception>
-        public int GetHashCode(string @string)
-        {
-            @string.MustNotBeNull(nameof(@string));
-            var hashCodeBuilder = MultiplyAddHashBuilder.Create();
-            foreach (var character in @string)
-            {
-                if (!character.IsWhiteSpace())
-                    hashCodeBuilder.CombineIntoHash(character);
-            }
-
-            return hashCodeBuilder.BuildHash();
-        }
     }
 
     /// <summary>
@@ -3846,12 +4067,12 @@ namespace Light.GuardClauses
         /// <inheritdoc/>
         public override string ToString() => $"Range from {CreateRangeDescriptionText()}";
         /// <summary>
-        /// Returns either "inclusive" or "exclusive", depending whether <see cref = "IsFromInclusive"/> is true or false.
+        /// Returns either "inclusive" or "exclusive", depending on whether <see cref = "IsFromInclusive"/> is true or false.
         /// </summary>
         public string LowerBoundaryText {[MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => GetBoundaryText(IsFromInclusive); }
         /// <summary>
-        /// Returns either "inclusive" or "exclusive", depending whether <see cref = "IsToInclusive"/> is true or false.
+        /// Returns either "inclusive" or "exclusive", depending on whether <see cref = "IsToInclusive"/> is true or false.
         /// </summary>
         public string UpperBoundaryText {[MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => GetBoundaryText(IsToInclusive); }
@@ -3916,6 +4137,26 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Range<T>.RangeFromInfo FromExclusive<T>(T value)
             where T : IComparable<T> => new(value, false);
+        /// <summary>
+        /// Creates a range with both boundaries inclusive.
+        /// </summary>
+        /// <param name = "from">The lower boundary of the range.</param>
+        /// <param name = "to">The upper boundary of the range.</param>
+        /// <returns>A new range with both boundaries inclusive.</returns>
+        /// <exception cref = "ArgumentOutOfRangeException">Thrown when <paramref name = "to"/> is less than <paramref name = "from"/>.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Range<T> InclusiveBetween<T>(T from, T to)
+            where T : IComparable<T> => new(from, to);
+        /// <summary>
+        /// Creates a range with both boundaries exclusive.
+        /// </summary>
+        /// <param name = "from">The lower boundary of the range.</param>
+        /// <param name = "to">The upper boundary of the range.</param>
+        /// <returns>A new range with both boundaries exclusive.</returns>
+        /// <exception cref = "ArgumentOutOfRangeException">Thrown when <paramref name = "to"/> is less than <paramref name = "from"/>.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Range<T> ExclusiveBetween<T>(T from, T to)
+            where T : IComparable<T> => new(from, to, false, false);
         /// <summary>
         /// Creates a range for the specified enumerable that encompasses all valid indexes.
         /// </summary>
@@ -3991,13 +4232,16 @@ namespace Light.GuardClauses
     }
 
     /// <summary>
-    /// Represents a delegate that receives a span and a value as parameters and that produces an exception.
+    /// This class caches <see cref = "Type"/> instances to avoid use of the typeof operator.
     /// </summary>
-    internal delegate Exception SpanExceptionFactory<TItem, in T>(Span<TItem> span, T value);
-    /// <summary>
-    /// Represents a delegate that receives a read-only span and a value as parameters and that produces an exception.
-    /// </summary>
-    internal delegate Exception ReadOnlySpanExceptionFactory<TItem, in T>(ReadOnlySpan<TItem> span, T value);
+    internal abstract class Types
+    {
+        /// <summary>
+        /// Gets the <see cref = "FlagsAttribute"/> type.
+        /// </summary>
+        public static readonly Type FlagsAttributeType = typeof(FlagsAttribute);
+    }
+
     /// <summary>
     /// Specifies the culture, case , and sort rules when comparing strings.
     /// </summary>
@@ -4049,16 +4293,176 @@ namespace Light.GuardClauses
     }
 
     /// <summary>
-    /// This class caches <see cref = "Type"/> instances to avoid use of the typeof operator.
+    /// Represents an <see cref = "IEqualityComparer{T}"/> that compares strings using the
+    /// ordinal sort rules, ignoring the case and the white space characters.
     /// </summary>
-    internal abstract class Types
+    internal sealed class OrdinalIgnoreCaseIgnoreWhiteSpaceComparer : IEqualityComparer<string>
     {
         /// <summary>
-        /// Gets the <see cref = "FlagsAttribute"/> type.
+        /// Checks if the two strings are equal using ordinal sorting rules as well as ignoring the case and
+        /// the white space of the provided strings.
         /// </summary>
-        public static readonly Type FlagsAttributeType = typeof(FlagsAttribute);
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "x"/> or <paramref name = "y"/> are null.</exception>
+        public bool Equals(string? x, string? y)
+        {
+            x.MustNotBeNull(nameof(x));
+            y.MustNotBeNull(nameof(y));
+            return x.EqualsOrdinalIgnoreCaseIgnoreWhiteSpace(y);
+        }
+
+        /// <summary>
+        /// Gets the hash code for the specified string. The hash code is created only from the non-white space characters
+        /// which are interpreted as case-insensitive.
+        /// </summary>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "string"/> is null.</exception>
+        public int GetHashCode(string @string)
+        {
+            @string.MustNotBeNull(nameof(@string));
+            var hashBuilder = MultiplyAddHashBuilder.Create();
+            foreach (var character in @string)
+            {
+                if (!character.IsWhiteSpace())
+                    hashBuilder.CombineIntoHash(char.ToLowerInvariant(character));
+            }
+
+            return hashBuilder.BuildHash();
+        }
     }
 
+    /// <summary>
+    /// Provides meta-information about enum values and the flag bitmask if the enum is marked with the <see cref = "FlagsAttribute"/>.
+    /// Can be used to validate that an enum value is valid.
+    /// </summary>
+    /// <typeparam name = "T">The type of the enum.</typeparam>
+    internal static class EnumInfo<T>
+        where T : struct, Enum
+    {
+        // ReSharper disable StaticMemberInGenericType
+        /// <summary>
+        /// Gets the value indicating whether the enum type is marked with the flags attribute.
+        /// </summary>
+        public static readonly bool IsFlagsEnum = typeof(T).GetCustomAttribute(Types.FlagsAttributeType) != null;
+        /// <summary>
+        /// Gets the flags pattern when <see cref = "IsFlagsEnum"/> is true. If the enum is not a flags enum, then 0UL is returned.
+        /// </summary>
+        public static readonly ulong FlagsPattern;
+        private static readonly int EnumSize = Unsafe.SizeOf<T>();
+        private static readonly T[] EnumConstantsArray;
+        /// <summary>
+        /// Gets the values of the enum as a read-only collection.
+        /// </summary>
+        public static ReadOnlyMemory<T> EnumConstants { get; }
+
+        static EnumInfo()
+        {
+#if NET8_0
+        EnumConstantsArray = Enum.GetValues<T>();
+#else
+            EnumConstantsArray = (T[])Enum.GetValues(typeof(T));
+#endif
+            EnumConstants = new(EnumConstantsArray);
+            if (!IsFlagsEnum)
+                return;
+            for (var i = 0; i < EnumConstantsArray.Length; ++i)
+            {
+                var convertedValue = ConvertToUInt64(EnumConstantsArray[i]);
+                FlagsPattern |= convertedValue;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsValidFlagsValue(T enumValue)
+        {
+            var convertedValue = ConvertToUInt64(enumValue);
+            return (FlagsPattern & convertedValue) == convertedValue;
+        }
+
+        private static bool IsValidValue(T parameter)
+        {
+            var comparer = EqualityComparer<T>.Default;
+            for (var i = 0; i < EnumConstantsArray.Length; ++i)
+                if (comparer.Equals(EnumConstantsArray[i], parameter))
+                    return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if the specified enum value is valid. This is true if either the enum is a standard enum and the enum value corresponds
+        /// to one of the enum constant values or if the enum type is marked with the <see cref = "FlagsAttribute"/> and the given value
+        /// is a valid combination of bits for this type.
+        /// </summary>
+        /// <param name = "enumValue">The enum value to be checked.</param>
+        /// <returns>True if either the enum value is </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsValidEnumValue(T enumValue) => IsFlagsEnum ? IsValidFlagsValue(enumValue) : IsValidValue(enumValue);
+        private static ulong ConvertToUInt64(T value)
+        {
+            switch (EnumSize)
+            {
+                case 1:
+                    return Unsafe.As<T, byte>(ref value);
+                case 2:
+                    return Unsafe.As<T, ushort>(ref value);
+                case 4:
+                    return Unsafe.As<T, uint>(ref value);
+                case 8:
+                    return Unsafe.As<T, ulong>(ref value);
+                default:
+                    ThrowUnknownEnumSize();
+                    return default;
+            }
+        }
+
+        private static void ThrowUnknownEnumSize()
+        {
+            throw new InvalidOperationException($"The enum type \"{typeof(T)}\" has an unknown size of {EnumSize}. This means that the underlying enum type is not one of the supported ones.");
+        }
+    }
+
+    /// <summary>
+    /// Represents an <see cref = "IEqualityComparer{T}"/> that compares strings using the
+    /// ordinal sort rules and ignoring the white space characters.
+    /// </summary>
+    internal sealed class OrdinalIgnoreWhiteSpaceComparer : IEqualityComparer<string>
+    {
+        /// <summary>
+        /// Checks if the two strings are equal using ordinal sorting rules as well as ignoring the white space
+        /// of the provided strings.
+        /// </summary>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "x"/> or <paramref name = "y"/> are null.</exception>
+        public bool Equals(string? x, string? y)
+        {
+            x.MustNotBeNull(nameof(x));
+            y.MustNotBeNull(nameof(y));
+            return x.EqualsOrdinalIgnoreWhiteSpace(y);
+        }
+
+        /// <summary>
+        /// Gets the hash code for the specified string. The hash code is created only from the non-white space characters.
+        /// </summary>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "string"/> is null.</exception>
+        public int GetHashCode(string @string)
+        {
+            @string.MustNotBeNull(nameof(@string));
+            var hashCodeBuilder = MultiplyAddHashBuilder.Create();
+            foreach (var character in @string)
+            {
+                if (!character.IsWhiteSpace())
+                    hashCodeBuilder.CombineIntoHash(character);
+            }
+
+            return hashCodeBuilder.BuildHash();
+        }
+    }
+
+    /// <summary>
+    /// Represents a delegate that receives a span and a value as parameters and that produces an exception.
+    /// </summary>
+    internal delegate Exception SpanExceptionFactory<TItem, in T>(Span<TItem> span, T value);
+    /// <summary>
+    /// Represents a delegate that receives a read-only span and a value as parameters and that produces an exception.
+    /// </summary>
+    internal delegate Exception ReadOnlySpanExceptionFactory<TItem, in T>(ReadOnlySpan<TItem> span, T value);
     [AttributeUsage(AttributeTargets.Parameter)]
     internal sealed class ValidatedNotNullAttribute : Attribute
     {
@@ -4067,132 +4471,6 @@ namespace Light.GuardClauses
 
 namespace Light.GuardClauses.Exceptions
 {
-    /// <summary>
-    /// This exception indicates that an URI is absolute instead of relative.
-    /// </summary>
-    [Serializable]
-    internal class AbsoluteUriException : UriException
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref = "AbsoluteUriException"/>.
-        /// </summary>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message of the exception (optional).</param>
-        public AbsoluteUriException(string? parameterName = null, string? message = null) : base(parameterName, message)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected AbsoluteUriException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-    }
-
-    /// <summary>
-    /// This exception indicates that a value of a value type is the default value.
-    /// </summary>
-    [Serializable]
-    internal class ArgumentDefaultException : ArgumentException
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref = "ArgumentDefaultException"/>.
-        /// </summary>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message of the exception (optional).</param>
-        public ArgumentDefaultException(string? parameterName = null, string? message = null) : base(message, parameterName)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected ArgumentDefaultException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-    }
-
-    /// <summary>
-    /// This exception indicates that the state of a collection is invalid.
-    /// </summary>
-    [Serializable]
-    internal class CollectionException : ArgumentException
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref = "CollectionException"/>.
-        /// </summary>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message of the exception (optional).</param>
-        public CollectionException(string? parameterName = null, string? message = null) : base(message, parameterName)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected CollectionException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-    }
-
-    /// <summary>
-    /// This exception indicates that a collection has no items.
-    /// </summary>
-    [Serializable]
-    internal class EmptyCollectionException : InvalidCollectionCountException
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref = "EmptyCollectionException"/>.
-        /// </summary>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message of the exception (optional).</param>
-        public EmptyCollectionException(string? parameterName = null, string? message = null) : base(parameterName, message)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected EmptyCollectionException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-    }
-
-    /// <summary>
-    /// This exception indicates that that a GUID is empty.
-    /// </summary>
-    [Serializable]
-    internal class EmptyGuidException : ArgumentException
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref = "EmptyGuidException"/>.
-        /// </summary>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message of the exception (optional).</param>
-        public EmptyGuidException(string? parameterName = null, string? message = null) : base(message, parameterName)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected EmptyGuidException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-    }
-
-    /// <summary>
-    /// This exception indicates that a string is empty.
-    /// </summary>
-    [Serializable]
-    internal class EmptyStringException : StringException
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref = "EmptyStringException"/>.
-        /// </summary>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message of the exception (optional).</param>
-        public EmptyStringException(string? parameterName = null, string? message = null) : base(parameterName, message)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected EmptyStringException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-    }
-
     /// <summary>
     /// This exception indicates that a value is not defined in the corresponding enum type.
     /// </summary>
@@ -4208,52 +4486,12 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
+#if !NET8_0
         /// <inheritdoc/>
         protected EnumValueNotDefinedException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-    }
-
-    /// <summary>
-    /// This exception indicates that a collection contains an item that must not be part of it.
-    /// </summary>
-    [Serializable]
-    internal class ExistingItemException : CollectionException
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref = "ExistingItemException"/>.
-        /// </summary>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message of the exception (optional).</param>
-        public ExistingItemException(string? parameterName = null, string? message = null) : base(parameterName, message)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected ExistingItemException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-    }
-
-    /// <summary>
-    /// This exception indicates that a collection has an invalid number of items.
-    /// </summary>
-    [Serializable]
-    internal class InvalidCollectionCountException : CollectionException
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref = "InvalidCollectionCountException"/>.
-        /// </summary>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message of the exception (optional).</param>
-        public InvalidCollectionCountException(string? parameterName = null, string? message = null) : base(parameterName, message)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected InvalidCollectionCountException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+#endif
     }
 
     /// <summary>
@@ -4271,136 +4509,12 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
+#if !NET8_0
         /// <inheritdoc/>
         protected InvalidConfigurationException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-    }
-
-    /// <summary>
-    /// This exception indicates that a <see cref = "DateTime"/> value is invalid.
-    /// </summary>
-    [Serializable]
-    internal class InvalidDateTimeException : ArgumentException
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref = "InvalidDateTimeException"/>.
-        /// </summary>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message of the exception (optional).</param>
-        public InvalidDateTimeException(string? parameterName = null, string? message = null) : base(message, parameterName)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected InvalidDateTimeException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-    }
-
-    /// <summary>
-    /// This exception indicates that an Email address is invalid.
-    /// </summary>
-    [Serializable]
-    internal class InvalidEmailAddressException : StringException
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref = "InvalidEmailAddressException"/>.
-        /// </summary>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message of the exception (optional).</param>
-        public InvalidEmailAddressException(string? parameterName = null, string? message = null) : base(parameterName, message)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected InvalidEmailAddressException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-    }
-
-    /// <summary>
-    /// This exception indicates that the data is in invalid state.
-    /// </summary>
-    [Serializable]
-    internal class InvalidStateException : Exception
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref = "InvalidStateException"/>.
-        /// </summary>
-        /// <param name = "message">The message of the exception (optional).</param>
-        /// <param name = "innerException">The exception that is the cause of this one (optional).</param>
-        public InvalidStateException(string? message = null, Exception? innerException = null) : base(message, innerException)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected InvalidStateException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-    }
-
-    /// <summary>
-    /// This exception indicates that an URI has an invalid scheme.
-    /// </summary>
-    [Serializable]
-    internal class InvalidUriSchemeException : UriException
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref = "InvalidUriSchemeException"/>.
-        /// </summary>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message of the exception (optional).</param>
-        public InvalidUriSchemeException(string? parameterName = null, string? message = null) : base(parameterName, message)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected InvalidUriSchemeException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-    }
-
-    /// <summary>
-    /// This exception indicates that an item is not present in a collection.
-    /// </summary>
-    [Serializable]
-    internal class MissingItemException : CollectionException
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref = "MissingItemException"/>.
-        /// </summary>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message of the exception (optional).</param>
-        public MissingItemException(string? parameterName = null, string? message = null) : base(parameterName, message)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected MissingItemException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-    }
-
-    /// <summary>
-    /// This exception indicates that a <see cref = "Nullable{T}"/> has no value.
-    /// </summary>
-    [Serializable]
-    internal class NullableHasNoValueException : ArgumentException
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref = "NullableHasNoValueException"/>.
-        /// </summary>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message of the exception (optional).</param>
-        public NullableHasNoValueException(string? parameterName = null, string? message = null) : base(message, parameterName)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected NullableHasNoValueException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+#endif
     }
 
     /// <summary>
@@ -4418,73 +4532,104 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
+#if !NET8_0
         /// <inheritdoc/>
         protected RelativeUriException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
+#endif
     }
 
     /// <summary>
-    /// This exception indicates that two references point to the same object.
+    /// This exception indicates that a collection contains an item that must not be part of it.
     /// </summary>
     [Serializable]
-    internal class SameObjectReferenceException : ArgumentException
+    internal class ExistingItemException : CollectionException
     {
         /// <summary>
-        /// Creates a new instance of <see cref = "SameObjectReferenceException"/>.
+        /// Creates a new instance of <see cref = "ExistingItemException"/>.
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public SameObjectReferenceException(string? parameterName = null, string? message = null) : base(message, parameterName)
+        public ExistingItemException(string? parameterName = null, string? message = null) : base(parameterName, message)
         {
         }
 
+#if !NET8_0
         /// <inheritdoc/>
-        protected SameObjectReferenceException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected ExistingItemException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
+#endif
     }
 
     /// <summary>
-    /// This exception indicates that a string is not matching a regular expression.
+    /// This exception indicates that an item is not present in a collection.
     /// </summary>
     [Serializable]
-    internal class StringDoesNotMatchException : StringException
+    internal class MissingItemException : CollectionException
     {
         /// <summary>
-        /// Creates a new instance of <see cref = "StringDoesNotMatchException"/>.
+        /// Creates a new instance of <see cref = "MissingItemException"/>.
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public StringDoesNotMatchException(string? parameterName = null, string? message = null) : base(parameterName, message)
+        public MissingItemException(string? parameterName = null, string? message = null) : base(parameterName, message)
         {
         }
 
+#if !NET8_0
         /// <inheritdoc/>
-        protected StringDoesNotMatchException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected MissingItemException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
+#endif
     }
 
     /// <summary>
-    /// This exception indicates that a string is in an invalid state.
+    /// This exception indicates that an Email address is invalid.
     /// </summary>
     [Serializable]
-    internal class StringException : ArgumentException
+    internal class InvalidEmailAddressException : StringException
     {
         /// <summary>
-        /// Creates a new instance of <see cref = "StringException"/>.
+        /// Creates a new instance of <see cref = "InvalidEmailAddressException"/>.
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public StringException(string? parameterName = null, string? message = null) : base(message, parameterName)
+        public InvalidEmailAddressException(string? parameterName = null, string? message = null) : base(parameterName, message)
         {
         }
 
+#if !NET8_0
         /// <inheritdoc/>
-        protected StringException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected InvalidEmailAddressException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
+#endif
+    }
+
+    /// <summary>
+    /// This exception indicates that two values are equal.
+    /// </summary>
+    [Serializable]
+    internal class ValuesEqualException : ArgumentException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "ValuesEqualException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public ValuesEqualException(string? parameterName = null, string? message = null) : base(message, parameterName)
+        {
+        }
+
+#if !NET8_0
+        /// <inheritdoc/>
+        protected ValuesEqualException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+#endif
     }
 
     /// <summary>
@@ -4502,10 +4647,12 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
+#if !NET8_0
         /// <inheritdoc/>
         protected StringLengthException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
+#endif
     }
 
     /// <summary>
@@ -4523,10 +4670,380 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
+#if !NET8_0
         /// <inheritdoc/>
         protected SubstringException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
+#endif
+    }
+
+    /// <summary>
+    /// This exception indicates that a collection has no items.
+    /// </summary>
+    [Serializable]
+    internal class EmptyCollectionException : InvalidCollectionCountException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "EmptyCollectionException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public EmptyCollectionException(string? parameterName = null, string? message = null) : base(parameterName, message)
+        {
+        }
+
+#if !NET8_0
+        /// <inheritdoc/>
+        protected EmptyCollectionException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+#endif
+    }
+
+    /// <summary>
+    /// This exception indicates that a value of a value type is the default value.
+    /// </summary>
+    [Serializable]
+    internal class ArgumentDefaultException : ArgumentException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "ArgumentDefaultException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public ArgumentDefaultException(string? parameterName = null, string? message = null) : base(message, parameterName)
+        {
+        }
+
+#if !NET8_0
+        /// <inheritdoc/>
+        protected ArgumentDefaultException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+#endif
+    }
+
+    /// <summary>
+    /// This exception indicates that a collection has an invalid number of items.
+    /// </summary>
+    [Serializable]
+    internal class InvalidCollectionCountException : CollectionException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "InvalidCollectionCountException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public InvalidCollectionCountException(string? parameterName = null, string? message = null) : base(parameterName, message)
+        {
+        }
+
+#if !NET8_0
+        /// <inheritdoc/>
+        protected InvalidCollectionCountException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+#endif
+    }
+
+    /// <summary>
+    /// This exception indicates that the state of a collection is invalid.
+    /// </summary>
+    [Serializable]
+    internal class CollectionException : ArgumentException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "CollectionException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public CollectionException(string? parameterName = null, string? message = null) : base(message, parameterName)
+        {
+        }
+
+#if !NET8_0
+        /// <inheritdoc/>
+        protected CollectionException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+#endif
+    }
+
+    /// <summary>
+    /// This exception indicates that a string is in an invalid state.
+    /// </summary>
+    [Serializable]
+    internal class StringException : ArgumentException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "StringException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public StringException(string? parameterName = null, string? message = null) : base(message, parameterName)
+        {
+        }
+
+#if !NET8_0
+        /// <inheritdoc/>
+        protected StringException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+#endif
+    }
+
+    /// <summary>
+    /// This exception indicates that a <see cref = "Nullable{T}"/> has no value.
+    /// </summary>
+    [Serializable]
+    internal class NullableHasNoValueException : ArgumentException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "NullableHasNoValueException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public NullableHasNoValueException(string? parameterName = null, string? message = null) : base(message, parameterName)
+        {
+        }
+
+#if !NET8_0
+        /// <inheritdoc/>
+        protected NullableHasNoValueException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+#endif
+    }
+
+    /// <summary>
+    /// This exception indicates that two references point to the same object.
+    /// </summary>
+    [Serializable]
+    internal class SameObjectReferenceException : ArgumentException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "SameObjectReferenceException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public SameObjectReferenceException(string? parameterName = null, string? message = null) : base(message, parameterName)
+        {
+        }
+
+#if !NET8_0
+        /// <inheritdoc/>
+        protected SameObjectReferenceException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+#endif
+    }
+
+    /// <summary>
+    /// This exception indicates that an URI has an invalid scheme.
+    /// </summary>
+    [Serializable]
+    internal class InvalidUriSchemeException : UriException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "InvalidUriSchemeException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public InvalidUriSchemeException(string? parameterName = null, string? message = null) : base(parameterName, message)
+        {
+        }
+
+#if !NET8_0
+        /// <inheritdoc/>
+        protected InvalidUriSchemeException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+#endif
+    }
+
+    /// <summary>
+    /// This exception indicates that an URI is absolute instead of relative.
+    /// </summary>
+    [Serializable]
+    internal class AbsoluteUriException : UriException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "AbsoluteUriException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public AbsoluteUriException(string? parameterName = null, string? message = null) : base(parameterName, message)
+        {
+        }
+
+#if !NET8_0
+        /// <inheritdoc/>
+        protected AbsoluteUriException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+#endif
+    }
+
+    /// <summary>
+    /// This exception indicates that that a GUID is empty.
+    /// </summary>
+    [Serializable]
+    internal class EmptyGuidException : ArgumentException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "EmptyGuidException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public EmptyGuidException(string? parameterName = null, string? message = null) : base(message, parameterName)
+        {
+        }
+
+#if !NET8_0
+        /// <inheritdoc/>
+        protected EmptyGuidException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+#endif
+    }
+
+    /// <summary>
+    /// This exception indicates that an URI is invalid.
+    /// </summary>
+    [Serializable]
+    internal class UriException : ArgumentException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "UriException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public UriException(string? parameterName = null, string? message = null) : base(message, parameterName)
+        {
+        }
+
+#if !NET8_0
+        /// <inheritdoc/>
+        protected UriException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+#endif
+    }
+
+    /// <summary>
+    /// This exception indicates that two values are not equal.
+    /// </summary>
+    [Serializable]
+    internal class ValuesNotEqualException : ArgumentException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "ValuesNotEqualException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public ValuesNotEqualException(string? parameterName = null, string? message = null) : base(message, parameterName)
+        {
+        }
+
+#if !NET8_0
+        /// <inheritdoc/>
+        protected ValuesNotEqualException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+#endif
+    }
+
+    /// <summary>
+    /// This exception indicates that a string contains only white space.
+    /// </summary>
+    [Serializable]
+    internal class WhiteSpaceStringException : StringException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "WhiteSpaceStringException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public WhiteSpaceStringException(string? parameterName = null, string? message = null) : base(parameterName, message)
+        {
+        }
+
+#if !NET8_0
+        /// <inheritdoc/>
+        protected WhiteSpaceStringException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+#endif
+    }
+
+    /// <summary>
+    /// This exception indicates that an item is part of a collection.
+    /// </summary>
+    [Serializable]
+    internal class ValueIsOneOfException : ArgumentException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "ValueIsOneOfException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public ValueIsOneOfException(string? parameterName = null, string? message = null) : base(message, parameterName)
+        {
+        }
+
+#if !NET8_0
+        /// <inheritdoc/>
+        protected ValueIsOneOfException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+#endif
+    }
+
+    /// <summary>
+    /// This exception indicates that a string is not matching a regular expression.
+    /// </summary>
+    [Serializable]
+    internal class StringDoesNotMatchException : StringException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "StringDoesNotMatchException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public StringDoesNotMatchException(string? parameterName = null, string? message = null) : base(parameterName, message)
+        {
+        }
+
+#if !NET8_0
+        /// <inheritdoc/>
+        protected StringDoesNotMatchException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+#endif
+    }
+
+    /// <summary>
+    /// This exception indicates that a <see cref = "DateTime"/> value is invalid.
+    /// </summary>
+    [Serializable]
+    internal class InvalidDateTimeException : ArgumentException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "InvalidDateTimeException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public InvalidDateTimeException(string? parameterName = null, string? message = null) : base(message, parameterName)
+        {
+        }
+
+#if !NET8_0
+        /// <inheritdoc/>
+        protected InvalidDateTimeException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+#endif
     }
 
     /// <summary>
@@ -4739,37 +5256,61 @@ namespace Light.GuardClauses.Exceptions
         [DoesNotReturn]
         public static void Substring(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be a substring of \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
         /// <summary>
-        /// Throws the default <see cref = "StringLengthException"/> indicating that a string is not shorter than the given length, using the optional parameter name an message.
+        /// Throws the default <see cref = "SubstringException"/> indicating that a string does not start with another one, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void StringDoesNotStartWith(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must start with \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+        /// <summary>
+        /// Throws the default <see cref = "SubstringException"/> indicating that a string does start with another one, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void StringStartsWith(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not start with \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+        /// <summary>
+        /// Throws the default <see cref = "SubstringException"/> indicating that a string does not end with another one, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void StringDoesNotEndWith(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must end with \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+        /// <summary>
+        /// Throws the default <see cref = "SubstringException"/> indicating that a string ends with another one, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void StringEndsWith(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not end with \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+        /// <summary>
+        /// Throws the default <see cref = "StringLengthException"/> indicating that a string is not shorter than the given length, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void StringNotShorterThan(string parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be shorter than {length}, but it actually has length {parameter.Length}.");
         /// <summary>
-        /// Throws the default <see cref = "StringLengthException"/> indicating that a string is not shorter or equal to the given length, using the optional parameter name an message.
+        /// Throws the default <see cref = "StringLengthException"/> indicating that a string is not shorter or equal to the given length, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void StringNotShorterThanOrEqualTo(string parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be shorter or equal to {length}, but it actually has length {parameter.Length}.");
         /// <summary>
-        /// Throws the default <see cref = "StringLengthException"/> indicating that a string has a different length than the specified one, using the optional parameter name an message.
+        /// Throws the default <see cref = "StringLengthException"/> indicating that a string has a different length than the specified one, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void StringLengthNotEqualTo(string parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must have length {length}, but it actually has length {parameter.Length}.");
         /// <summary>
-        /// Throws the default <see cref = "StringLengthException"/> indicating that a string is not longer than the given length, using the optional parameter name an message.
+        /// Throws the default <see cref = "StringLengthException"/> indicating that a string is not longer than the given length, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void StringNotLongerThan(string parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be longer than {length}, but it actually has length {parameter.Length}.");
         /// <summary>
-        /// Throws the default <see cref = "StringLengthException"/> indicating that a string is not longer or equal to the given length, using the optional parameter name an message.
+        /// Throws the default <see cref = "StringLengthException"/> indicating that a string is not longer or equal to the given length, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void StringNotLongerThanOrEqualTo(string parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be longer than or equal to {length}, but it actually has length {parameter.Length}.");
         /// <summary>
-        /// Throws the default <see cref = "StringLengthException"/> indicating that a string's length is not in between the given range, using the optional parameter name an message.
+        /// Throws the default <see cref = "StringLengthException"/> indicating that a string's length is not in between the given range, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
@@ -4999,45 +5540,26 @@ namespace Light.GuardClauses.Exceptions
     }
 
     /// <summary>
-    /// This exception indicates that a value cannot be cast to another type.
+    /// This exception indicates that a string is empty.
     /// </summary>
     [Serializable]
-    internal class TypeCastException : ArgumentException
+    internal class EmptyStringException : StringException
     {
         /// <summary>
-        /// Creates a new instance of <see cref = "TypeCastException"/>.
+        /// Creates a new instance of <see cref = "EmptyStringException"/>.
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public TypeCastException(string? parameterName = null, string? message = null) : base(message, parameterName)
+        public EmptyStringException(string? parameterName = null, string? message = null) : base(parameterName, message)
         {
         }
 
+#if !NET8_0
         /// <inheritdoc/>
-        protected TypeCastException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected EmptyStringException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-    }
-
-    /// <summary>
-    /// This exception indicates that an URI is invalid.
-    /// </summary>
-    [Serializable]
-    internal class UriException : ArgumentException
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref = "UriException"/>.
-        /// </summary>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message of the exception (optional).</param>
-        public UriException(string? parameterName = null, string? message = null) : base(message, parameterName)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected UriException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+#endif
     }
 
     /// <summary>
@@ -5055,330 +5577,95 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
+#if !NET8_0
         /// <inheritdoc/>
         protected ValueIsNotOneOfException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
+#endif
     }
 
     /// <summary>
-    /// This exception indicates that an item is part of a collection.
+    /// This exception indicates that a value cannot be cast to another type.
     /// </summary>
     [Serializable]
-    internal class ValueIsOneOfException : ArgumentException
+    internal class TypeCastException : ArgumentException
     {
         /// <summary>
-        /// Creates a new instance of <see cref = "ValueIsOneOfException"/>.
+        /// Creates a new instance of <see cref = "TypeCastException"/>.
         /// </summary>
         /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public ValueIsOneOfException(string? parameterName = null, string? message = null) : base(message, parameterName)
+        public TypeCastException(string? parameterName = null, string? message = null) : base(message, parameterName)
         {
         }
 
+#if !NET8_0
         /// <inheritdoc/>
-        protected ValueIsOneOfException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected TypeCastException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
+#endif
     }
 
     /// <summary>
-    /// This exception indicates that two values are equal.
+    /// This exception indicates that the data is in invalid state.
     /// </summary>
     [Serializable]
-    internal class ValuesEqualException : ArgumentException
+    internal class InvalidStateException : Exception
     {
         /// <summary>
-        /// Creates a new instance of <see cref = "ValuesEqualException"/>.
+        /// Creates a new instance of <see cref = "InvalidStateException"/>.
         /// </summary>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
         /// <param name = "message">The message of the exception (optional).</param>
-        public ValuesEqualException(string? parameterName = null, string? message = null) : base(message, parameterName)
+        /// <param name = "innerException">The exception that is the cause of this one (optional).</param>
+        public InvalidStateException(string? message = null, Exception? innerException = null) : base(message, innerException)
         {
         }
 
+#if !NET8_0
         /// <inheritdoc/>
-        protected ValuesEqualException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected InvalidStateException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-    }
-
-    /// <summary>
-    /// This exception indicates that two values are not equal.
-    /// </summary>
-    [Serializable]
-    internal class ValuesNotEqualException : ArgumentException
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref = "ValuesNotEqualException"/>.
-        /// </summary>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message of the exception (optional).</param>
-        public ValuesNotEqualException(string? parameterName = null, string? message = null) : base(message, parameterName)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected ValuesNotEqualException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
-    }
-
-    /// <summary>
-    /// This exception indicates that a string contains only white space.
-    /// </summary>
-    [Serializable]
-    internal class WhiteSpaceStringException : StringException
-    {
-        /// <summary>
-        /// Creates a new instance of <see cref = "WhiteSpaceStringException"/>.
-        /// </summary>
-        /// <param name = "parameterName">The name of the parameter (optional).</param>
-        /// <param name = "message">The message of the exception (optional).</param>
-        public WhiteSpaceStringException(string? parameterName = null, string? message = null) : base(parameterName, message)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected WhiteSpaceStringException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+#endif
     }
 }
 
 namespace Light.GuardClauses.FrameworkExtensions
 {
     /// <summary>
-    /// Provides extension methods for the <see cref = "IEnumerable{T}"/> interface.
+    /// Represents a builder for the <see cref = "MultiplyAddHash"/> algorithm that does not allocate.
+    /// Should only be used in cases where the overload for sixteen values is not enough or a dedicated
+    /// initial hash must be provided (e.g. for test reasons).
+    /// Instantiate the builder with the <see cref = "Create"/> method. You have to instantiate a new builder
+    /// for each hash code that you want to calculate.
     /// </summary>
-    internal static class EnumerableExtensions
+    internal struct MultiplyAddHashBuilder
     {
-        /// <summary>
-        /// Tries to cast the specified enumerable to an <see cref = "IList{T}"/>, or
-        /// creates a new <see cref = "List{T}"/> containing the enumerable items.
-        /// </summary>
-        /// <typeparam name = "T">The item type of the enumerable.</typeparam>
-        /// <param name = "source">The enumerable to be transformed.</param>
-        /// <returns>The list containing the items of the enumerable.</returns>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "source"/> is null.</exception>
+        private int _hash;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("source:null => halt; source:notnull => notnull")]
-        public static IList<T> AsList<T>([ValidatedNotNull] this IEnumerable<T> source) => source as IList<T> ?? source.ToList();
+        private MultiplyAddHashBuilder(int initialHash) => _hash = initialHash;
         /// <summary>
-        /// Tries to cast the specified enumerable to an <see cref = "IList{T}"/>, or
-        /// creates a new collection containing the enumerable items by calling the specified delegate.
+        /// Combines the given value into the hash using the <see cref = "MultiplyAddHash.CombineIntoHash{T}(ref int, T)"/> method.
         /// </summary>
-        /// <typeparam name = "T">The item type of the collection.</typeparam>
-        /// <param name = "source">The enumerable that will be converted to <see cref = "IList{T}"/>.</param>
-        /// <param name = "createCollection">The delegate that creates the collection containing the specified items.</param>
-        /// <returns>The cast enumerable, or a new collection containing the enumerable items.</returns>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "source"/> or <paramref name = "createCollection"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("source:null => halt; source:notnull => notnull; createCollection:null => halt")]
-        public static IList<T> AsList<T>([ValidatedNotNull] this IEnumerable<T> source, Func<IEnumerable<T>, IList<T>> createCollection) => source as IList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(source.MustNotBeNull(nameof(source)));
-        /// <summary>
-        /// Tries to downcast the specified enumerable to an array, or creates a new array with the specified items.
-        /// </summary>
-        /// <typeparam name = "T">The item type of the collection.</typeparam>
-        /// <param name = "source">The enumerable that will be converted to an array.</param>
-        /// <returns>The cast array, or a new array containing the enumerable items.</returns>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "source"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("source:null => halt; source:notnull => notnull")]
-        public static T[] AsArray<T>([ValidatedNotNull] this IEnumerable<T> source) => source as T[] ?? source.ToArray();
-        /// <summary>
-        /// Performs the action on each item of the specified enumerable. If the enumerable contains items that are null, this
-        /// method can either throw an exception or ignore the value (your delegate will not be called in this case).
-        /// </summary>
-        /// <typeparam name = "T">The item type of the enumerable.</typeparam>
-        /// <param name = "enumerable">The collection containing the items that will be passed to the action.</param>
-        /// <param name = "action">The action that executes for each item of the collection.</param>
-        /// <param name = "throwWhenItemIsNull">The value indicating whether this method should throw a <see cref = "CollectionException"/> when any of the items is null (optional). Defaults to true.</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "enumerable"/> or <paramref name = "action"/> is null.</exception>
-        /// <exception cref = "CollectionException">Thrown when <paramref name = "enumerable"/> contains a value that is null and <paramref name = "throwWhenItemIsNull"/> is set to true.</exception>
-        public static IEnumerable<T> ForEach<T>([ValidatedNotNull] this IEnumerable<T> enumerable, Action<T> action, bool throwWhenItemIsNull = true)
+        public MultiplyAddHashBuilder CombineIntoHash<T>(T value)
         {
-            // ReSharper disable PossibleMultipleEnumeration
-            action.MustNotBeNull(nameof(action));
-            var i = 0;
-            if (enumerable is IList<T> list)
-            {
-                for (; i < list.Count; i++)
-                {
-                    var item = list[i];
-                    if (item is null)
-                    {
-                        if (throwWhenItemIsNull)
-                            throw new CollectionException(nameof(enumerable), $"The collection contains null at index {i}.");
-                        continue;
-                    }
-
-                    action(item);
-                }
-            }
-            else
-            {
-                foreach (var item in enumerable.MustNotBeNull(nameof(enumerable)))
-                {
-                    if (item is null)
-                    {
-                        if (throwWhenItemIsNull)
-                            throw new CollectionException(nameof(enumerable), $"The collection contains null at index {i}.");
-                        ++i;
-                        continue;
-                    }
-
-                    action(item);
-                    ++i;
-                }
-            }
-
-            return enumerable;
-        // ReSharper restore PossibleMultipleEnumeration
+            MultiplyAddHash.CombineIntoHash(ref _hash, value);
+            return this;
         }
 
         /// <summary>
-        /// Tries to cast the specified enumerable as an <see cref = "IReadOnlyList{T}"/>, or
-        /// creates a new <see cref = "List{T}"/> containing the enumerable items.
+        /// Returns the calculated hash code.
         /// </summary>
-        /// <typeparam name = "T">The item type of the enumerable.</typeparam>
-        /// <param name = "source">The enumerable to be transformed.</param>
-        /// <returns>The list containing the items of the enumerable.</returns>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "source"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("source:null => halt; source:notnull => notnull")]
-        public static IReadOnlyList<T> AsReadOnlyList<T>([ValidatedNotNull] this IEnumerable<T> source) => source as IReadOnlyList<T> ?? source.ToList();
+        public int BuildHash() => _hash;
         /// <summary>
-        /// Tries to cast the specified enumerable as an <see cref = "IReadOnlyList{T}"/>, or
-        /// creates a new collection containing the enumerable items by calling the specified delegate.
+        /// Initializes a new instance of <see cref = "MultiplyAddHashBuilder"/> with the specified initial hash.
         /// </summary>
-        /// <typeparam name = "T">The item type of the collection.</typeparam>
-        /// <param name = "source">The enumerable that will be converted to <see cref = "IReadOnlyList{T}"/>.</param>
-        /// <param name = "createCollection">The delegate that creates the collection containing the specified items.</param>
-        /// <returns>The cast enumerable, or a new collection containing the enumerable items.</returns>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "source"/> or <paramref name = "createCollection"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("source:null => halt; source:notnull => notnull; createCollection:null => halt")]
-        public static IReadOnlyList<T> AsReadOnlyList<T>([ValidatedNotNull] this IEnumerable<T> source, Func<IEnumerable<T>, IReadOnlyList<T>> createCollection) => source as IReadOnlyList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(source.MustNotBeNull(nameof(source)));
-        /// <summary>
-        /// Gets the count of the specified enumerable.
-        /// </summary>
-        /// <param name = "enumerable">The enumerable whose count should be determined.</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "enumerable"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("enumerable:null => halt")]
-        public static int Count([ValidatedNotNull] this IEnumerable enumerable)
-        {
-            if (enumerable is ICollection collection)
-                return collection.Count;
-            if (enumerable is string @string)
-                return @string.Length;
-            return DetermineCountViaEnumerating(enumerable);
-        }
-
-        /// <summary>
-        /// Gets the count of the specified enumerable.
-        /// </summary>
-        /// <param name = "enumerable">The enumerable whose count should be determined.</param>
-        /// <param name = "parameterName">The name of the parameter that is passed to the <see cref = "ArgumentNullException"/> (optional).</param>
-        /// <param name = "message">The message that is passed to the <see cref = "ArgumentNullException"/> (optional).</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "enumerable"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("enumerable:null => halt")]
-        public static int Count([ValidatedNotNull] this IEnumerable? enumerable, string? parameterName, string? message)
-        {
-            if (enumerable is ICollection collection)
-                return collection.Count;
-            if (enumerable is string @string)
-                return @string.Length;
-            return DetermineCountViaEnumerating(enumerable, parameterName, message);
-        }
-
-        /// <summary>
-        /// Gets the count of the specified enumerable.
-        /// </summary>
-        /// <param name = "enumerable">The enumerable whose count should be determined.</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "enumerable"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("enumerable:null => halt")]
-        public static int GetCount<T>(this IEnumerable<T> enumerable)
-        {
-            if (enumerable is ICollection collection)
-                return collection.Count;
-            if (enumerable is string @string)
-                return @string.Length;
-            if (TryGetCollectionOfTCount(enumerable, out var count))
-                return count;
-            return DetermineCountViaEnumerating(enumerable);
-        }
-
-        /// <summary>
-        /// Gets the count of the specified enumerable.
-        /// </summary>
-        /// <param name = "enumerable">The enumerable whose count should be determined.</param>
-        /// <param name = "parameterName">The name of the parameter that is passed to the <see cref = "ArgumentNullException"/> (optional).</param>
-        /// <param name = "message">The message that is passed to the <see cref = "ArgumentNullException"/> (optional).</param>
-        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "enumerable"/> is null.</exception>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ContractAnnotation("enumerable:null => halt")]
-        public static int GetCount<T>(this IEnumerable<T> enumerable, string? parameterName, string? message = null)
-        {
-            if (enumerable is ICollection collection)
-                return collection.Count;
-            if (enumerable is string @string)
-                return @string.Length;
-            if (TryGetCollectionOfTCount(enumerable, out var count))
-                return count;
-            return DetermineCountViaEnumerating(enumerable, parameterName, message);
-        }
-
-        private static bool TryGetCollectionOfTCount<T>([NoEnumeration] this IEnumerable<T> enumerable, out int count)
-        {
-            if (enumerable is ICollection<T> collectionOfT)
-            {
-                count = collectionOfT.Count;
-                return true;
-            }
-
-            if (enumerable is IReadOnlyCollection<T> readOnlyCollection)
-            {
-                count = readOnlyCollection.Count;
-                return true;
-            }
-
-            count = 0;
-            return false;
-        }
-
-        private static int DetermineCountViaEnumerating(IEnumerable? enumerable)
-        {
-            var count = 0;
-            var enumerator = enumerable.MustNotBeNull(nameof(enumerable)).GetEnumerator();
-            while (enumerator.MoveNext())
-                count++;
-            return count;
-        }
-
-        private static int DetermineCountViaEnumerating(IEnumerable? enumerable, string? parameterName, string? message)
-        {
-            var count = 0;
-            var enumerator = enumerable.MustNotBeNull(parameterName, message).GetEnumerator();
-            while (enumerator.MoveNext())
-                count++;
-            return count;
-        }
-
-        internal static bool ContainsViaForeach<TItem>(this IEnumerable<TItem> items, TItem item)
-        {
-            var equalityComparer = EqualityComparer<TItem>.Default;
-            foreach (var i in items)
-            {
-                if (equalityComparer.Equals(i, item))
-                    return true;
-            }
-
-            return false;
-        }
+        public static MultiplyAddHashBuilder Create(int initialHash = MultiplyAddHash.FirstPrime) => new MultiplyAddHashBuilder(initialHash);
     }
 
     /// <summary>
@@ -5387,7 +5674,7 @@ namespace Light.GuardClauses.FrameworkExtensions
     internal static class ExpressionExtensions
     {
         /// <summary>
-        /// Extracts the <see cref = "PropertyInfo"/> from a expression of the shape "object => object.Property".
+        /// Extracts the <see cref = "PropertyInfo"/> from an expression of the shape "object => object.Property".
         /// </summary>
         /// <typeparam name = "T">The object type.</typeparam>
         /// <typeparam name = "TProperty">The type of the property.</typeparam>
@@ -5396,7 +5683,8 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref = "ArgumentException">
         /// Throw when the <paramref name = "expression"/> is not of the shape "object => object.Property".
         /// </exception>
-        public static PropertyInfo ExtractProperty<T, TProperty>([ValidatedNotNull] this Expression<Func<T, TProperty>> expression)
+         // ReSharper disable once RedundantNullableFlowAttribute - NotNull is not redundant, see Issue72NotNullAttributeTests
+        public static PropertyInfo ExtractProperty<T, TProperty>([NotNull, ValidatedNotNull] this Expression<Func<T, TProperty>> expression)
         {
             expression.MustNotBeNull(nameof(expression));
             var memberExpression = expression.Body as MemberExpression;
@@ -5406,7 +5694,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         }
 
         /// <summary>
-        /// Extracts the <see cref = "FieldInfo"/> from a expression of the shape "object => object.Field".
+        /// Extracts the <see cref = "FieldInfo"/> from an expression of the shape "object => object.Field".
         /// </summary>
         /// <typeparam name = "T">The object type.</typeparam>
         /// <typeparam name = "TField">The type of the field.</typeparam>
@@ -5415,7 +5703,8 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref = "ArgumentException">
         /// Throw when the <paramref name = "expression"/> is not of the shape "object => object.Field".
         /// </exception>
-        public static FieldInfo ExtractField<T, TField>([ValidatedNotNull] this Expression<Func<T, TField>> expression)
+         // ReSharper disable once RedundantNullableFlowAttribute - NotNull is not redundant, see Issue72NotNullAttributeTests
+        public static FieldInfo ExtractField<T, TField>([NotNull, ValidatedNotNull] this Expression<Func<T, TField>> expression)
         {
             expression.MustNotBeNull(nameof(expression));
             var memberExpression = expression.Body as MemberExpression;
@@ -5740,37 +6029,255 @@ namespace Light.GuardClauses.FrameworkExtensions
     }
 
     /// <summary>
-    /// Represents a builder for the <see cref = "MultiplyAddHash"/> algorithm that does not allocate.
-    /// Should only be used in cases where the overload for sixteen values is not enough or a dedicated
-    /// initial hash must be provided (e.g. for test reasons).
-    /// Instantiate the builder with the <see cref = "Create"/> method. You have to instantiate a new builder
-    /// for each hash code that you want to calculate.
+    /// Provides extension methods for the <see cref = "IEnumerable{T}"/> interface.
     /// </summary>
-    internal struct MultiplyAddHashBuilder
+    internal static class EnumerableExtensions
     {
-        private int _hash;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private MultiplyAddHashBuilder(int initialHash) => _hash = initialHash;
         /// <summary>
-        /// Combines the given value into the hash using the <see cref = "MultiplyAddHash.CombineIntoHash{T}(ref int, T)"/> method.
+        /// Tries to cast the specified enumerable to an <see cref = "IList{T}"/>, or
+        /// creates a new <see cref = "List{T}"/> containing the enumerable items.
         /// </summary>
+        /// <typeparam name = "T">The item type of the enumerable.</typeparam>
+        /// <param name = "source">The enumerable to be transformed.</param>
+        /// <returns>The list containing the items of the enumerable.</returns>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "source"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public MultiplyAddHashBuilder CombineIntoHash<T>(T value)
+        [ContractAnnotation("source:null => halt; source:notnull => notnull")]
+        // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        public static IList<T> AsList<T>([NotNull, ValidatedNotNull] this IEnumerable<T> source) => source as IList<T> ?? source.ToList();
+        /// <summary>
+        /// Tries to cast the specified enumerable to an <see cref = "IList{T}"/>, or
+        /// creates a new collection containing the enumerable items by calling the specified delegate.
+        /// </summary>
+        /// <typeparam name = "T">The item type of the collection.</typeparam>
+        /// <param name = "source">The enumerable that will be converted to <see cref = "IList{T}"/>.</param>
+        /// <param name = "createCollection">The delegate that creates the collection containing the specified items.</param>
+        /// <returns>The cast enumerable, or a new collection containing the enumerable items.</returns>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "source"/> or <paramref name = "createCollection"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("source:null => halt; source:notnull => notnull; createCollection:null => halt")]
+        // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        public static IList<T> AsList<T>([NotNull, ValidatedNotNull] this IEnumerable<T> source, Func<IEnumerable<T>, IList<T>> createCollection) => source as IList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(source.MustNotBeNull(nameof(source)));
+        /// <summary>
+        /// Tries to downcast the specified enumerable to an array, or creates a new array with the specified items.
+        /// </summary>
+        /// <typeparam name = "T">The item type of the collection.</typeparam>
+        /// <param name = "source">The enumerable that will be converted to an array.</param>
+        /// <returns>The cast array, or a new array containing the enumerable items.</returns>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "source"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("source:null => halt; source:notnull => notnull")]
+        // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        public static T[] AsArray<T>([NotNull, ValidatedNotNull] this IEnumerable<T> source) => source as T[] ?? source.ToArray();
+        /// <summary>
+        /// Performs the action on each item of the specified enumerable. If the enumerable contains items that are null, this
+        /// method can either throw an exception or ignore the value (your delegate will not be called in this case).
+        /// </summary>
+        /// <typeparam name = "T">The item type of the enumerable.</typeparam>
+        /// <param name = "enumerable">The collection containing the items that will be passed to the action.</param>
+        /// <param name = "action">The action that executes for each item of the collection.</param>
+        /// <param name = "throwWhenItemIsNull">The value indicating whether this method should throw a <see cref = "CollectionException"/> when any of the items is null (optional). Defaults to true.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "enumerable"/> or <paramref name = "action"/> is null.</exception>
+        /// <exception cref = "CollectionException">Thrown when <paramref name = "enumerable"/> contains a value that is null and <paramref name = "throwWhenItemIsNull"/> is set to true.</exception>
+         // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        public static IEnumerable<T> ForEach<T>([NotNull, ValidatedNotNull] this IEnumerable<T> enumerable, Action<T> action, bool throwWhenItemIsNull = true)
         {
-            MultiplyAddHash.CombineIntoHash(ref _hash, value);
-            return this;
+            // ReSharper disable PossibleMultipleEnumeration
+            action.MustNotBeNull(nameof(action));
+            var i = 0;
+            if (enumerable is IList<T> list)
+            {
+                for (; i < list.Count; i++)
+                {
+                    var item = list[i];
+                    if (item is null)
+                    {
+                        if (throwWhenItemIsNull)
+                            throw new CollectionException(nameof(enumerable), $"The collection contains null at index {i}.");
+                        continue;
+                    }
+
+                    action(item);
+                }
+            }
+            else
+            {
+                foreach (var item in enumerable.MustNotBeNull(nameof(enumerable)))
+                {
+                    if (item is null)
+                    {
+                        if (throwWhenItemIsNull)
+                            throw new CollectionException(nameof(enumerable), $"The collection contains null at index {i}.");
+                        ++i;
+                        continue;
+                    }
+
+                    action(item);
+                    ++i;
+                }
+            }
+
+            return enumerable;
+        // ReSharper restore PossibleMultipleEnumeration
         }
 
         /// <summary>
-        /// Returns the calculated hash code.
+        /// Tries to cast the specified enumerable as an <see cref = "IReadOnlyList{T}"/>, or
+        /// creates a new <see cref = "List{T}"/> containing the enumerable items.
         /// </summary>
+        /// <typeparam name = "T">The item type of the enumerable.</typeparam>
+        /// <param name = "source">The enumerable to be transformed.</param>
+        /// <returns>The list containing the items of the enumerable.</returns>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "source"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int BuildHash() => _hash;
+        [ContractAnnotation("source:null => halt; source:notnull => notnull")]
+        // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        public static IReadOnlyList<T> AsReadOnlyList<T>([NotNull, ValidatedNotNull] this IEnumerable<T> source) => source as IReadOnlyList<T> ?? source.ToList();
         /// <summary>
-        /// Initializes a new instance of <see cref = "MultiplyAddHashBuilder"/> with the specified initial hash.
+        /// Tries to cast the specified enumerable as an <see cref = "IReadOnlyList{T}"/>, or
+        /// creates a new collection containing the enumerable items by calling the specified delegate.
         /// </summary>
+        /// <typeparam name = "T">The item type of the collection.</typeparam>
+        /// <param name = "source">The enumerable that will be converted to <see cref = "IReadOnlyList{T}"/>.</param>
+        /// <param name = "createCollection">The delegate that creates the collection containing the specified items.</param>
+        /// <returns>The cast enumerable, or a new collection containing the enumerable items.</returns>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "source"/> or <paramref name = "createCollection"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static MultiplyAddHashBuilder Create(int initialHash = MultiplyAddHash.FirstPrime) => new MultiplyAddHashBuilder(initialHash);
+        [ContractAnnotation("source:null => halt; source:notnull => notnull; createCollection:null => halt")]
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        public static IReadOnlyList<T> AsReadOnlyList<T>([NotNull, ValidatedNotNull] this IEnumerable<T> source, [NotNull, ValidatedNotNull] Func<IEnumerable<T>, IReadOnlyList<T>> createCollection) => source as IReadOnlyList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(source.MustNotBeNull(nameof(source)));
+        // ReSharper restore RedundantNullableFlowAttribute
+        /// <summary>
+        /// Gets the count of the specified enumerable.
+        /// </summary>
+        /// <param name = "enumerable">The enumerable whose count should be determined.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "enumerable"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("enumerable:null => halt")]
+        // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        public static int Count([NotNull, ValidatedNotNull] this IEnumerable enumerable)
+        {
+            if (enumerable is ICollection collection)
+                return collection.Count;
+            if (enumerable is string @string)
+                return @string.Length;
+            return DetermineCountViaEnumerating(enumerable);
+        }
+
+        /// <summary>
+        /// Gets the count of the specified enumerable.
+        /// </summary>
+        /// <param name = "enumerable">The enumerable whose count should be determined.</param>
+        /// <param name = "parameterName">The name of the parameter that is passed to the <see cref = "ArgumentNullException"/> (optional).</param>
+        /// <param name = "message">The message that is passed to the <see cref = "ArgumentNullException"/> (optional).</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "enumerable"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("enumerable:null => halt")]
+        public static int Count([NotNull, ValidatedNotNull] this IEnumerable? enumerable, string? parameterName, string? message)
+        {
+            if (enumerable is ICollection collection)
+                return collection.Count;
+            if (enumerable is string @string)
+                return @string.Length;
+            return DetermineCountViaEnumerating(enumerable, parameterName, message);
+        }
+
+        /// <summary>
+        /// Gets the count of the specified enumerable.
+        /// </summary>
+        /// <param name = "enumerable">The enumerable whose count should be determined.</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "enumerable"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("enumerable:null => halt")]
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        public static int GetCount<T>([NotNull, ValidatedNotNull] this IEnumerable<T> enumerable)
+        {
+            if (enumerable is ICollection collection)
+                return collection.Count;
+            if (enumerable is string @string)
+                return @string.Length;
+            if (TryGetCollectionOfTCount(enumerable, out var count))
+                return count;
+            return DetermineCountViaEnumerating(enumerable);
+        }
+
+        /// <summary>
+        /// Gets the count of the specified enumerable.
+        /// </summary>
+        /// <param name = "enumerable">The enumerable whose count should be determined.</param>
+        /// <param name = "parameterName">The name of the parameter that is passed to the <see cref = "ArgumentNullException"/> (optional).</param>
+        /// <param name = "message">The message that is passed to the <see cref = "ArgumentNullException"/> (optional).</param>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "enumerable"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("enumerable:null => halt")]
+        public static int GetCount<T>([NotNull, ValidatedNotNull] this IEnumerable<T> enumerable, string? parameterName, string? message = null)
+        {
+            if (enumerable is ICollection collection)
+                return collection.Count;
+            if (enumerable is string @string)
+                return @string.Length;
+            if (TryGetCollectionOfTCount(enumerable, out var count))
+                return count;
+            return DetermineCountViaEnumerating(enumerable, parameterName, message);
+        }
+
+        private static bool TryGetCollectionOfTCount<T>([NoEnumeration] this IEnumerable<T> enumerable, out int count)
+        {
+            if (enumerable is ICollection<T> collectionOfT)
+            {
+                count = collectionOfT.Count;
+                return true;
+            }
+
+            if (enumerable is IReadOnlyCollection<T> readOnlyCollection)
+            {
+                count = readOnlyCollection.Count;
+                return true;
+            }
+
+            count = 0;
+            return false;
+        }
+
+        private static int DetermineCountViaEnumerating(IEnumerable? enumerable)
+        {
+            var count = 0;
+            var enumerator = enumerable.MustNotBeNull(nameof(enumerable)).GetEnumerator();
+            while (enumerator.MoveNext())
+                count++;
+            if (enumerator is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+
+            return count;
+        }
+
+        private static int DetermineCountViaEnumerating([NotNull] IEnumerable? enumerable, string? parameterName, string? message)
+        {
+            var count = 0;
+            var enumerator = enumerable.MustNotBeNull(parameterName, message).GetEnumerator();
+            while (enumerator.MoveNext())
+                count++;
+            if (enumerator is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+
+            return count;
+        }
+
+        internal static bool ContainsViaForeach<TItem>(this IEnumerable<TItem> items, TItem item)
+        {
+            var equalityComparer = EqualityComparer<TItem>.Default;
+            foreach (var i in items)
+            {
+                if (equalityComparer.Equals(i, item))
+                    return true;
+            }
+
+            return false;
+        }
     }
 
     /// <summary>
@@ -5785,7 +6292,7 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <summary>
         /// Gets the list of types that will not be surrounded by quotation marks in error messages.
         /// </summary>
-        public static readonly ReadOnlyCollection<Type> UnquotedTypes = new ReadOnlyCollection<Type>(new[] { typeof(int), typeof(long), typeof(short), typeof(sbyte), typeof(uint), typeof(ulong), typeof(ushort), typeof(byte), typeof(bool), typeof(double), typeof(decimal), typeof(float) });
+        public static readonly ReadOnlyCollection<Type> UnquotedTypes = new([typeof(int), typeof(long), typeof(short), typeof(sbyte), typeof(uint), typeof(ulong), typeof(ushort), typeof(byte), typeof(bool), typeof(double), typeof(decimal), typeof(float)]);
         private static bool IsUnquotedType<T>()
         {
             if (typeof(T) == typeof(int))
@@ -5830,10 +6337,10 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// </summary>
         /// <param name = "value">The value whose string representation is requested.</param>
         [ContractAnnotation("value:null => halt; value:notnull => notnull")]
-        public static string? ToStringRepresentation<T>([ValidatedNotNull] this T value)
+        public static string? ToStringRepresentation<T>([NotNull, ValidatedNotNull] this T value)
         {
             value.MustNotBeNullReference(nameof(value));
-            var content = value!.ToString();
+            var content = value.ToString();
             if (IsUnquotedType<T>() || content.IsNullOrEmpty())
                 return content;
             // ReSharper disable UseIndexFromEndExpression -- not possible in netstandard2.0
@@ -5864,7 +6371,9 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "stringBuilder"/> or <paramref name = "items"/>is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("stringBuilder:null => halt; items:null => halt; stringBuilder:notnull => notnull")]
-        public static StringBuilder AppendCollectionContent<T>([ValidatedNotNull] this StringBuilder stringBuilder, [ValidatedNotNull] IEnumerable<T> items, string headerLine = "Content of the collection:", bool finishWithNewLine = true) => stringBuilder.MustNotBeNull(nameof(stringBuilder)).AppendLine(headerLine).AppendItemsWithNewLine(items, finishWithNewLine: finishWithNewLine);
+        // ReSharper disable RedundantNullableFlowAttribute
+        public static StringBuilder AppendCollectionContent<T>([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, [NotNull, ValidatedNotNull] IEnumerable<T> items, string headerLine = "Content of the collection:", bool finishWithNewLine = true) => stringBuilder.MustNotBeNull(nameof(stringBuilder)).AppendLine(headerLine).AppendItemsWithNewLine(items, finishWithNewLine: finishWithNewLine);
+        // ReSharper restore RedundantNullableFlowAttribute
         /// <summary>
         /// Appends the string representations of the specified items to the string builder.
         /// </summary>
@@ -5874,7 +6383,9 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <param name = "emptyCollectionText">The text that is appended to the string builder when <paramref name = "items"/> is empty. Defaults to "empty collection".</param>
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "stringBuilder"/> or <paramref name = "items"/> is null.</exception>
         [ContractAnnotation("stringBuilder:null => halt; items:null => halt; stringBuilder:notnull => notnull")]
-        public static StringBuilder AppendItems<T>([ValidatedNotNull] this StringBuilder stringBuilder, [ValidatedNotNull] IEnumerable<T> items, string itemSeparator = ", ", string emptyCollectionText = "empty collection")
+        // ReSharper disable RedundantNullableFlowAttribute
+        public static StringBuilder AppendItems<T>([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, [NotNull, ValidatedNotNull] IEnumerable<T> items, string itemSeparator = ", ", string emptyCollectionText = "empty collection")
+        // ReSharper restore RedundantNullableFlowAttribute
         {
             stringBuilder.MustNotBeNull(nameof(stringBuilder));
             var list = items.MustNotBeNull(nameof(items)).AsList();
@@ -5903,17 +6414,20 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "stringBuilder"/> or <paramref name = "items"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("stringBuilder:null => halt; items:null => halt; stringBuilder:notnull => notnull")]
-        public static StringBuilder AppendItemsWithNewLine<T>([ValidatedNotNull] this StringBuilder stringBuilder, [ValidatedNotNull] IEnumerable<T> items, string emptyCollectionText = "empty collection", bool finishWithNewLine = true) => stringBuilder.AppendItems(items, DefaultNewLineSeparator, emptyCollectionText).AppendLineIf(finishWithNewLine);
+        // ReSharper disable RedundantNullableFlowAttribute
+        public static StringBuilder AppendItemsWithNewLine<T>([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, [NotNull, ValidatedNotNull] IEnumerable<T> items, string emptyCollectionText = "empty collection", bool finishWithNewLine = true) => stringBuilder.AppendItems(items, DefaultNewLineSeparator, emptyCollectionText).AppendLineIf(finishWithNewLine);
+        // ReSharper restore RedundantNullableFlowAttribute
         /// <summary>
         /// Appends the value to the specified string builder if the condition is true.
         /// </summary>
         /// <param name = "stringBuilder">The string builder where <paramref name = "value"/> will be appended to.</param>
-        /// <param name = "condition">The boolean value indicating whether the append will be performed or not.</param>
+        /// <param name = "condition">The boolean value indicating whether the append operation will be performed or not.</param>
         /// <param name = "value">The value to be appended to the string builder.</param>
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "stringBuilder"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("stringBuilder:null => halt; stringBuilder:notnull => notnull")]
-        public static StringBuilder AppendIf([ValidatedNotNull] this StringBuilder stringBuilder, bool condition, string value)
+        // ReSharper disable once RedundantNullableFlowAttribute
+        public static StringBuilder AppendIf([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, bool condition, string value)
         {
             if (condition)
                 stringBuilder.MustNotBeNull(nameof(stringBuilder)).Append(value);
@@ -5924,12 +6438,13 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// Appends the value followed by a new line separator to the specified string builder if the condition is true.
         /// </summary>
         /// <param name = "stringBuilder">The string builder where <paramref name = "value"/> will be appended to.</param>
-        /// <param name = "condition">The boolean value indicating whether the append will be performed or not.</param>
+        /// <param name = "condition">The boolean value indicating whether the append operation will be performed or not.</param>
         /// <param name = "value">The value to be appended to the string builder (optional). This value defaults to an empty string.</param>
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "stringBuilder"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("stringBuilder:null => halt; stringBuilder:notnull => notnull")]
-        public static StringBuilder AppendLineIf([ValidatedNotNull] this StringBuilder stringBuilder, bool condition, string value = "")
+        // ReSharper disable once RedundantNullableFlowAttribute
+        public static StringBuilder AppendLineIf([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, bool condition, string value = "")
         {
             if (condition)
                 stringBuilder.MustNotBeNull(nameof(stringBuilder)).AppendLine(value);
@@ -5941,7 +6456,9 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// specified <paramref name = "stringBuilder"/>.
         /// </summary>
         /// <exception cref = "ArgumentNullException">Thrown when any parameter is null.</exception>
-        public static StringBuilder AppendExceptionMessages([ValidatedNotNull] this StringBuilder stringBuilder, [ValidatedNotNull] Exception exception)
+         // ReSharper disable RedundantNullableFlowAttribute
+        public static StringBuilder AppendExceptionMessages([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, [NotNull, ValidatedNotNull] Exception exception)
+        // ReSharper restore RedundantNullableFlowAttribute
         {
             stringBuilder.MustNotBeNull(nameof(stringBuilder));
             exception.MustNotBeNull(nameof(exception));
@@ -5961,7 +6478,8 @@ namespace Light.GuardClauses.FrameworkExtensions
         /// a single string.
         /// </summary>
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "exception"/> is null.</exception>
-        public static string GetAllExceptionMessages([ValidatedNotNull] this Exception exception) => new StringBuilder().AppendExceptionMessages(exception).ToString();
+         // ReSharper disable once RedundantNullableFlowAttribute
+        public static string GetAllExceptionMessages([NotNull, ValidatedNotNull] this Exception exception) => new StringBuilder().AppendExceptionMessages(exception).ToString();
         /// <summary>
         /// Checks if the two strings are equal using ordinal sorting rules as well as ignoring the white space
         /// of the provided strings.
@@ -5980,7 +6498,7 @@ namespace Light.GuardClauses.FrameworkExtensions
             bool wasYSuccessful;
             // This condition of the while loop actually has to use the single '&' operator because
             // y.TryAdvanceToNextNonWhiteSpaceCharacter must be called even though it already returned
-            // false on x. Otherwise the 'wasXSuccessful == wasYSuccessful' comparison would not return
+            // false on x. Otherwise, the 'wasXSuccessful == wasYSuccessful' comparison would not return
             // the desired result.
             while ((wasXSuccessful = x.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexX)) & (wasYSuccessful = y.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexY)))
             {
@@ -6009,7 +6527,7 @@ namespace Light.GuardClauses.FrameworkExtensions
             bool wasYSuccessful;
             // This condition of the while loop actually has to use the single '&' operator because
             // y.TryAdvanceToNextNonWhiteSpaceCharacter must be called even though it already returned
-            // false on x. Otherwise the 'wasXSuccessful == wasYSuccessful' comparison would not return
+            // false on x. Otherwise, the 'wasXSuccessful == wasYSuccessful' comparison would not return
             // the desired result.
             while ((wasXSuccessful = x.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexX)) & (wasYSuccessful = y.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexY)))
             {
