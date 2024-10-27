@@ -169,9 +169,11 @@ public static class TextExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> or <paramref name="items" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("stringBuilder:null => halt; items:null => halt; stringBuilder:notnull => notnull")]
-    public static StringBuilder AppendItemsWithNewLine<T>([ValidatedNotNull] this StringBuilder stringBuilder, [ValidatedNotNull] IEnumerable<T> items, string emptyCollectionText = "empty collection", bool finishWithNewLine = true) =>
+    // ReSharper disable RedundantNullableFlowAttribute
+    public static StringBuilder AppendItemsWithNewLine<T>([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, [NotNull, ValidatedNotNull] IEnumerable<T> items, string emptyCollectionText = "empty collection", bool finishWithNewLine = true) =>
         stringBuilder.AppendItems(items, DefaultNewLineSeparator, emptyCollectionText)
                      .AppendLineIf(finishWithNewLine);
+    // ReSharper restore RedundantNullableFlowAttribute
 
     /// <summary>
     /// Appends the value to the specified string builder if the condition is true.
