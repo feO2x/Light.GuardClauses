@@ -1476,4 +1476,18 @@ public static class Issue72NotNullAttributeTests
             return (stringBuilder, value.Length);
         }
     }
+
+    [Fact]
+    public static void CheckAppendItems()
+    {
+        var stringBuilder = new StringBuilder();
+        TestAppendItems(stringBuilder, [1, 2, 3]).Should().Be((stringBuilder, 3));
+        return;
+        
+        static (StringBuilder, int) TestAppendItems<T>(StringBuilder? stringBuilder, ICollection<T>? items)
+        {
+            stringBuilder!.AppendItems(items!);
+            return (stringBuilder, items.Count);
+        }
+    }
 }

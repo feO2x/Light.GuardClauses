@@ -138,7 +138,9 @@ public static class TextExtensions
     /// <param name="emptyCollectionText">The text that is appended to the string builder when <paramref name="items" /> is empty. Defaults to "empty collection".</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> or <paramref name="items" /> is null.</exception>
     [ContractAnnotation("stringBuilder:null => halt; items:null => halt; stringBuilder:notnull => notnull")]
-    public static StringBuilder AppendItems<T>([ValidatedNotNull] this StringBuilder stringBuilder, [ValidatedNotNull] IEnumerable<T> items, string itemSeparator = ", ", string emptyCollectionText = "empty collection")
+    // ReSharper disable RedundantNullableFlowAttribute
+    public static StringBuilder AppendItems<T>([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, [NotNull, ValidatedNotNull] IEnumerable<T> items, string itemSeparator = ", ", string emptyCollectionText = "empty collection")
+        // ReSharper restore RedundantNullableFlowAttribute
     {
         stringBuilder.MustNotBeNull(nameof(stringBuilder));
         var list = items.MustNotBeNull(nameof(items)).AsList();
