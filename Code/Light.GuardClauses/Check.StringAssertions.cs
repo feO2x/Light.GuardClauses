@@ -155,10 +155,10 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is not equal to <paramref name="other" />.</exception>
     /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? MustBe(this string? parameter, string? other, StringComparison comparisonType, Func<string?, string?, Exception> exceptionFactory)
+    public static string? MustBe(this string? parameter, string? other, StringComparison comparisonType, Func<string?, string?, StringComparison, Exception> exceptionFactory)
     {
         if (!string.Equals(parameter, other, comparisonType))
-            Throw.CustomException(exceptionFactory, parameter, other);
+            Throw.CustomException(exceptionFactory, parameter, other, comparisonType);
         return parameter;
     }
 
@@ -171,7 +171,7 @@ public static partial class Check
     /// <param name="parameterName">The name of the parameter (optional).</param>
     /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
     /// <exception cref="ValuesNotEqualException">Thrown when <paramref name="parameter" /> is not equal to <paramref name="other" />.</exception>
-    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparisonType" /> enum.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? MustBe(this string? parameter, string? other, StringComparisonType comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
@@ -188,11 +188,11 @@ public static partial class Check
     /// <param name="comparisonType">The enum value specifying how the two strings should be compared.</param>
     /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="other" /> are passed to this delegate.</param>
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is not equal to <paramref name="other" />.</exception>
-    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
-    public static string? MustBe(this string? parameter, string? other, StringComparisonType comparisonType, Func<string?, string?, Exception> exceptionFactory)
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparisonType" /> enum.</exception>
+    public static string? MustBe(this string? parameter, string? other, StringComparisonType comparisonType, Func<string?, string?, StringComparisonType, Exception> exceptionFactory)
     {
         if (!parameter.Equals(other, comparisonType))
-            Throw.CustomException(exceptionFactory, parameter, other);
+            Throw.CustomException(exceptionFactory, parameter, other, comparisonType);
         return parameter;
     }
 
@@ -220,7 +220,7 @@ public static partial class Check
     /// <param name="parameter">The first string to be compared.</param>
     /// <param name="other">The second string to be compared.</param>
     /// <param name="comparisonType">The enum value specifying how the two strings should be compared.</param>
-    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="other" /> are passed to this delegate.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" />, <paramref name="other" />, and <paramref name="comparisonType" /> are passed to this delegate.</param>
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is equal to <paramref name="other" />.</exception>
     /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -240,7 +240,7 @@ public static partial class Check
     /// <param name="parameterName">The name of the parameter (optional).</param>
     /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
     /// <exception cref="ValuesEqualException">Thrown when <paramref name="parameter" /> is equal to <paramref name="other" />.</exception>
-    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparisonType" /> enum.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? MustNotBe(this string? parameter, string? other, StringComparisonType comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
@@ -255,14 +255,14 @@ public static partial class Check
     /// <param name="parameter">The first string to be compared.</param>
     /// <param name="other">The second string to be compared.</param>
     /// <param name="comparisonType">The enum value specifying how the two strings should be compared.</param>
-    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="other" /> are passed to this delegate.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" />, <paramref name="other" />, and <paramref name="comparisonType" /> are passed to this delegate.</param>
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is equal to <paramref name="other" />.</exception>
-    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparisonType" /> enum.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? MustNotBe(this string? parameter, string? other, StringComparisonType comparisonType, Func<string?, string?, Exception> exceptionFactory)
+    public static string? MustNotBe(this string? parameter, string? other, StringComparisonType comparisonType, Func<string?, string?, StringComparisonType, Exception> exceptionFactory)
     {
         if (parameter.Equals(other, comparisonType))
-            Throw.CustomException(exceptionFactory, parameter, other);
+            Throw.CustomException(exceptionFactory, parameter, other, comparisonType);
         return parameter;
     }
 
@@ -340,7 +340,9 @@ public static partial class Check
     public static string MustContain([NotNull, ValidatedNotNull] this string? parameter, string? value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!parameter.MustNotBeNull(parameterName, message).Contains(value.MustNotBeNull(nameof(value), message)))
+        {
             Throw.StringDoesNotContain(parameter, value, parameterName, message);
+        }
         return parameter;
     }
 
@@ -361,7 +363,9 @@ public static partial class Check
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || !parameter.Contains(value))
+        {
             Throw.CustomException(exceptionFactory, parameter, value!);
+        }
         return parameter;
     }
 
@@ -381,7 +385,9 @@ public static partial class Check
     public static string MustContain([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).IndexOf(value.MustNotBeNull(nameof(value), message), comparisonType) < 0)
+        {
             Throw.StringDoesNotContain(parameter, value, comparisonType, parameterName, message);
+        }
         return parameter;
     }
 
@@ -395,16 +401,18 @@ public static partial class Check
     /// <exception cref="Exception">
     /// Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="value" />,
     /// or when <paramref name="parameter" /> is null,
-    /// or when <paramref name="value" /> is null,
-    /// or when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.
+    /// or when <paramref name="value" /> is null.
     /// </exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
     public static string MustContain([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
-        if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) < 0)
+        if (parameter is null || value is null || parameter.IndexOf(value, comparisonType) < 0)
+        {
             Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
+        }
         return parameter;
     }
 
@@ -422,7 +430,9 @@ public static partial class Check
     public static string MustNotContain([NotNull, ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).Contains(value.MustNotBeNull(nameof(value), message)))
+        {
             Throw.StringContains(parameter, value, parameterName, message);
+        }
         return parameter;
     }
 
@@ -431,7 +441,7 @@ public static partial class Check
     /// </summary>
     /// <param name="parameter">The string to be checked.</param>
     /// <param name="value">The string that must not be part of <paramref name="parameter" />.</param>
-    /// <param name="exceptionFactory">The delegate that creates your custom exception (optional). <paramref name="parameter" /> and <paramref name="value" /> are passed to this </param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception (optional). <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
     /// <exception cref="Exception">
     /// Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="value" />,
     /// or when <paramref name="parameter" /> is null,
@@ -477,15 +487,15 @@ public static partial class Check
     /// <exception cref="Exception">
     /// Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="value" />,
     /// or when <paramref name="parameter" /> is null,
-    /// or when <paramref name="value" /> is null,
-    /// or when <paramref name="comparisonType" /> is not a valid value of the <see cref="StringComparison" /> enum.
+    /// or when <paramref name="value" /> is null.
     /// </exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
     public static string MustNotContain([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
-        if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) >= 0)
+        if (parameter is null || value is null || parameter.IndexOf(value, comparisonType) >= 0)
             Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
         return parameter;
     }
@@ -604,15 +614,15 @@ public static partial class Check
     /// <exception cref="Exception">
     /// Your custom exception thrown when <paramref name="value" /> does not contain <paramref name="parameter" />,
     /// or when <paramref name="parameter" /> is null,
-    /// or when <paramref name="value" /> is null,
-    /// or when <paramref name="comparisonType" /> is not a valid value of the <see cref="StringComparison" /> enum.
+    /// or when <paramref name="value" /> is null.
     /// </exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
     public static string MustBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
-        if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || value.IndexOf(parameter, comparisonType) == -1)
+        if (parameter is null || value is null || value.IndexOf(parameter, comparisonType) == -1)
             Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
         return parameter;
     }
@@ -683,7 +693,7 @@ public static partial class Check
     /// <param name="parameter">The string to be checked.</param>
     /// <param name="value">The other string that must not contain <paramref name="parameter" />.</param>
     /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
-    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType" /> are passed to this delegate.</param>
     /// <exception cref="Exception">
     /// Your custom exception thrown when <paramref name="value" /> contains <paramref name="parameter" />,
     /// or when <paramref name="parameter" /> is null,
@@ -695,8 +705,341 @@ public static partial class Check
     public static string MustNotBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
-        if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || value.IndexOf(parameter, comparisonType) != -1)
+        if (parameter is null || value is null || value.IndexOf(parameter, comparisonType) != -1)
             Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the string starts with the specified value, or otherwise throws a <see cref="SubstringException" />.
+    /// </summary>
+    /// <param name="parameter">The string to be checked.</param>
+    /// <param name="value">The other string <paramref name="parameter"/> must start with.</param>
+    /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search (optional). The default value is <see cref="StringComparison.CurrentCulture"/>.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> does not start with <paramref name="value" />.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
+    public static string MustStartWith(
+        [NotNull, ValidatedNotNull] this string? parameter,
+        [NotNull, ValidatedNotNull] string value,
+        StringComparison comparisonType = StringComparison.CurrentCulture,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (!parameter.MustNotBeNull(parameterName, message).StartsWith(value, comparisonType))
+        {
+            Throw.StringDoesNotStartWith(parameter, value, comparisonType, parameterName, message);
+        }
+        return parameter;
+    }
+    
+    /// <summary>
+    /// Ensures that the string starts with the specified value, or otherwise throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The string to be checked.</param>
+    /// <param name="value">The other string <paramref name="parameter"/> must start with.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> does not start with <paramref name="value" />,
+    /// or when <paramref name="parameter" /> is null,
+    /// or when <paramref name="value" /> is null.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt; exceptionFactory:null => halt")]
+    public static string MustStartWith(
+        [NotNull, ValidatedNotNull] this string? parameter,
+        [NotNull, ValidatedNotNull] string value,
+        [NotNull, ValidatedNotNull] Func<string?, string, Exception> exceptionFactory
+    )
+    {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract -- caller might have NRTs turned off
+        if (parameter is null || value is null || !parameter.StartsWith(value))
+        {
+            Throw.CustomException(exceptionFactory, parameter, value!);
+        }
+        return parameter;
+    }
+    
+    /// <summary>
+    /// Ensures that the string starts with the specified value, or otherwise throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The string to be checked.</param>
+    /// <param name="value">The other string <paramref name="parameter"/> must start with.</param>
+    /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType" /> are passed to this delegate.</param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> does not start with <paramref name="value" />,
+    /// or when <paramref name="parameter" /> is null,
+    /// or when <paramref name="value" /> is null.
+    /// </exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt; exceptionFactory:null => halt")]
+    public static string MustStartWith(
+        [NotNull, ValidatedNotNull] this string? parameter,
+        [NotNull, ValidatedNotNull] string value,
+        StringComparison comparisonType,
+        [NotNull, ValidatedNotNull] Func<string?, string, StringComparison, Exception> exceptionFactory
+    )
+    {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract -- caller might have NRTs turned off
+        if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || !parameter.StartsWith(value, comparisonType))
+        {
+            Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
+        }
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the string does not start with the specified value, or otherwise throws a <see cref="SubstringException" />.
+    /// </summary>
+    /// <param name="parameter">The string to be checked.</param>
+    /// <param name="value">The other string that <paramref name="parameter" /> must not start with.</param>
+    /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search (optional). The default value is <see cref="StringComparison.CurrentCulture" />.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> starts with <paramref name="value" />.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
+    public static string MustNotStartWith(
+        [NotNull, ValidatedNotNull] this string? parameter,
+        [NotNull, ValidatedNotNull] string value,
+        StringComparison comparisonType = StringComparison.CurrentCulture,
+        [CallerArgumentExpression("parameter")]
+        string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (parameter.MustNotBeNull(parameterName, message).StartsWith(value, comparisonType))
+        {
+            Throw.StringStartsWith(parameter, value, comparisonType, parameterName, message);
+        }
+
+        return parameter;
+    }
+    
+    /// <summary>
+    /// Ensures that the string does not start with the specified value, or otherwise throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The string to be checked.</param>
+    /// <param name="value">The other string that <paramref name="parameter" /> must not start with.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> does not start with <paramref name="value" />,
+    /// or when <paramref name="parameter" /> is null,
+    /// or when <paramref name="value" /> is null.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt; exceptionFactory:null => halt")]
+    public static string MustNotStartWith(
+        [NotNull, ValidatedNotNull] this string? parameter,
+        [NotNull, ValidatedNotNull] string value,
+        [NotNull, ValidatedNotNull] Func<string?, string, Exception> exceptionFactory
+    )
+    {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract -- caller might have NRTs turned off
+        if (parameter is null || value is null || parameter.StartsWith(value))
+        {
+            Throw.CustomException(exceptionFactory, parameter, value!);
+        }
+        return parameter;
+    }
+    
+    /// <summary>
+    /// Ensures that the string does not start with the specified value, or otherwise throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The string to be checked.</param>
+    /// <param name="value">The other string that <paramref name="parameter" /> must not start with.</param>
+    /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType" /> are passed to this delegate.</param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> does not start with <paramref name="value" />,
+    /// or when <paramref name="parameter" /> is null,
+    /// or when <paramref name="value" /> is null.
+    /// </exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt; exceptionFactory:null => halt")]
+    public static string MustNotStartWith(
+        [NotNull, ValidatedNotNull] this string? parameter,
+        [NotNull, ValidatedNotNull] string value,
+        StringComparison comparisonType,
+        [NotNull, ValidatedNotNull] Func<string?, string, StringComparison, Exception> exceptionFactory
+    )
+    {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract -- caller might have NRTs turned off
+        if (parameter is null || value is null || parameter.StartsWith(value, comparisonType))
+        {
+            Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
+        }
+        return parameter;
+    }
+    
+    /// <summary>
+    /// Ensures that the string ends with the specified value, or otherwise throws a <see cref="SubstringException" />.
+    /// </summary>
+    /// <param name="parameter">The string to be checked.</param>
+    /// <param name="value">The other string <paramref name="parameter"/> must end with.</param>
+    /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search (optional). The default value is <see cref="StringComparison.CurrentCulture"/>.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> does not end with <paramref name="value" />.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
+    public static string MustEndWith(
+        [NotNull, ValidatedNotNull] this string? parameter,
+        [NotNull, ValidatedNotNull] string value,
+        StringComparison comparisonType = StringComparison.CurrentCulture,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (!parameter.MustNotBeNull(parameterName, message).EndsWith(value, comparisonType))
+        {
+            Throw.StringDoesNotEndWith(parameter, value, comparisonType, parameterName, message);
+        }
+        return parameter;
+    }
+    
+    /// <summary>
+    /// Ensures that the string ends with the specified value, or otherwise throws a <see cref="SubstringException" />.
+    /// </summary>
+    /// <param name="parameter">The string to be checked.</param>
+    /// <param name="value">The other string <paramref name="parameter"/> must end with.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> does not end with <paramref name="value" />,
+    /// or when <paramref name="parameter" /> is null,
+    /// or when <paramref name="value" /> is null.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt; exceptionFactory:null => halt")]
+    public static string MustEndWith(
+        [NotNull, ValidatedNotNull] this string? parameter,
+        [NotNull, ValidatedNotNull] string value,
+        [NotNull, ValidatedNotNull] Func<string?, string, Exception> exceptionFactory
+    )
+    {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract -- caller might have NRTs turned off
+        if (parameter is null || value is null || !parameter.EndsWith(value))
+        {
+            Throw.CustomException(exceptionFactory, parameter, value!);
+        }
+        return parameter;
+    }
+    
+    /// <summary>
+    /// Ensures that the string ends with the specified value, or otherwise throws a <see cref="SubstringException" />.
+    /// </summary>
+    /// <param name="parameter">The string to be checked.</param>
+    /// <param name="value">The other string <paramref name="parameter"/> must end with.</param>
+    /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType" /> are passed to this delegate.</param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> does not end with <paramref name="value" />,
+    /// or when <paramref name="parameter" /> is null,
+    /// or when <paramref name="value" /> is null.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt; exceptionFactory:null => halt")]
+    public static string MustEndWith(
+        [NotNull, ValidatedNotNull] this string? parameter,
+        [NotNull, ValidatedNotNull] string value,
+        StringComparison comparisonType,
+        [NotNull, ValidatedNotNull] Func<string?, string, StringComparison, Exception> exceptionFactory
+    )
+    {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract -- caller might have NRTs turned off
+        if (parameter is null || value is null || !parameter.EndsWith(value, comparisonType))
+        {
+            Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
+        }
+        return parameter;
+    }
+    
+    /// <summary>
+    /// Ensures that the string does not end with the specified value, or otherwise throws a <see cref="SubstringException" />.
+    /// </summary>
+    /// <param name="parameter">The string to be checked.</param>
+    /// <param name="value">The other string <paramref name="parameter"/> must not end with.</param>
+    /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search (optional). The default value is <see cref="StringComparison.CurrentCulture"/>.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="SubstringException">Thrown when <paramref name="parameter" /> ends with <paramref name="value" />.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
+    public static string MustNotEndWith(
+        [NotNull, ValidatedNotNull] this string? parameter,
+        [NotNull, ValidatedNotNull] string value,
+        StringComparison comparisonType = StringComparison.CurrentCulture,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (parameter.MustNotBeNull(parameterName, message).EndsWith(value, comparisonType))
+        {
+            Throw.StringEndsWith(parameter, value, comparisonType, parameterName, message);
+        }
+        return parameter;
+    }
+    
+    /// <summary>
+    /// Ensures that the string does not end with the specified value, or otherwise throws a <see cref="SubstringException" />.
+    /// </summary>
+    /// <param name="parameter">The string to be checked.</param>
+    /// <param name="value">The other string <paramref name="parameter"/> must not end with.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> ends with <paramref name="value" />,
+    /// or when <paramref name="parameter" /> is null,
+    /// or when <paramref name="value" /> is null.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt; exceptionFactory:null => halt")]
+    public static string MustNotEndWith(
+        [NotNull, ValidatedNotNull] this string? parameter,
+        [NotNull, ValidatedNotNull] string value,
+        [NotNull, ValidatedNotNull] Func<string?, string, Exception> exceptionFactory
+    )
+    {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract -- caller might have NRTs turned off
+        if (parameter is null || value is null || parameter.EndsWith(value))
+        {
+            Throw.CustomException(exceptionFactory, parameter, value!);
+        }
+        return parameter;
+    }
+    
+    /// <summary>
+    /// Ensures that the string does not end with the specified value, or otherwise throws a <see cref="SubstringException" />.
+    /// </summary>
+    /// <param name="parameter">The string to be checked.</param>
+    /// <param name="value">The other string <paramref name="parameter"/> must not end with.</param>
+    /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType"/> are passed to this delegate.</param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> ends with <paramref name="value" />,
+    /// or when <paramref name="parameter" /> is null,
+    /// or when <paramref name="value" /> is null.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt; exceptionFactory:null => halt")]
+    public static string MustNotEndWith(
+        [NotNull, ValidatedNotNull] this string? parameter,
+        [NotNull, ValidatedNotNull] string value,
+        StringComparison comparisonType,
+        [NotNull, ValidatedNotNull] Func<string?, string, StringComparison, Exception> exceptionFactory
+    )
+    {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract -- caller might have NRTs turned off
+        if (parameter is null || value is null || parameter.EndsWith(value, comparisonType))
+        {
+            Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
+        }
         return parameter;
     }
 
@@ -1238,6 +1581,6 @@ public static partial class Check
     {
         if (parameter is null || !parameter.AsSpan().IsTrimmedAtEnd())
             Throw.CustomException(exceptionFactory, parameter);
-        return parameter!;
+        return parameter;
     }
 }

@@ -93,7 +93,6 @@ public static class MustNotBeSubstringOfTests
     [InlineData("Full of Possibilities", "Death is so terribly final, while life is full of possibilities", StringComparison.OrdinalIgnoreCase)]
     [InlineData(null, "Foo", StringComparison.Ordinal)]
     [InlineData("Bar", null, StringComparison.CurrentCulture)]
-    [InlineData("Baz", "Qux", (StringComparison) (-14))]
     public static void CustomExceptionCustomComparison(string a, string b, StringComparison comparisonType) => 
         Test.CustomException(a,
                              b,
