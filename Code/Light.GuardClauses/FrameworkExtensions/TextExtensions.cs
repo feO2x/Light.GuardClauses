@@ -184,7 +184,8 @@ public static class TextExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("stringBuilder:null => halt; stringBuilder:notnull => notnull")]
-    public static StringBuilder AppendIf([ValidatedNotNull] this StringBuilder stringBuilder, bool condition, string value)
+    // ReSharper disable once RedundantNullableFlowAttribute
+    public static StringBuilder AppendIf([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, bool condition, string value)
     {
         if (condition)
             stringBuilder.MustNotBeNull(nameof(stringBuilder)).Append(value);

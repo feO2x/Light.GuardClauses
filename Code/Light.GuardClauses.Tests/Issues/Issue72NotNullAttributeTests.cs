@@ -1448,4 +1448,18 @@ public static class Issue72NotNullAttributeTests
             return (stringBuilder, items.Count);
         }
     }
+
+    [Fact]
+    public static void CheckAppendIf()
+    {
+        var stringBuilder = new StringBuilder();
+        TestAppendIf(stringBuilder, true, "foo").Should().Be((stringBuilder, 3));
+        return;
+        
+        static (StringBuilder, int) TestAppendIf(StringBuilder? stringBuilder, bool condition, string value)
+        {
+            stringBuilder!.AppendIf(condition, value);
+            return (stringBuilder, value.Length);
+        }
+    }
 }
