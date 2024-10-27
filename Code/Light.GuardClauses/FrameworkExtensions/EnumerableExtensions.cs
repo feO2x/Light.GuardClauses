@@ -116,7 +116,8 @@ public static class EnumerableExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("source:null => halt; source:notnull => notnull")]
-    public static IReadOnlyList<T> AsReadOnlyList<T>([ValidatedNotNull] this IEnumerable<T> source) =>
+    // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+    public static IReadOnlyList<T> AsReadOnlyList<T>([NotNull, ValidatedNotNull] this IEnumerable<T> source) =>
         source as IReadOnlyList<T> ?? source.ToList();
 
     /// <summary>
@@ -130,8 +131,11 @@ public static class EnumerableExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> or <paramref name="createCollection" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("source:null => halt; source:notnull => notnull; createCollection:null => halt")]
-    public static IReadOnlyList<T> AsReadOnlyList<T>([ValidatedNotNull] this IEnumerable<T> source, Func<IEnumerable<T>, IReadOnlyList<T>> createCollection) =>
+    // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+    public static IReadOnlyList<T> AsReadOnlyList<T>([NotNull, ValidatedNotNull] this IEnumerable<T> source, [NotNull, ValidatedNotNull] Func<IEnumerable<T>, IReadOnlyList<T>> createCollection) =>
         source as IReadOnlyList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(source.MustNotBeNull(nameof(source)));
+    // ReSharper restore RedundantNullableFlowAttribute
+
 
     /// <summary>
     /// Gets the count of the specified enumerable.

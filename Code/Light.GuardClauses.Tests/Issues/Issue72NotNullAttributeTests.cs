@@ -1310,4 +1310,24 @@ public static class Issue72NotNullAttributeTests
             return array.Length;
         }
     }
+
+    [Fact]
+    public static void CheckAsReadOnlyList()
+    {
+        TestAsReadOnlyList([1, 2, 3]).Should().Be(3);
+        TestAsReadOnlyListWithDelegate([1, 2, 3], collection => new List<int>(collection)).Should().Be(3);
+        return;
+        
+        static int TestAsReadOnlyList(int[]? array)
+        {
+            array!.AsReadOnlyList();
+            return array.Length;
+        }
+        
+        static int TestAsReadOnlyListWithDelegate(int[]? array, Func<IEnumerable<int>, IReadOnlyList<int>>? collectionFactory)
+        {
+            array!.AsReadOnlyList(collectionFactory!);
+            return array.Length;
+        }
+    }
 }
