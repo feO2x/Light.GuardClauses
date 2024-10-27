@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -10,7 +11,7 @@ namespace Light.GuardClauses.FrameworkExtensions;
 public static class ExpressionExtensions
 {
     /// <summary>
-    /// Extracts the <see cref="PropertyInfo" /> from a expression of the shape "object => object.Property".
+    /// Extracts the <see cref="PropertyInfo" /> from an expression of the shape "object => object.Property".
     /// </summary>
     /// <typeparam name="T">The object type.</typeparam>
     /// <typeparam name="TProperty">The type of the property.</typeparam>
@@ -19,7 +20,8 @@ public static class ExpressionExtensions
     /// <exception cref="ArgumentException">
     /// Throw when the <paramref name="expression" /> is not of the shape "object => object.Property".
     /// </exception>
-    public static PropertyInfo ExtractProperty<T, TProperty>([ValidatedNotNull] this Expression<Func<T, TProperty>> expression)
+    // ReSharper disable once RedundantNullableFlowAttribute - NotNull is not redundant, see Issue72NotNullAttributeTests
+    public static PropertyInfo ExtractProperty<T, TProperty>([NotNull, ValidatedNotNull] this Expression<Func<T, TProperty>> expression)
     {
         expression.MustNotBeNull(nameof(expression));
 
@@ -31,7 +33,7 @@ public static class ExpressionExtensions
     }
 
     /// <summary>
-    /// Extracts the <see cref="FieldInfo" /> from a expression of the shape "object => object.Field".
+    /// Extracts the <see cref="FieldInfo" /> from an expression of the shape "object => object.Field".
     /// </summary>
     /// <typeparam name="T">The object type.</typeparam>
     /// <typeparam name="TField">The type of the field.</typeparam>

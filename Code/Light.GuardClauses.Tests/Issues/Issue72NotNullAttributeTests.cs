@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using FluentAssertions;
@@ -1335,8 +1336,8 @@ public static class Issue72NotNullAttributeTests
     [Fact]
     public static void CheckCount()
     {
-        TestCount(new ArrayList(new[]{ 1, 2, 3 })).Should().Be(3);
-        TestCountWithParameterNameAndMessage(new ArrayList(new[]{ 1, 2, 3 })).Should().Be(3);
+        TestCount(new ArrayList(new[] { 1, 2, 3 })).Should().Be(3);
+        TestCountWithParameterNameAndMessage(new ArrayList(new[] { 1, 2, 3 })).Should().Be(3);
         return;
 
         static int TestCount(ICollection? collection)
@@ -1358,7 +1359,7 @@ public static class Issue72NotNullAttributeTests
         TestGetCount([1, 2, 3]).Should().Be(3);
         TestGetCountWithParameterNameAndMessage([1, 2, 3]).Should().Be(3);
         return;
-        
+
         static int TestGetCount<T>(ICollection<T>? collection)
         {
             collection!.GetCount();
@@ -1369,6 +1370,19 @@ public static class Issue72NotNullAttributeTests
         {
             collection!.GetCount(nameof(collection), "The collection must not be null");
             return collection.Count;
+        }
+    }
+
+    [Fact]
+    public static void CheckExtractProperty()
+    {
+        TestExtractProperty((string a) => a.Length).Should().NotBeNull();
+        return;
+
+        static Type TestExtractProperty<T, TProperty>(Expression<Func<T, TProperty>>? expression)
+        {
+            expression!.ExtractProperty();
+            return expression.Type;
         }
     }
 }
