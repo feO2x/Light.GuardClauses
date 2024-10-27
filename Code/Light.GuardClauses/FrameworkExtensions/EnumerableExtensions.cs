@@ -52,7 +52,8 @@ public static class EnumerableExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("source:null => halt; source:notnull => notnull")]
-    public static T[] AsArray<T>([ValidatedNotNull] this IEnumerable<T> source) => source as T[] ?? source.ToArray();
+    // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+    public static T[] AsArray<T>([NotNull, ValidatedNotNull] this IEnumerable<T> source) => source as T[] ?? source.ToArray();
 
     /// <summary>
     /// Performs the action on each item of the specified enumerable. If the enumerable contains items that are null, this

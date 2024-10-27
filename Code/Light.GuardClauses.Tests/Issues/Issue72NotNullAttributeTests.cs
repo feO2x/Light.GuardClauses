@@ -1284,4 +1284,17 @@ public static class Issue72NotNullAttributeTests
             return list.Count;
         }
     }
+
+    [Fact]
+    public static void CheckAsArray()
+    {
+        TestAsArray([1, 2, 3]).Should().Be(3);
+        return;
+        
+        static int TestAsArray(int[]? array)
+        {
+            array!.AsArray();
+            return array.Length;
+        }
+    }
 }
