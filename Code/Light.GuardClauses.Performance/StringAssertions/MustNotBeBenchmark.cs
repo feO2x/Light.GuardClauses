@@ -25,6 +25,6 @@ namespace Light.GuardClauses.Performance.StringAssertions
 
         [Benchmark]
         public string LightGuardClausesCustomException() =>
-            X.MustNotBe(Y, StringComparisonType.OrdinalIgnoreCaseIgnoreWhiteSpace, (x, y) => new Exception("The strings are equal."));
+            X.MustNotBe(Y, StringComparisonType.OrdinalIgnoreCaseIgnoreWhiteSpace, (_, _, _) => new Exception("The strings are equal."));
     }
 }

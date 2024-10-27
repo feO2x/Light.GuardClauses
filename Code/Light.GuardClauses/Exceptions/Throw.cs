@@ -268,9 +268,41 @@ public static class Throw
     [DoesNotReturn]
     public static void Substring(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
         throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be a substring of \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+    
+    /// <summary>
+    /// Throws the default <see cref="SubstringException"/> indicating that a string does not start with another one, using the optional parameter name and message.
+    /// </summary>
+    [ContractAnnotation("=> halt")]
+    [DoesNotReturn]
+    public static void StringDoesNotStartWith(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
+        throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must start with \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+    
+    /// <summary>
+    /// Throws the default <see cref="SubstringException"/> indicating that a string does start with another one, using the optional parameter name and message.
+    /// </summary>
+    [ContractAnnotation("=> halt")]
+    [DoesNotReturn]
+    public static void StringStartsWith(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
+        throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not start with \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+    
+    /// <summary>
+    /// Throws the default <see cref="SubstringException"/> indicating that a string does not end with another one, using the optional parameter name and message.
+    /// </summary>
+    [ContractAnnotation("=> halt")]
+    [DoesNotReturn]
+    public static void StringDoesNotEndWith(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
+        throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must end with \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+    
+    /// <summary>
+    /// Throws the default <see cref="SubstringException"/> indicating that a string ends with another one, using the optional parameter name and message.
+    /// </summary>
+    [ContractAnnotation("=> halt")]
+    [DoesNotReturn]
+    public static void StringEndsWith(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
+        throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not end with \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
 
     /// <summary>
-    /// Throws the default <see cref="StringLengthException"/> indicating that a string is not shorter than the given length, using the optional parameter name an message.
+    /// Throws the default <see cref="StringLengthException"/> indicating that a string is not shorter than the given length, using the optional parameter name and message.
     /// </summary>
     [ContractAnnotation("=> halt")]
     [DoesNotReturn]
@@ -278,7 +310,7 @@ public static class Throw
         throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be shorter than {length}, but it actually has length {parameter.Length}.");
 
     /// <summary>
-    /// Throws the default <see cref="StringLengthException"/> indicating that a string is not shorter or equal to the given length, using the optional parameter name an message.
+    /// Throws the default <see cref="StringLengthException"/> indicating that a string is not shorter or equal to the given length, using the optional parameter name and message.
     /// </summary>
     [ContractAnnotation("=> halt")]
     [DoesNotReturn]
@@ -286,7 +318,7 @@ public static class Throw
         throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be shorter or equal to {length}, but it actually has length {parameter.Length}.");
 
     /// <summary>
-    /// Throws the default <see cref="StringLengthException"/> indicating that a string has a different length than the specified one, using the optional parameter name an message.
+    /// Throws the default <see cref="StringLengthException"/> indicating that a string has a different length than the specified one, using the optional parameter name and message.
     /// </summary>
     [ContractAnnotation("=> halt")]
     [DoesNotReturn]
@@ -294,7 +326,7 @@ public static class Throw
         throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must have length {length}, but it actually has length {parameter.Length}.");
 
     /// <summary>
-    /// Throws the default <see cref="StringLengthException"/> indicating that a string is not longer than the given length, using the optional parameter name an message.
+    /// Throws the default <see cref="StringLengthException"/> indicating that a string is not longer than the given length, using the optional parameter name and message.
     /// </summary>
     [ContractAnnotation("=> halt")]
     [DoesNotReturn]
@@ -302,7 +334,7 @@ public static class Throw
         throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be longer than {length}, but it actually has length {parameter.Length}.");
 
     /// <summary>
-    /// Throws the default <see cref="StringLengthException"/> indicating that a string is not longer or equal to the given length, using the optional parameter name an message.
+    /// Throws the default <see cref="StringLengthException"/> indicating that a string is not longer or equal to the given length, using the optional parameter name and message.
     /// </summary>
     [ContractAnnotation("=> halt")]
     [DoesNotReturn]
@@ -310,7 +342,7 @@ public static class Throw
         throw new StringLengthException(parameterName, message ?? $"{parameterName ?? "The string"} must be longer than or equal to {length}, but it actually has length {parameter.Length}.");
 
     /// <summary>
-    /// Throws the default <see cref="StringLengthException"/> indicating that a string's length is not in between the given range, using the optional parameter name an message.
+    /// Throws the default <see cref="StringLengthException"/> indicating that a string's length is not in between the given range, using the optional parameter name and message.
     /// </summary>
     [ContractAnnotation("=> halt")]
     [DoesNotReturn]

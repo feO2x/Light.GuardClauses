@@ -56,6 +56,78 @@ public static class RangeTests
     }
 
     [Theory]
+    [InlineData(0, 10, 0)]  // Lower boundary
+    [InlineData(0, 10, 5)]  // Middle value
+    [InlineData(0, 10, 10)] // Upper boundary
+    public static void InclusiveBetween_ValuesInRange(int from, int to, int value)
+    {
+        var range = Range.InclusiveBetween(from, to);
+
+        var result = range.IsValueWithinRange(value);
+
+        result.Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData(0, 10, -1)]  // Below range
+    [InlineData(0, 10, 11)]  // Above range
+    public static void InclusiveBetween_ValuesOutOfRange(int from, int to, int value)
+    {
+        var range = Range.InclusiveBetween(from, to);
+
+        var result = range.IsValueWithinRange(value);
+
+        result.Should().BeFalse();
+    }
+
+    [Theory]
+    [InlineData(0, 10, 1)]   // Just above lower boundary
+    [InlineData(0, 10, 5)]   // Middle value
+    [InlineData(0, 10, 9)]   // Just below upper boundary
+    public static void ExclusiveBetween_ValuesInRange(int from, int to, int value)
+    {
+        var range = Range.ExclusiveBetween(from, to);
+
+        var result = range.IsValueWithinRange(value);
+
+        result.Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData(0, 10, 0)]   // Lower boundary
+    [InlineData(0, 10, 10)]  // Upper boundary
+    [InlineData(0, 10, -1)]  // Below range
+    [InlineData(0, 10, 11)]  // Above range
+    public static void ExclusiveBetween_ValuesOutOfRange(int from, int to, int value)
+    {
+        var range = Range.ExclusiveBetween(from, to);
+
+        var result = range.IsValueWithinRange(value);
+
+        result.Should().BeFalse();
+    }
+
+        [Theory]
+    [InlineData(10, 5)]      // To less than From
+    [InlineData(-5, -10)]    // Negative To less than From
+    public static void InclusiveBetween_InvalidRange_ThrowsException(int from, int to)
+    {
+        Action inclusiveAct = () => Range.InclusiveBetween(from, to);
+        inclusiveAct.Should().Throw<ArgumentOutOfRangeException>()
+            .And.Message.Should().Contain($"{nameof(to)} must not be less than {from}");
+    }
+
+        [Theory]
+    [InlineData(10, 5)]      // To less than From
+    [InlineData(-5, -10)]    // Negative To less than From
+    public static void ExclusiveBetween_InvalidRange_ThrowsException(int from, int to)
+    {
+        Action exclusiveAct = () => Range.ExclusiveBetween(from, to);
+        exclusiveAct.Should().Throw<ArgumentOutOfRangeException>()
+            .And.Message.Should().Contain($"{nameof(to)} must not be less than {from}");
+    }
+
+    [Theory]
     [MemberData(nameof(Collections))]
     public static void RangeForCollections(IEnumerable enumerable)
     {

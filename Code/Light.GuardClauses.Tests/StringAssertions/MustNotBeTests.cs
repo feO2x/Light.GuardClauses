@@ -56,7 +56,8 @@ public static class MustNotBeTests
     public static void CustomExceptionIgnoreWhiteSpace() => 
         Test.CustomException("Foo",
                              "  Foo",
-                             (x, y, exceptionFactory) => x.MustNotBe(y, StringComparisonType.OrdinalIgnoreWhiteSpace, exceptionFactory));
+                             StringComparisonType.OrdinalIgnoreWhiteSpace,
+                             (x, y, ct, exceptionFactory) => x.MustNotBe(y, ct, exceptionFactory));
 
     [Fact]
     public static void CustomMessage() =>

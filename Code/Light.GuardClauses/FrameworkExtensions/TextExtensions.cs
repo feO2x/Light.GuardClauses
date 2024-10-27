@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using JetBrains.Annotations;
+using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace Light.GuardClauses.FrameworkExtensions;
 
@@ -21,21 +22,22 @@ public static class TextExtensions
     /// Gets the list of types that will not be surrounded by quotation marks in error messages.
     /// </summary>
     public static readonly ReadOnlyCollection<Type> UnquotedTypes =
-        new ReadOnlyCollection<Type>(new[]
-        {
-            typeof(int),
-            typeof(long),
-            typeof(short),
-            typeof(sbyte),
-            typeof(uint),
-            typeof(ulong),
-            typeof(ushort),
-            typeof(byte),
-            typeof(bool),
-            typeof(double),
-            typeof(decimal),
-            typeof(float)
-        });
+        new (
+            [
+                typeof(int),
+                typeof(long),
+                typeof(short),
+                typeof(sbyte),
+                typeof(uint),
+                typeof(ulong),
+                typeof(ushort),
+                typeof(byte),
+                typeof(bool),
+                typeof(double),
+                typeof(decimal),
+                typeof(float)
+            ]
+        );
 
     private static bool IsUnquotedType<T>()
     {
@@ -83,11 +85,11 @@ public static class TextExtensions
     /// </summary>
     /// <param name="value">The value whose string representation is requested.</param>
     [ContractAnnotation("value:null => halt; value:notnull => notnull")]
-    public static string? ToStringRepresentation<T>([ValidatedNotNull] this T value)
+    public static string? ToStringRepresentation<T>([NotNull, ValidatedNotNull] this T value)
     {
         value.MustNotBeNullReference(nameof(value));
 
-        var content = value!.ToString();
+        var content = value.ToString();
         if (IsUnquotedType<T>() || content.IsNullOrEmpty())
             return content;
 
@@ -95,7 +97,7 @@ public static class TextExtensions
         if (content.Length <= 126)
         {
             Span<char> span = stackalloc char[content.Length + 2];
-            span[0] = span[span.Length -1] = '"';
+            span[0] = span[span.Length - 1] = '"';
             content.AsSpan().CopyTo(span.Slice(1, content.Length));
             return span.ToString();
         }
@@ -120,10 +122,12 @@ public static class TextExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> or <paramref name="items" />is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("stringBuilder:null => halt; items:null => halt; stringBuilder:notnull => notnull")]
-    public static StringBuilder AppendCollectionContent<T>([ValidatedNotNull] this StringBuilder stringBuilder, [ValidatedNotNull] IEnumerable<T> items, string headerLine = "Content of the collection:", bool finishWithNewLine = true) =>
+    // ReSharper disable RedundantNullableFlowAttribute
+    public static StringBuilder AppendCollectionContent<T>([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, [NotNull, ValidatedNotNull] IEnumerable<T> items, string headerLine = "Content of the collection:", bool finishWithNewLine = true) =>
         stringBuilder.MustNotBeNull(nameof(stringBuilder))
                      .AppendLine(headerLine)
                      .AppendItemsWithNewLine(items, finishWithNewLine: finishWithNewLine);
+    // ReSharper restore RedundantNullableFlowAttribute
 
     /// <summary>
     /// Appends the string representations of the specified items to the string builder.
@@ -134,7 +138,9 @@ public static class TextExtensions
     /// <param name="emptyCollectionText">The text that is appended to the string builder when <paramref name="items" /> is empty. Defaults to "empty collection".</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> or <paramref name="items" /> is null.</exception>
     [ContractAnnotation("stringBuilder:null => halt; items:null => halt; stringBuilder:notnull => notnull")]
-    public static StringBuilder AppendItems<T>([ValidatedNotNull] this StringBuilder stringBuilder, [ValidatedNotNull] IEnumerable<T> items, string itemSeparator = ", ", string emptyCollectionText = "empty collection")
+    // ReSharper disable RedundantNullableFlowAttribute
+    public static StringBuilder AppendItems<T>([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, [NotNull, ValidatedNotNull] IEnumerable<T> items, string itemSeparator = ", ", string emptyCollectionText = "empty collection")
+        // ReSharper restore RedundantNullableFlowAttribute
     {
         stringBuilder.MustNotBeNull(nameof(stringBuilder));
         var list = items.MustNotBeNull(nameof(items)).AsList();
@@ -165,20 +171,23 @@ public static class TextExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> or <paramref name="items" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("stringBuilder:null => halt; items:null => halt; stringBuilder:notnull => notnull")]
-    public static StringBuilder AppendItemsWithNewLine<T>([ValidatedNotNull] this StringBuilder stringBuilder, [ValidatedNotNull] IEnumerable<T> items, string emptyCollectionText = "empty collection", bool finishWithNewLine = true) =>
+    // ReSharper disable RedundantNullableFlowAttribute
+    public static StringBuilder AppendItemsWithNewLine<T>([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, [NotNull, ValidatedNotNull] IEnumerable<T> items, string emptyCollectionText = "empty collection", bool finishWithNewLine = true) =>
         stringBuilder.AppendItems(items, DefaultNewLineSeparator, emptyCollectionText)
                      .AppendLineIf(finishWithNewLine);
+    // ReSharper restore RedundantNullableFlowAttribute
 
     /// <summary>
     /// Appends the value to the specified string builder if the condition is true.
     /// </summary>
     /// <param name="stringBuilder">The string builder where <paramref name="value" /> will be appended to.</param>
-    /// <param name="condition">The boolean value indicating whether the append will be performed or not.</param>
+    /// <param name="condition">The boolean value indicating whether the append operation will be performed or not.</param>
     /// <param name="value">The value to be appended to the string builder.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("stringBuilder:null => halt; stringBuilder:notnull => notnull")]
-    public static StringBuilder AppendIf([ValidatedNotNull] this StringBuilder stringBuilder, bool condition, string value)
+    // ReSharper disable once RedundantNullableFlowAttribute
+    public static StringBuilder AppendIf([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, bool condition, string value)
     {
         if (condition)
             stringBuilder.MustNotBeNull(nameof(stringBuilder)).Append(value);
@@ -189,12 +198,13 @@ public static class TextExtensions
     /// Appends the value followed by a new line separator to the specified string builder if the condition is true.
     /// </summary>
     /// <param name="stringBuilder">The string builder where <paramref name="value" /> will be appended to.</param>
-    /// <param name="condition">The boolean value indicating whether the append will be performed or not.</param>
+    /// <param name="condition">The boolean value indicating whether the append operation will be performed or not.</param>
     /// <param name="value">The value to be appended to the string builder (optional). This value defaults to an empty string.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("stringBuilder:null => halt; stringBuilder:notnull => notnull")]
-    public static StringBuilder AppendLineIf([ValidatedNotNull] this StringBuilder stringBuilder, bool condition, string value = "")
+    // ReSharper disable once RedundantNullableFlowAttribute
+    public static StringBuilder AppendLineIf([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, bool condition, string value = "")
     {
         if (condition)
             stringBuilder.MustNotBeNull(nameof(stringBuilder)).AppendLine(value);
@@ -206,7 +216,9 @@ public static class TextExtensions
     /// specified <paramref name="stringBuilder" />.
     /// </summary>
     /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
-    public static StringBuilder AppendExceptionMessages([ValidatedNotNull] this StringBuilder stringBuilder, [ValidatedNotNull] Exception exception)
+    // ReSharper disable RedundantNullableFlowAttribute
+    public static StringBuilder AppendExceptionMessages([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, [NotNull, ValidatedNotNull] Exception exception)
+        // ReSharper restore RedundantNullableFlowAttribute
     {
         stringBuilder.MustNotBeNull(nameof(stringBuilder));
         exception.MustNotBeNull(nameof(exception));
@@ -228,7 +240,8 @@ public static class TextExtensions
     /// a single string.
     /// </summary>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="exception" /> is null.</exception>
-    public static string GetAllExceptionMessages([ValidatedNotNull] this Exception exception) =>
+    // ReSharper disable once RedundantNullableFlowAttribute
+    public static string GetAllExceptionMessages([NotNull, ValidatedNotNull] this Exception exception) =>
         new StringBuilder().AppendExceptionMessages(exception).ToString();
 
     /// <summary>
@@ -252,7 +265,7 @@ public static class TextExtensions
         bool wasYSuccessful;
         // This condition of the while loop actually has to use the single '&' operator because
         // y.TryAdvanceToNextNonWhiteSpaceCharacter must be called even though it already returned
-        // false on x. Otherwise the 'wasXSuccessful == wasYSuccessful' comparison would not return
+        // false on x. Otherwise, the 'wasXSuccessful == wasYSuccessful' comparison would not return
         // the desired result.
         while ((wasXSuccessful = x.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexX)) &
                (wasYSuccessful = y.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexY)))
@@ -285,7 +298,7 @@ public static class TextExtensions
         bool wasYSuccessful;
         // This condition of the while loop actually has to use the single '&' operator because
         // y.TryAdvanceToNextNonWhiteSpaceCharacter must be called even though it already returned
-        // false on x. Otherwise the 'wasXSuccessful == wasYSuccessful' comparison would not return
+        // false on x. Otherwise, the 'wasXSuccessful == wasYSuccessful' comparison would not return
         // the desired result.
         while ((wasXSuccessful = x.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexX)) &
                (wasYSuccessful = y.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexY)))

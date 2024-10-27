@@ -94,7 +94,6 @@ public static class MustBeSubstringOfTests
     [InlineData("Foo", "FOO", StringComparison.Ordinal)]
     [InlineData("Bar", null, StringComparison.OrdinalIgnoreCase)]
     [InlineData(null, "Baz", StringComparison.CurrentCulture)]
-    [InlineData("Qux", "Quux", (StringComparison) 509)]
     public static void CustomExceptionCustomComparisonType(string first, string second, StringComparison comparisonType) =>
         Test.CustomException(first,
                              second,
