@@ -1462,4 +1462,18 @@ public static class Issue72NotNullAttributeTests
             return (stringBuilder, value.Length);
         }
     }
+
+    [Fact]
+    public static void CheckAppendLineIf()
+    {
+        var stringBuilder = new StringBuilder();
+        TestAppendLineIf(stringBuilder, true, "foo").Should().Be((stringBuilder, 3));
+        return;
+        
+        static (StringBuilder, int) TestAppendLineIf(StringBuilder? stringBuilder, bool condition, string value)
+        {
+            stringBuilder!.AppendLineIf(condition, value);
+            return (stringBuilder, value.Length);
+        }
+    }
 }

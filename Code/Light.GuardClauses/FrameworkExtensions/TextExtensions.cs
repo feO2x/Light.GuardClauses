@@ -179,7 +179,7 @@ public static class TextExtensions
     /// Appends the value to the specified string builder if the condition is true.
     /// </summary>
     /// <param name="stringBuilder">The string builder where <paramref name="value" /> will be appended to.</param>
-    /// <param name="condition">The boolean value indicating whether the append will be performed or not.</param>
+    /// <param name="condition">The boolean value indicating whether the append operation will be performed or not.</param>
     /// <param name="value">The value to be appended to the string builder.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -196,12 +196,13 @@ public static class TextExtensions
     /// Appends the value followed by a new line separator to the specified string builder if the condition is true.
     /// </summary>
     /// <param name="stringBuilder">The string builder where <paramref name="value" /> will be appended to.</param>
-    /// <param name="condition">The boolean value indicating whether the append will be performed or not.</param>
+    /// <param name="condition">The boolean value indicating whether the append operation will be performed or not.</param>
     /// <param name="value">The value to be appended to the string builder (optional). This value defaults to an empty string.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("stringBuilder:null => halt; stringBuilder:notnull => notnull")]
-    public static StringBuilder AppendLineIf([ValidatedNotNull] this StringBuilder stringBuilder, bool condition, string value = "")
+    // ReSharper disable once RedundantNullableFlowAttribute
+    public static StringBuilder AppendLineIf([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, bool condition, string value = "")
     {
         if (condition)
             stringBuilder.MustNotBeNull(nameof(stringBuilder)).AppendLine(value);
@@ -259,7 +260,7 @@ public static class TextExtensions
         bool wasYSuccessful;
         // This condition of the while loop actually has to use the single '&' operator because
         // y.TryAdvanceToNextNonWhiteSpaceCharacter must be called even though it already returned
-        // false on x. Otherwise the 'wasXSuccessful == wasYSuccessful' comparison would not return
+        // false on x. Otherwise, the 'wasXSuccessful == wasYSuccessful' comparison would not return
         // the desired result.
         while ((wasXSuccessful = x.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexX)) &
                (wasYSuccessful = y.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexY)))
@@ -292,7 +293,7 @@ public static class TextExtensions
         bool wasYSuccessful;
         // This condition of the while loop actually has to use the single '&' operator because
         // y.TryAdvanceToNextNonWhiteSpaceCharacter must be called even though it already returned
-        // false on x. Otherwise the 'wasXSuccessful == wasYSuccessful' comparison would not return
+        // false on x. Otherwise, the 'wasXSuccessful == wasYSuccessful' comparison would not return
         // the desired result.
         while ((wasXSuccessful = x.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexX)) &
                (wasYSuccessful = y.TryAdvanceToNextNonWhiteSpaceCharacter(ref indexY)))
