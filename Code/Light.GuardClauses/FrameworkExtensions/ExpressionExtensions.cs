@@ -42,7 +42,8 @@ public static class ExpressionExtensions
     /// <exception cref="ArgumentException">
     /// Throw when the <paramref name="expression" /> is not of the shape "object => object.Field".
     /// </exception>
-    public static FieldInfo ExtractField<T, TField>([ValidatedNotNull] this Expression<Func<T, TField>> expression)
+    // ReSharper disable once RedundantNullableFlowAttribute - NotNull is not redundant, see Issue72NotNullAttributeTests
+    public static FieldInfo ExtractField<T, TField>([NotNull, ValidatedNotNull] this Expression<Func<T, TField>> expression)
     {
         expression.MustNotBeNull(nameof(expression));
 

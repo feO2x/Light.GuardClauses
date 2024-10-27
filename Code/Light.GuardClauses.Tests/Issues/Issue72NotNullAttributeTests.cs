@@ -1385,4 +1385,25 @@ public static class Issue72NotNullAttributeTests
             return expression.Type;
         }
     }
+
+    [Fact]
+    public static void CheckExtractField()
+    {
+        TestExtractField((TestClassWithPublicField x) => x.PublicField).Should().NotBeNull();
+        return;
+
+        static Type TestExtractField<T, TField>(Expression<Func<T, TField>>? expression)
+        {
+            expression!.ExtractField();
+            return expression.Type;
+        }
+    }
+
+    private sealed class TestClassWithPublicField
+    {
+#pragma warning disable CS0414 // Field is assigned but its value is never used
+        // ReSharper disable once ConvertToConstant.Local
+        public readonly int PublicField = 42;
+#pragma warning restore CS0414
+    }
 }
