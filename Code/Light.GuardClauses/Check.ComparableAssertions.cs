@@ -335,7 +335,7 @@ public static partial class Check
     /// <returns>True if the parameter is not within the specified range, else false.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsNotIn<T>([ValidatedNotNull] this T parameter, Range<T> range) where T : IComparable<T> => !range.IsValueWithinRange(parameter);
+    public static bool IsNotIn<T>([NotNull, ValidatedNotNull] this T parameter, Range<T> range) where T : IComparable<T> => !range.IsValueWithinRange(parameter);
 
     /// <summary>
     /// Ensures that <paramref name="parameter" /> is within the specified range, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
