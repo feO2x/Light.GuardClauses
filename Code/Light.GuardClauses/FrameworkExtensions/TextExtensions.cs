@@ -240,7 +240,8 @@ public static class TextExtensions
     /// a single string.
     /// </summary>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="exception" /> is null.</exception>
-    public static string GetAllExceptionMessages([ValidatedNotNull] this Exception exception) =>
+    // ReSharper disable once RedundantNullableFlowAttribute
+    public static string GetAllExceptionMessages([NotNull, ValidatedNotNull] this Exception exception) =>
         new StringBuilder().AppendExceptionMessages(exception).ToString();
 
     /// <summary>

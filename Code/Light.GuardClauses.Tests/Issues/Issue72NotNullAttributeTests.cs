@@ -1504,4 +1504,17 @@ public static class Issue72NotNullAttributeTests
             return (stringBuilder, exception.Message.Length);
         }
     }
+
+    [Fact]
+    public static void CheckGetAllExceptionMessages()
+    {
+        TestGetAllExceptionMessages(new Exception("foo")).Should().Be(3);
+        return;
+        
+        static int TestGetAllExceptionMessages(Exception? exception)
+        {
+            exception!.GetAllExceptionMessages();
+            return exception.Message.Length;
+        }
+    }
 }
