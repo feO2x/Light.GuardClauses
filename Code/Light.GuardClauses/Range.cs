@@ -133,7 +133,7 @@ public readonly struct Range<T> : IEquatable<Range<T>> where T : IComparable<T>
         $"Range from {CreateRangeDescriptionText()}";
 
     /// <summary>
-    /// Returns either "inclusive" or "exclusive", depending whether <see cref="IsFromInclusive"/> is true or false.
+    /// Returns either "inclusive" or "exclusive", depending on whether <see cref="IsFromInclusive"/> is true or false.
     /// </summary>
     public string LowerBoundaryText
     {
@@ -142,7 +142,7 @@ public readonly struct Range<T> : IEquatable<Range<T>> where T : IComparable<T>
     }
 
     /// <summary>
-    /// Returns either "inclusive" or "exclusive", depending whether <see cref="IsToInclusive"/> is true or false.
+    /// Returns either "inclusive" or "exclusive", depending on whether <see cref="IsToInclusive"/> is true or false.
     /// </summary>
     public string UpperBoundaryText
     {
@@ -215,6 +215,26 @@ public static class Range
     /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Range<T>.RangeFromInfo FromExclusive<T>(T value) where T : IComparable<T> => new (value, false);
+
+    /// <summary>
+    /// Creates a range with both boundaries inclusive.
+    /// </summary>
+    /// <param name="from">The lower boundary of the range.</param>
+    /// <param name="to">The upper boundary of the range.</param>
+    /// <returns>A new range with both boundaries inclusive.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="to" /> is less than <paramref name="from" />.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Range<T> InclusiveBetween<T>(T from, T to) where T : IComparable<T> => new (from, to);
+
+    /// <summary>
+    /// Creates a range with both boundaries exclusive.
+    /// </summary>
+    /// <param name="from">The lower boundary of the range.</param>
+    /// <param name="to">The upper boundary of the range.</param>
+    /// <returns>A new range with both boundaries exclusive.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="to" /> is less than <paramref name="from" />.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Range<T> ExclusiveBetween<T>(T from, T to) where T : IComparable<T> => new (from, to, false, false);
 
     /// <summary>
     /// Creates a range for the specified enumerable that encompasses all valid indexes.
