@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using JetBrains.Annotations;
+using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace Light.GuardClauses.FrameworkExtensions;
 
@@ -21,21 +22,22 @@ public static class TextExtensions
     /// Gets the list of types that will not be surrounded by quotation marks in error messages.
     /// </summary>
     public static readonly ReadOnlyCollection<Type> UnquotedTypes =
-        new ReadOnlyCollection<Type>(new[]
-        {
-            typeof(int),
-            typeof(long),
-            typeof(short),
-            typeof(sbyte),
-            typeof(uint),
-            typeof(ulong),
-            typeof(ushort),
-            typeof(byte),
-            typeof(bool),
-            typeof(double),
-            typeof(decimal),
-            typeof(float)
-        });
+        new (
+            [
+                typeof(int),
+                typeof(long),
+                typeof(short),
+                typeof(sbyte),
+                typeof(uint),
+                typeof(ulong),
+                typeof(ushort),
+                typeof(byte),
+                typeof(bool),
+                typeof(double),
+                typeof(decimal),
+                typeof(float)
+            ]
+        );
 
     private static bool IsUnquotedType<T>()
     {
@@ -87,7 +89,7 @@ public static class TextExtensions
     {
         value.MustNotBeNullReference(nameof(value));
 
-        var content = value!.ToString();
+        var content = value.ToString();
         if (IsUnquotedType<T>() || content.IsNullOrEmpty())
             return content;
 
@@ -95,7 +97,7 @@ public static class TextExtensions
         if (content.Length <= 126)
         {
             Span<char> span = stackalloc char[content.Length + 2];
-            span[0] = span[span.Length -1] = '"';
+            span[0] = span[span.Length - 1] = '"';
             content.AsSpan().CopyTo(span.Slice(1, content.Length));
             return span.ToString();
         }
@@ -120,10 +122,12 @@ public static class TextExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="stringBuilder" /> or <paramref name="items" />is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("stringBuilder:null => halt; items:null => halt; stringBuilder:notnull => notnull")]
-    public static StringBuilder AppendCollectionContent<T>([ValidatedNotNull] this StringBuilder stringBuilder, [ValidatedNotNull] IEnumerable<T> items, string headerLine = "Content of the collection:", bool finishWithNewLine = true) =>
+    // ReSharper disable RedundantNullableFlowAttribute
+    public static StringBuilder AppendCollectionContent<T>([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, [NotNull, ValidatedNotNull] IEnumerable<T> items, string headerLine = "Content of the collection:", bool finishWithNewLine = true) =>
         stringBuilder.MustNotBeNull(nameof(stringBuilder))
                      .AppendLine(headerLine)
                      .AppendItemsWithNewLine(items, finishWithNewLine: finishWithNewLine);
+    // ReSharper restore RedundantNullableFlowAttribute
 
     /// <summary>
     /// Appends the string representations of the specified items to the string builder.

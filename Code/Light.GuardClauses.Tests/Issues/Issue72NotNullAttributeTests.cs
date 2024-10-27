@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Text.RegularExpressions;
 using FluentAssertions;
 using Light.GuardClauses.FrameworkExtensions;
@@ -1405,5 +1406,19 @@ public static class Issue72NotNullAttributeTests
         // ReSharper disable once ConvertToConstant.Local
         public readonly int PublicField = 42;
 #pragma warning restore CS0414
+    }
+
+    [Fact]
+    public static void CheckAppendCollectionContent()
+    {
+        var stringBuilder = new StringBuilder();
+        TestAppendCollectionContent(stringBuilder, [1, 2, 3]).Should().Be((stringBuilder, 3));
+        return;
+        
+        static (StringBuilder, int) TestAppendCollectionContent<T>(StringBuilder? stringBuilder, ICollection<T>? items)
+        {
+            stringBuilder!.AppendCollectionContent(items!);
+            return (stringBuilder, items.Count);
+        }
     }
 }
