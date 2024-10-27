@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
 using System.Runtime.CompilerServices;
+using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace Light.GuardClauses;
 
@@ -28,7 +29,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustNotBeNullOrEmpty([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustNotBeNullOrEmpty([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter is null)
             Throw.ArgumentNull(parameterName, message);
@@ -46,16 +47,12 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is an empty string or null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-    public static string MustNotBeNullOrEmpty([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+    public static string MustNotBeNullOrEmpty([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
     {
-        if (string.IsNullOrEmpty(parameter))
+        if (parameter.IsNullOrEmpty())
             Throw.CustomException(exceptionFactory, parameter);
-        
-#if NETSTANDARD2_0
-        return parameter!;
-#else
+
         return parameter;
-#endif
     }
 
     /// <summary>
@@ -77,11 +74,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustNotBeNullOrWhiteSpace([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustNotBeNullOrWhiteSpace([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         parameter.MustNotBeNullOrEmpty(parameterName, message);
 
-        foreach (var character in parameter!)
+        foreach (var character in parameter)
         {
             if (!character.IsWhiteSpace())
                 return parameter;
@@ -99,7 +96,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is null, empty, or contains only white space.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory: null => halt")]
-    public static string MustNotBeNullOrWhiteSpace([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+    public static string MustNotBeNullOrWhiteSpace([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
     {
         if (parameter.IsNullOrWhiteSpace())
             Throw.CustomException(exceptionFactory, parameter);
@@ -280,11 +277,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="regex" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; regex:null => halt")]
-    public static string MustMatch([ValidatedNotNull] this string? parameter, Regex regex, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustMatch([NotNull, ValidatedNotNull] this string? parameter, Regex regex, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!regex.MustNotBeNull(nameof(regex), message).IsMatch(parameter.MustNotBeNull(parameterName, message)))
-            Throw.StringDoesNotMatch(parameter!, regex, parameterName, message);
-        return parameter!;
+            Throw.StringDoesNotMatch(parameter, regex, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -299,7 +296,7 @@ public static partial class Check
     /// or when <paramref name="regex" /> is null.
     /// </exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string MustMatch([ValidatedNotNull] this string? parameter, Regex regex, Func<string?, Regex, Exception> exceptionFactory)
+    public static string MustMatch([NotNull, ValidatedNotNull] this string? parameter, Regex regex, Func<string?, Regex, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || regex is null || !regex.IsMatch(parameter))
@@ -340,11 +337,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustContain([ValidatedNotNull] this string? parameter, string? value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustContain([NotNull, ValidatedNotNull] this string? parameter, string? value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!parameter.MustNotBeNull(parameterName, message).Contains(value.MustNotBeNull(nameof(value), message)))
-            Throw.StringDoesNotContain(parameter!, value!, parameterName, message);
-        return parameter!;
+            Throw.StringDoesNotContain(parameter, value, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -360,7 +357,7 @@ public static partial class Check
     /// </exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustContain([ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
+    public static string MustContain([NotNull, ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || !parameter.Contains(value))
@@ -381,11 +378,11 @@ public static partial class Check
     /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustContain([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).IndexOf(value.MustNotBeNull(nameof(value), message), comparisonType) < 0)
-            Throw.StringDoesNotContain(parameter!, value, comparisonType, parameterName, message);
-        return parameter!;
+            Throw.StringDoesNotContain(parameter, value, comparisonType, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -403,7 +400,7 @@ public static partial class Check
     /// </exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
+    public static string MustContain([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) < 0)
@@ -422,11 +419,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustNotContain([NotNull, ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).Contains(value.MustNotBeNull(nameof(value), message)))
-            Throw.StringContains(parameter!, value, parameterName, message);
-        return parameter!;
+            Throw.StringContains(parameter, value, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -442,7 +439,7 @@ public static partial class Check
     /// </exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
+    public static string MustNotContain([NotNull, ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || parameter.Contains(value))
@@ -463,11 +460,11 @@ public static partial class Check
     /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustNotContain([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).IndexOf(value.MustNotBeNull(nameof(value), message), comparisonType) >= 0)
-            Throw.StringContains(parameter!, value, comparisonType, parameterName, message);
-        return parameter!;
+            Throw.StringContains(parameter, value, comparisonType, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -485,7 +482,7 @@ public static partial class Check
     /// </exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustNotContain([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
+    public static string MustNotContain([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) >= 0)
@@ -504,7 +501,8 @@ public static partial class Check
     /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("string:null => halt; value:null => halt")]
-    public static bool Contains([ValidatedNotNull] this string @string, string value, StringComparison comparisonType) =>
+    // ReSharper disable once RedundantNullableFlowAttribute
+    public static bool Contains([NotNull, ValidatedNotNull] this string @string, string value, StringComparison comparisonType) =>
         @string.MustNotBeNull(nameof(@string)).IndexOf(value.MustNotBeNull(nameof(value)), comparisonType) >= 0;
 
     /// <summary>
@@ -516,8 +514,10 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="value" /> or <paramref name="other" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("value:null => halt; other:null => halt")]
-    public static bool IsSubstringOf([ValidatedNotNull] this string value, [ValidatedNotNull] string other) =>
+    // ReSharper disable RedundantNullableFlowAttribute
+    public static bool IsSubstringOf([NotNull, ValidatedNotNull] this string value, [NotNull, ValidatedNotNull] string other) =>
         other.MustNotBeNull(nameof(other)).Contains(value);
+    // ReSharper restore RedundantNullableFlowAttribute
 
     /// <summary>
     /// Checks if the string is a substring of the other string.
@@ -530,8 +530,10 @@ public static partial class Check
     /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("value:null => halt; other:null => halt")]
-    public static bool IsSubstringOf(this string value, string other, StringComparison comparisonType) =>
+    // ReSharper disable RedundantNullableFlowAttribute
+    public static bool IsSubstringOf([NotNull, ValidatedNotNull] this string value, [NotNull, ValidatedNotNull] string other, StringComparison comparisonType) =>
         other.MustNotBeNull(nameof(other)).IndexOf(value, comparisonType) != -1;
+    // ReSharper disable RedundantNullableFlowAttribute
 
     /// <summary>
     /// Ensures that the string is a substring of the specified other string, or otherwise throws a <see cref="SubstringException" />.
@@ -544,11 +546,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-    public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!value.MustNotBeNull(nameof(value), message).Contains(parameter.MustNotBeNull(parameterName, message)))
-            Throw.NotSubstring(parameter!, value, parameterName, message);
-        return parameter!;
+            Throw.NotSubstring(parameter, value, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -564,7 +566,7 @@ public static partial class Check
     /// </exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-    public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
+    public static string MustBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || !value.Contains(parameter))
@@ -585,11 +587,11 @@ public static partial class Check
     /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-    public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (value.MustNotBeNull(nameof(value), message).IndexOf(parameter.MustNotBeNull(parameterName, message), comparisonType) == -1)
-            Throw.NotSubstring(parameter!, value, comparisonType, parameterName, message);
-        return parameter!;
+            Throw.NotSubstring(parameter, value, comparisonType, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -607,7 +609,7 @@ public static partial class Check
     /// </exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-    public static string MustBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
+    public static string MustBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || value.IndexOf(parameter, comparisonType) == -1)
@@ -626,11 +628,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-    public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustNotBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (value.MustNotBeNull(nameof(value), message).Contains(parameter.MustNotBeNull(parameterName, message)))
-            Throw.Substring(parameter!, value, parameterName, message);
-        return parameter!;
+            Throw.Substring(parameter, value, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -647,7 +649,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> or <paramref name="value" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-    public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
+    public static string MustNotBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, Func<string?, string, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || value.Contains(parameter))
@@ -668,11 +670,11 @@ public static partial class Check
     /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-    public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustNotBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (value.MustNotBeNull(nameof(value), message).IndexOf(parameter.MustNotBeNull(parameterName, message), comparisonType) != -1)
-            Throw.Substring(parameter!, value, comparisonType, parameterName, message);
-        return parameter!;
+            Throw.Substring(parameter, value, comparisonType, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -690,7 +692,7 @@ public static partial class Check
     /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
-    public static string MustNotBeSubstringOf([ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
+    public static string MustNotBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || value.IndexOf(parameter, comparisonType) != -1)
@@ -730,11 +732,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustBeEmailAddress([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!parameter.MustNotBeNull(parameterName, message).IsEmailAddress())
-            Throw.InvalidEmailAddress(parameter!, parameterName, message);
-        return parameter!;
+            Throw.InvalidEmailAddress(parameter, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -746,7 +748,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or no valid email address.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+    public static string MustBeEmailAddress([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
     {
         if (!parameter.IsEmailAddress())
             Throw.CustomException(exceptionFactory, parameter);
@@ -765,11 +767,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; emailAddressPattern:null => halt")]
-    public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, Regex emailAddressPattern, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustBeEmailAddress([NotNull, ValidatedNotNull] this string? parameter, Regex emailAddressPattern, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!parameter.MustNotBeNull(parameterName, message).IsEmailAddress(emailAddressPattern))
-            Throw.InvalidEmailAddress(parameter!, parameterName, message);
-        return parameter!;
+            Throw.InvalidEmailAddress(parameter, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -782,7 +784,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or no valid email address.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; emailAddressPattern:null => halt")]
-    public static string MustBeEmailAddress([ValidatedNotNull] this string? parameter, Regex emailAddressPattern, Func<string?, Regex, Exception> exceptionFactory)
+    public static string MustBeEmailAddress([NotNull, ValidatedNotNull] this string? parameter, Regex emailAddressPattern, Func<string?, Regex, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (emailAddressPattern is null || !parameter.IsEmailAddress(emailAddressPattern))
@@ -801,11 +803,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeShorterThan([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustBeShorterThan([NotNull, ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).Length >= length)
-            Throw.StringNotShorterThan(parameter!, length, parameterName, message);
-        return parameter!;
+            Throw.StringNotShorterThan(parameter, length, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -817,7 +819,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or when it has a length greater than or equal to <paramref name="length"/>.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeShorterThan([ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
+    public static string MustBeShorterThan([NotNull, ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
     {
         if (parameter is null || parameter.Length >= length)
             Throw.CustomException(exceptionFactory, parameter, length);
@@ -835,11 +837,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeShorterThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustBeShorterThanOrEqualTo([NotNull, ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).Length > length)
-            Throw.StringNotShorterThanOrEqualTo(parameter!, length, parameterName, message);
-        return parameter!;
+            Throw.StringNotShorterThanOrEqualTo(parameter, length, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -851,7 +853,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or when it has a length greater than <paramref name="length"/>.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeShorterThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
+    public static string MustBeShorterThanOrEqualTo([NotNull, ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
     {
         if (parameter is null || parameter.Length > length)
             Throw.CustomException(exceptionFactory, parameter, length);
@@ -865,15 +867,15 @@ public static partial class Check
     /// <param name="length">The asserted length of the string.</param>
     /// <param name="parameterName">The name of the parameter (optional).</param>
     /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
-    /// <exception cref="StringLengthException">Thrown when <paramref name="parameter"/> has a length different than <paramref name="length"/>.</exception>
+    /// <exception cref="StringLengthException">Thrown when <paramref name="parameter"/> has a length other than <paramref name="length"/>.</exception>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustHaveLength([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustHaveLength([NotNull, ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).Length != length)
-            Throw.StringLengthNotEqualTo(parameter!, length, parameterName, message);
-        return parameter!;
+            Throw.StringLengthNotEqualTo(parameter, length, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -882,10 +884,10 @@ public static partial class Check
     /// <param name="parameter">The string to be checked.</param>
     /// <param name="length">The asserted length of the string.</param>
     /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter"/> and <paramref name="length"/> are passed to this delegate.</param>
-    /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or when it has a length different than <paramref name="length"/>.</exception>
+    /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or when it has a length other than <paramref name="length"/>.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustHaveLength([ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
+    public static string MustHaveLength([NotNull, ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
     {
         if (parameter is null || parameter.Length != length)
             Throw.CustomException(exceptionFactory, parameter, length);
@@ -903,11 +905,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeLongerThan([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustBeLongerThan([NotNull, ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).Length <= length)
-            Throw.StringNotLongerThan(parameter!, length, parameterName, message);
-        return parameter!;
+            Throw.StringNotLongerThan(parameter, length, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -919,7 +921,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or when it has a length shorter than or equal to <paramref name="length"/>.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeLongerThan([ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
+    public static string MustBeLongerThan([NotNull, ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
     {
         if (parameter is null || parameter.Length <= length)
             Throw.CustomException(exceptionFactory, parameter, length);
@@ -937,11 +939,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeLongerThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustBeLongerThanOrEqualTo([NotNull, ValidatedNotNull] this string? parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).Length < length)
-            Throw.StringNotLongerThanOrEqualTo(parameter!, length, parameterName, message);
-        return parameter!;
+            Throw.StringNotLongerThanOrEqualTo(parameter, length, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -953,7 +955,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or when it has a length shorter than <paramref name="length"/>.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeLongerThanOrEqualTo([ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
+    public static string MustBeLongerThanOrEqualTo([NotNull, ValidatedNotNull] this string? parameter, int length, Func<string?, int, Exception> exceptionFactory)
     {
         if (parameter is null || parameter.Length < length)
             Throw.CustomException(exceptionFactory, parameter, length);
@@ -971,11 +973,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustHaveLengthIn([ValidatedNotNull] this string? parameter, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustHaveLengthIn([NotNull, ValidatedNotNull] this string? parameter, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!range.IsValueWithinRange(parameter.MustNotBeNull(parameterName, message).Length))
-            Throw.StringLengthNotInRange(parameter!, range, parameterName, message);
-        return parameter!;
+            Throw.StringLengthNotInRange(parameter, range, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -987,7 +989,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or its length is not within the specified range.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustHaveLengthIn([ValidatedNotNull] this string? parameter, Range<int> range, Func<string?, Range<int>, Exception> exceptionFactory)
+    public static string MustHaveLengthIn([NotNull, ValidatedNotNull] this string? parameter, Range<int> range, Func<string?, Range<int>, Exception> exceptionFactory)
     {
         if (parameter is null || !range.IsValueWithinRange(parameter.Length))
             Throw.CustomException(exceptionFactory, parameter, range);
@@ -1012,11 +1014,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeNewLine([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustBeNewLine([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!parameter.MustNotBeNull(parameterName, message).IsNewLine())
-            Throw.NotNewLine(parameter!, parameterName, message);
-        return parameter!;
+            Throw.NotNewLine(parameter, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -1027,7 +1029,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is not equal to "\n" or "\r\n".</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeNewLine([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+    public static string MustBeNewLine([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
     {
         if (!parameter.IsNewLine())
             Throw.CustomException(exceptionFactory, parameter);
@@ -1081,11 +1083,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeTrimmed([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustBeTrimmed([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!parameter.MustNotBeNull(parameterName, message).IsTrimmed())
             Throw.NotTrimmed(parameter, parameterName, message);
-        return parameter!;
+        return parameter;
 
     }
 
@@ -1098,11 +1100,11 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or not trimmed. Empty strings are regarded as trimmed.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeTrimmed([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+    public static string MustBeTrimmed([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
     {
-        if (!parameter.IsTrimmed(regardNullAsTrimmed: false))
+        if (parameter is null || !parameter.AsSpan().IsTrimmed())
             Throw.CustomException(exceptionFactory, parameter);
-        return parameter!;
+        return parameter;
     }
 
     /// <summary>
@@ -1149,11 +1151,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeTrimmedAtStart([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustBeTrimmedAtStart([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!parameter.MustNotBeNull(parameterName, message).IsTrimmedAtStart())
             Throw.NotTrimmedAtStart(parameter, parameterName, message);
-        return parameter!;
+        return parameter;
     }
     
     /// <summary>
@@ -1165,11 +1167,11 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or not trimmed at the start. Empty strings are regarded as trimmed.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeTrimmedAtStart([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+    public static string MustBeTrimmedAtStart([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
     {
-        if (!parameter.IsTrimmedAtStart(regardNullAsTrimmed: false))
+        if (parameter is null || !parameter.AsSpan().IsTrimmedAtStart())
             Throw.CustomException(exceptionFactory, parameter);
-        return parameter!;
+        return parameter;
     }
     
     /// <summary>
@@ -1216,11 +1218,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeTrimmedAtEnd([ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static string MustBeTrimmedAtEnd([NotNull, ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!parameter.MustNotBeNull(parameterName, message).IsTrimmedAtEnd())
             Throw.NotTrimmedAtEnd(parameter, parameterName, message);
-        return parameter!;
+        return parameter;
     }
     
     /// <summary>
@@ -1232,9 +1234,9 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is null or not trimmed at the end. Empty strings are regarded as trimmed.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static string MustBeTrimmedAtEnd([ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+    public static string MustBeTrimmedAtEnd([NotNull, ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
     {
-        if (!parameter.IsTrimmedAtEnd(regardNullAsTrimmed: false))
+        if (parameter is null || !parameter.AsSpan().IsTrimmedAtEnd())
             Throw.CustomException(exceptionFactory, parameter);
         return parameter!;
     }

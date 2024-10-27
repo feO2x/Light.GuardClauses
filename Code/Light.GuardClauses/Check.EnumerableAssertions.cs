@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
+using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace Light.GuardClauses;
 
@@ -23,11 +24,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static TCollection MustHaveCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
+    public static TCollection MustHaveCount<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
     {
         if (parameter!.Count(parameterName, message) != count)
-            Throw.InvalidCollectionCount(parameter!, count, parameterName, message);
-        return parameter!;
+            Throw.InvalidCollectionCount(parameter, count, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -39,7 +40,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> does not have the specified number of items, or when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static TCollection MustHaveCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, Func<TCollection?, int, Exception> exceptionFactory) where TCollection : class, IEnumerable
+    public static TCollection MustHaveCount<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, int count, Func<TCollection?, int, Exception> exceptionFactory) where TCollection : class, IEnumerable
     {
         if (parameter is null || parameter.Count() != count)
             Throw.CustomException(exceptionFactory, parameter, count);
@@ -66,11 +67,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static TCollection MustNotBeNullOrEmpty<TCollection>([ValidatedNotNull] this TCollection? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
+    public static TCollection MustNotBeNullOrEmpty<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
     {
         if (parameter.Count(parameterName, message) == 0)
             Throw.EmptyCollection(parameterName, message);
-        return parameter!;
+        return parameter;
     }
 
     /// <summary>
@@ -81,7 +82,7 @@ public static partial class Check
     /// <exception cref="Exception">Thrown when <paramref name="parameter"/> has no items, or when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static TCollection MustNotBeNullOrEmpty<TCollection>([ValidatedNotNull] this TCollection? parameter, Func<TCollection?, Exception> exceptionFactory) where TCollection : class, IEnumerable
+    public static TCollection MustNotBeNullOrEmpty<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, Func<TCollection?, Exception> exceptionFactory) where TCollection : class, IEnumerable
     {
         if (parameter is null || parameter.Count() == 0)
             Throw.CustomException(exceptionFactory, parameter);
@@ -99,7 +100,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static TCollection MustContain<TCollection, TItem>([ValidatedNotNull] this TCollection? parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable<TItem>
+    public static TCollection MustContain<TCollection, TItem>([NotNull, ValidatedNotNull] this TCollection? parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable<TItem>
     {
         if (parameter is ICollection<TItem> collection)
         {
@@ -109,8 +110,8 @@ public static partial class Check
         }
 
         if (!parameter.MustNotBeNull(parameterName, message).Contains(item))
-            Throw.MissingItem(parameter!, item, parameterName, message);
-        return parameter!;
+            Throw.MissingItem(parameter, item, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -122,7 +123,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="item"/>, or when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static TCollection MustContain<TCollection, TItem>([ValidatedNotNull] this TCollection? parameter, TItem item, Func<TCollection?, TItem, Exception> exceptionFactory) where TCollection : class, IEnumerable<TItem>
+    public static TCollection MustContain<TCollection, TItem>([NotNull, ValidatedNotNull] this TCollection? parameter, TItem item, Func<TCollection?, TItem, Exception> exceptionFactory) where TCollection : class, IEnumerable<TItem>
     {
         if (parameter is ICollection<TItem> collection)
         {
@@ -147,7 +148,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static TCollection MustNotContain<TCollection, TItem>([ValidatedNotNull] this TCollection? parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable<TItem>
+    public static TCollection MustNotContain<TCollection, TItem>([NotNull, ValidatedNotNull] this TCollection? parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable<TItem>
     {
         if (parameter is ICollection<TItem> collection)
         {
@@ -157,8 +158,8 @@ public static partial class Check
         }
 
         if (parameter.MustNotBeNull(parameterName, message).Contains(item))
-            Throw.ExistingItem(parameter!, item, parameterName, message);
-        return parameter!;
+            Throw.ExistingItem(parameter, item, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -170,7 +171,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="item"/>.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static TCollection MustNotContain<TCollection, TItem>([ValidatedNotNull] this TCollection? parameter, TItem item, Func<TCollection?, TItem, Exception> exceptionFactory) where TCollection : class, IEnumerable<TItem>
+    public static TCollection MustNotContain<TCollection, TItem>([NotNull, ValidatedNotNull] this TCollection? parameter, TItem item, Func<TCollection?, TItem, Exception> exceptionFactory) where TCollection : class, IEnumerable<TItem>
     {
         if (parameter is ICollection<TItem> collection)
         {
@@ -192,7 +193,8 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="items" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("items:null => halt")]
-    public static bool IsOneOf<TItem>(this TItem item, [ValidatedNotNull] IEnumerable<TItem> items)
+    // ReSharper disable once RedundantNullableFlowAttribute - the attribute has an effect, see Issue72NotNullAttribute tests
+    public static bool IsOneOf<TItem>(this TItem item, [NotNull, ValidatedNotNull] IEnumerable<TItem> items)
     {
         if (items is ICollection<TItem> collection)
             return collection.Contains(item);
@@ -214,7 +216,8 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="items"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("items:null => halt")]
-    public static TItem MustBeOneOf<TItem>(this TItem parameter, [ValidatedNotNull] IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    // ReSharper disable once RedundantNullableFlowAttribute - the attribute has an effect, see Issue72NotNullAttribute tests
+    public static TItem MustBeOneOf<TItem>(this TItem parameter, [NotNull, ValidatedNotNull] IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         // ReSharper disable PossibleMultipleEnumeration
         if (!parameter.IsOneOf(items.MustNotBeNull(nameof(items), message)))
@@ -232,9 +235,9 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is not equal to one of the specified <paramref name="items"/>, or when <paramref name="items"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("items:null => halt")]
-    public static TItem MustBeOneOf<TItem, TCollection>(this TItem parameter, [ValidatedNotNull] TCollection items, Func<TItem, TCollection, Exception> exceptionFactory) where TCollection : class, IEnumerable<TItem>
+    public static TItem MustBeOneOf<TItem, TCollection>(this TItem parameter, [NotNull, ValidatedNotNull] TCollection items, Func<TItem, TCollection, Exception> exceptionFactory) where TCollection : class, IEnumerable<TItem>
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (items is null || !parameter.IsOneOf(items))
             Throw.CustomException(exceptionFactory, parameter, items!);
         return parameter;
@@ -251,7 +254,8 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="items"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("items:null => halt")]
-    public static TItem MustNotBeOneOf<TItem>(this TItem parameter, [ValidatedNotNull] IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    // ReSharper disable once RedundantNullableFlowAttribute - the attribute has an effect, see Issue72NotNullAttribute tests
+    public static TItem MustNotBeOneOf<TItem>(this TItem parameter, [NotNull, ValidatedNotNull] IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         // ReSharper disable PossibleMultipleEnumeration
         if (parameter.IsOneOf(items.MustNotBeNull(nameof(items), message)))
@@ -269,9 +273,9 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> is equal to one of the specified <paramref name="items"/>, or when <paramref name="items"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("items:null => halt")]
-    public static TItem MustNotBeOneOf<TItem, TCollection>(this TItem parameter, [ValidatedNotNull] TCollection items, Func<TItem, TCollection, Exception> exceptionFactory) where TCollection : class, IEnumerable<TItem>
+    public static TItem MustNotBeOneOf<TItem, TCollection>(this TItem parameter, [NotNull, ValidatedNotNull] TCollection items, Func<TItem, TCollection, Exception> exceptionFactory) where TCollection : class, IEnumerable<TItem>
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse - caller might have NRTs turned off
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (items is null || parameter.IsOneOf(items))
             Throw.CustomException(exceptionFactory, parameter, items!);
         return parameter;
@@ -288,11 +292,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static TCollection MustHaveMinimumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
+    public static TCollection MustHaveMinimumCount<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
     {
         if (parameter.Count(parameterName, message) < count)
-            Throw.InvalidMinimumCollectionCount(parameter!, count, parameterName, message);
-        return parameter!;
+            Throw.InvalidMinimumCollectionCount(parameter, count, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -304,7 +308,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> does not contain at least the specified number of items, or when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static TCollection MustHaveMinimumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, Func<TCollection?, int, Exception> exceptionFactory) where TCollection : class, IEnumerable
+    public static TCollection MustHaveMinimumCount<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, int count, Func<TCollection?, int, Exception> exceptionFactory) where TCollection : class, IEnumerable
     {
         if (parameter is null || parameter.Count() < count)
             Throw.CustomException(exceptionFactory, parameter, count);
@@ -322,11 +326,11 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static TCollection MustHaveMaximumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
+    public static TCollection MustHaveMaximumCount<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, int count, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where TCollection : class, IEnumerable
     {
         if (parameter.Count(parameterName, message) > count)
-            Throw.InvalidMaximumCollectionCount(parameter!, count, parameterName, message);
-        return parameter!;
+            Throw.InvalidMaximumCollectionCount(parameter, count, parameterName, message);
+        return parameter;
     }
 
     /// <summary>
@@ -338,7 +342,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter"/> does not contain at most the specified number of items, or when <paramref name="parameter"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static TCollection MustHaveMaximumCount<TCollection>([ValidatedNotNull] this TCollection? parameter, int count, Func<TCollection?, int, Exception> exceptionFactory) where TCollection : class, IEnumerable
+    public static TCollection MustHaveMaximumCount<TCollection>([NotNull, ValidatedNotNull] this TCollection? parameter, int count, Func<TCollection?, int, Exception> exceptionFactory) where TCollection : class, IEnumerable
     {
         if (parameter is null || parameter.Count() > count)
             Throw.CustomException(exceptionFactory, parameter, count);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Light.GuardClauses.Exceptions;
+using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace Light.GuardClauses;
 
@@ -20,7 +21,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static T MustNotBeNull<T>([ValidatedNotNull, NoEnumeration] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : class
+    public static T MustNotBeNull<T>([NotNull, ValidatedNotNull, NoEnumeration] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : class
     {
         if (parameter is null)
             Throw.ArgumentNull(parameterName, message);
@@ -35,7 +36,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-    public static T MustNotBeNull<T>([ValidatedNotNull, NoEnumeration] this T? parameter, Func<Exception> exceptionFactory) where T : class
+    public static T MustNotBeNull<T>([NotNull, ValidatedNotNull, NoEnumeration] this T? parameter, Func<Exception> exceptionFactory) where T : class
     {
         if (parameter is null)
             Throw.CustomException(exceptionFactory);
@@ -53,7 +54,7 @@ public static partial class Check
     /// <exception cref="ArgumentDefaultException">Thrown when <paramref name="parameter" /> is a value type and the default value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static T MustNotBeDefault<T>([ValidatedNotNull] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static T MustNotBeDefault<T>([NotNull, ValidatedNotNull] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (default(T) is null)
         {
@@ -64,7 +65,11 @@ public static partial class Check
 
         if (EqualityComparer<T>.Default.Equals(parameter, default!))
             Throw.ArgumentDefault(parameterName, message);
+        
+        // If we end up here, we have a value type which cannot be null
+#pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
         return parameter;
+#pragma warning restore CS8777
     }
 
     /// <summary>
@@ -75,7 +80,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is the default value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-    public static T MustNotBeDefault<T>([ValidatedNotNull] this T parameter, Func<Exception> exceptionFactory)
+    public static T MustNotBeDefault<T>([NotNull, ValidatedNotNull] this T parameter, Func<Exception> exceptionFactory)
     {
         if (default(T) is null)
         {
@@ -86,7 +91,11 @@ public static partial class Check
 
         if (EqualityComparer<T>.Default.Equals(parameter, default!))
             Throw.CustomException(exceptionFactory);
+        
+        // If we end up here, we have a value type which cannot be null
+#pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
         return parameter;
+#pragma warning restore CS8777
 
     }
 
@@ -101,10 +110,15 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <typeparamref name="T" /> is a reference type and <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static T MustNotBeNullReference<T>([ValidatedNotNull, NoEnumeration] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static T MustNotBeNullReference<T>([NotNull, ValidatedNotNull, NoEnumeration] this T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (default(T) != null)
+        {
+            // If we end up here, parameter cannot be null
+#pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
             return parameter;
+#pragma warning restore CS8777 // Parameter must have a non-null value when exiting.
+        }
 
         if (parameter is null)
             Throw.ArgumentNull(parameterName, message);
@@ -121,10 +135,15 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <typeparamref name="T" /> is a reference type and <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-    public static T MustNotBeNullReference<T>([ValidatedNotNull, NoEnumeration] this T parameter, Func<Exception> exceptionFactory)
+    public static T MustNotBeNullReference<T>([NotNull, ValidatedNotNull, NoEnumeration] this T parameter, Func<Exception> exceptionFactory)
     {
         if (default(T) != null)
+        {
+            // If we end up here, parameter cannot be null
+#pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
             return parameter;
+#pragma warning restore CS8777 // Parameter must have a non-null value when exiting.
+        }
 
         if (parameter is null)
             Throw.CustomException(exceptionFactory);
@@ -141,7 +160,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
-    public static T MustBeOfType<T>([ValidatedNotNull, NoEnumeration] this object? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+    public static T MustBeOfType<T>([NotNull, ValidatedNotNull, NoEnumeration] this object? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message) is T castValue)
             return castValue;
@@ -158,7 +177,7 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> cannot be cast to <typeparamref name="T" />.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
-    public static T MustBeOfType<T>([ValidatedNotNull, NoEnumeration] this object? parameter, Func<object?, Exception> exceptionFactory)
+    public static T MustBeOfType<T>([NotNull, ValidatedNotNull, NoEnumeration] this object? parameter, Func<object?, Exception> exceptionFactory)
     {
         if (parameter is T castValue)
             return castValue;
@@ -328,7 +347,7 @@ public static partial class Check
     /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
     /// <exception cref="NullableHasNoValueException">Thrown when <paramref name="parameter" /> has no value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T MustHaveValue<T>([NoEnumeration] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : struct
+    public static T MustHaveValue<T>([NotNull, NoEnumeration] this T? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) where T : struct
     {
         if (!parameter.HasValue)
             Throw.NullableHasNoValue(parameterName, message);
@@ -344,7 +363,7 @@ public static partial class Check
     /// <exception cref="NullableHasNoValueException">Thrown when <paramref name="parameter" /> has no value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("exceptionFactory:null => halt")]
-    public static T MustHaveValue<T>([NoEnumeration] this T? parameter, Func<Exception> exceptionFactory) where T : struct
+    public static T MustHaveValue<T>([NotNull, NoEnumeration] this T? parameter, Func<Exception> exceptionFactory) where T : struct
     {
         if (!parameter.HasValue)
             Throw.CustomException(exceptionFactory);

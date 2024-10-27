@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 #if NET8_0
 using System.Diagnostics.CodeAnalysis;
 #endif
+using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace Light.GuardClauses;
 
@@ -48,9 +49,10 @@ public static partial class Check
 #if NET8_0
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
 #endif
-        [ValidatedNotNull]
-        this Type type,
-        [ValidatedNotNull] Type interfaceType
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type,
+        [NotNull, ValidatedNotNull] Type interfaceType
+        // ReSharper restore RedundantNullableFlowAttribute
     )
     {
         type.MustNotBeNull();
@@ -79,10 +81,11 @@ public static partial class Check
 #if NET8_0
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
 #endif
-        [ValidatedNotNull]
-        this Type type,
-        [ValidatedNotNull] Type interfaceType,
-        [ValidatedNotNull] IEqualityComparer<Type> typeComparer
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type,
+        [NotNull, ValidatedNotNull] Type interfaceType,
+        [NotNull, ValidatedNotNull] IEqualityComparer<Type> typeComparer
+        // ReSharper restore RedundantNullableFlowAttribute
     )
     {
         type.MustNotBeNull();
@@ -112,8 +115,10 @@ public static partial class Check
 #if NET8_0
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
 #endif
-        [ValidatedNotNull] this Type type,
-        [ValidatedNotNull] Type otherType) =>
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type,
+        [NotNull, ValidatedNotNull] Type otherType) =>
+        // ReSharper restore RedundantNullableFlowAttribute
         type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.Implements(otherType);
 
     /// <summary>
@@ -131,9 +136,11 @@ public static partial class Check
 #if NET8_0
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
 #endif
-        [ValidatedNotNull] this Type type,
-        [ValidatedNotNull] Type otherType,
-        [ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type,
+        [NotNull, ValidatedNotNull] Type otherType,
+        [NotNull, ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
+        // ReSharper restore RedundantNullableFlowAttribute
         typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type.MustNotBeNull(nameof(type)), otherType.MustNotBeNull(nameof(otherType))) || type.Implements(otherType, typeComparer);
 
     /// <summary>
@@ -144,7 +151,9 @@ public static partial class Check
     /// <param name="baseClass">The base class that <paramref name="type" /> should derive from.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="baseClass" /> is null.</exception>
     [ContractAnnotation("type:null => halt; baseClass:null => halt")]
-    public static bool DerivesFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type baseClass)
+    // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+    public static bool DerivesFrom([NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type baseClass)
+    // ReSharper restore RedundantNullableFlowAttribute
     {
         baseClass.MustNotBeNull(nameof(baseClass));
 
@@ -169,7 +178,9 @@ public static partial class Check
     /// <param name="typeComparer">The equality comparer used to compare the types.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="baseClass" />, or <paramref name="typeComparer" /> is null.</exception>
     [ContractAnnotation("type:null => halt; baseClass:null => halt; typeComparer:null => halt")]
-    public static bool DerivesFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type baseClass, [ValidatedNotNull] IEqualityComparer<Type> typeComparer)
+    // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+    public static bool DerivesFrom([NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type baseClass, [NotNull, ValidatedNotNull] IEqualityComparer<Type> typeComparer)
+    // ReSharper restore RedundantNullableFlowAttribute
     {
         baseClass.MustNotBeNull(nameof(baseClass));
         typeComparer.MustNotBeNull(nameof(typeComparer));
@@ -195,7 +206,9 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="otherType" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("type:null => halt; otherType:null => halt")]
-    public static bool IsOrDerivesFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType) =>
+    // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+    public static bool IsOrDerivesFrom([NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type otherType) => 
+        // ReSharper restore RedundantNullableFlowAttribute
         type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.DerivesFrom(otherType);
 
     /// <summary>
@@ -208,7 +221,9 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="otherType" />, or <paramref name="typeComparer" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("type:null => halt; otherType:null => halt; typeComparer:null => halt")]
-    public static bool IsOrDerivesFrom([ValidatedNotNull] this Type type, [ValidatedNotNull] Type otherType, [ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
+    // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+    public static bool IsOrDerivesFrom([NotNull, ValidatedNotNull] this Type type, [NotNull, ValidatedNotNull] Type otherType, [NotNull, ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
+        // ReSharper restore RedundantNullableFlowAttribute
         typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type, otherType.MustNotBeNull(nameof(otherType))) || type.DerivesFrom(otherType, typeComparer);
 
 
@@ -224,9 +239,11 @@ public static partial class Check
     public static bool InheritsFrom(
 #if NET8_0
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
-#endif        
-        [ValidatedNotNull] this Type type,
-        [ValidatedNotNull] Type baseClassOrInterfaceType) =>
+#endif
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type,
+        [NotNull, ValidatedNotNull] Type baseClassOrInterfaceType) =>
+        // ReSharper restore RedundantNullableFlowAttribute
         baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType))
                                 .IsInterface ?
             type.Implements(baseClassOrInterfaceType) :
@@ -245,10 +262,12 @@ public static partial class Check
     public static bool InheritsFrom(
 #if NET8_0
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
-#endif        
-        [ValidatedNotNull] this Type type,
-        [ValidatedNotNull] Type baseClassOrInterfaceType,
-        [ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
+#endif
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type,
+        [NotNull, ValidatedNotNull] Type baseClassOrInterfaceType,
+        [NotNull, ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
+        // ReSharper restore RedundantNullableFlowAttribute
         baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType))
                                 .IsInterface ?
             type.Implements(baseClassOrInterfaceType, typeComparer) :
@@ -268,8 +287,10 @@ public static partial class Check
 #if NET8_0
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
 #endif
-        [ValidatedNotNull] this Type type,
-        [ValidatedNotNull] Type otherType) =>
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type,
+        [NotNull, ValidatedNotNull] Type otherType) =>
+        // ReSharper restore RedundantNullableFlowAttribute
         type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType);
 
 
@@ -287,9 +308,11 @@ public static partial class Check
 #if NET8_0
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
 #endif        
-        [ValidatedNotNull] this Type type,
-        [ValidatedNotNull] Type otherType,
-        [ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
+        // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull, ValidatedNotNull] this Type type,
+        [NotNull, ValidatedNotNull] Type otherType,
+        [NotNull, ValidatedNotNull] IEqualityComparer<Type> typeComparer) =>
+        // ReSharper restore RedundantNullableFlowAttribute
         typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type, otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType, typeComparer);
 
 
@@ -301,7 +324,8 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("type:null => halt")]
-    public static bool IsOpenConstructedGenericType([ValidatedNotNull] this Type type) =>
+    // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+    public static bool IsOpenConstructedGenericType([NotNull, ValidatedNotNull] this Type type) =>
         type.MustNotBeNull(nameof(type)).IsGenericType &&
         type.ContainsGenericParameters &&
         type.IsGenericTypeDefinition == false;
