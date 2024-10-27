@@ -1204,4 +1204,17 @@ public static class Issue72NotNullAttributeTests
             return input;
         }
     }
+
+    [Fact]
+    public static void CheckIsIn()
+    {
+        TestIsIn("k").Should().Be("k");
+        return;
+        
+        static string TestIsIn(string? input)
+        {
+            input!.IsIn(Range.FromInclusive("a").ToInclusive("z"));
+            return input;
+        }
+    }
 }
