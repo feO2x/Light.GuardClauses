@@ -268,10 +268,16 @@ public static class Throw
     [DoesNotReturn]
     public static void Substring(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
         throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be a substring of \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+    
+    /// <summary>
+    /// Throws the default <see cref="SubstringException"/> indicating that a string is a substring of another one, using the optional parameter name and message.
+    /// </summary>
+    [ContractAnnotation("=> halt")]
+    [DoesNotReturn]
+    public static void StringDoesNotStartWith(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
+        throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must start with \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
 
     /// <summary>
-    /// Throws the default <see cref="StringLengthException"/> indicating that a string is not shorter than the given length, using the optional parameter name an message.
-    [DoesNotReturn]
     /// Throws the default <see cref="StringLengthException"/> indicating that a string is not shorter than the given length, using the optional parameter name and message.
     /// </summary>
     [ContractAnnotation("=> halt")]
