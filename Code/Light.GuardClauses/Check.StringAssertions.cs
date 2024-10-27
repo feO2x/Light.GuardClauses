@@ -340,7 +340,9 @@ public static partial class Check
     public static string MustContain([NotNull, ValidatedNotNull] this string? parameter, string? value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (!parameter.MustNotBeNull(parameterName, message).Contains(value.MustNotBeNull(nameof(value), message)))
+        {
             Throw.StringDoesNotContain(parameter, value, parameterName, message);
+        }
         return parameter;
     }
 
@@ -361,7 +363,9 @@ public static partial class Check
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
         if (parameter is null || value is null || !parameter.Contains(value))
+        {
             Throw.CustomException(exceptionFactory, parameter, value!);
+        }
         return parameter;
     }
 
@@ -381,7 +385,9 @@ public static partial class Check
     public static string MustContain([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).IndexOf(value.MustNotBeNull(nameof(value), message), comparisonType) < 0)
+        {
             Throw.StringDoesNotContain(parameter, value, comparisonType, parameterName, message);
+        }
         return parameter;
     }
 
@@ -395,16 +401,18 @@ public static partial class Check
     /// <exception cref="Exception">
     /// Your custom exception thrown when <paramref name="parameter" /> does not contain <paramref name="value" />,
     /// or when <paramref name="parameter" /> is null,
-    /// or when <paramref name="value" /> is null,
-    /// or when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.
+    /// or when <paramref name="value" /> is null.
     /// </exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
     public static string MustContain([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
-        if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) < 0)
+        if (parameter is null || value is null || parameter.IndexOf(value, comparisonType) < 0)
+        {
             Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
+        }
         return parameter;
     }
 
@@ -422,7 +430,9 @@ public static partial class Check
     public static string MustNotContain([NotNull, ValidatedNotNull] this string? parameter, string value, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
         if (parameter.MustNotBeNull(parameterName, message).Contains(value.MustNotBeNull(nameof(value), message)))
+        {
             Throw.StringContains(parameter, value, parameterName, message);
+        }
         return parameter;
     }
 
@@ -477,15 +487,15 @@ public static partial class Check
     /// <exception cref="Exception">
     /// Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="value" />,
     /// or when <paramref name="parameter" /> is null,
-    /// or when <paramref name="value" /> is null,
-    /// or when <paramref name="comparisonType" /> is not a valid value of the <see cref="StringComparison" /> enum.
+    /// or when <paramref name="value" /> is null.
     /// </exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
     public static string MustNotContain([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
-        if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || parameter.IndexOf(value, comparisonType) >= 0)
+        if (parameter is null || value is null || parameter.IndexOf(value, comparisonType) >= 0)
             Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
         return parameter;
     }
@@ -604,15 +614,15 @@ public static partial class Check
     /// <exception cref="Exception">
     /// Your custom exception thrown when <paramref name="value" /> does not contain <paramref name="parameter" />,
     /// or when <paramref name="parameter" /> is null,
-    /// or when <paramref name="value" /> is null,
-    /// or when <paramref name="comparisonType" /> is not a valid value of the <see cref="StringComparison" /> enum.
+    /// or when <paramref name="value" /> is null.
     /// </exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; value:null => halt")]
     public static string MustBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
-        if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || value.IndexOf(parameter, comparisonType) == -1)
+        if (parameter is null || value is null || value.IndexOf(parameter, comparisonType) == -1)
             Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
         return parameter;
     }
@@ -695,7 +705,7 @@ public static partial class Check
     public static string MustNotBeSubstringOf([NotNull, ValidatedNotNull] this string? parameter, string value, StringComparison comparisonType, Func<string?, string, StringComparison, Exception> exceptionFactory)
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract - caller might have NRTs turned off
-        if (parameter is null || value is null || !comparisonType.IsValidEnumValue() || value.IndexOf(parameter, comparisonType) != -1)
+        if (parameter is null || value is null || value.IndexOf(parameter, comparisonType) != -1)
             Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
         return parameter;
     }

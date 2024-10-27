@@ -79,7 +79,6 @@ public static class MustContainTests
     [InlineData("Foo", "foo", StringComparison.Ordinal)]
     [InlineData(null, "Bar", StringComparison.OrdinalIgnoreCase)]
     [InlineData("Baz", null, StringComparison.CurrentCulture)]
-    [InlineData("Qux", "Qux", (StringComparison) 42)]
     public static void CustomExceptionCustomSearch(string x, string y, StringComparison comparison) =>
         Test.CustomException(x,
                              y,
