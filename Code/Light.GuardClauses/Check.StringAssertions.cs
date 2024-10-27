@@ -1238,6 +1238,6 @@ public static partial class Check
     {
         if (parameter is null || !parameter.AsSpan().IsTrimmedAtEnd())
             Throw.CustomException(exceptionFactory, parameter);
-        return parameter!;
+        return parameter;
     }
 }
