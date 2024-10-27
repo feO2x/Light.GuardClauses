@@ -1250,4 +1250,17 @@ public static class Issue72NotNullAttributeTests
             return input;
         }
     }
+
+    [Fact]
+    public static void CheckIsOpenConstructedGenericType()
+    {
+        TestIsOpenConstructedGenericType(typeof(List<>)).Should().Be(typeof(List<>));
+        return;
+        
+        static Type TestIsOpenConstructedGenericType(Type? type)
+        {
+            type!.IsOpenConstructedGenericType();
+            return type;
+        }
+    }
 }

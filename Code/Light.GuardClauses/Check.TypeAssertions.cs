@@ -324,7 +324,8 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("type:null => halt")]
-    public static bool IsOpenConstructedGenericType([ValidatedNotNull] this Type type) =>
+    // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+    public static bool IsOpenConstructedGenericType([NotNull, ValidatedNotNull] this Type type) =>
         type.MustNotBeNull(nameof(type)).IsGenericType &&
         type.ContainsGenericParameters &&
         type.IsGenericTypeDefinition == false;
