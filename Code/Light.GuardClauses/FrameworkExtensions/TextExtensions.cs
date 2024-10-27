@@ -216,7 +216,9 @@ public static class TextExtensions
     /// specified <paramref name="stringBuilder" />.
     /// </summary>
     /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
-    public static StringBuilder AppendExceptionMessages([ValidatedNotNull] this StringBuilder stringBuilder, [ValidatedNotNull] Exception exception)
+    // ReSharper disable RedundantNullableFlowAttribute
+    public static StringBuilder AppendExceptionMessages([NotNull, ValidatedNotNull] this StringBuilder stringBuilder, [NotNull, ValidatedNotNull] Exception exception)
+        // ReSharper restore RedundantNullableFlowAttribute
     {
         stringBuilder.MustNotBeNull(nameof(stringBuilder));
         exception.MustNotBeNull(nameof(exception));

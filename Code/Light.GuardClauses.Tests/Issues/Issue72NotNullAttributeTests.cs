@@ -1490,4 +1490,18 @@ public static class Issue72NotNullAttributeTests
             return (stringBuilder, items.Count);
         }
     }
+
+    [Fact]
+    public static void CheckAppendExceptionMessages()
+    {
+        var stringBuilder = new StringBuilder();
+        TestAppendExceptionMessages(stringBuilder, new Exception("foo")).Should().Be((stringBuilder, 3));
+        return;
+        
+        static (StringBuilder, int) TestAppendExceptionMessages(StringBuilder? stringBuilder, Exception exception)
+        {
+            stringBuilder!.AppendExceptionMessages(exception);
+            return (stringBuilder, exception.Message.Length);
+        }
+    }
 }
