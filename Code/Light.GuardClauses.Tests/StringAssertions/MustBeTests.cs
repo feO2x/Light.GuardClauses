@@ -50,7 +50,8 @@ public static class MustBeTests
     public static void CustomException() =>
         Test.CustomException("Foo",
                              "Bar",
-                             (x, y, exceptionFactory) => x.MustBe(y, StringComparison.Ordinal, exceptionFactory));
+                             StringComparison.Ordinal,
+                             (x, y, ct, exceptionFactory) => x.MustBe(y, ct, exceptionFactory));
 
     [Fact]
     public static void CustomMessage() =>
@@ -60,7 +61,8 @@ public static class MustBeTests
     public static void CustomExceptionIgnoreWhiteSpace() =>
         Test.CustomException("Foo",
                              "   foo",
-                             (x, y, exceptionFactory) => x.MustBe(y, StringComparisonType.OrdinalIgnoreWhiteSpace, exceptionFactory));
+                             StringComparisonType.OrdinalIgnoreWhiteSpace,
+                             (x, y, ct, exceptionFactory) => x.MustBe(y, ct, exceptionFactory));
 
     [Fact]
     public static void CustomMessageIgnoreWhiteSpace() =>

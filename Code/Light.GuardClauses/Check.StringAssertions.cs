@@ -155,10 +155,10 @@ public static partial class Check
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is not equal to <paramref name="other" />.</exception>
     /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? MustBe(this string? parameter, string? other, StringComparison comparisonType, Func<string?, string?, Exception> exceptionFactory)
+    public static string? MustBe(this string? parameter, string? other, StringComparison comparisonType, Func<string?, string?, StringComparison, Exception> exceptionFactory)
     {
         if (!string.Equals(parameter, other, comparisonType))
-            Throw.CustomException(exceptionFactory, parameter, other);
+            Throw.CustomException(exceptionFactory, parameter, other, comparisonType);
         return parameter;
     }
 
@@ -171,7 +171,7 @@ public static partial class Check
     /// <param name="parameterName">The name of the parameter (optional).</param>
     /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
     /// <exception cref="ValuesNotEqualException">Thrown when <paramref name="parameter" /> is not equal to <paramref name="other" />.</exception>
-    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparisonType" /> enum.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? MustBe(this string? parameter, string? other, StringComparisonType comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
@@ -188,11 +188,11 @@ public static partial class Check
     /// <param name="comparisonType">The enum value specifying how the two strings should be compared.</param>
     /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="other" /> are passed to this delegate.</param>
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is not equal to <paramref name="other" />.</exception>
-    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
-    public static string? MustBe(this string? parameter, string? other, StringComparisonType comparisonType, Func<string?, string?, Exception> exceptionFactory)
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparisonType" /> enum.</exception>
+    public static string? MustBe(this string? parameter, string? other, StringComparisonType comparisonType, Func<string?, string?, StringComparisonType, Exception> exceptionFactory)
     {
         if (!parameter.Equals(other, comparisonType))
-            Throw.CustomException(exceptionFactory, parameter, other);
+            Throw.CustomException(exceptionFactory, parameter, other, comparisonType);
         return parameter;
     }
 
@@ -220,7 +220,7 @@ public static partial class Check
     /// <param name="parameter">The first string to be compared.</param>
     /// <param name="other">The second string to be compared.</param>
     /// <param name="comparisonType">The enum value specifying how the two strings should be compared.</param>
-    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="other" /> are passed to this delegate.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" />, <paramref name="other" />, and <paramref name="comparisonType" /> are passed to this delegate.</param>
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is equal to <paramref name="other" />.</exception>
     /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -240,7 +240,7 @@ public static partial class Check
     /// <param name="parameterName">The name of the parameter (optional).</param>
     /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
     /// <exception cref="ValuesEqualException">Thrown when <paramref name="parameter" /> is equal to <paramref name="other" />.</exception>
-    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparisonType" /> enum.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string? MustNotBe(this string? parameter, string? other, StringComparisonType comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
     {
@@ -255,14 +255,14 @@ public static partial class Check
     /// <param name="parameter">The first string to be compared.</param>
     /// <param name="other">The second string to be compared.</param>
     /// <param name="comparisonType">The enum value specifying how the two strings should be compared.</param>
-    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="other" /> are passed to this delegate.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" />, <paramref name="other" />, and <paramref name="comparisonType" /> are passed to this delegate.</param>
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is equal to <paramref name="other" />.</exception>
-    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparison" /> enum.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid value from the <see cref="StringComparisonType" /> enum.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? MustNotBe(this string? parameter, string? other, StringComparisonType comparisonType, Func<string?, string?, Exception> exceptionFactory)
+    public static string? MustNotBe(this string? parameter, string? other, StringComparisonType comparisonType, Func<string?, string?, StringComparisonType, Exception> exceptionFactory)
     {
         if (parameter.Equals(other, comparisonType))
-            Throw.CustomException(exceptionFactory, parameter, other);
+            Throw.CustomException(exceptionFactory, parameter, other, comparisonType);
         return parameter;
     }
 
@@ -441,7 +441,7 @@ public static partial class Check
     /// </summary>
     /// <param name="parameter">The string to be checked.</param>
     /// <param name="value">The string that must not be part of <paramref name="parameter" />.</param>
-    /// <param name="exceptionFactory">The delegate that creates your custom exception (optional). <paramref name="parameter" /> and <paramref name="value" /> are passed to this </param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception (optional). <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
     /// <exception cref="Exception">
     /// Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="value" />,
     /// or when <paramref name="parameter" /> is null,
@@ -693,7 +693,7 @@ public static partial class Check
     /// <param name="parameter">The string to be checked.</param>
     /// <param name="value">The other string that must not contain <paramref name="parameter" />.</param>
     /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
-    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType" /> are passed to this delegate.</param>
     /// <exception cref="Exception">
     /// Your custom exception thrown when <paramref name="value" /> contains <paramref name="parameter" />,
     /// or when <paramref name="parameter" /> is null,
@@ -771,7 +771,7 @@ public static partial class Check
     /// <param name="parameter">The string to be checked.</param>
     /// <param name="value">The other string <paramref name="parameter"/> must start with.</param>
     /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
-    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType" /> are passed to this delegate.</param>
     /// <exception cref="Exception">
     /// Your custom exception thrown when <paramref name="parameter" /> does not start with <paramref name="value" />,
     /// or when <paramref name="parameter" /> is null,
@@ -855,7 +855,7 @@ public static partial class Check
     /// <param name="parameter">The string to be checked.</param>
     /// <param name="value">The other string that <paramref name="parameter" /> must not start with.</param>
     /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
-    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType" /> are passed to this delegate.</param>
     /// <exception cref="Exception">
     /// Your custom exception thrown when <paramref name="parameter" /> does not start with <paramref name="value" />,
     /// or when <paramref name="parameter" /> is null,
@@ -938,7 +938,7 @@ public static partial class Check
     /// <param name="parameter">The string to be checked.</param>
     /// <param name="value">The other string <paramref name="parameter"/> must end with.</param>
     /// <param name="comparisonType">One of the enumeration values that specifies the rules for the search.</param>
-    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="value" /> are passed to this delegate.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" />, <paramref name="value" />, and <paramref name="comparisonType" /> are passed to this delegate.</param>
     /// <exception cref="Exception">
     /// Your custom exception thrown when <paramref name="parameter" /> does not end with <paramref name="value" />,
     /// or when <paramref name="parameter" /> is null,
