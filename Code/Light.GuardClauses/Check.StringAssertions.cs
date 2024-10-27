@@ -514,9 +514,10 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="value" /> or <paramref name="other" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("value:null => halt; other:null => halt")]
-    // ReSharper disable once RedundantNullableFlowAttribute
-    public static bool IsSubstringOf([NotNull, ValidatedNotNull] this string value, [ValidatedNotNull] string other) =>
+    // ReSharper disable RedundantNullableFlowAttribute
+    public static bool IsSubstringOf([NotNull, ValidatedNotNull] this string value, [NotNull, ValidatedNotNull] string other) =>
         other.MustNotBeNull(nameof(other)).Contains(value);
+    // ReSharper restore RedundantNullableFlowAttribute
 
     /// <summary>
     /// Checks if the string is a substring of the other string.
@@ -529,9 +530,10 @@ public static partial class Check
     /// <exception cref="ArgumentException">Thrown when <paramref name="comparisonType" /> is not a valid <see cref="StringComparison" /> value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("value:null => halt; other:null => halt")]
-    // ReSharper disable once RedundantNullableFlowAttribute
-    public static bool IsSubstringOf([NotNull] this string value, string other, StringComparison comparisonType) =>
+    // ReSharper disable RedundantNullableFlowAttribute
+    public static bool IsSubstringOf([NotNull, ValidatedNotNull] this string value, [NotNull, ValidatedNotNull] string other, StringComparison comparisonType) =>
         other.MustNotBeNull(nameof(other)).IndexOf(value, comparisonType) != -1;
+    // ReSharper disable RedundantNullableFlowAttribute
 
     /// <summary>
     /// Ensures that the string is a substring of the specified other string, or otherwise throws a <see cref="SubstringException" />.

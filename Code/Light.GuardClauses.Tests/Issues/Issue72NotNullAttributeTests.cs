@@ -1230,4 +1230,24 @@ public static class Issue72NotNullAttributeTests
             return input;
         }
     }
+
+    [Fact]
+    public static void CheckIsSubstringOf()
+    {
+        TestIsSubstringOf("foo", "oo").Should().Be("foo");
+        TestIsSubstringOfWithComparison("foo", "oo").Should().Be("foo");
+        return;
+        
+        static string TestIsSubstringOf(string? input, string? comparison)
+        {
+            comparison!.IsSubstringOf(input!);
+            return input;
+        }
+        
+        static string TestIsSubstringOfWithComparison(string? input, string? comparison)
+        {
+            comparison!.IsSubstringOf(input!, StringComparison.OrdinalIgnoreCase);
+            return input;
+        }
+    }
 }
