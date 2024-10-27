@@ -144,7 +144,8 @@ public static class EnumerableExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("enumerable:null => halt")]
-    public static int Count([ValidatedNotNull] this IEnumerable enumerable)
+    // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+    public static int Count([NotNull, ValidatedNotNull] this IEnumerable enumerable)
     {
         if (enumerable is ICollection collection)
             return collection.Count;

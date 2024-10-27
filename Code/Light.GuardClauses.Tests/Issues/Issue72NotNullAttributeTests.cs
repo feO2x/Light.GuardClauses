@@ -1,6 +1,7 @@
 #nullable enable
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
@@ -1185,7 +1186,7 @@ public static class Issue72NotNullAttributeTests
             return input;
         }
     }
-    
+
     [Fact]
     public static void CheckMustHaveOneSchemeOf()
     {
@@ -1211,7 +1212,7 @@ public static class Issue72NotNullAttributeTests
     {
         TestIsIn("k").Should().Be("k");
         return;
-        
+
         static string TestIsIn(string? input)
         {
             input!.IsIn(Range.FromInclusive("a").ToInclusive("z"));
@@ -1224,7 +1225,7 @@ public static class Issue72NotNullAttributeTests
     {
         TestIsNotIn("k").Should().Be("k");
         return;
-        
+
         static string TestIsNotIn(string? input)
         {
             input!.IsNotIn(Range.FromInclusive("a").ToInclusive("h"));
@@ -1238,13 +1239,13 @@ public static class Issue72NotNullAttributeTests
         TestIsSubstringOf("foo", "oo").Should().Be("foo");
         TestIsSubstringOfWithComparison("foo", "oo").Should().Be("foo");
         return;
-        
+
         static string TestIsSubstringOf(string? input, string? comparison)
         {
             comparison!.IsSubstringOf(input!);
             return input;
         }
-        
+
         static string TestIsSubstringOfWithComparison(string? input, string? comparison)
         {
             comparison!.IsSubstringOf(input!, StringComparison.OrdinalIgnoreCase);
@@ -1257,7 +1258,7 @@ public static class Issue72NotNullAttributeTests
     {
         TestIsOpenConstructedGenericType(typeof(List<>)).Should().Be(typeof(List<>));
         return;
-        
+
         static Type TestIsOpenConstructedGenericType(Type? type)
         {
             type!.IsOpenConstructedGenericType();
@@ -1271,13 +1272,13 @@ public static class Issue72NotNullAttributeTests
         TestAsList(new List<int>()).Should().Be(0);
         TestAsListWithDelegate(new List<int>()).Should().Be(0);
         return;
-        
+
         static int TestAsList(IList<int>? list)
         {
             list!.AsList();
             return list.Count;
         }
-        
+
         static int TestAsListWithDelegate(IList<int>? list)
         {
             list!.AsList(collection => new List<int>(collection));
@@ -1290,7 +1291,7 @@ public static class Issue72NotNullAttributeTests
     {
         TestAsArray([1, 2, 3]).Should().Be(3);
         return;
-        
+
         static int TestAsArray(int[]? array)
         {
             array!.AsArray();
@@ -1303,7 +1304,7 @@ public static class Issue72NotNullAttributeTests
     {
         TestForEach(["foo", "bar"]).Should().Be(2);
         return;
-        
+
         static int TestForEach(string[]? array)
         {
             array!.ForEach(_ => { });
@@ -1317,17 +1318,37 @@ public static class Issue72NotNullAttributeTests
         TestAsReadOnlyList([1, 2, 3]).Should().Be(3);
         TestAsReadOnlyListWithDelegate([1, 2, 3], collection => new List<int>(collection)).Should().Be(3);
         return;
-        
+
         static int TestAsReadOnlyList(int[]? array)
         {
             array!.AsReadOnlyList();
             return array.Length;
         }
-        
+
         static int TestAsReadOnlyListWithDelegate(int[]? array, Func<IEnumerable<int>, IReadOnlyList<int>>? collectionFactory)
         {
             array!.AsReadOnlyList(collectionFactory!);
             return array.Length;
+        }
+    }
+
+    [Fact]
+    public static void CheckCount()
+    {
+        TestCount(new ArrayList(new[]{ 1, 2, 3 })).Should().Be(3);
+        TestCountWithParameterNameAndMessage(new ArrayList(new[]{ 1, 2, 3 })).Should().Be(3);
+        return;
+
+        static int TestCount(ICollection? collection)
+        {
+            collection!.Count();
+            return collection.Count;
+        }
+
+        static int TestCountWithParameterNameAndMessage(ICollection? collection)
+        {
+            collection!.Count(nameof(collection), "The collection must not be null");
+            return collection.Count;
         }
     }
 }
