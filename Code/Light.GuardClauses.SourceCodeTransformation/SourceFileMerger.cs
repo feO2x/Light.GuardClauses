@@ -34,7 +34,7 @@ public static class SourceFileMerger
                      .AppendLine($@"License information for Light.GuardClauses
 
 The MIT License (MIT)
-Copyright (c) 2016, 2023 Kenny Pflug mailto:kenny.pflug@live.de
+Copyright (c) 2016, 2024 Kenny Pflug mailto:kenny.pflug@live.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the ""Software""), to deal
@@ -69,6 +69,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 {(options.IncludeJetBrainsAnnotationsUsing ? "using JetBrains.Annotations;" + Environment.NewLine : string.Empty)}using {options.BaseNamespace}.Exceptions;
 using {options.BaseNamespace}.FrameworkExtensions;
+{(options.IncludeJetBrainsAnnotationsUsing ? "using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;" : "")}
 
 #nullable enable annotations
 
