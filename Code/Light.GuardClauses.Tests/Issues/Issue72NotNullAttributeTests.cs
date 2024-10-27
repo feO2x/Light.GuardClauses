@@ -6,6 +6,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using FluentAssertions;
+using Light.GuardClauses.FrameworkExtensions;
 using Xunit;
 
 namespace Light.GuardClauses.Tests.Issues;
@@ -1261,6 +1262,26 @@ public static class Issue72NotNullAttributeTests
         {
             type!.IsOpenConstructedGenericType();
             return type;
+        }
+    }
+
+    [Fact]
+    public static void CheckAsList()
+    {
+        TestAsList(new List<int>()).Should().Be(0);
+        TestAsListWithDelegate(new List<int>()).Should().Be(0);
+        return;
+        
+        static int TestAsList(IList<int>? list)
+        {
+            list!.AsList();
+            return list.Count;
+        }
+        
+        static int TestAsListWithDelegate(IList<int>? list)
+        {
+            list!.AsList(collection => new List<int>(collection));
+            return list.Count;
         }
     }
 }

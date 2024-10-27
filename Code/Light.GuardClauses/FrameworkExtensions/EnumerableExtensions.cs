@@ -24,7 +24,8 @@ public static class EnumerableExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("source:null => halt; source:notnull => notnull")]
-    public static IList<T> AsList<T>([ValidatedNotNull] this IEnumerable<T> source) => 
+    // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+    public static IList<T> AsList<T>([NotNull, ValidatedNotNull] this IEnumerable<T> source) => 
         source as IList<T> ?? source.ToList();
 
     /// <summary>
@@ -38,7 +39,8 @@ public static class EnumerableExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> or <paramref name="createCollection" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("source:null => halt; source:notnull => notnull; createCollection:null => halt")]
-    public static IList<T> AsList<T>([ValidatedNotNull] this IEnumerable<T> source, Func<IEnumerable<T>, IList<T>> createCollection) => 
+    // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+    public static IList<T> AsList<T>([NotNull, ValidatedNotNull] this IEnumerable<T> source, Func<IEnumerable<T>, IList<T>> createCollection) => 
         source as IList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(source.MustNotBeNull(nameof(source)));
 
     /// <summary>
