@@ -85,7 +85,7 @@ public static class TextExtensions
     /// </summary>
     /// <param name="value">The value whose string representation is requested.</param>
     [ContractAnnotation("value:null => halt; value:notnull => notnull")]
-    public static string? ToStringRepresentation<T>([ValidatedNotNull] this T value)
+    public static string? ToStringRepresentation<T>([NotNull, ValidatedNotNull] this T value)
     {
         value.MustNotBeNullReference(nameof(value));
 

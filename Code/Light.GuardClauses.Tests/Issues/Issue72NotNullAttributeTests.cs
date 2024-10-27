@@ -1421,4 +1421,17 @@ public static class Issue72NotNullAttributeTests
             return (stringBuilder, items.Count);
         }
     }
+
+    [Fact]
+    public static void CheckToStringRepresentation()
+    {
+        TestToStringRepresentation("foo").Should().Be(3);
+        return;
+        
+        static int TestToStringRepresentation(string? value)
+        {
+            value.ToStringRepresentation();
+            return value.Length;
+        }
+    }
 }
