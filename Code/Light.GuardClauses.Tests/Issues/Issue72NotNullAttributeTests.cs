@@ -1297,4 +1297,17 @@ public static class Issue72NotNullAttributeTests
             return array.Length;
         }
     }
+
+    [Fact]
+    public static void CheckForEach()
+    {
+        TestForEach(["foo", "bar"]).Should().Be(2);
+        return;
+        
+        static int TestForEach(string[]? array)
+        {
+            array!.ForEach(_ => { });
+            return array.Length;
+        }
+    }
 }
