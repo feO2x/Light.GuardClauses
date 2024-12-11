@@ -38,7 +38,8 @@ public static partial class Check
     /// <exception cref="NullableHasNoValueException">Thrown when <paramref name="parameter" /> has no value.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("exceptionFactory:null => halt")]
-    public static T MustHaveValue<T>([NotNull, NoEnumeration] this T? parameter, Func<Exception> exceptionFactory) where T : struct
+    public static T MustHaveValue<T>([NotNull, NoEnumeration] this T? parameter, Func<Exception> exceptionFactory)
+        where T : struct
     {
         if (!parameter.HasValue)
         {

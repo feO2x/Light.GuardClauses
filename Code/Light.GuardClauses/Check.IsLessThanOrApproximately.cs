@@ -17,7 +17,7 @@ public static partial class Check
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsLessThanOrApproximately(this double value, double other, double tolerance) =>
         value < other || value.IsApproximately(other, tolerance);
-    
+
     /// <summary>
     /// Checks if the specified value is less than or approximately the same as the other value, using the default tolerance of 0.0001.
     /// </summary>
@@ -30,7 +30,7 @@ public static partial class Check
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsLessThanOrApproximately(this double value, double other) =>
         value < other || value.IsApproximately(other);
-    
+
     /// <summary>
     /// Checks if the specified value is less than or approximately the same as the other value, using the given tolerance.
     /// </summary>
@@ -44,7 +44,7 @@ public static partial class Check
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsLessThanOrApproximately(this float value, float other, float tolerance) =>
         value < other || value.IsApproximately(other, tolerance);
-    
+
     /// <summary>
     /// Checks if the specified value is less than or approximately the same as the other value, using the default tolerance of 0.0001f.
     /// </summary>

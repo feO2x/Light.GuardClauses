@@ -28,6 +28,7 @@ public static partial class Check
         {
             Throw.ValuesNotEqual(parameter, other, parameterName, message);
         }
+
         return parameter;
     }
 
@@ -45,6 +46,7 @@ public static partial class Check
         {
             Throw.CustomException(exceptionFactory, parameter, other);
         }
+
         return parameter;
     }
 
@@ -72,6 +74,7 @@ public static partial class Check
         {
             Throw.ValuesNotEqual(parameter, other, parameterName, message);
         }
+
         return parameter;
     }
 
@@ -97,6 +100,7 @@ public static partial class Check
         {
             Throw.CustomException(exceptionFactory, parameter, other, equalityComparer!);
         }
+
         return parameter;
     }
 }

@@ -30,7 +30,7 @@ public static partial class Check
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsGreaterThanOrApproximately(this double value, double other) =>
         value > other || value.IsApproximately(other);
-    
+
     /// <summary>
     /// Checks if the specified value is greater than or approximately the same as the other value, using the given tolerance.
     /// </summary>

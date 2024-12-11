@@ -54,5 +54,5 @@ public enum StringComparisonType
     /// Compare strings using ordinal sort rules, ignoring the case and ignoring the
     /// white space characters of the strings being compared.
     /// </summary>
-    OrdinalIgnoreCaseIgnoreWhiteSpace = 7
+    OrdinalIgnoreCaseIgnoreWhiteSpace = 7,
 }
