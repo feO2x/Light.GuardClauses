@@ -14,16 +14,6 @@ namespace Light.GuardClauses;
 public static partial class Check
 {
     /// <summary>
-    /// Checks if the specified collection is null or empty.
-    /// </summary>
-    /// <param name="collection">The collection to be checked.</param>
-    /// <returns>True if the collection is null or empty, else false.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [ContractAnnotation("=> true, collection:canbenull; => false, collection:notnull")]
-    public static bool IsNullOrEmpty([NotNullWhen(false)] this IEnumerable? collection) =>
-        collection is null || collection.Count() == 0;
-
-    /// <summary>
     /// Ensures that the collection is not null or empty, or otherwise throws an <see cref="EmptyCollectionException"/>.
     /// </summary>
     /// <param name="parameter">The collection to be checked.</param>
