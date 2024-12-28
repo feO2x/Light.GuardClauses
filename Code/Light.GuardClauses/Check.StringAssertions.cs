@@ -12,12 +12,6 @@ namespace Light.GuardClauses;
 public static partial class Check
 {
     /// <summary>
-    /// Checks if the specified character is a letter.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsLetter(this char character) => char.IsLetter(character);
-
-    /// <summary>
     /// Checks if the specified character is a letter or digit.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
