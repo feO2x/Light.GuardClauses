@@ -54,4 +54,54 @@ public static partial class Check
 
         return parameter;
     }
+
+    /// <summary>
+    /// Ensures that the specified string is not null or empty, or otherwise throws an <see cref="ArgumentNullException" /> or <see cref="EmptyStringException" />.
+    /// </summary>
+    /// <param name="parameter">The string to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="EmptyStringException">Thrown when <paramref name="parameter" /> is an empty string.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+    public static string MustNotBeNullOrEmpty(
+        [NotNull] [ValidatedNotNull] this string? parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (parameter is null)
+        {
+            Throw.ArgumentNull(parameterName, message);
+        }
+
+        if (parameter.Length == 0)
+        {
+            Throw.EmptyString(parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified string is not null or empty, or otherwise throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The string to be checked.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.</param>
+    /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is an empty string or null.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+    public static string MustNotBeNullOrEmpty(
+        [NotNull] [ValidatedNotNull] this string? parameter,
+        Func<string?, Exception> exceptionFactory
+    )
+    {
+        if (parameter.IsNullOrEmpty())
+        {
+            Throw.CustomException(exceptionFactory, parameter);
+        }
+
+        return parameter;
+    }
 }
