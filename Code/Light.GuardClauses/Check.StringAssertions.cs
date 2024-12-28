@@ -12,12 +12,6 @@ namespace Light.GuardClauses;
 public static partial class Check
 {
     /// <summary>
-    /// Checks if the specified character is a digit.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsDigit(this char character) => char.IsDigit(character);
-
-    /// <summary>
     /// Ensures that the two strings are equal using the specified <paramref name="comparisonType" />, or otherwise throws a <see cref="ValuesNotEqualException" />.
     /// </summary>
     /// <param name="parameter">The first string to be compared.</param>
