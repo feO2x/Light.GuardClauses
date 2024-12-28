@@ -15,7 +15,7 @@ public sealed class EquivalentTypeComparer : IEqualityComparer<Type>
     /// <summary>
     /// Gets a singleton instance of the equality comparer.
     /// </summary>
-    public static readonly EquivalentTypeComparer Instance = new EquivalentTypeComparer();
+    public static readonly EquivalentTypeComparer Instance = new ();
 
     /// <summary>
     /// Checks if the two types are equivalent (using <see cref="Check.IsEquivalentTypeTo" />).
@@ -35,7 +35,7 @@ public sealed class EquivalentTypeComparer : IEqualityComparer<Type>
     /// <param name="type">The type whose hash code is requested.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int GetHashCode(Type type) =>
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         type is null                  ? 0 :
         type.IsConstructedGenericType ? type.GetGenericTypeDefinition().GetHashCode() :
                                         type.GetHashCode();

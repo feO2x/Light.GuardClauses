@@ -83,7 +83,14 @@ public static class MultiplyAddHash
     /// Creates a hash code from the six specified values.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int CreateHashCode<T1, T2, T3, T4, T5, T6>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6)
+    public static int CreateHashCode<T1, T2, T3, T4, T5, T6>(
+        T1 value1,
+        T2 value2,
+        T3 value3,
+        T4 value4,
+        T5 value5,
+        T6 value6
+    )
     {
         var hash = FirstPrime;
         CombineIntoHash(ref hash, value1);
@@ -99,7 +106,15 @@ public static class MultiplyAddHash
     /// Creates a hash code from the seven specified values.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7)
+    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7>(
+        T1 value1,
+        T2 value2,
+        T3 value3,
+        T4 value4,
+        T5 value5,
+        T6 value6,
+        T7 value7
+    )
     {
         var hash = FirstPrime;
         CombineIntoHash(ref hash, value1);
@@ -116,7 +131,16 @@ public static class MultiplyAddHash
     /// Creates a hash code from the eight specified values.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8)
+    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8>(
+        T1 value1,
+        T2 value2,
+        T3 value3,
+        T4 value4,
+        T5 value5,
+        T6 value6,
+        T7 value7,
+        T8 value8
+    )
     {
         var hash = FirstPrime;
         CombineIntoHash(ref hash, value1);
@@ -134,7 +158,17 @@ public static class MultiplyAddHash
     /// Creates a hash code from the nine specified values.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9)
+    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9>(
+        T1 value1,
+        T2 value2,
+        T3 value3,
+        T4 value4,
+        T5 value5,
+        T6 value6,
+        T7 value7,
+        T8 value8,
+        T9 value9
+    )
     {
         var hash = FirstPrime;
         CombineIntoHash(ref hash, value1);
@@ -153,7 +187,18 @@ public static class MultiplyAddHash
     /// Creates a hash code from the ten specified values.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9, T10 value10)
+    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(
+        T1 value1,
+        T2 value2,
+        T3 value3,
+        T4 value4,
+        T5 value5,
+        T6 value6,
+        T7 value7,
+        T8 value8,
+        T9 value9,
+        T10 value10
+    )
     {
         var hash = FirstPrime;
         CombineIntoHash(ref hash, value1);
@@ -173,7 +218,19 @@ public static class MultiplyAddHash
     /// Creates a hash code from the eleven specified values.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9, T10 value10, T11 value11)
+    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(
+        T1 value1,
+        T2 value2,
+        T3 value3,
+        T4 value4,
+        T5 value5,
+        T6 value6,
+        T7 value7,
+        T8 value8,
+        T9 value9,
+        T10 value10,
+        T11 value11
+    )
     {
         var hash = FirstPrime;
         CombineIntoHash(ref hash, value1);
@@ -194,7 +251,20 @@ public static class MultiplyAddHash
     /// Creates a hash code from the eleven specified values.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9, T10 value10, T11 value11, T12 value12)
+    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(
+        T1 value1,
+        T2 value2,
+        T3 value3,
+        T4 value4,
+        T5 value5,
+        T6 value6,
+        T7 value7,
+        T8 value8,
+        T9 value9,
+        T10 value10,
+        T11 value11,
+        T12 value12
+    )
     {
         var hash = FirstPrime;
         CombineIntoHash(ref hash, value1);
@@ -216,7 +286,21 @@ public static class MultiplyAddHash
     /// Creates a hash code from the thirteen specified values.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9, T10 value10, T11 value11, T12 value12, T13 value13)
+    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(
+        T1 value1,
+        T2 value2,
+        T3 value3,
+        T4 value4,
+        T5 value5,
+        T6 value6,
+        T7 value7,
+        T8 value8,
+        T9 value9,
+        T10 value10,
+        T11 value11,
+        T12 value12,
+        T13 value13
+    )
     {
         var hash = FirstPrime;
         CombineIntoHash(ref hash, value1);
@@ -239,7 +323,22 @@ public static class MultiplyAddHash
     /// Creates a hash code from the fourteen specified values.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9, T10 value10, T11 value11, T12 value12, T13 value13, T14 value14)
+    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(
+        T1 value1,
+        T2 value2,
+        T3 value3,
+        T4 value4,
+        T5 value5,
+        T6 value6,
+        T7 value7,
+        T8 value8,
+        T9 value9,
+        T10 value10,
+        T11 value11,
+        T12 value12,
+        T13 value13,
+        T14 value14
+    )
     {
         var hash = FirstPrime;
         CombineIntoHash(ref hash, value1);
@@ -263,7 +362,23 @@ public static class MultiplyAddHash
     /// Creates a hash code from the fifteen specified values.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9, T10 value10, T11 value11, T12 value12, T13 value13, T14 value14, T15 value15)
+    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(
+        T1 value1,
+        T2 value2,
+        T3 value3,
+        T4 value4,
+        T5 value5,
+        T6 value6,
+        T7 value7,
+        T8 value8,
+        T9 value9,
+        T10 value10,
+        T11 value11,
+        T12 value12,
+        T13 value13,
+        T14 value14,
+        T15 value15
+    )
     {
         var hash = FirstPrime;
         CombineIntoHash(ref hash, value1);
@@ -288,7 +403,24 @@ public static class MultiplyAddHash
     /// Creates a hash code from the sixteen specified values.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(T1 value1, T2 value2, T3 value3, T4 value4, T5 value5, T6 value6, T7 value7, T8 value8, T9 value9, T10 value10, T11 value11, T12 value12, T13 value13, T14 value14, T15 value15, T16 value16)
+    public static int CreateHashCode<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(
+        T1 value1,
+        T2 value2,
+        T3 value3,
+        T4 value4,
+        T5 value5,
+        T6 value6,
+        T7 value7,
+        T8 value8,
+        T9 value9,
+        T10 value10,
+        T11 value11,
+        T12 value12,
+        T13 value13,
+        T14 value14,
+        T15 value15,
+        T16 value16
+    )
     {
         var hash = FirstPrime;
         CombineIntoHash(ref hash, value1);
@@ -315,5 +447,6 @@ public static class MultiplyAddHash
     /// <c>hash = unchecked(hash * SecondPrime + value?.GetHashCode() ?? 0);</c>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void CombineIntoHash<T>(ref int hash, T value) => hash = unchecked(hash * SecondPrime + value?.GetHashCode() ?? 0);
+    public static void CombineIntoHash<T>(ref int hash, T value) =>
+        hash = unchecked(hash * SecondPrime + value?.GetHashCode() ?? 0);
 }

@@ -21,7 +21,7 @@ public static class EnumInfo<T> where T : struct, Enum
         typeof(T).GetCustomAttribute(Types.FlagsAttributeType) != null;
 
     /// <summary>
-    /// Gets the flags pattern when <see cref="IsFlagsEnum"/> is true. If the enum is not a flags enum, then 0UL is returned.
+    /// Gets the flags pattern when <see cref="IsFlagsEnum" /> is true. If the enum is not a flags enum, then 0UL is returned.
     /// </summary>
     public static readonly ulong FlagsPattern;
 
@@ -40,10 +40,12 @@ public static class EnumInfo<T> where T : struct, Enum
 #else
         EnumConstantsArray = (T[]) Enum.GetValues(typeof(T));
 #endif
-        EnumConstants = new (EnumConstantsArray);
+        EnumConstants = new ReadOnlyMemory<T>(EnumConstantsArray);
 
         if (!IsFlagsEnum)
+        {
             return;
+        }
 
         for (var i = 0; i < EnumConstantsArray.Length; ++i)
         {
@@ -63,8 +65,12 @@ public static class EnumInfo<T> where T : struct, Enum
     {
         var comparer = EqualityComparer<T>.Default;
         for (var i = 0; i < EnumConstantsArray.Length; ++i)
+        {
             if (comparer.Equals(EnumConstantsArray[i], parameter))
+            {
                 return true;
+            }
+        }
 
         return false;
     }
@@ -90,12 +96,11 @@ public static class EnumInfo<T> where T : struct, Enum
             case 8: return Unsafe.As<T, ulong>(ref value);
             default:
                 ThrowUnknownEnumSize();
-                return default;
+                return 0UL;
         }
     }
 
-    private static void ThrowUnknownEnumSize()
-    {
-        throw new InvalidOperationException($"The enum type \"{typeof(T)}\" has an unknown size of {EnumSize}. This means that the underlying enum type is not one of the supported ones.");
-    }
+    private static void ThrowUnknownEnumSize() => throw new InvalidOperationException(
+        $"The enum type \"{typeof(T)}\" has an unknown size of {EnumSize}. This means that the underlying enum type is not one of the supported ones."
+    );
 }

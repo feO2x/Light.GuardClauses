@@ -20,14 +20,21 @@ public static class ExpressionExtensions
     /// <exception cref="ArgumentException">
     /// Throw when the <paramref name="expression" /> is not of the shape "object => object.Property".
     /// </exception>
-    // ReSharper disable once RedundantNullableFlowAttribute - NotNull is not redundant, see Issue72NotNullAttributeTests
-    public static PropertyInfo ExtractProperty<T, TProperty>([NotNull, ValidatedNotNull] this Expression<Func<T, TProperty>> expression)
+    public static PropertyInfo ExtractProperty<T, TProperty>(
+        // ReSharper disable once RedundantNullableFlowAttribute - NotNull is not redundant, see Issue72NotNullAttributeTests
+        [NotNull] [ValidatedNotNull] this Expression<Func<T, TProperty>> expression
+    )
     {
         expression.MustNotBeNull(nameof(expression));
 
         var memberExpression = expression.Body as MemberExpression;
         if (!(memberExpression?.Member is PropertyInfo propertyInfo))
-            throw new ArgumentException("The specified expression is not valid. Please use an expression like the following one: o => o.Property", nameof(expression));
+        {
+            throw new ArgumentException(
+                "The specified expression is not valid. Please use an expression like the following one: o => o.Property",
+                nameof(expression)
+            );
+        }
 
         return propertyInfo;
     }
@@ -42,14 +49,21 @@ public static class ExpressionExtensions
     /// <exception cref="ArgumentException">
     /// Throw when the <paramref name="expression" /> is not of the shape "object => object.Field".
     /// </exception>
-    // ReSharper disable once RedundantNullableFlowAttribute - NotNull is not redundant, see Issue72NotNullAttributeTests
-    public static FieldInfo ExtractField<T, TField>([NotNull, ValidatedNotNull] this Expression<Func<T, TField>> expression)
+    public static FieldInfo ExtractField<T, TField>(
+        // ReSharper disable once RedundantNullableFlowAttribute - NotNull is not redundant, see Issue72NotNullAttributeTests
+        [NotNull] [ValidatedNotNull] this Expression<Func<T, TField>> expression
+    )
     {
         expression.MustNotBeNull(nameof(expression));
 
         var memberExpression = expression.Body as MemberExpression;
         if (!(memberExpression?.Member is FieldInfo fieldInfo))
-            throw new ArgumentException("The specified expression is not valid. Please use an expression like the following one: o => o.Field", nameof(expression));
+        {
+            throw new ArgumentException(
+                "The specified expression is not valid. Please use an expression like the following one: o => o.Field",
+                nameof(expression)
+            );
+        }
 
         return fieldInfo;
     }
