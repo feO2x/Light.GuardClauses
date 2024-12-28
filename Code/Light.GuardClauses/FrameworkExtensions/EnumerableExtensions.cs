@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 using Light.GuardClauses.Exceptions;
 using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
@@ -25,7 +25,7 @@ public static class EnumerableExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("source:null => halt; source:notnull => notnull")]
     // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
-    public static IList<T> AsList<T>([NotNull, ValidatedNotNull] this IEnumerable<T> source) => 
+    public static IList<T> AsList<T>([NotNull] [ValidatedNotNull] this IEnumerable<T> source) =>
         source as IList<T> ?? source.ToList();
 
     /// <summary>
@@ -39,9 +39,13 @@ public static class EnumerableExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="source" /> or <paramref name="createCollection" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("source:null => halt; source:notnull => notnull; createCollection:null => halt")]
-    // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
-    public static IList<T> AsList<T>([NotNull, ValidatedNotNull] this IEnumerable<T> source, Func<IEnumerable<T>, IList<T>> createCollection) => 
-        source as IList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(source.MustNotBeNull(nameof(source)));
+    public static IList<T> AsList<T>(
+        // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull] [ValidatedNotNull] this IEnumerable<T> source,
+        Func<IEnumerable<T>, IList<T>> createCollection
+    ) =>
+        source as IList<T> ??
+        createCollection.MustNotBeNull(nameof(createCollection))(source.MustNotBeNull(nameof(source)));
 
     /// <summary>
     /// Tries to downcast the specified enumerable to an array, or creates a new array with the specified items.
@@ -53,7 +57,8 @@ public static class EnumerableExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("source:null => halt; source:notnull => notnull")]
     // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
-    public static T[] AsArray<T>([NotNull, ValidatedNotNull] this IEnumerable<T> source) => source as T[] ?? source.ToArray();
+    public static T[] AsArray<T>([NotNull] [ValidatedNotNull] this IEnumerable<T> source) =>
+        source as T[] ?? source.ToArray();
 
     /// <summary>
     /// Performs the action on each item of the specified enumerable. If the enumerable contains items that are null, this
@@ -65,8 +70,12 @@ public static class EnumerableExtensions
     /// <param name="throwWhenItemIsNull">The value indicating whether this method should throw a <see cref="CollectionException" /> when any of the items is null (optional). Defaults to true.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> or <paramref name="action" /> is null.</exception>
     /// <exception cref="CollectionException">Thrown when <paramref name="enumerable" /> contains a value that is null and <paramref name="throwWhenItemIsNull" /> is set to true.</exception>
-    // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
-    public static IEnumerable<T> ForEach<T>([NotNull, ValidatedNotNull] this IEnumerable<T> enumerable, Action<T> action, bool throwWhenItemIsNull = true)
+    public static IEnumerable<T> ForEach<T>(
+        // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
+        [NotNull] [ValidatedNotNull] this IEnumerable<T> enumerable,
+        Action<T> action,
+        bool throwWhenItemIsNull = true
+    )
     {
         // ReSharper disable PossibleMultipleEnumeration
         action.MustNotBeNull(nameof(action));
@@ -79,7 +88,14 @@ public static class EnumerableExtensions
                 var item = list[i];
                 if (item is null)
                 {
-                    if (throwWhenItemIsNull) throw new CollectionException(nameof(enumerable), $"The collection contains null at index {i}.");
+                    if (throwWhenItemIsNull)
+                    {
+                        throw new CollectionException(
+                            nameof(enumerable),
+                            $"The collection contains null at index {i}."
+                        );
+                    }
+
                     continue;
                 }
 
@@ -92,7 +108,14 @@ public static class EnumerableExtensions
             {
                 if (item is null)
                 {
-                    if (throwWhenItemIsNull) throw new CollectionException(nameof(enumerable), $"The collection contains null at index {i}.");
+                    if (throwWhenItemIsNull)
+                    {
+                        throw new CollectionException(
+                            nameof(enumerable),
+                            $"The collection contains null at index {i}."
+                        );
+                    }
+
                     ++i;
                     continue;
                 }
@@ -117,7 +140,7 @@ public static class EnumerableExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("source:null => halt; source:notnull => notnull")]
     // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
-    public static IReadOnlyList<T> AsReadOnlyList<T>([NotNull, ValidatedNotNull] this IEnumerable<T> source) =>
+    public static IReadOnlyList<T> AsReadOnlyList<T>([NotNull] [ValidatedNotNull] this IEnumerable<T> source) =>
         source as IReadOnlyList<T> ?? source.ToList();
 
     /// <summary>
@@ -132,8 +155,12 @@ public static class EnumerableExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("source:null => halt; source:notnull => notnull; createCollection:null => halt")]
     // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
-    public static IReadOnlyList<T> AsReadOnlyList<T>([NotNull, ValidatedNotNull] this IEnumerable<T> source, [NotNull, ValidatedNotNull] Func<IEnumerable<T>, IReadOnlyList<T>> createCollection) =>
-        source as IReadOnlyList<T> ?? createCollection.MustNotBeNull(nameof(createCollection))(source.MustNotBeNull(nameof(source)));
+    public static IReadOnlyList<T> AsReadOnlyList<T>(
+        [NotNull] [ValidatedNotNull] this IEnumerable<T> source,
+        [NotNull] [ValidatedNotNull] Func<IEnumerable<T>, IReadOnlyList<T>> createCollection
+    ) =>
+        source as IReadOnlyList<T> ??
+        createCollection.MustNotBeNull(nameof(createCollection))(source.MustNotBeNull(nameof(source)));
     // ReSharper restore RedundantNullableFlowAttribute
 
 
@@ -141,16 +168,21 @@ public static class EnumerableExtensions
     /// Gets the count of the specified enumerable.
     /// </summary>
     /// <param name="enumerable">The enumerable whose count should be determined.</param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("enumerable:null => halt")]
     // ReSharper disable once RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
-    public static int Count([NotNull, ValidatedNotNull] this IEnumerable enumerable)
+    public static int Count([NotNull] [ValidatedNotNull] this IEnumerable enumerable)
     {
         if (enumerable is ICollection collection)
+        {
             return collection.Count;
+        }
+
         if (enumerable is string @string)
+        {
             return @string.Length;
+        }
 
         return DetermineCountViaEnumerating(enumerable);
     }
@@ -159,37 +191,54 @@ public static class EnumerableExtensions
     /// Gets the count of the specified enumerable.
     /// </summary>
     /// <param name="enumerable">The enumerable whose count should be determined.</param>
-    /// <param name="parameterName">The name of the parameter that is passed to the <see cref="ArgumentNullException"/> (optional).</param>
-    /// <param name="message">The message that is passed to the <see cref="ArgumentNullException"/> (optional).</param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
+    /// <param name="parameterName">The name of the parameter that is passed to the <see cref="ArgumentNullException" /> (optional).</param>
+    /// <param name="message">The message that is passed to the <see cref="ArgumentNullException" /> (optional).</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("enumerable:null => halt")]
-    public static int Count([NotNull, ValidatedNotNull] this IEnumerable? enumerable, string? parameterName, string? message)
+    public static int Count(
+        [NotNull] [ValidatedNotNull] this IEnumerable? enumerable,
+        string? parameterName,
+        string? message
+    )
     {
         if (enumerable is ICollection collection)
+        {
             return collection.Count;
+        }
+
         if (enumerable is string @string)
+        {
             return @string.Length;
+        }
 
         return DetermineCountViaEnumerating(enumerable, parameterName, message);
     }
-    
+
     /// <summary>
     /// Gets the count of the specified enumerable.
     /// </summary>
     /// <param name="enumerable">The enumerable whose count should be determined.</param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("enumerable:null => halt")]
     // ReSharper disable RedundantNullableFlowAttribute -- NotNull has an effect, see Issue72NotNullAttributeTests
-    public static int GetCount<T>([NotNull, ValidatedNotNull] this IEnumerable<T> enumerable)
+    public static int GetCount<T>([NotNull] [ValidatedNotNull] this IEnumerable<T> enumerable)
     {
         if (enumerable is ICollection collection)
+        {
             return collection.Count;
+        }
+
         if (enumerable is string @string)
+        {
             return @string.Length;
+        }
+
         if (TryGetCollectionOfTCount(enumerable, out var count))
+        {
             return count;
+        }
 
         return DetermineCountViaEnumerating(enumerable);
     }
@@ -198,19 +247,31 @@ public static class EnumerableExtensions
     /// Gets the count of the specified enumerable.
     /// </summary>
     /// <param name="enumerable">The enumerable whose count should be determined.</param>
-    /// <param name="parameterName">The name of the parameter that is passed to the <see cref="ArgumentNullException"/> (optional).</param>
-    /// <param name="message">The message that is passed to the <see cref="ArgumentNullException"/> (optional).</param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
+    /// <param name="parameterName">The name of the parameter that is passed to the <see cref="ArgumentNullException" /> (optional).</param>
+    /// <param name="message">The message that is passed to the <see cref="ArgumentNullException" /> (optional).</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("enumerable:null => halt")]
-    public static int GetCount<T>([NotNull, ValidatedNotNull] this IEnumerable<T> enumerable, string? parameterName, string? message = null)
+    public static int GetCount<T>(
+        [NotNull] [ValidatedNotNull] this IEnumerable<T> enumerable,
+        string? parameterName,
+        string? message = null
+    )
     {
         if (enumerable is ICollection collection)
+        {
             return collection.Count;
+        }
+
         if (enumerable is string @string)
+        {
             return @string.Length;
+        }
+
         if (TryGetCollectionOfTCount(enumerable, out var count))
+        {
             return count;
+        }
 
         return DetermineCountViaEnumerating(enumerable, parameterName, message);
     }
@@ -222,6 +283,7 @@ public static class EnumerableExtensions
             count = collectionOfT.Count;
             return true;
         }
+
         if (enumerable is IReadOnlyCollection<T> readOnlyCollection)
         {
             count = readOnlyCollection.Count;
@@ -237,24 +299,36 @@ public static class EnumerableExtensions
         var count = 0;
         var enumerator = enumerable.MustNotBeNull(nameof(enumerable)).GetEnumerator();
         while (enumerator.MoveNext())
+        {
             count++;
+        }
+
         if (enumerator is IDisposable disposable)
         {
             disposable.Dispose();
         }
+
         return count;
     }
 
-    private static int DetermineCountViaEnumerating([NotNull] IEnumerable? enumerable, string? parameterName, string? message)
+    private static int DetermineCountViaEnumerating(
+        [NotNull] IEnumerable? enumerable,
+        string? parameterName,
+        string? message
+    )
     {
         var count = 0;
         var enumerator = enumerable.MustNotBeNull(parameterName, message).GetEnumerator();
         while (enumerator.MoveNext())
+        {
             count++;
+        }
+
         if (enumerator is IDisposable disposable)
         {
             disposable.Dispose();
         }
+
         return count;
     }
 
@@ -264,7 +338,9 @@ public static class EnumerableExtensions
         foreach (var i in items)
         {
             if (equalityComparer.Equals(i, item))
+            {
                 return true;
+            }
         }
 
         return false;

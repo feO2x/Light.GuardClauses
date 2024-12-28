@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Light.GuardClauses.FrameworkExtensions;
 using System.Runtime.CompilerServices;
+using Light.GuardClauses.FrameworkExtensions;
 
 namespace Light.GuardClauses;
 
@@ -62,7 +62,7 @@ public readonly struct Range<T> : IEquatable<Range<T>> where T : IComparable<T>
     /// <returns>True if value is within range, otherwise false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool IsValueWithinRange(T value) =>
-        value.MustNotBeNullReference(nameof(value)).CompareTo(From) >= _expectedLowerBoundaryResult && 
+        value.MustNotBeNullReference(nameof(value)).CompareTo(From) >= _expectedLowerBoundaryResult &&
         value.CompareTo(To) <= _expectedUpperBoundaryResult;
 
     /// <summary>
@@ -72,7 +72,7 @@ public readonly struct Range<T> : IEquatable<Range<T>> where T : IComparable<T>
     /// <param name="value">The value that indicates the inclusive lower boundary of the resulting range.</param>
     /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static RangeFromInfo FromInclusive(T value) => new RangeFromInfo(value, true);
+    public static RangeFromInfo FromInclusive(T value) => new (value, true);
 
     /// <summary>
     /// Use this method to create a range in a fluent style using method chaining.
@@ -81,7 +81,7 @@ public readonly struct Range<T> : IEquatable<Range<T>> where T : IComparable<T>
     /// <param name="value">The value that indicates the exclusive lower boundary of the resulting range.</param>
     /// <returns>A value you can use to fluently define the upper boundary of a new range.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static RangeFromInfo FromExclusive(T value) => new RangeFromInfo(value, false);
+    public static RangeFromInfo FromExclusive(T value) => new (value, false);
 
     /// <summary>
     /// The nested <see cref="RangeFromInfo" /> can be used to fluently create a <see cref="Range{T}" />.
@@ -113,7 +113,7 @@ public readonly struct Range<T> : IEquatable<Range<T>> where T : IComparable<T>
         /// Thrown when <paramref name="value" /> is less than the lower boundary value.
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Range<T> ToExclusive(T value) => new Range<T>(_from, value, _isFromInclusive, false);
+        public Range<T> ToExclusive(T value) => new (_from, value, _isFromInclusive, false);
 
         /// <summary>
         /// Use this method to create a range in a fluent style using method chaining.
@@ -125,15 +125,14 @@ public readonly struct Range<T> : IEquatable<Range<T>> where T : IComparable<T>
         /// Thrown when <paramref name="value" /> is less than the lower boundary value.
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Range<T> ToInclusive(T value) => new Range<T>(_from, value, _isFromInclusive);
+        public Range<T> ToInclusive(T value) => new (_from, value, _isFromInclusive);
     }
 
     /// <inheritdoc />
-    public override string ToString() => 
-        $"Range from {CreateRangeDescriptionText()}";
+    public override string ToString() => $"Range from {CreateRangeDescriptionText()}";
 
     /// <summary>
-    /// Returns either "inclusive" or "exclusive", depending on whether <see cref="IsFromInclusive"/> is true or false.
+    /// Returns either "inclusive" or "exclusive", depending on whether <see cref="IsFromInclusive" /> is true or false.
     /// </summary>
     public string LowerBoundaryText
     {
@@ -142,7 +141,7 @@ public readonly struct Range<T> : IEquatable<Range<T>> where T : IComparable<T>
     }
 
     /// <summary>
-    /// Returns either "inclusive" or "exclusive", depending on whether <see cref="IsToInclusive"/> is true or false.
+    /// Returns either "inclusive" or "exclusive", depending on whether <see cref="IsToInclusive" /> is true or false.
     /// </summary>
     public string UpperBoundaryText
     {
@@ -164,7 +163,10 @@ public readonly struct Range<T> : IEquatable<Range<T>> where T : IComparable<T>
     {
         if (IsFromInclusive != other.IsFromInclusive ||
             IsToInclusive != other.IsToInclusive)
+        {
             return false;
+        }
+
         var comparer = EqualityComparer<T>.Default;
         return comparer.Equals(From, other.From) &&
                comparer.Equals(To, other.To);
@@ -173,7 +175,11 @@ public readonly struct Range<T> : IEquatable<Range<T>> where T : IComparable<T>
     /// <inheritdoc />
     public override bool Equals(object? other)
     {
-        if (other is null) return false;
+        if (other is null)
+        {
+            return false;
+        }
+
         return other is Range<T> range && Equals(range);
     }
 
@@ -194,7 +200,7 @@ public readonly struct Range<T> : IEquatable<Range<T>> where T : IComparable<T>
 }
 
 /// <summary>
-/// Provides methods to simplify the creation of <see cref="Range{T}"/> instances.
+/// Provides methods to simplify the creation of <see cref="Range{T}" /> instances.
 /// </summary>
 public static class Range
 {
@@ -243,11 +249,11 @@ public static class Range
     /// The count of this enumerable will be used to create the index range. Please ensure that this enumerable
     /// is actually a collection, not a lazy enumerable.
     /// </param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Range<int> For(IEnumerable enumerable) =>
-        new (0, enumerable.Count(), isFromInclusive: true, isToInclusive: false);
-    
+        new (0, enumerable.Count(), true, false);
+
     /// <summary>
     /// Creates a range for the specified enumerable that encompasses all valid indexes.
     /// </summary>
@@ -255,10 +261,10 @@ public static class Range
     /// The count of this enumerable will be used to create the index range. Please ensure that this enumerable
     /// is actually a collection, not a lazy enumerable.
     /// </param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="enumerable" /> is null.</exception>
     public static Range<int> For<T>(IEnumerable<T> enumerable) =>
-        new (0, enumerable.GetCount(), isFromInclusive: true, isToInclusive: false);
-    
+        new (0, enumerable.GetCount(), true, false);
+
     /// <summary>
     /// Creates a range for the specified span that encompasses all valid indexes.
     /// </summary>
@@ -267,8 +273,8 @@ public static class Range
     /// </param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Range<int> For<T>(ReadOnlySpan<T> span) =>
-        new (0, span.Length, isFromInclusive: true, isToInclusive: false);
-    
+        new (0, span.Length, true, false);
+
     /// <summary>
     /// Creates a range for the specified span that encompasses all valid indexes.
     /// </summary>
@@ -277,7 +283,7 @@ public static class Range
     /// </param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Range<int> For<T>(Span<T> span) =>
-        new (0 , span.Length, isFromInclusive: true, isToInclusive: false);
+        new (0, span.Length, true, false);
 
     /// <summary>
     /// Creates a range for the specified memory that encompasses all valid indexes.
@@ -287,8 +293,8 @@ public static class Range
     /// </param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Range<int> For<T>(Memory<T> memory) =>
-        new (0, memory.Length, isFromInclusive: true, isToInclusive: false);
-    
+        new (0, memory.Length, true, false);
+
     /// <summary>
     /// Creates a range for the specified memory that encompasses all valid indexes.
     /// </summary>
@@ -297,8 +303,8 @@ public static class Range
     /// </param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Range<int> For<T>(ReadOnlyMemory<T> memory) =>
-        new (0, memory.Length, isFromInclusive: true, isToInclusive: false);
-    
+        new (0, memory.Length, true, false);
+
     /// <summary>
     /// Creates a range for the specified memory that encompasses all valid indexes.
     /// </summary>
@@ -307,5 +313,5 @@ public static class Range
     /// </param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Range<int> For<T>(ArraySegment<T> segment) =>
-        new (0, segment.Count, isFromInclusive: true, isToInclusive: false);
+        new (0, segment.Count, true, false);
 }

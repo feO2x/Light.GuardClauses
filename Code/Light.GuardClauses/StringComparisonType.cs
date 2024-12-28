@@ -4,9 +4,9 @@
 /// Specifies the culture, case , and sort rules when comparing strings.
 /// </summary>
 /// <remarks>
-/// This enum is en extension of <see cref="System.StringComparison"/>, adding
+/// This enum is en extension of <see cref="System.StringComparison" />, adding
 /// capabilities to ignore white space when making string equality comparisons.
-/// See the <see cref="Check.Equals(string,string,StringComparisonType)"/> when
+/// See the <see cref="Check.Equals(string,string,StringComparisonType)" /> when
 /// you want to compare in such a way.
 /// </remarks>
 public enum StringComparisonType
