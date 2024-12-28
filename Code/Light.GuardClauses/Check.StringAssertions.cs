@@ -12,14 +12,6 @@ namespace Light.GuardClauses;
 public static partial class Check
 {
     /// <summary>
-    /// Checks if the specified string is null or empty.
-    /// </summary>
-    /// <param name="string">The string to be checked.</param>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [ContractAnnotation("=> false, string:notnull; => true, string:canbenull")]
-    public static bool IsNullOrEmpty([NotNullWhen(false)] this string? @string) => string.IsNullOrEmpty(@string);
-
-    /// <summary>
     /// Ensures that the specified string is not null or empty, or otherwise throws an <see cref="ArgumentNullException" /> or <see cref="EmptyStringException" />.
     /// </summary>
     /// <param name="parameter">The string to be checked.</param>

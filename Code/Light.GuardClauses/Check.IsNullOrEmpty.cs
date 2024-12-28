@@ -17,4 +17,12 @@ public static partial class Check
     [ContractAnnotation("=> true, collection:canbenull; => false, collection:notnull")]
     public static bool IsNullOrEmpty([NotNullWhen(false)] this IEnumerable? collection) =>
         collection is null || collection.Count() == 0;
+
+    /// <summary>
+    /// Checks if the specified string is null or empty.
+    /// </summary>
+    /// <param name="string">The string to be checked.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("=> false, string:notnull; => true, string:canbenull")]
+    public static bool IsNullOrEmpty([NotNullWhen(false)] this string? @string) => string.IsNullOrEmpty(@string);
 }
