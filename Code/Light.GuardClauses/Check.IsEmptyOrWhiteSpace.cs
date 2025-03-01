@@ -34,4 +34,18 @@ public static partial class Check
 
         return true;
     }
+
+    /// <summary>
+    /// Checks if the specified memory is empty or contains only white space characters.
+    /// </summary>
+    /// <param name="memory">The memory to be checked.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsEmptyOrWhiteSpace(this Memory<char> memory) => memory.Span.IsEmptyOrWhiteSpace();
+
+    /// <summary>
+    /// Checks if the specified memory is empty or contains only white space characters.
+    /// </summary>
+    /// <param name="memory">The memory to be checked.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsEmptyOrWhiteSpace(this ReadOnlyMemory<char> memory) => memory.Span.IsEmptyOrWhiteSpace();
 }
