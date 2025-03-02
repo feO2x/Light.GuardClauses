@@ -382,6 +382,22 @@ public static class Throw
         throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must be trimmed at the end, but it actually is {parameter.ToStringOrNull()}.");
 
     /// <summary>
+    /// Throws the default <see cref="StringException"/> indicating that a string is not a valid file extension.
+    /// </summary>
+    [ContractAnnotation("=> halt")]
+    [DoesNotReturn]
+    public static void NotFileExtension(string? parameter, string? parameterName, string? message) =>
+        throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must be a valid file extension, but it actually is {parameter.ToStringOrNull()}.");
+    
+    /// <summary>
+    /// Throws the default <see cref="StringException"/> indicating that a string is not a valid file extension.
+    /// </summary>
+    [ContractAnnotation("=> halt")]
+    [DoesNotReturn]
+    public static void NotFileExtension(ReadOnlySpan<char> parameter, string? parameterName, string? message) =>
+        throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must be a valid file extension, but it actually is {parameter.ToString()}.");
+
+    /// <summary>
     /// Throws the default <see cref="ValuesNotEqualException" /> indicating that two values are not equal, using the optional parameter name and message.
     /// </summary>
     [ContractAnnotation("=> halt")]
@@ -658,8 +674,16 @@ public static class Throw
     [ContractAnnotation("=> halt")]
     [DoesNotReturn]
     public static void CustomSpanException<TItem, T>(SpanExceptionFactory<TItem, T> exceptionFactory, in Span<TItem> span, T value) =>
-        throw exceptionFactory.MustNotBeNull(nameof(exceptionFactory))(span, value);
-
+        throw exceptionFactory.MustNotBeNull(nameof(exceptionFactory)).Invoke(span, value);
+    
+    /// <summary>
+    /// Throws the exception that is returned by <paramref name="exceptionFactory"/>. <paramref name="span"/> is passed to <paramref name="exceptionFactory"/>.
+    /// </summary>
+    [ContractAnnotation("=> halt")]
+    [DoesNotReturn]
+    public static void CustomSpanException<TItem>(ReadOnlySpanExceptionFactory<TItem> exceptionFactory, in ReadOnlySpan<TItem> span) =>
+        throw exceptionFactory.MustNotBeNull(nameof(exceptionFactory))(span);
+    
     /// <summary>
     /// Throws the exception that is returned by <paramref name="exceptionFactory"/>. <paramref name="span"/> and <paramref name="value"/> are passed to <paramref name="exceptionFactory"/>.
     /// </summary>
@@ -667,6 +691,4 @@ public static class Throw
     [DoesNotReturn]
     public static void CustomSpanException<TItem, T>(ReadOnlySpanExceptionFactory<TItem, T> exceptionFactory, in ReadOnlySpan<TItem> span, T value) =>
         throw exceptionFactory.MustNotBeNull(nameof(exceptionFactory))(span, value);
-
-
 }
