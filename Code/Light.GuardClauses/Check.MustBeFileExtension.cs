@@ -19,7 +19,7 @@ public static partial class Check
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
     public static string MustBeFileExtension(
-        [NotNull] [ValidatedNotNull] this string? parameter,
+        [NotNull][ValidatedNotNull] this string? parameter,
         [CallerArgumentExpression(nameof(parameter))] string? parameterName = null,
         string? message = null
     )
@@ -41,7 +41,7 @@ public static partial class Check
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
     public static string MustBeFileExtension(
-        [NotNull] [ValidatedNotNull] this string? parameter,
+        [NotNull][ValidatedNotNull] this string? parameter,
         Func<string?, Exception> exceptionFactory
     )
     {
@@ -68,7 +68,23 @@ public static partial class Check
         string? message = null
     )
     {
-        ((ReadOnlySpan<char>) parameter).MustBeFileExtension(parameterName, message);
+        ((ReadOnlySpan<char>)parameter).MustBeFileExtension(parameterName, message);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the character span is a valid file extension, or otherwise throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The character span to be checked.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.</param>
+    /// <returns>The original character span.</returns>
+    /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is not a valid file extension.</exception>
+    public static Span<char> MustBeFileExtension(
+        this Span<char> parameter,
+        ReadOnlySpanExceptionFactory<char> exceptionFactory
+    )
+    {
+        ((ReadOnlySpan<char>)parameter).MustBeFileExtension(exceptionFactory);
         return parameter;
     }
 
@@ -87,7 +103,23 @@ public static partial class Check
         string? message = null
     )
     {
-        ((ReadOnlySpan<char>) parameter.Span).MustBeFileExtension(parameterName, message);
+        ((ReadOnlySpan<char>)parameter.Span).MustBeFileExtension(parameterName, message);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the character memory is a valid file extension, or otherwise throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The character memory to be checked.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.</param>
+    /// <returns>The original character memory.</returns>
+    /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is not a valid file extension.</exception>
+    public static Memory<char> MustBeFileExtension(
+        this Memory<char> parameter,
+        ReadOnlySpanExceptionFactory<char> exceptionFactory
+    )
+    {
+        ((ReadOnlySpan<char>)parameter.Span).MustBeFileExtension(exceptionFactory);
         return parameter;
     }
 
@@ -111,6 +143,22 @@ public static partial class Check
     }
 
     /// <summary>
+    /// Ensures that the read-only character memory is a valid file extension, or otherwise throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The read-only character memory to be checked.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.</param>
+    /// <returns>The original read-only character memory.</returns>
+    /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is not a valid file extension.</exception>
+    public static ReadOnlyMemory<char> MustBeFileExtension(
+        this ReadOnlyMemory<char> parameter,
+        ReadOnlySpanExceptionFactory<char> exceptionFactory
+    )
+    {
+        parameter.Span.MustBeFileExtension(exceptionFactory);
+        return parameter;
+    }
+
+    /// <summary>
     /// Ensures that the read-only character span is a valid file extension, or otherwise throws a <see cref="StringException" />.
     /// </summary>
     /// <param name="parameter">The read-only character span to be checked.</param>
@@ -128,6 +176,26 @@ public static partial class Check
         if (!parameter.IsFileExtension())
         {
             Throw.NotFileExtension(parameter, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the read-only character span is a valid file extension, or otherwise throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The read-only character span to be checked.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.</param>
+    /// <returns>The original read-only character span.</returns>
+    /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> is not a valid file extension.</exception>
+    public static ReadOnlySpan<char> MustBeFileExtension(
+        this ReadOnlySpan<char> parameter,
+        ReadOnlySpanExceptionFactory<char> exceptionFactory
+    )
+    {
+        if (!parameter.IsFileExtension())
+        {
+            Throw.CustomSpanException(exceptionFactory, parameter);
         }
 
         return parameter;

@@ -674,8 +674,16 @@ public static class Throw
     [ContractAnnotation("=> halt")]
     [DoesNotReturn]
     public static void CustomSpanException<TItem, T>(SpanExceptionFactory<TItem, T> exceptionFactory, in Span<TItem> span, T value) =>
-        throw exceptionFactory.MustNotBeNull(nameof(exceptionFactory))(span, value);
-
+        throw exceptionFactory.MustNotBeNull(nameof(exceptionFactory)).Invoke(span, value);
+    
+    /// <summary>
+    /// Throws the exception that is returned by <paramref name="exceptionFactory"/>. <paramref name="span"/> is passed to <paramref name="exceptionFactory"/>.
+    /// </summary>
+    [ContractAnnotation("=> halt")]
+    [DoesNotReturn]
+    public static void CustomSpanException<TItem>(ReadOnlySpanExceptionFactory<TItem> exceptionFactory, in ReadOnlySpan<TItem> span) =>
+        throw exceptionFactory.MustNotBeNull(nameof(exceptionFactory))(span);
+    
     /// <summary>
     /// Throws the exception that is returned by <paramref name="exceptionFactory"/>. <paramref name="span"/> and <paramref name="value"/> are passed to <paramref name="exceptionFactory"/>.
     /// </summary>
