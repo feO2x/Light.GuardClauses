@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
@@ -14,9 +15,54 @@ public static partial class Check
     /// </param>
     /// <returns>True if the string is a valid file extension, false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsFileExtension([NotNullWhen(true)] this string? value)
+    public static bool IsFileExtension([NotNullWhen(true)] this string? value) =>
+        value != null && IsFileExtension(value.AsSpan());
+
+    /// <summary>
+    /// Checks if the specified character span represents a valid file extension.
+    /// </summary>
+    /// <param name="value">
+    /// The character span to be checked. It must start with a period (.) and can only contain letters, digits,
+    /// and additional periods.
+    /// </param>
+    /// <returns>True if the span is a valid file extension, false otherwise.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsFileExtension(this Span<char> value) => IsFileExtension((ReadOnlySpan<char>) value);
+
+    /// <summary>
+    /// Checks if the specified character memory represents a valid file extension.
+    /// </summary>
+    /// <param name="value">
+    /// The character span to be checked. It must start with a period (.) and can only contain letters, digits,
+    /// and additional periods.
+    /// </param>
+    /// <returns>True if the span is a valid file extension, false otherwise.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsFileExtension(this ReadOnlyMemory<char> value) => IsFileExtension(value.Span);
+
+    /// <summary>
+    /// Checks if the specified character memory represents a valid file extension.
+    /// </summary>
+    /// <param name="value">
+    /// The character span to be checked. It must start with a period (.) and can only contain letters, digits,
+    /// and additional periods.
+    /// </param>
+    /// <returns>True if the span is a valid file extension, false otherwise.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsFileExtension(this Memory<char> value) => IsFileExtension(value.Span);
+
+    /// <summary>
+    /// Checks if the specified character span represents a valid file extension.
+    /// </summary>
+    /// <param name="value">
+    /// The character span to be checked. It must start with a period (.) and can only contain letters, digits,
+    /// and additional periods.
+    /// </param>
+    /// <returns>True if the span is a valid file extension, false otherwise.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsFileExtension(this ReadOnlySpan<char> value)
     {
-        if (value is not { Length: > 1 } || value[0] != '.' || value[value.Length - 1] == '.')
+        if (value.Length <= 1 || value[0] != '.' || value[value.Length - 1] == '.')
         {
             return false;
         }
