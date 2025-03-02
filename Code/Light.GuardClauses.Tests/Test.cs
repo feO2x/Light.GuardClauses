@@ -115,7 +115,7 @@ public static class Test
         }
     }
 
-    private sealed class ExceptionDummy : Exception { };
+    private sealed class ExceptionDummy : Exception;
 
     public static void WriteExceptionTo<T>(this ExceptionAssertions<T> exceptionAssertions, ITestOutputHelper output) where T : Exception =>
         output.WriteLine(exceptionAssertions.Which.ToString());
