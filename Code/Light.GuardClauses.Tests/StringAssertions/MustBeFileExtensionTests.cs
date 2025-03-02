@@ -126,14 +126,12 @@ public static class MustBeFileExtensionTests
     [Fact]
     public static void CallerArgumentExpression_Span()
     {
-        // Act & Assert
         var act = () =>
         {
             var invalidSpan = "txt".AsSpan();
             invalidSpan.MustBeFileExtension();
         };
         
-        // Should throw with parameter name matching the variable name
         act.Should().Throw<StringException>()
            .WithParameterName("invalidSpan");
     }
