@@ -86,7 +86,7 @@ public static class MustBeFileExtensionTests
         
         var result = span.MustBeFileExtension();
         
-        result.ToString().Should().Be(input);
+        result.Equals(span, StringComparison.Ordinal).Should().BeTrue();
     }
 
     [Theory]
