@@ -24,12 +24,12 @@ public static partial class Check
         var hasAlphanumeric = false;
         for (var i = 1; i < value.Length; i++)
         {
-            var c = value[i];
-            if (c.IsLetterOrDigit())
+            var character = value[i];
+            if (character.IsLetterOrDigit())
             {
                 hasAlphanumeric = true;
             }
-            else if (c != '.')
+            else if (character != '.')
             {
                 return false;
             }
