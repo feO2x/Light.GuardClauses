@@ -9,19 +9,18 @@ namespace Light.GuardClauses;
 public static partial class Check
 {
     /// <summary>
-    /// Ensures that the string is a valid file extension, or otherwise throws an <see cref="ArgumentException" />.
+    /// Ensures that the string is a valid file extension, or otherwise throws an <see cref="StringException" />.
     /// </summary>
     /// <param name="parameter">The string to be checked.</param>
     /// <param name="parameterName">The name of the parameter (optional).</param>
     /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
-    /// <exception cref="ArgumentException">Thrown when <paramref name="parameter" /> is not a valid file extension.</exception>
+    /// <exception cref="StringException">Thrown when <paramref name="parameter" /> is not a valid file extension.</exception>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="parameter" /> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
     public static string MustBeFileExtension(
         [NotNull] [ValidatedNotNull] this string? parameter,
-        [CallerArgumentExpression("parameter")]
-        string? parameterName = null,
+        [CallerArgumentExpression(nameof(parameter))] string? parameterName = null,
         string? message = null
     )
     {
@@ -49,6 +48,86 @@ public static partial class Check
         if (parameter is null || !parameter.IsFileExtension())
         {
             Throw.CustomException(exceptionFactory, parameter);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the character span is a valid file extension, or otherwise throws a <see cref="StringException" />.
+    /// </summary>
+    /// <param name="parameter">The character span to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <returns>The original character span.</returns>
+    /// <exception cref="StringException">Thrown when <paramref name="parameter" /> is not a valid file extension.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Span<char> MustBeFileExtension(
+        this Span<char> parameter,
+        [CallerArgumentExpression(nameof(parameter))] string? parameterName = null,
+        string? message = null
+    )
+    {
+        ((ReadOnlySpan<char>) parameter).MustBeFileExtension(parameterName, message);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the character memory is a valid file extension, or otherwise throws a <see cref="StringException" />.
+    /// </summary>
+    /// <param name="parameter">The character memory to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <returns>The original character memory.</returns>
+    /// <exception cref="StringException">Thrown when <paramref name="parameter" /> is not a valid file extension.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Memory<char> MustBeFileExtension(
+        this Memory<char> parameter,
+        [CallerArgumentExpression(nameof(parameter))] string? parameterName = null,
+        string? message = null
+    )
+    {
+        ((ReadOnlySpan<char>) parameter.Span).MustBeFileExtension(parameterName, message);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the read-only character memory is a valid file extension, or otherwise throws a <see cref="StringException" />.
+    /// </summary>
+    /// <param name="parameter">The read-only character memory to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <returns>The original read-only character memory.</returns>
+    /// <exception cref="StringException">Thrown when <paramref name="parameter" /> is not a valid file extension.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ReadOnlyMemory<char> MustBeFileExtension(
+        this ReadOnlyMemory<char> parameter,
+        [CallerArgumentExpression(nameof(parameter))] string? parameterName = null,
+        string? message = null
+    )
+    {
+        parameter.Span.MustBeFileExtension(parameterName, message);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the read-only character span is a valid file extension, or otherwise throws a <see cref="StringException" />.
+    /// </summary>
+    /// <param name="parameter">The read-only character span to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <returns>The original read-only character span.</returns>
+    /// <exception cref="StringException">Thrown when <paramref name="parameter" /> is not a valid file extension.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ReadOnlySpan<char> MustBeFileExtension(
+        this ReadOnlySpan<char> parameter,
+        [CallerArgumentExpression(nameof(parameter))] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (!parameter.IsFileExtension())
+        {
+            Throw.NotFileExtension(parameter, parameterName, message);
         }
 
         return parameter;
