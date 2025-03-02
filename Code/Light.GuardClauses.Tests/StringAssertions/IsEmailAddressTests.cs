@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertions;
 
-public sealed class IsEmailAddressTest
+public sealed class IsEmailAddressTests
 {
     [Theory]
     [InlineData(null)]
@@ -16,12 +16,12 @@ public sealed class IsEmailAddressTest
     [InlineData(".email@domain.com")]
     [InlineData("email.@domain.com")]
     [InlineData("email..email@domain.com")]
-    [InlineData("あいうえお@domain.com")]
     [InlineData("email@domain.com (Joe Smith)")]
     [InlineData("email@domain")]
     [InlineData("email@-domain.com")]
     [InlineData("email@111.222.333.44444")]
     [InlineData("email@domain..com")]
+    [InlineData("email@256.256.256.256")] // Invalid IP (values > 255)
     public void IsNotValidEmailAddress(string email)
     {
         var isValid = email.IsEmailAddress();
@@ -41,6 +41,13 @@ public sealed class IsEmailAddressTest
     [InlineData("email@domain.name")]
     [InlineData("email@domain.co.jp")]
     [InlineData("firstname-lastname@domain.com")]
+    [InlineData("email@domain.museum")] // Long TLD (>4 chars)
+    [InlineData("email@domain.travel")] // Another long TLD
+    [InlineData("email@domain.photography")] // Even longer TLD
+    [InlineData("email@[IPv6:2001:db8::1]")] // IPv6 format
+    [InlineData("\"quoted\"@domain.com")] // Quoted local part
+    [InlineData("user.name+tag+sorting@example.com")] // Gmail-style + addressing
+    [InlineData("あいうえお@domain.com")] // Unicode character test
     public void IsValidEmailAddress(string email)
     {
         var isValid = email.IsEmailAddress();

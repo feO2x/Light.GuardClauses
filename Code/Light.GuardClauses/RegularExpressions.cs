@@ -14,8 +14,9 @@ public static class RegularExpressions
     /// <summary>
     /// Gets the string that represents the <see cref="EmailRegex" />.
     /// </summary>
+    // This is an AI-generated regex. I don't have any clue and I find it way to complex to ever understand it.
     public const string EmailRegexText =
-        @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*@((((\w+\-?)+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$";
+        @"^(?:(?:""(?:(?:[^""\\]|\\.)*)""|[\p{L}\p{N}!#$%&'*+\-/=?^_`{|}~-]+(?:\.[\p{L}\p{N}!#$%&'*+\-/=?^_`{|}~-]+)*)@(?:(?:[A-Za-z0-9](?:[A-Za-z0-9\-]*[A-Za-z0-9])?\.)+[A-Za-z]{2,}|(?:\[(?:IPv6:[0-9A-Fa-f:.]+)\])|(?:25[0-5]|2[0-4]\d|[01]?\d?\d)(?:\.(?:25[0-5]|2[0-4]\d|[01]?\d?\d)){3}))$";
 
     /// <summary>
     /// Gets the default regular expression for email validation.
