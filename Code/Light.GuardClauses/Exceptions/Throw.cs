@@ -84,6 +84,14 @@ public static class Throw
     [DoesNotReturn]
     public static void InvalidEmailAddress(string parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
         throw new InvalidEmailAddressException(parameterName, message ?? $"{parameterName ?? "The string"} must be a valid email address, but it actually is \"{parameter}\".");
+    
+    /// <summary>
+    /// Throws an <see cref="InvalidEmailAddressException"/> using the optional message.
+    /// </summary>
+    [ContractAnnotation("=> halt")]
+    [DoesNotReturn]
+    public static void InvalidEmailAddress(ReadOnlySpan<char> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) =>
+        throw new InvalidEmailAddressException(parameterName, message ?? $"{parameterName ?? "The string"} must be a valid email address, but it actually is \"{parameter.ToString()}\".");
 
     /// <summary>
     /// Throws the default <see cref="NullableHasNoValueException" /> indicating that a <see cref="Nullable{T}" /> has no value, using the optional parameter name and message.
