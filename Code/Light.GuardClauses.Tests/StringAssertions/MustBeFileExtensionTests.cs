@@ -1,5 +1,6 @@
 using System;
 using FluentAssertions;
+using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
 using Xunit;
 
@@ -73,5 +74,64 @@ public static class MustBeFileExtensionTests
 
         act.Should().Throw<ArgumentException>()
            .WithParameterName(nameof(invalidString));
+    }
+
+    [Theory]
+    [InlineData(".txt")]
+    [InlineData(".jpg")]
+    [InlineData(".tar.gz")]
+    public static void ValidFileExtensions_Span(string input)
+    {
+        var span = input.AsSpan();
+        
+        var result = span.MustBeFileExtension();
+        
+        result.ToString().Should().Be(input);
+    }
+
+    [Theory]
+    [MemberData(nameof(InvalidFileExtensionsData))]
+    public static void InvalidFileExtensions_Span(string invalidString)
+    {
+        var act = () =>
+        {
+            var span = new ReadOnlySpan<char>(invalidString?.ToCharArray() ?? []);
+            span.MustBeFileExtension("parameterName");
+        };
+        
+        act.Should().Throw<StringException>()
+           .And.Message.Should().Contain(
+                $"parameterName must be a valid file extension, but it actually is {invalidString}"
+            );
+    }
+
+    [Theory]
+    [MemberData(nameof(InvalidFileExtensionsData))]
+    public static void CustomExceptionInvalidFileExtensions_Span(string invalidString)
+    {
+        var exception = new Exception();
+
+        var act = () =>
+        {
+            var span = new ReadOnlySpan<char>(invalidString?.ToCharArray() ?? []);
+            span.MustBeFileExtension(_ => exception);
+        };
+
+        act.Should().Throw<Exception>().Which.Should().BeSameAs(exception);
+    }
+
+    [Fact]
+    public static void CallerArgumentExpression_Span()
+    {
+        // Act & Assert
+        var act = () =>
+        {
+            var invalidSpan = "txt".AsSpan();
+            invalidSpan.MustBeFileExtension();
+        };
+        
+        // Should throw with parameter name matching the variable name
+        act.Should().Throw<StringException>()
+           .WithParameterName("invalidSpan");
     }
 }
