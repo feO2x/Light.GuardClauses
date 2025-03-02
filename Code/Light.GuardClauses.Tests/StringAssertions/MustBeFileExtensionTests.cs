@@ -18,11 +18,16 @@ public static class MustBeFileExtensionTests
         "....",
         ".docx.",
     ];
+    
+    public static readonly TheoryData<string> ValidFileExtensionsData =
+    [
+        ".txt",
+        ".jpg",
+        ".tar.gz",
+    ];
 
     [Theory]
-    [InlineData(".txt")]
-    [InlineData(".jpg")]
-    [InlineData(".tar.gz")]
+    [MemberData(nameof(ValidFileExtensionsData))]
     public static void ValidFileExtensions(string input) =>
         input.MustBeFileExtension().Should().BeSameAs(input);
 
@@ -77,9 +82,7 @@ public static class MustBeFileExtensionTests
     }
 
     [Theory]
-    [InlineData(".txt")]
-    [InlineData(".jpg")]
-    [InlineData(".tar.gz")]
+    [MemberData(nameof(ValidFileExtensionsData))]
     public static void ValidFileExtensions_Span(string input)
     {
         var span = input.AsSpan();
