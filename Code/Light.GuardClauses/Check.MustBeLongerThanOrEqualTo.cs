@@ -74,11 +74,7 @@ public static partial class Check
         string? message = null
     )
     {
-        if (parameter.Length < length)
-        {
-            Throw.SpanMustBeLongerThanOrEqualTo(parameter, length, parameterName, message);
-        }
-
+        ((ReadOnlySpan<T>) parameter).MustBeLongerThanOrEqualTo(length, parameterName, message);
         return parameter;
     }
 
@@ -116,7 +112,7 @@ public static partial class Check
     public static ReadOnlySpan<T> MustBeLongerThanOrEqualTo<T>(
         this ReadOnlySpan<T> parameter,
         int length,
-        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        [CallerArgumentExpression(nameof(parameter))] string? parameterName = null,
         string? message = null
     )
     {

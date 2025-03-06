@@ -2,7 +2,6 @@ using System;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Light.GuardClauses.ExceptionFactory;
-using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses;
 

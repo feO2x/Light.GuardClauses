@@ -74,11 +74,7 @@ public static partial class Check
         string? message = null
     )
     {
-        if (parameter.Length != length)
-        {
-            Throw.InvalidSpanLength(parameter, length, parameterName, message);
-        }
-
+        ((ReadOnlySpan<T>) parameter).MustHaveLength(length, parameterName, message);
         return parameter;
     }
 
