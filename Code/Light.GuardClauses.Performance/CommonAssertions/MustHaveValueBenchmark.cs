@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using BenchmarkDotNet.Attributes;
+using Light.GuardClauses.ExceptionFactory;
 using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CommonAssertions

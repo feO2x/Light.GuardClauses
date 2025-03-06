@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using BenchmarkDotNet.Attributes;
+using Light.GuardClauses.ExceptionFactory;
 using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CollectionAssertions
