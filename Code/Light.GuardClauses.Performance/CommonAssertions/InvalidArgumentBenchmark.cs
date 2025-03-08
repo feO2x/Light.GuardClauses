@@ -1,5 +1,6 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
+using Light.GuardClauses.ExceptionFactory;
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
@@ -34,7 +35,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
         public bool LightGuardClausesCustomExceptionManualInlining()
         {
             if (Condition)
-                Exceptions.Throw.CustomException(() => new ArgumentException(Message, ParameterName));
+                Throw.CustomException(() => new ArgumentException(Message, ParameterName));
             return Condition;
         }
 

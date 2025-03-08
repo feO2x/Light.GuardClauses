@@ -1,6 +1,7 @@
 using System;
 using JetBrains.Annotations;
 using System.Runtime.CompilerServices;
+using Light.GuardClauses.ExceptionFactory;
 using Light.GuardClauses.Exceptions;
 using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 

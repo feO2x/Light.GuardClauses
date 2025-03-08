@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using Light.GuardClauses.Exceptions;
 using JetBrains.Annotations;
+using Light.GuardClauses.ExceptionFactory;
 using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace Light.GuardClauses;
@@ -73,11 +74,7 @@ public static partial class Check
         string? message = null
     )
     {
-        if (parameter.Length >= length)
-        {
-            Throw.SpanMustBeShorterThan(parameter, length, parameterName, message);
-        }
-
+        ((ReadOnlySpan<T>) parameter).MustBeShorterThan(length, parameterName, message);
         return parameter;
     }
 

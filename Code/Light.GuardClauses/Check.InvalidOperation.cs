@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
-using Light.GuardClauses.Exceptions;
+using Light.GuardClauses.ExceptionFactory;
 
 namespace Light.GuardClauses;
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using Light.GuardClauses.ExceptionFactory;
 using Light.GuardClauses.Exceptions;
 using Light.GuardClauses.FrameworkExtensions;
 using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;

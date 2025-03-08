@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using BenchmarkDotNet.Attributes;
+using Light.GuardClauses.ExceptionFactory;
 using Light.GuardClauses.Exceptions;
 
 namespace Light.GuardClauses.Performance.CollectionAssertions
@@ -47,7 +48,7 @@ namespace Light.GuardClauses.Performance.CollectionAssertions
         public static Span<T> MustHaveLengthCopyByValue<T>(this Span<T> parameter, int length, string parameterName = null, string message = null)
         {
             if (parameter.Length != length)
-                Throw.InvalidSpanLength(parameter, length, parameterName, message);
+                Throw.InvalidSpanLength((ReadOnlySpan<T>) parameter, length, parameterName, message);
             return parameter;
         }
 
@@ -55,7 +56,7 @@ namespace Light.GuardClauses.Performance.CollectionAssertions
         public static Span<T> MustHaveLengthInParameter<T>(in this Span<T> parameter, int length, string parameterName = null, string message = null)
         {
             if (parameter.Length != length)
-                Throw.InvalidSpanLength(parameter, length, parameterName, message);
+                Throw.InvalidSpanLength((ReadOnlySpan<T>) parameter, length, parameterName, message);
             return parameter;
         }
 
@@ -63,7 +64,7 @@ namespace Light.GuardClauses.Performance.CollectionAssertions
         public static ref Span<T> MustHaveLengthInOut<T>(ref this Span<T> parameter, int length, string parameterName = null, string message = null)
         {
             if (parameter.Length != length)
-                Throw.InvalidSpanLength(parameter, length, parameterName, message);
+                Throw.InvalidSpanLength((ReadOnlySpan<T>) parameter, length, parameterName, message);
             return ref parameter;
         }
     }
