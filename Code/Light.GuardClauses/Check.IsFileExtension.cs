@@ -62,6 +62,7 @@ public static partial class Check
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsFileExtension(this ReadOnlySpan<char> value)
     {
+        // ReSharper disable once UseIndexFromEndExpression -- cannot use index from end expression in .NET Standard 2.0
         if (value.Length <= 1 || value[0] != '.' || value[value.Length - 1] == '.')
         {
             return false;
