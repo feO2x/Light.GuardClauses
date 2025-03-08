@@ -20,7 +20,7 @@ public static partial class Check
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsApproximately(this double value, double other, double tolerance) =>
-        Math.Abs(value - other) < tolerance;
+        Math.Abs(value - other) <= tolerance;
 
     /// <summary>
     /// Checks if the specified value is approximately the same as the other value, using the default tolerance of 0.0001.
@@ -33,7 +33,7 @@ public static partial class Check
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsApproximately(this double value, double other) =>
-        Math.Abs(value - other) < 0.0001;
+        Math.Abs(value - other) <= 0.0001;
 
     /// <summary>
     /// Checks if the specified value is approximately the same as the other value, using the given tolerance.
@@ -47,7 +47,7 @@ public static partial class Check
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsApproximately(this float value, float other, float tolerance) =>
-        Math.Abs(value - other) < tolerance;
+        Math.Abs(value - other) <= tolerance;
 
     /// <summary>
     /// Checks if the specified value is approximately the same as the other value, using the default tolerance of 0.0001f.
@@ -60,7 +60,7 @@ public static partial class Check
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsApproximately(this float value, float other) =>
-        Math.Abs(value - other) < 0.0001f;
+        Math.Abs(value - other) <= 0.0001f;
 
 #if NET8_0
     /// <summary>
@@ -76,6 +76,6 @@ public static partial class Check
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsApproximately<T>(this T value, T other, T tolerance) where T : INumber<T> =>
-        T.Abs(value - other) < tolerance;
+        T.Abs(value - other) <= tolerance;
 #endif
 }
