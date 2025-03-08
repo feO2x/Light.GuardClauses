@@ -1,4 +1,7 @@
 using System.Runtime.CompilerServices;
+#if NET8_0
+using System.Numerics;
+#endif
 
 namespace Light.GuardClauses;
 
@@ -57,4 +60,21 @@ public static partial class Check
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsLessThanOrApproximately(this float value, float other) =>
         value < other || value.IsApproximately(other);
+
+#if NET8_0
+    /// <summary>
+    /// Checks if the specified value is less than or approximately the same as the other value, using the given tolerance.
+    /// </summary>
+    /// <param name="value">The first value to compare.</param>
+    /// <param name="other">The second value to compare.</param>
+    /// <param name="tolerance">The tolerance indicating how much the two values may differ from each other.</param>
+    /// <typeparam name="T">The type that implements the <see cref="INumber{T}" /> interface.</typeparam>
+    /// <returns>
+    /// True if <paramref name="value" /> is less than <paramref name="other" /> or if their absolute difference
+    /// is smaller than the given <paramref name="tolerance" />, otherwise false.
+    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsLessThanOrApproximately<T>(this T value, T other, T tolerance) where T : INumber<T> =>
+        value < other || value.IsApproximately(other, tolerance);
+#endif
 }
