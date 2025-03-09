@@ -3,6 +3,7 @@
 using System;
 using FluentAssertions;
 using FluentAssertions.Specialized;
+using Light.GuardClauses.ExceptionFactory;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 

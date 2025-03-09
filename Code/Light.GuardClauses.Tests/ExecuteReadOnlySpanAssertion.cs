@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System;
+using Light.GuardClauses.ExceptionFactory;
 
 namespace Light.GuardClauses.Tests;
 

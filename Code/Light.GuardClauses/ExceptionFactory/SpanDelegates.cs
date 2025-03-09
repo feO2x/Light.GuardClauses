@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Light.GuardClauses;
+namespace Light.GuardClauses.ExceptionFactory;
 
 /// <summary>
 /// Represents a delegate that receives a span and a value as parameters and that produces an exception.
