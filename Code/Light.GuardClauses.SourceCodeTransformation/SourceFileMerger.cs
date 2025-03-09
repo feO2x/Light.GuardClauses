@@ -24,17 +24,20 @@ public static class SourceFileMerger
         {
             Console.WriteLine("Appending version header...");
             stringBuilder.AppendLine("/* ------------------------------")
-                         .AppendLine($"   Light.GuardClauses {typeof(SourceFileMerger).Assembly.GetName().Version!.ToString(3)}")
+                         .AppendLine(
+                              $"   Light.GuardClauses {typeof(SourceFileMerger).Assembly.GetName().Version!.ToString(3)}"
+                          )
                          .AppendLine("   ------------------------------")
                          .AppendLine();
         }
 
         Console.WriteLine("Creating default file layout...");
         stringBuilder.AppendLineIf(!options.IncludeVersionComment, "/*")
-                     .AppendLine($@"License information for Light.GuardClauses
+                     .AppendLine(
+                          $@"License information for Light.GuardClauses
 
 The MIT License (MIT)
-Copyright (c) 2016, 2024 Kenny Pflug mailto:kenny.pflug@live.de
+Copyright (c) 2016, 2025 Kenny Pflug mailto:kenny.pflug@live.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the ""Software""), to deal
@@ -68,6 +71,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 {(options.IncludeJetBrainsAnnotationsUsing ? "using JetBrains.Annotations;" + Environment.NewLine : string.Empty)}using {options.BaseNamespace}.Exceptions;
+using {options.BaseNamespace}.ExceptionFactory;
 using {options.BaseNamespace}.FrameworkExtensions;
 {(options.IncludeJetBrainsAnnotationsUsing ? "using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;" : "")}
 
@@ -82,12 +86,18 @@ namespace {options.BaseNamespace}.Exceptions
 {{
 }}
 
+namespace {options.BaseNamespace}.ExceptionFactory
+{{
+}}
+
 namespace {options.BaseNamespace}.FrameworkExtensions
 {{
-}}");
+}}"
+                      );
         if (options.IncludeJetBrainsAnnotations)
         {
-            stringBuilder.AppendLine().AppendLine(@"/* 
+            stringBuilder.AppendLine().AppendLine(
+                @"/* 
 License information for JetBrains.Annotations
 
 MIT License
@@ -113,12 +123,14 @@ SOFTWARE. */
 
 namespace JetBrains.Annotations
 {
-}");
+}"
+            );
         }
 
         if (options.IncludeCodeAnalysisNullableAttributes)
         {
-            stringBuilder.AppendLine().AppendLine(@"
+            stringBuilder.AppendLine().AppendLine(
+                @"
 namespace System.Diagnostics.CodeAnalysis
 {
     /// <summary>
@@ -293,12 +305,14 @@ namespace System.Diagnostics.CodeAnalysis
             ReturnValue = returnValue;
         }
     }
-}");
+}"
+            );
         }
 
         if (options.IncludeCallerArgumentExpressionAttribute)
         {
-            stringBuilder.AppendLine().AppendLine(@"
+            stringBuilder.AppendLine().AppendLine(
+                @"
 namespace System.Runtime.CompilerServices
 {
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
@@ -311,10 +325,11 @@ namespace System.Runtime.CompilerServices
     
         public string ParameterName { get; }
     }
-}");
+}"
+            );
         }
 
-        var csharpParseOptions = new CSharpParseOptions(LanguageVersion.CSharp10);
+        var csharpParseOptions = new CSharpParseOptions(LanguageVersion.CSharp12);
         var targetSyntaxTree = CSharpSyntaxTree.ParseText(stringBuilder.ToString(), csharpParseOptions);
 
         var targetRoot = (CompilationUnitSyntax) targetSyntaxTree.GetRoot();
@@ -323,63 +338,131 @@ namespace System.Runtime.CompilerServices
                                    .OfType<NamespaceDeclarationSyntax>()
                                    .ToList();
         var defaultNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == $"{options.BaseNamespace}");
-        var exceptionsNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == $"{options.BaseNamespace}.Exceptions");
-        var extensionsNamespace = namespaces.First(@namespace => @namespace.Name.ToString() == $"{options.BaseNamespace}.FrameworkExtensions");
-        var jetBrainsNamespace = namespaces.FirstOrDefault(@namespace => @namespace.Name.ToString() == "JetBrains.Annotations");
+        var exceptionsNamespace =
+            namespaces.First(@namespace => @namespace.Name.ToString() == $"{options.BaseNamespace}.Exceptions");
+        var extensionsNamespace = namespaces.First(
+            @namespace => @namespace.Name.ToString() == $"{options.BaseNamespace}.FrameworkExtensions"
+        );
+        var exceptionFactoryNamespace = namespaces.First(
+            @namespace => @namespace.Name.ToString() == $"{options.BaseNamespace}.ExceptionFactory"
+        );
+        var jetBrainsNamespace =
+            namespaces.FirstOrDefault(@namespace => @namespace.Name.ToString() == "JetBrains.Annotations");
         var replacedNodes = new Dictionary<NamespaceDeclarationSyntax, NamespaceDeclarationSyntax>
         {
             [defaultNamespace] = defaultNamespace,
             [exceptionsNamespace] = exceptionsNamespace,
-            [extensionsNamespace] = extensionsNamespace
+            [extensionsNamespace] = extensionsNamespace,
+            [exceptionFactoryNamespace] = exceptionFactoryNamespace,
         };
         if (options.IncludeJetBrainsAnnotations && jetBrainsNamespace != null)
+        {
             replacedNodes.Add(jetBrainsNamespace, jetBrainsNamespace);
+        }
 
         var allSourceFiles = new DirectoryInfo(options.SourceFolder).GetFiles("*.cs", SearchOption.AllDirectories)
-                                                                    .Where(f => !f.FullName.Contains("obj") &&
-                                                                                !f.FullName.Contains("bin"))
+                                                                    .Where(
+                                                                         f => !f.FullName.Contains("obj") &&
+                                                                              !f.FullName.Contains("bin")
+                                                                     )
                                                                     .ToDictionary(f => f.Name);
 
-        // Start with Check.CommonAssertions before all other files to prepare the Check class
-        Console.WriteLine("Merging CommonAssertions of the Check class...");
-        var currentFile = allSourceFiles["Check.CommonAssertions.cs"];
-
+        // Start with Check.cs before all other files to prepare the Check class
+        Console.WriteLine("Preparing Check class...");
+        var currentFile = allSourceFiles["Check.cs"];
         var sourceSyntaxTree = CSharpSyntaxTree.ParseText(currentFile.ReadContent(), csharpParseOptions);
         var checkClassDeclaration = (ClassDeclarationSyntax) sourceSyntaxTree.GetRoot()
                                                                              .DescendantNodes()
-                                                                             .First(node => node.IsKind(SyntaxKind.ClassDeclaration));
-        checkClassDeclaration = checkClassDeclaration.WithModifiers(checkClassDeclaration.Modifiers.Remove(checkClassDeclaration.Modifiers.First(token => token.IsKind(SyntaxKind.PartialKeyword))));
+                                                                             .First(
+                                                                                  node => node.IsKind(
+                                                                                      SyntaxKind.ClassDeclaration
+                                                                                  )
+                                                                              );
+        checkClassDeclaration = checkClassDeclaration.WithModifiers(
+            checkClassDeclaration.Modifiers.Remove(
+                checkClassDeclaration.Modifiers.First(token => token.IsKind(SyntaxKind.PartialKeyword))
+            )
+        );
+
+        // Do the same thing for the Throw class
+        Console.WriteLine("Preparing Throw class...");
+        currentFile = allSourceFiles["Throw.cs"];
+        sourceSyntaxTree = CSharpSyntaxTree.ParseText(currentFile.ReadContent(), csharpParseOptions);
+        var throwClassDeclaration = (ClassDeclarationSyntax) sourceSyntaxTree.GetRoot()
+                                                                             .DescendantNodes()
+                                                                             .First(
+                                                                                  node => node.IsKind(
+                                                                                      SyntaxKind.ClassDeclaration
+                                                                                  )
+                                                                              );
+        throwClassDeclaration = throwClassDeclaration.WithModifiers(
+            throwClassDeclaration.Modifiers.Remove(
+                throwClassDeclaration.Modifiers.First(token => token.IsKind(SyntaxKind.PartialKeyword))
+            )
+        );
 
         // Process all other files
         Console.WriteLine("Merging remaining files...");
         foreach (var fileName in allSourceFiles.Keys)
         {
+            if (fileName == "SpanDelegates.cs")
+            {
+                
+            }
+            
             if (!CheckIfFileShouldBeProcessed(options, fileName))
+            {
                 continue;
+            }
 
             currentFile = allSourceFiles[fileName];
             sourceSyntaxTree = CSharpSyntaxTree.ParseText(currentFile.ReadContent(), csharpParseOptions);
-            var originalNamespace = DetermineOriginalNamespace(options,
-                                                               defaultNamespace,
-                                                               currentFile,
-                                                               extensionsNamespace,
-                                                               exceptionsNamespace,
-                                                               jetBrainsNamespace);
+            var originalNamespace = DetermineOriginalNamespace(
+                options,
+                defaultNamespace,
+                currentFile,
+                extensionsNamespace,
+                exceptionsNamespace,
+                exceptionFactoryNamespace,
+                jetBrainsNamespace
+            );
 
             // If the file contains assertions, add it to the existing Check class declaration
             if (originalNamespace == defaultNamespace && currentFile.Name.StartsWith("Check."))
             {
                 var classDeclaration = (ClassDeclarationSyntax) sourceSyntaxTree.GetRoot()
                                                                                 .DescendantNodes()
-                                                                                .First(node => node.IsKind(SyntaxKind.ClassDeclaration));
-                checkClassDeclaration = checkClassDeclaration.WithMembers(checkClassDeclaration.Members.AddRange(classDeclaration.Members));
+                                                                                .First(
+                                                                                     node => node.IsKind(
+                                                                                         SyntaxKind.ClassDeclaration
+                                                                                     )
+                                                                                 );
+                checkClassDeclaration =
+                    checkClassDeclaration.WithMembers(checkClassDeclaration.Members.AddRange(classDeclaration.Members));
+                continue;
+            }
+
+            // Do something similar for the Throw class
+            if (originalNamespace == exceptionFactoryNamespace && currentFile.Name.StartsWith("Throw."))
+            {
+                var classDeclaration = (ClassDeclarationSyntax) sourceSyntaxTree.GetRoot()
+                                                                                .DescendantNodes()
+                                                                                .First(
+                                                                                     node => node.IsKind(
+                                                                                         SyntaxKind.ClassDeclaration
+                                                                                     )
+                                                                                 );
+                throwClassDeclaration =
+                    throwClassDeclaration.WithMembers(throwClassDeclaration.Members.AddRange(classDeclaration.Members));
                 continue;
             }
 
             // Else just get the members of the first namespace and add them to the corresponding one
             var sourceCompilationUnit = (CompilationUnitSyntax) sourceSyntaxTree.GetRoot();
             if (sourceCompilationUnit.Members.IsNullOrEmpty())
+            {
                 continue;
+            }
 
             var membersToAdd = ((FileScopedNamespaceDeclarationSyntax) sourceCompilationUnit.Members[0]).Members;
 
@@ -387,15 +470,25 @@ namespace System.Runtime.CompilerServices
             replacedNodes[originalNamespace] =
                 currentlyEditedNamespace
                    .WithMembers(
-                        currentlyEditedNamespace.Members.AddRange(membersToAdd));
+                        currentlyEditedNamespace.Members.AddRange(membersToAdd)
+                    );
         }
 
         // After the Check class declaration is finished, insert it into the default namespace
         var currentDefaultNamespace = replacedNodes[defaultNamespace];
-        replacedNodes[defaultNamespace] = currentDefaultNamespace.WithMembers(currentDefaultNamespace.Members.Insert(0, checkClassDeclaration));
+        replacedNodes[defaultNamespace] =
+            currentDefaultNamespace.WithMembers(currentDefaultNamespace.Members.Insert(0, checkClassDeclaration));
+
+        // Do the same thing for the Throw class
+        var currentExceptionFactoryNamespace = replacedNodes[exceptionFactoryNamespace];
+        replacedNodes[exceptionFactoryNamespace] =
+            currentExceptionFactoryNamespace.WithMembers(
+                currentExceptionFactoryNamespace.Members.Insert(0, throwClassDeclaration)
+            );
 
         // Update the target compilation unit
-        targetRoot = targetRoot.ReplaceNodes(replacedNodes.Keys, (originalNode, _) => replacedNodes[originalNode]).NormalizeWhitespace();
+        targetRoot = targetRoot.ReplaceNodes(replacedNodes.Keys, (originalNode, _) => replacedNodes[originalNode])
+                               .NormalizeWhitespace();
 
         // Make types internal if necessary
         if (options.ChangePublicTypesToInternalTypes)
@@ -403,38 +496,57 @@ namespace System.Runtime.CompilerServices
             Console.WriteLine("Types are changed from public to internal...");
             var changedTypeDeclarations = new Dictionary<MemberDeclarationSyntax, MemberDeclarationSyntax>();
 
-            foreach (var typeDeclaration in targetRoot.DescendantNodes().Where(node => node.IsKind(SyntaxKind.ClassDeclaration) ||
-                                                                                       node.IsKind(SyntaxKind.StructDeclaration) ||
-                                                                                       node.IsKind(SyntaxKind.EnumDeclaration) ||
-                                                                                       node.IsKind(SyntaxKind.DelegateDeclaration)))
+            foreach (var typeDeclaration in targetRoot.DescendantNodes().Where(
+                         node => node.IsKind(SyntaxKind.ClassDeclaration) ||
+                                 node.IsKind(SyntaxKind.StructDeclaration) ||
+                                 node.IsKind(SyntaxKind.EnumDeclaration) ||
+                                 node.IsKind(SyntaxKind.DelegateDeclaration)
+                     ))
             {
                 if (typeDeclaration is BaseTypeDeclarationSyntax typeDeclarationSyntax)
                 {
                     var publicModifier = typeDeclarationSyntax.Modifiers[0];
                     var adjustedModifiers = typeDeclarationSyntax.Modifiers
                                                                  .RemoveAt(0)
-                                                                 .Insert(0, Token(SyntaxKind.InternalKeyword).WithTriviaFrom(publicModifier));
+                                                                 .Insert(
+                                                                      0,
+                                                                      Token(SyntaxKind.InternalKeyword)
+                                                                         .WithTriviaFrom(publicModifier)
+                                                                  );
 
                     if (typeDeclarationSyntax is ClassDeclarationSyntax classDeclaration)
+                    {
                         changedTypeDeclarations[classDeclaration] = classDeclaration.WithModifiers(adjustedModifiers);
+                    }
 
                     else if (typeDeclarationSyntax is StructDeclarationSyntax structDeclaration)
+                    {
                         changedTypeDeclarations[structDeclaration] = structDeclaration.WithModifiers(adjustedModifiers);
+                    }
 
                     else if (typeDeclarationSyntax is EnumDeclarationSyntax enumDeclaration)
+                    {
                         changedTypeDeclarations[enumDeclaration] = enumDeclaration.WithModifiers(adjustedModifiers);
+                    }
                 }
                 else if (typeDeclaration is DelegateDeclarationSyntax delegateDeclaration)
                 {
                     var publicModifier = delegateDeclaration.Modifiers[0];
                     var adjustedModifiers = delegateDeclaration.Modifiers
                                                                .RemoveAt(0)
-                                                               .Insert(0, Token(SyntaxKind.InternalKeyword).WithTriviaFrom(publicModifier));
+                                                               .Insert(
+                                                                    0,
+                                                                    Token(SyntaxKind.InternalKeyword)
+                                                                       .WithTriviaFrom(publicModifier)
+                                                                );
                     changedTypeDeclarations[delegateDeclaration] = delegateDeclaration.WithModifiers(adjustedModifiers);
                 }
             }
 
-            targetRoot = targetRoot.ReplaceNodes(changedTypeDeclarations.Keys, (originalNode, _) => changedTypeDeclarations[originalNode]);
+            targetRoot = targetRoot.ReplaceNodes(
+                changedTypeDeclarations.Keys,
+                (originalNode, _) => changedTypeDeclarations[originalNode]
+            );
         }
 
         // Remove assertion overloads that incorporate an exception factory if necessary
@@ -443,23 +555,49 @@ namespace System.Runtime.CompilerServices
             Console.WriteLine("Removing overloads with exception factory...");
 
             var checkClass = (ClassDeclarationSyntax) targetRoot.DescendantNodes()
-                                                                .First(node => node.IsKind(SyntaxKind.ClassDeclaration) &&
-                                                                               node is ClassDeclarationSyntax { Identifier.Text: "Check" });
+                                                                .First(
+                                                                     node => node.IsKind(SyntaxKind.ClassDeclaration) &&
+                                                                             node is ClassDeclarationSyntax
+                                                                             {
+                                                                                 Identifier.Text: "Check",
+                                                                             }
+                                                                 );
 
             var membersWithoutExceptionFactory =
                 checkClass.Members
-                          .Where(member => member is not MethodDeclarationSyntax method || method.ParameterList.Parameters.All(parameter => parameter.Identifier.Text != "exceptionFactory"));
-            targetRoot = targetRoot.ReplaceNode(checkClass, checkClass.WithMembers(new SyntaxList<MemberDeclarationSyntax>(membersWithoutExceptionFactory)));
+                          .Where(
+                               member => member is not MethodDeclarationSyntax method ||
+                                         method.ParameterList.Parameters.All(
+                                             parameter => parameter.Identifier.Text != "exceptionFactory"
+                                         )
+                           );
+            targetRoot = targetRoot.ReplaceNode(
+                checkClass,
+                checkClass.WithMembers(new (membersWithoutExceptionFactory))
+            );
 
             // Remove members from Throw class that use exception factories
             var throwClass = (ClassDeclarationSyntax) targetRoot.DescendantNodes()
-                                                                .First(node => node.IsKind(SyntaxKind.ClassDeclaration) &&
-                                                                               node is ClassDeclarationSyntax { Identifier.Text: "Throw" });
+                                                                .First(
+                                                                     node => node.IsKind(SyntaxKind.ClassDeclaration) &&
+                                                                             node is ClassDeclarationSyntax
+                                                                             {
+                                                                                 Identifier.Text: "Throw",
+                                                                             }
+                                                                 );
 
             membersWithoutExceptionFactory =
                 throwClass.Members
-                          .Where(member => member is not MethodDeclarationSyntax method || method.ParameterList.Parameters.All(parameter => parameter.Identifier.Text != "exceptionFactory"));
-            targetRoot = targetRoot.ReplaceNode(throwClass, throwClass.WithMembers(new SyntaxList<MemberDeclarationSyntax>(membersWithoutExceptionFactory)));
+                          .Where(
+                               member => member is not MethodDeclarationSyntax method ||
+                                         method.ParameterList.Parameters.All(
+                                             parameter => parameter.Identifier.Text != "exceptionFactory"
+                                         )
+                           );
+            targetRoot = targetRoot.ReplaceNode(
+                throwClass,
+                throwClass.WithMembers(new (membersWithoutExceptionFactory))
+            );
         }
 
         var targetFileContent = targetRoot.ToFullString();
@@ -473,31 +611,35 @@ namespace System.Runtime.CompilerServices
     }
 
     private static bool CheckIfFileShouldBeProcessed(SourceFileMergeOptions options, string fileName) =>
-        fileName != "Check.CommonAssertions.cs" &&
+        fileName != "Check.cs" &&
+        fileName != "Throw.cs" &&
         fileName != "CallerArgumentExpressionAttribute.cs" &&
         (fileName != "ReSharperAnnotations.cs" || options.IncludeJetBrainsAnnotations) &&
         (fileName != "ValidatedNotNullAttribute.cs" || options.IncludeValidatedNotNullAttribute);
 
-    private static NamespaceDeclarationSyntax DetermineOriginalNamespace(SourceFileMergeOptions options,
-                                                                         NamespaceDeclarationSyntax defaultNamespace,
-                                                                         FileInfo currentFile,
-                                                                         NamespaceDeclarationSyntax extensionsNamespace,
-                                                                         NamespaceDeclarationSyntax exceptionsNamespace,
-                                                                         NamespaceDeclarationSyntax? jetBrainsNamespace)
+    private static NamespaceDeclarationSyntax DetermineOriginalNamespace(
+        SourceFileMergeOptions options,
+        NamespaceDeclarationSyntax defaultNamespace,
+        FileInfo currentFile,
+        NamespaceDeclarationSyntax extensionsNamespace,
+        NamespaceDeclarationSyntax exceptionsNamespace,
+        NamespaceDeclarationSyntax exceptionFactoryNamespace,
+        NamespaceDeclarationSyntax? jetBrainsNamespace
+    )
     {
         var originalNamespace = defaultNamespace;
         switch (currentFile.Directory?.Name)
         {
-            case "FrameworkExtensions":
-                originalNamespace = extensionsNamespace;
-                break;
-            case "Exceptions":
-                originalNamespace = exceptionsNamespace;
-                break;
+            case "FrameworkExtensions": originalNamespace = extensionsNamespace; break;
+            case "Exceptions":          originalNamespace = exceptionsNamespace; break;
+            case "ExceptionFactory":    originalNamespace = exceptionFactoryNamespace; break;
             default:
             {
                 if (options.IncludeJetBrainsAnnotations && currentFile.Name == "ReSharperAnnotations.cs")
+                {
                     originalNamespace = jetBrainsNamespace!;
+                }
+
                 break;
             }
         }

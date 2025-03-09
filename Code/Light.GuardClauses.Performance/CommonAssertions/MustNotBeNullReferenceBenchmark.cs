@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using BenchmarkDotNet.Attributes;
-using Light.GuardClauses.Exceptions;
+using Light.GuardClauses.ExceptionFactory;
 
 namespace Light.GuardClauses.Performance.CommonAssertions
 {
@@ -56,7 +56,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
                     return parameter;
 
                 Throw.ArgumentNull(parameterName, message);
-                return default(T);
+                return default;
             }
 
             return parameter;
@@ -71,7 +71,7 @@ namespace Light.GuardClauses.Performance.CommonAssertions
                 return parameter;
 
             Throw.ArgumentNull(parameterName, message);
-            return default(T);
+            return default;
         }
     }
 }
