@@ -30,6 +30,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Versioning", "Versioning", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.SourceCodeTransformation.Tests", "Light.GuardClauses.SourceCodeTransformation.Tests\Light.GuardClauses.SourceCodeTransformation.Tests.csproj", "{A2067796-F167-47BE-B367-191152DCE230}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plans", "Plans", "{664661A0-3861-486B-87B5-A35A5CC5F7B7}"
+	ProjectSection(SolutionItems) = preProject
+		Plans\issue-114-must-not-be-default-or-empty-for-immutable-array.md = Plans\issue-114-must-not-be-default-or-empty-for-immutable-array.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
