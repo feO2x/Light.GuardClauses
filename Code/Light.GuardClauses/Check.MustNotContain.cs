@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
@@ -193,6 +194,53 @@ public static partial class Check
         if (parameter is null || value is null || parameter.IndexOf(value, comparisonType) >= 0)
         {
             Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the <see cref="ImmutableArray{T}" /> does not contain the specified item, or otherwise throws an <see cref="ExistingItemException" />.
+    /// </summary>
+    /// <param name="parameter">The <see cref="ImmutableArray{T}" /> to be checked.</param>
+    /// <param name="item">The item that must not be part of the <see cref="ImmutableArray{T}" />.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="ExistingItemException">Thrown when <paramref name="parameter" /> contains <paramref name="item" />.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ImmutableArray<T> MustNotContain<T>(
+        this ImmutableArray<T> parameter,
+        T item,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (parameter.Contains(item))
+        {
+            Throw.ExistingItem(parameter, item, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the <see cref="ImmutableArray{T}" /> does not contain the specified item, or otherwise throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The <see cref="ImmutableArray{T}" /> to be checked.</param>
+    /// <param name="item">The item that must not be part of the <see cref="ImmutableArray{T}" />.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="item" /> are passed to this delegate.</param>
+    /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="item" />.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("exceptionFactory:null => halt")]
+    public static ImmutableArray<T> MustNotContain<T>(
+        this ImmutableArray<T> parameter,
+        T item,
+        Func<ImmutableArray<T>, T, Exception> exceptionFactory
+    )
+    {
+        if (parameter.Contains(item))
+        {
+            Throw.CustomException(exceptionFactory, parameter, item);
         }
 
         return parameter;
