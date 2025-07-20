@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Light.GuardClauses.ExceptionFactory;
@@ -51,6 +52,53 @@ public static partial class Check
     )
     {
         if (parameter is null || !range.IsValueWithinRange(parameter.Length))
+        {
+            Throw.CustomException(exceptionFactory, parameter, range);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the <see cref="ImmutableArray{T}" />'s length is within the specified range, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.
+    /// </summary>
+    /// <param name="parameter">The <see cref="ImmutableArray{T}" /> to be checked.</param>
+    /// <param name="range">The range where the <see cref="ImmutableArray{T}" />'s length must be in-between.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the length of <paramref name="parameter" /> is not within the specified <paramref name="range" />.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ImmutableArray<T> MustHaveLengthIn<T>(
+        this ImmutableArray<T> parameter,
+        Range<int> range,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (!range.IsValueWithinRange(parameter.Length))
+        {
+            Throw.ImmutableArrayLengthNotInRange(parameter, range, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the <see cref="ImmutableArray{T}" />'s length is within the specified range, or otherwise throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The <see cref="ImmutableArray{T}" /> to be checked.</param>
+    /// <param name="range">The range where the <see cref="ImmutableArray{T}" />'s length must be in-between.</param>
+    /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="range" /> are passed to this delegate.</param>
+    /// <exception cref="Exception">Your custom exception thrown when the length of <paramref name="parameter" /> is not within the specified range.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("exceptionFactory:null => halt")]
+    public static ImmutableArray<T> MustHaveLengthIn<T>(
+        this ImmutableArray<T> parameter,
+        Range<int> range,
+        Func<ImmutableArray<T>, Range<int>, Exception> exceptionFactory
+    )
+    {
+        if (!range.IsValueWithinRange(parameter.Length))
         {
             Throw.CustomException(exceptionFactory, parameter, range);
         }
