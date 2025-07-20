@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
@@ -69,6 +70,70 @@ public static class MustNotContainTests
     public static void CallerArgumentExpression()
     {
         var array = new[] { 1, 2, 3 };
+
+        Action act = () => array.MustNotContain(3);
+
+        act.Should().Throw<ExistingItemException>()
+           .WithParameterName(nameof(array));
+    }
+
+    [Theory]
+    [InlineData(new[] { "Foo", "Bar" }, "Foo")]
+    [InlineData(new[] { "Baz", "Qux", "Quux" }, "Qux")]
+    [InlineData(new[] { "Corge", "Grault", null }, null)]
+    public static void ImmutableArrayItemExists(string[] items, string item)
+    {
+        var array = ImmutableArray.Create(items);
+
+        Action act = () => array.MustNotContain(item, nameof(array));
+
+        var assertions = act.Should().Throw<ExistingItemException>().Which;
+        assertions.Message.Should()
+                  .Contain($"{nameof(array)} must not contain {item.ToStringOrNull()}, but it actually does.");
+        assertions.ParamName.Should().BeSameAs(nameof(array));
+    }
+
+    [Theory]
+    [InlineData(new[] { 100, 101, 102 }, 42)]
+    [InlineData(new[] { 11 }, -5000)]
+    public static void ImmutableArrayItemExistsNot(int[] items, int item)
+    {
+        var array = ImmutableArray.Create(items);
+        array.MustNotContain(item).Should().Equal(array);
+    }
+
+    [Fact]
+    public static void ImmutableArrayEmptyDoesNotContainItem()
+    {
+        var emptyArray = ImmutableArray<int>.Empty;
+        emptyArray.MustNotContain(42).Should().Equal(emptyArray);
+    }
+
+    [Fact]
+    public static void ImmutableArrayCustomException() =>
+        Test.CustomException(
+            ImmutableArray.Create("Foo"),
+            "Foo",
+            (array, value, exceptionFactory) => array.MustNotContain(value, exceptionFactory)
+        );
+
+    [Fact]
+    public static void ImmutableArrayNoCustomExceptionThrown()
+    {
+        var array = ImmutableArray.Create(1, 2);
+        array.MustNotContain(3, (_, _) => new ()).Should().Equal(array);
+    }
+
+    [Fact]
+    public static void ImmutableArrayCustomMessage() =>
+        Test.CustomMessage<ExistingItemException>(
+            message => ImmutableArray.Create(42).MustNotContain(42, message: message)
+        );
+
+    [Fact]
+    public static void ImmutableArrayCallerArgumentExpression()
+    {
+        var array = ImmutableArray.Create(1, 2, 3);
 
         Action act = () => array.MustNotContain(3);
 
