@@ -23,6 +23,6 @@ public static partial class Throw
         throw new ArgumentOutOfRangeException(
             parameterName,
             message ??
-            $"{parameterName ?? "The immutable array"} must have its length in between {range.CreateRangeDescriptionText("and")}, but it actually has length {parameter.Length}."
+            $"{parameterName ?? "The immutable array"} must have its length in between {range.CreateRangeDescriptionText("and")}, but it actually {(parameter.IsDefault ? "has no length because it is the default instance" : $"has length {parameter.Length}")}."
         );
 }

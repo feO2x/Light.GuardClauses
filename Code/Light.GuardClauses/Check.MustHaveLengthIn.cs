@@ -75,7 +75,8 @@ public static partial class Check
         string? message = null
     )
     {
-        if (!range.IsValueWithinRange(parameter.Length))
+        var length = parameter.IsDefault ? 0 : parameter.Length;
+        if (!range.IsValueWithinRange(length))
         {
             Throw.ImmutableArrayLengthNotInRange(parameter, range, parameterName, message);
         }
@@ -98,7 +99,8 @@ public static partial class Check
         Func<ImmutableArray<T>, Range<int>, Exception> exceptionFactory
     )
     {
-        if (!range.IsValueWithinRange(parameter.Length))
+        var length = parameter.IsDefault ? 0 : parameter.Length;
+        if (!range.IsValueWithinRange(length))
         {
             Throw.CustomException(exceptionFactory, parameter, range);
         }
