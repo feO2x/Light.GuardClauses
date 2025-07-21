@@ -1,59 +1,55 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="..\Version.props" />
+  <Import Project="..\Version.props" />
 
-    <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0</TargetFrameworks>
-        <Description>A lightweight .NET library for expressive Guard Clauses.</Description>
-        <Authors>Kenny Pflug</Authors>
-        <Company>Kenny Pflug</Company>
-        <Nullable>enable</Nullable>
-        <IsAotCompatible Condition="'$(TargetFramework)' == 'net8.0'">true</IsAotCompatible>
-        <Copyright>Copyright © Kenny Pflug 2016, 2025</Copyright>
-        <LangVersion>12</LangVersion>
-        <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
-        <IsPackable>true</IsPackable>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageIcon>light-logo.png</PackageIcon>
-        <PackageProjectUrl>https://github.com/feO2x/Light.GuardClauses</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/feO2x/Light.GuardClauses.git</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <PackageTags>Assertions;Preconditions;GuardClauses;DesignByContract;DbC</PackageTags>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageReleaseNotes>
-Light.GuardClauses 13.0.0
---------------------------------
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0</TargetFrameworks>
+    <Description>A lightweight .NET library for expressive Guard Clauses.</Description>
+    <Authors>Kenny Pflug</Authors>
+    <Company>Kenny Pflug</Company>
+    <Nullable>enable</Nullable>
+    <IsAotCompatible Condition="'$(TargetFramework)' == 'net8.0'">true</IsAotCompatible>
+    <Copyright>Copyright © Kenny Pflug 2016, 2025</Copyright>
+    <LangVersion>12</LangVersion>
+    <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
+    <IsPackable>true</IsPackable>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>light-logo.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/feO2x/Light.GuardClauses</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/feO2x/Light.GuardClauses.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PackageTags>Assertions;Preconditions;GuardClauses;DesignByContract;DbC</PackageTags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>
+      Light.GuardClauses 13.1.0
+      --------------------------------
 
-- new assertions: IsApproximately&lt;T&gt;, IsLessThanOrApproximately&lt;T&gt;, IsGreaterThanOrApproximately&lt;T&gt;, MustBeApproximately, MustNotBeApproximately, MustBeLessThanOrApproximately, MustBeGreaterThanOrApproximately, IsEmptyOrWhiteSpace, IsFileExtension
-- email regex is now precompiled on .NET 8 and newer, the regex is compiled at runtime on .NET Standard 2.0 and 2.1
-- breaking: Throw class is now located in new namespace Light.GuardClauses.ExceptionFactory
-- breaking: Throw members regarding spans now only support ReadOnlySpan&lt;T&gt;, in keywords were removed
-- breaking: IsApproximately now uses less-than-or-equal-to operator (&lt;=) instead of less-than operator (&lt;)
-- breaking: Email regex is less strict and support additional patterns like domains with more than 3 letters (e.g. .info or .travel)
-        </PackageReleaseNotes>
-    </PropertyGroup>
-    
-    <ItemGroup>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
-      <PackageReference Include="Nullable" Version="1.3.1" PrivateAssets="all" />
-      <PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
-      <PackageReference Include="System.Memory" Version="4.6.0" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
-      <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" Condition="'$(TargetFramework)' != 'net8.0'" />
-    </ItemGroup>
+      - new assertions for ImmutableArray&lt;T&gt;: MustNotBeDefaultOrEmpty, MustHaveLength, MustHaveLengthIn, MustHaveMinimumLength, MustHaveMaximumLength
+      - new dependency: System.Collections.Immutable
+    </PackageReleaseNotes>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <Analyzer Include="..\Light.GuardClauses.InternalRoslynAnalyzers\bin\$(Configuration)\netstandard2.0\Light.GuardClauses.InternalRoslynAnalyzers.dll"
-                  Condition="Exists('..\Light.GuardClauses.InternalRoslynAnalyzers\bin\$(Configuration)\netstandard2.0\Light.GuardClauses.InternalRoslynAnalyzers.dll')" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
+    <PackageReference Include="Nullable" Version="1.3.1" PrivateAssets="all" />
+    <PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
+    <PackageReference Include="System.Memory" Version="4.6.0" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" Condition="'$(TargetFramework)' != 'net8.0'" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <None Include="light-logo.png" Pack="true" PackagePath="\" />
-        <None Include="../../README.md" Pack="true" PackagePath="\" />
-    </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\Light.GuardClauses.InternalRoslynAnalyzers\bin\$(Configuration)\netstandard2.0\Light.GuardClauses.InternalRoslynAnalyzers.dll"
+              Condition="Exists('..\Light.GuardClauses.InternalRoslynAnalyzers\bin\$(Configuration)\netstandard2.0\Light.GuardClauses.InternalRoslynAnalyzers.dll')" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="light-logo.png" Pack="true" PackagePath="\" />
+    <None Include="../../README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
 </Project>
