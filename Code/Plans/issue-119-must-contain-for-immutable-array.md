@@ -16,6 +16,5 @@ The .NET library Light.GuardClauses already has several assertions for collectio
 
 - There are already plenty of other assertions and tests in this library. All overloads are placed in the same file in the production code project. The test projects has top-level folders for different groups of assertions, like `CollectionAssertions`, `StringAssertions`, `DateTimeAssertions` and so on. Please take a look at them to follow a similar structure and code style.
 - This assertion specifically targets `ImmutableArray<T>` to avoid boxing that would occur with generic `IEnumerable<T>` extensions.
-- There are already plenty of other assertions and tests in this library. All overloads are placed in the same file in the production code project. The test projects has top-level folders for different groups of assertions, like `CollectionAssertions`, `StringAssertions`, `DateTimeAssertions` and so on. Please take a look at them to follow a similar structure and code style.
 - The assertion should verify that the `ImmutableArray<T>` contains the specified item.
 - If you have any questions or suggestions, please ask me about them.
