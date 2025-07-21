@@ -19,7 +19,7 @@ public static class MustHaveMaximumLengthTests
 
         var assertion = act.Should().Throw<InvalidCollectionCountException>().Which;
         assertion.Message.Should().Contain(
-            $"{nameof(immutableArray)} must have at most count {length}, but it actually has count {immutableArray.Length}."
+            $"{nameof(immutableArray)} must have at most a length of {length}, but it actually has a length of {immutableArray.Length}."
         );
         assertion.ParamName.Should().BeSameAs(nameof(immutableArray));
     }
@@ -86,5 +86,55 @@ public static class MustHaveMaximumLengthTests
 
         act.Should().Throw<InvalidCollectionCountException>()
            .WithParameterName(nameof(myImmutableArray));
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(5)]
+    public static void
+        DefaultImmutableArrayInstanceShouldNotThrowWhenLengthIsGreaterThanOrEqualToZero(int validLength) =>
+        default(ImmutableArray<int>).MustHaveMaximumLength(validLength).IsDefault.Should().BeTrue();
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(-5)]
+    [InlineData(-12)]
+    public static void DefaultImmutableArrayInstanceShouldNotThrowWhenLengthIsNegative(int negativeLength)
+    {
+        var act = () => default(ImmutableArray<int>).MustHaveMaximumLength(negativeLength);
+
+        act.Should().Throw<InvalidCollectionCountException>()
+           .WithParameterName("default(ImmutableArray<int>)")
+           .WithMessage(
+                $"default(ImmutableArray<int>) must have at most a length of {negativeLength}, but it actually has no length because it is the default instance.*"
+            );
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(5)]
+    public static void DefaultImmutableArrayInstanceCustomExceptionShouldNotThrow(int validLength)
+    {
+        var result = default(ImmutableArray<int>).MustHaveMaximumLength(validLength, (_, _) => new Exception());
+        result.IsDefault.Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(-5)]
+    [InlineData(-12)]
+    public static void DefaultImmutableArrayInstanceCustomExceptionShouldThrow(int negativeLength)
+    {
+        var act = () => default(ImmutableArray<int>).MustHaveMaximumLength(
+            negativeLength,
+            (array, length) => new ArgumentException(
+                $"Custom: Array length {(array.IsDefault ? 0 : array.Length)} exceeds maximum {length}"
+            )
+        );
+
+        act.Should().Throw<ArgumentException>()
+           .WithMessage("Custom: Array length 0 exceeds maximum *");
     }
 }
