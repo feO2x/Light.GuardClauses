@@ -1,5 +1,5 @@
 /* ------------------------------
-   Light.GuardClauses 13.0.0
+   Light.GuardClauses 13.1.0
    ------------------------------
 
 License information for Light.GuardClauses
@@ -265,6 +265,50 @@ namespace Light.GuardClauses
             if (parameter is null || value is null || parameter.IndexOf(value, comparisonType) >= 0)
             {
                 Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the <see cref = "ImmutableArray{T}"/> does not contain the specified item, or otherwise throws an <see cref = "ExistingItemException"/>.
+        /// </summary>
+        /// <param name = "parameter">The <see cref = "ImmutableArray{T}"/> to be checked.</param>
+        /// <param name = "item">The item that must not be part of the <see cref = "ImmutableArray{T}"/>.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ExistingItemException">Thrown when <paramref name = "parameter"/> contains <paramref name = "item"/>.</exception>
+        /// <remarks>
+        /// The default instance of <see cref = "ImmutableArray{T}"/> cannot contain any items, so this method will not throw for default instances.
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> MustNotContain<T>(this ImmutableArray<T> parameter, T item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.IsDefault && parameter.Contains(item))
+            {
+                Throw.ExistingItem(parameter, item, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the <see cref = "ImmutableArray{T}"/> does not contain the specified item, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The <see cref = "ImmutableArray{T}"/> to be checked.</param>
+        /// <param name = "item">The item that must not be part of the <see cref = "ImmutableArray{T}"/>.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "item"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> contains <paramref name = "item"/>.</exception>
+        /// <remarks>
+        /// The default instance of <see cref = "ImmutableArray{T}"/> cannot contain any items, so this method will not throw for default instances.
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("exceptionFactory:null => halt")]
+        public static ImmutableArray<T> MustNotContain<T>(this ImmutableArray<T> parameter, T item, Func<ImmutableArray<T>, T, Exception> exceptionFactory)
+        {
+            if (!parameter.IsDefault && parameter.Contains(item))
+            {
+                Throw.CustomException(exceptionFactory, parameter, item);
             }
 
             return parameter;
@@ -2765,6 +2809,42 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsLessThanOrApproximately(this float value, float other) => value < other || value.IsApproximately(other);
         /// <summary>
+        /// Ensures that the specified <see cref = "ImmutableArray{T}"/> is not default or empty, or otherwise throws an <see cref = "Exceptions.EmptyCollectionException"/>.
+        /// </summary>
+        /// <param name = "parameter">The <see cref = "ImmutableArray{T}"/> to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "Exceptions.EmptyCollectionException">Thrown when <paramref name = "parameter"/> is default or empty.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> MustNotBeDefaultOrEmpty<T>(this ImmutableArray<T> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (parameter.IsDefaultOrEmpty)
+            {
+                Throw.EmptyCollection(parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified <see cref = "ImmutableArray{T}"/> is not default or empty, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The <see cref = "ImmutableArray{T}"/> to be checked.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. The <see cref = "ImmutableArray{T}"/> is passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is default or empty.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("exceptionFactory:null => halt")]
+        public static ImmutableArray<T> MustNotBeDefaultOrEmpty<T>(this ImmutableArray<T> parameter, Func<ImmutableArray<T>, Exception> exceptionFactory)
+        {
+            if (parameter.IsDefaultOrEmpty)
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
         /// Ensures that the specified URI has the "http" scheme, or otherwise throws an <see cref = "InvalidUriSchemeException"/>.
         /// </summary>
         /// <param name = "parameter">The URI to be checked.</param>
@@ -4228,6 +4308,46 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Ensures that the <see cref = "ImmutableArray{T}"/>'s length is within the specified range, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
+        /// </summary>
+        /// <param name = "parameter">The <see cref = "ImmutableArray{T}"/> to be checked.</param>
+        /// <param name = "range">The range where the <see cref = "ImmutableArray{T}"/>'s length must be in-between.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ArgumentOutOfRangeException">Thrown when the length of <paramref name = "parameter"/> is not within the specified <paramref name = "range"/>.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> MustHaveLengthIn<T>(this ImmutableArray<T> parameter, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            var length = parameter.IsDefault ? 0 : parameter.Length;
+            if (!range.IsValueWithinRange(length))
+            {
+                Throw.ImmutableArrayLengthNotInRange(parameter, range, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the <see cref = "ImmutableArray{T}"/>'s length is within the specified range, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The <see cref = "ImmutableArray{T}"/> to be checked.</param>
+        /// <param name = "range">The range where the <see cref = "ImmutableArray{T}"/>'s length must be in-between.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "range"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when the length of <paramref name = "parameter"/> is not within the specified range.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("exceptionFactory:null => halt")]
+        public static ImmutableArray<T> MustHaveLengthIn<T>(this ImmutableArray<T> parameter, Range<int> range, Func<ImmutableArray<T>, Range<int>, Exception> exceptionFactory)
+        {
+            var length = parameter.IsDefault ? 0 : parameter.Length;
+            if (!range.IsValueWithinRange(length))
+            {
+                Throw.CustomException(exceptionFactory, parameter, range);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
         /// Ensures that the specified parameter is not the default value, or otherwise throws an <see cref = "ArgumentNullException"/>
         /// for reference types, or an <see cref = "ArgumentDefaultException"/> for value types.
         /// </summary>
@@ -4403,6 +4523,47 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Ensures that the <see cref = "ImmutableArray{T}"/> has at most the specified length, or otherwise throws an <see cref = "InvalidCollectionCountException"/>.
+        /// </summary>
+        /// <param name = "parameter">The <see cref = "ImmutableArray{T}"/> to be checked.</param>
+        /// <param name = "length">The maximum length the <see cref = "ImmutableArray{T}"/> should have.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "InvalidCollectionCountException">Thrown when <paramref name = "parameter"/> has more than the specified length.</exception>
+        /// <remarks>The default instance of <see cref = "ImmutableArray{T}"/> will be treated as having length 0.</remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> MustHaveMaximumLength<T>(this ImmutableArray<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            var parameterLength = parameter.IsDefault ? 0 : parameter.Length;
+            if (parameterLength > length)
+            {
+                Throw.InvalidMaximumImmutableArrayLength(parameter, length, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the <see cref = "ImmutableArray{T}"/> has at most the specified length, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The <see cref = "ImmutableArray{T}"/> to be checked.</param>
+        /// <param name = "length">The maximum length the <see cref = "ImmutableArray{T}"/> should have.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "length"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> has more than the specified length.</exception>
+        /// <remarks>The default instance of <see cref = "ImmutableArray{T}"/> will be treated as having length 0.</remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> MustHaveMaximumLength<T>(this ImmutableArray<T> parameter, int length, Func<ImmutableArray<T>, int, Exception> exceptionFactory)
+        {
+            var parameterLength = parameter.IsDefault ? 0 : parameter.Length;
+            if (parameterLength > length)
+            {
+                Throw.CustomException(exceptionFactory, parameter, length);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
         /// Checks if the specified collection is null or empty.
         /// </summary>
         /// <param name = "collection">The collection to be checked.</param>
@@ -4476,6 +4637,47 @@ namespace Light.GuardClauses
             if (parameter is null || !parameter.AsSpan().IsTrimmedAtEnd())
             {
                 Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the <see cref = "ImmutableArray{T}"/> has at least the specified length, or otherwise throws an <see cref = "InvalidCollectionCountException"/>.
+        /// </summary>
+        /// <param name = "parameter">The <see cref = "ImmutableArray{T}"/> to be checked.</param>
+        /// <param name = "length">The minimum length the <see cref = "ImmutableArray{T}"/> should have.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "InvalidCollectionCountException">Thrown when <paramref name = "parameter"/> has less than the specified length.</exception>
+        /// <remarks>The default instance of <see cref = "ImmutableArray{T}"/> will be treated as having length 0.</remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> MustHaveMinimumLength<T>(this ImmutableArray<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            var parameterLength = parameter.IsDefault ? 0 : parameter.Length;
+            if (parameterLength < length)
+            {
+                Throw.InvalidMinimumImmutableArrayLength(parameter, length, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the <see cref = "ImmutableArray{T}"/> has at least the specified length, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The <see cref = "ImmutableArray{T}"/> to be checked.</param>
+        /// <param name = "length">The minimum length the <see cref = "ImmutableArray{T}"/> should have.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "length"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> has less than the specified length.</exception>
+        /// <remarks>The default instance of <see cref = "ImmutableArray{T}"/> will be treated as having length 0.</remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> MustHaveMinimumLength<T>(this ImmutableArray<T> parameter, int length, Func<ImmutableArray<T>, int, Exception> exceptionFactory)
+        {
+            var parameterLength = parameter.IsDefault ? 0 : parameter.Length;
+            if (parameterLength < length)
+            {
+                Throw.CustomException(exceptionFactory, parameter, length);
             }
 
             return parameter;
@@ -4715,6 +4917,45 @@ namespace Light.GuardClauses
             if (parameter.Length != length)
             {
                 Throw.CustomSpanException(exceptionFactory, parameter, length);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the immutable array has the specified length, or otherwise throws an <see cref = "InvalidCollectionCountException"/>.
+        /// </summary>
+        /// <param name = "parameter">The immutable array to be checked.</param>
+        /// <param name = "length">The length that the immutable array must have.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "InvalidCollectionCountException">Thrown when <paramref name = "parameter"/> does not have the specified length.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> MustHaveLength<T>(this ImmutableArray<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            var actualLength = parameter.IsDefault ? 0 : parameter.Length;
+            if (actualLength != length)
+            {
+                Throw.InvalidImmutableArrayLength(parameter, length, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the immutable array has the specified length, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The immutable array to be checked.</param>
+        /// <param name = "length">The length that the immutable array must have.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "length"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> does not have the specified length.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> MustHaveLength<T>(this ImmutableArray<T> parameter, int length, Func<ImmutableArray<T>, int, Exception> exceptionFactory)
+        {
+            var actualLength = parameter.IsDefault ? 0 : parameter.Length;
+            if (actualLength != length)
+            {
+                Throw.CustomException(exceptionFactory, parameter, length);
             }
 
             return parameter;
@@ -5324,6 +5565,43 @@ namespace Light.GuardClauses
             if (parameter is null || value is null || parameter.IndexOf(value, comparisonType) < 0)
             {
                 Throw.CustomException(exceptionFactory, parameter, value!, comparisonType);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the immutable array contains the specified item, or otherwise throws a <see cref = "MissingItemException"/>.
+        /// </summary>
+        /// <param name = "parameter">The immutable array to be checked.</param>
+        /// <param name = "item">The item that must be part of the immutable array.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "MissingItemException">Thrown when <paramref name = "parameter"/> does not contain <paramref name = "item"/>.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> MustContain<T>(this ImmutableArray<T> parameter, T item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.Contains(item))
+            {
+                Throw.MissingItem(parameter, item, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the immutable array contains the specified item, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The immutable array to be checked.</param>
+        /// <param name = "item">The item that must be part of the immutable array.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "item"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> does not contain <paramref name = "item"/>.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> MustContain<T>(this ImmutableArray<T> parameter, T item, Func<ImmutableArray<T>, T, Exception> exceptionFactory)
+        {
+            if (!parameter.Contains(item))
+            {
+                Throw.CustomException(exceptionFactory, parameter, item);
             }
 
             return parameter;
@@ -6635,6 +6913,17 @@ namespace Light.GuardClauses.ExceptionFactory
         [DoesNotReturn]
         public static void EmptyString(string? parameterName = null, string? message = null) => throw new EmptyStringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be an empty string, but it actually is.");
         /// <summary>
+        /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that an <see cref = "ImmutableArray{T}"/> has less than a
+        /// minimum number of items, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void InvalidMinimumImmutableArrayLength<T>(ImmutableArray<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The immutable array"} must have at least a length of {length}, but it actually {(parameter.IsDefault ? "has no length because it is the default instance" : $"has a length of {parameter.Length}")}.");
+        }
+
+        /// <summary>
         /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that a comparable value must not be
         /// less than or equal to the given boundary value, using the optional parameter name and message.
         /// </summary>
@@ -7145,12 +7434,35 @@ namespace Light.GuardClauses.ExceptionFactory
         [DoesNotReturn]
         public static void StringDoesNotMatch(string parameter, Regex regex, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new StringDoesNotMatchException(parameterName, message ?? $"{parameterName ?? "The string"} must match the regular expression \"{regex}\", but it actually is \"{parameter}\".");
         /// <summary>
+        /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that an immutable array has an invalid length,
+        /// using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void InvalidImmutableArrayLength<T>(ImmutableArray<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            var actualLength = parameter.IsDefault ? 0 : parameter.Length;
+            throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The immutable array"} must have length {length}, but it actually has length {actualLength}.");
+        }
+
+        /// <summary>
         /// Throws the default <see cref = "ValueIsNotOneOfException"/> indicating that a value is not one of a specified
         /// collection of items, using the optional parameter name and message.
         /// </summary>
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void ValueNotOneOf<TItem>(TItem parameter, IEnumerable<TItem> items, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new ValueIsNotOneOfException(parameterName, message ?? new StringBuilder().AppendLine($"{parameterName ?? "The value"} must be one of the following items").AppendItemsWithNewLine(items).AppendLine($"but it actually is {parameter.ToStringOrNull()}.").ToString());
+        /// <summary>
+        /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that an <see cref = "ImmutableArray{T}"/> has more than a
+        /// maximum number of items, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void InvalidMaximumImmutableArrayLength<T>(ImmutableArray<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The immutable array"} must have at most a length of {length}, but it actually {(parameter.IsDefault ? "has no length because it is the default instance" : $"has a length of {parameter.Length}")}.");
+        }
+
         /// <summary>
         /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that a value must not be approximately
         /// equal to another value within a specified tolerance, using the optional parameter name and message.
@@ -7208,6 +7520,13 @@ namespace Light.GuardClauses.ExceptionFactory
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void StringContains(string parameter, string substring, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not contain {substring.ToStringOrNull()} as a substring ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+        /// <summary>
+        /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that an <see cref = "ImmutableArray{T}"/>'s length is not within the
+        /// given range, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void ImmutableArrayLengthNotInRange<T>(ImmutableArray<T> parameter, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The immutable array"} must have its length in between {range.CreateRangeDescriptionText("and")}, but it actually {(parameter.IsDefault ? "has no length because it is the default instance" : $"has length {parameter.Length}")}.");
         /// <summary>
         /// Throws the default <see cref = "SubstringException"/> indicating that a string does not start with another one,
         /// using the optional parameter name and message.
