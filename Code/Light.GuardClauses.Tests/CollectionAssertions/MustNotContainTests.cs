@@ -140,4 +140,51 @@ public static class MustNotContainTests
         act.Should().Throw<ExistingItemException>()
            .WithParameterName(nameof(array));
     }
+
+    [Fact]
+    public static void ImmutableArrayDefaultInstanceDoesNotContainItem()
+    {
+        var defaultArray = default(ImmutableArray<int>);
+
+        // Default instance should not throw for any item since it cannot contain anything
+        var result = defaultArray.MustNotContain(42);
+
+        result.IsDefault.Should().BeTrue();
+    }
+
+    [Fact]
+    public static void ImmutableArrayDefaultInstanceCustomException()
+    {
+        var defaultArray = default(ImmutableArray<string>);
+
+        // Default instance should not throw even with custom exception factory
+        var result = defaultArray.MustNotContain(
+            "test",
+            (_, _) => new InvalidOperationException("Should not be called")
+        );
+
+        result.IsDefault.Should().BeTrue();
+    }
+
+    [Fact]
+    public static void ImmutableArrayDefaultInstanceCustomMessage()
+    {
+        var defaultArray = default(ImmutableArray<object>);
+
+        // Default instance should not throw even with custom message
+        var result = defaultArray.MustNotContain(new object(), message: "Custom message");
+
+        result.IsDefault.Should().BeTrue();
+    }
+
+    [Fact]
+    public static void ImmutableArrayDefaultInstanceCallerArgumentExpression()
+    {
+        var defaultArray = default(ImmutableArray<char>);
+
+        // Default instance should not throw, so no exception to check parameter name
+        var result = defaultArray.MustNotContain('x');
+
+        result.IsDefault.Should().BeTrue();
+    }
 }

@@ -207,6 +207,9 @@ public static partial class Check
     /// <param name="parameterName">The name of the parameter (optional).</param>
     /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
     /// <exception cref="ExistingItemException">Thrown when <paramref name="parameter" /> contains <paramref name="item" />.</exception>
+    /// <remarks>
+    /// The default instance of <see cref="ImmutableArray{T}" /> cannot contain any items, so this method will not throw for default instances.
+    /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ImmutableArray<T> MustNotContain<T>(
         this ImmutableArray<T> parameter,
@@ -215,7 +218,7 @@ public static partial class Check
         string? message = null
     )
     {
-        if (parameter.Contains(item))
+        if (!parameter.IsDefault && parameter.Contains(item))
         {
             Throw.ExistingItem(parameter, item, parameterName, message);
         }
@@ -230,6 +233,9 @@ public static partial class Check
     /// <param name="item">The item that must not be part of the <see cref="ImmutableArray{T}" />.</param>
     /// <param name="exceptionFactory">The delegate that creates your custom exception. <paramref name="parameter" /> and <paramref name="item" /> are passed to this delegate.</param>
     /// <exception cref="Exception">Your custom exception thrown when <paramref name="parameter" /> contains <paramref name="item" />.</exception>
+    /// <remarks>
+    /// The default instance of <see cref="ImmutableArray{T}" /> cannot contain any items, so this method will not throw for default instances.
+    /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("exceptionFactory:null => halt")]
     public static ImmutableArray<T> MustNotContain<T>(
@@ -238,7 +244,7 @@ public static partial class Check
         Func<ImmutableArray<T>, T, Exception> exceptionFactory
     )
     {
-        if (parameter.Contains(item))
+        if (!parameter.IsDefault && parameter.Contains(item))
         {
             Throw.CustomException(exceptionFactory, parameter, item);
         }
