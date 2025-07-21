@@ -68,4 +68,47 @@ public static class MustHaveLengthInTests
         act.Should().Throw<ArgumentOutOfRangeException>()
            .WithParameterName(nameof(testArray));
     }
+
+    [Fact]
+    public static void DefaultImmutableArrayInRange()
+    {
+        var defaultArray = default(ImmutableArray<int>);
+
+        var result = defaultArray.MustHaveLengthIn(Range.FromInclusive(0).ToInclusive(5));
+
+        result.IsDefault.Should().BeTrue();
+    }
+
+    [Fact]
+    public static void DefaultImmutableArrayNotInRange()
+    {
+        var defaultArray = default(ImmutableArray<int>);
+
+        var act = () => defaultArray.MustHaveLengthIn(Range.FromInclusive(1).ToInclusive(5), nameof(defaultArray));
+
+        act.Should().Throw<ArgumentOutOfRangeException>()
+           .And.Message.Should().Contain("must have its length in between 1 (inclusive) and 5 (inclusive)")
+           .And.Contain("has no length because it is the default instance");
+    }
+
+    [Fact]
+    public static void DefaultImmutableArrayCustomException()
+    {
+        var defaultArray = default(ImmutableArray<int>);
+
+        Test.CustomException(
+            defaultArray,
+            Range.FromInclusive(1).ToInclusive(5),
+            (array, r, exceptionFactory) => array.MustHaveLengthIn(r, exceptionFactory)
+        );
+    }
+
+    [Fact]
+    public static void DefaultImmutableArrayCustomMessage() =>
+        Test.CustomMessage<ArgumentOutOfRangeException>(
+            message => default(ImmutableArray<int>).MustHaveLengthIn(
+                Range.FromInclusive(1).ToInclusive(5),
+                message: message
+            )
+        );
 }
