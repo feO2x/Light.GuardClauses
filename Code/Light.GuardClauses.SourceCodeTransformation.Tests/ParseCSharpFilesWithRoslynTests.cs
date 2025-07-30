@@ -29,7 +29,7 @@ namespace Light.GuardClauses.SourceCodeTransformation.Tests
         [Fact]
         public static void ParseSpanDelegatesFile()
         {
-            var fileInfo = GetLightGuardClausesFile("SpanDelegates.cs");
+            var fileInfo = GetLightGuardClausesFile(@"ExceptionFactory\SpanDelegates.cs");
             var syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(fileInfo.FullName), new CSharpParseOptions(LanguageVersion.CSharp7_3, preprocessorSymbols: new[] { "NETSTANDARD2_0" }));
             var root = (CompilationUnitSyntax) syntaxTree.GetRoot();
 
