@@ -5,7 +5,7 @@ namespace Light.GuardClauses;
 /// <summary>
 /// Provides regular expressions that are used in string assertions.
 /// </summary>
-#if NET8_0
+#if NET8_0_OR_GREATER
 public static partial class RegularExpressions
 #else
 public static class RegularExpressions
@@ -24,7 +24,7 @@ public static class RegularExpressions
     /// was modified to satisfy all tests of https://blogs.msdn.microsoft.com/testing123/2009/02/06/email-address-test-cases/.
     /// </summary>
     public static readonly Regex EmailRegex =
-#if NET8_0
+#if NET8_0_OR_GREATER
         GenerateEmailRegex();
 
     [GeneratedRegex(EmailRegexText, RegexOptions.ECMAScript | RegexOptions.CultureInvariant)]

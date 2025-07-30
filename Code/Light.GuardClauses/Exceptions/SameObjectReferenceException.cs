@@ -16,7 +16,7 @@ public class SameObjectReferenceException : ArgumentException
     /// <param name="message">The message of the exception (optional).</param>
     public SameObjectReferenceException(string? parameterName = null, string? message = null) : base(message, parameterName) { }
 
-#if !NET8_0
+#if !NET8_0_OR_GREATER
     /// <inheritdoc />
     protected SameObjectReferenceException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 #endif

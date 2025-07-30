@@ -24,7 +24,7 @@ public sealed class IsEmailAddressTests
         isValid.Should().BeTrue();
     }
 
-#if NET8_0
+#if NET8_0_OR_GREATER
     [Theory]
     [ClassData(typeof(InvalidEmailAddressesWithNull))]
     public void IsNotValidEmailAddress_ReadOnlySpan(string email)

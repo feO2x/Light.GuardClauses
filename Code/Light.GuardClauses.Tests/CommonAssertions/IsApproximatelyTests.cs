@@ -41,7 +41,7 @@ public static class IsApproximatelyTests
     public static void FloatWithCustomTolerance(float first, float second, float tolerance, bool expected) =>
         first.IsApproximately(second, tolerance).Should().Be(expected);
 
-#if NET8_0
+#if NET8_0_OR_GREATER
     [Theory]
     [InlineData(1.1, 1.3, 0.5, true)]
     [InlineData(100.55, 100.555, 0.00001, false)]

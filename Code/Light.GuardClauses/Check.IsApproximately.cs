@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
-#if NET8_0
+#if NET8_0_OR_GREATER
 using System.Numerics;
 #endif
 
@@ -62,7 +62,7 @@ public static partial class Check
     public static bool IsApproximately(this float value, float other) =>
         Math.Abs(value - other) <= 0.0001f;
 
-#if NET8_0
+#if NET8_0_OR_GREATER
     /// <summary>
     /// Checks if the specified value is approximately the same as the other value, using the given tolerance.
     /// </summary>

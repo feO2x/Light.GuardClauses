@@ -1,5 +1,5 @@
-using System.Runtime.CompilerServices;
-#if NET8_0
+﻿using System.Runtime.CompilerServices;
+#if NET8_0_OR_GREATER
 using System.Numerics;
 #endif
 
@@ -61,7 +61,7 @@ public static partial class Check
     public static bool IsGreaterThanOrApproximately(this float value, float other) =>
         value > other || value.IsApproximately(other);
 
-#if NET8_0
+#if NET8_0_OR_GREATER
     /// <summary>
     /// Checks if the specified value is greater than or approximately the same as the other value, using the given tolerance.
     /// </summary>

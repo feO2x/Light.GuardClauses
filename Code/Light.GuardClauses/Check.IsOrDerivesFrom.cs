@@ -1,4 +1,4 @@
-#if NET8_0
+﻿#if NET8_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
 #endif
 using System;
