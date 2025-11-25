@@ -3,9 +3,9 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
-namespace Light.GuardClauses;
+namespace Light.GuardClauses.FrameworkExtensions;
 
-public static partial class Check
+public static partial class StringExtensions
 {
     /// <summary>
     /// Checks if the string contains the specified value using the given comparison type.
