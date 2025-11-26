@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -29,7 +29,7 @@ public static partial class Check
     public static bool IsEmailAddress([NotNullWhen(true)] this string? emailAddress, Regex emailAddressPattern) =>
         emailAddress != null && emailAddressPattern.MustNotBeNull(nameof(emailAddressPattern)).IsMatch(emailAddress);
 
-#if NET8_0
+#if NET8_0_OR_GREATER
     /// <summary>
     /// Checks if the specified span is an email address using the default email regular expression
     /// defined in <see cref="RegularExpressions.EmailRegex" />.

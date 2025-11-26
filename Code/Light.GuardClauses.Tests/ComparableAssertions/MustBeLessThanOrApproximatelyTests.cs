@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using FluentAssertions;
 using Xunit;
 
@@ -202,7 +202,7 @@ public static class MustBeLessThanOrApproximatelyTests
            .WithParameterName(nameof(threePointFive));
     }
 
-#if NET8_0
+#if NET8_0_OR_GREATER
     [Theory]
     [InlineData(15.9, 15.91, 0.1)]
     [InlineData(24.45, 24.4999, 0.0001)]

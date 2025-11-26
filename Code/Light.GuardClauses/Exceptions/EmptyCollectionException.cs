@@ -16,7 +16,7 @@ public class EmptyCollectionException : InvalidCollectionCountException
     /// <param name="message">The message of the exception (optional).</param>
     public EmptyCollectionException(string? parameterName = null, string? message = null) : base(parameterName, message) { }
 
-#if !NET8_0
+#if !NET8_0_OR_GREATER
     /// <inheritdoc />
     protected EmptyCollectionException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 #endif

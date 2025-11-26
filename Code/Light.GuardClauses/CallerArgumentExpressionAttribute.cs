@@ -1,4 +1,4 @@
-﻿#if !NET8_0
+﻿#if !NET8_0_OR_GREATER
 // ReSharper disable once CheckNamespace -- CallerArgumentExpression must be in exactly this namespace
 namespace System.Runtime.CompilerServices;
 

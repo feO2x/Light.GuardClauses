@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
@@ -109,7 +109,7 @@ public static partial class Check
         return parameter;
     }
 
-#if NET8_0
+#if NET8_0_OR_GREATER
     /// <summary>
     /// Ensures that the span represents a valid email address using the default email regular expression
     /// defined in <see cref="RegularExpressions.EmailRegex" />, or otherwise throws an <see cref="InvalidEmailAddressException" />.

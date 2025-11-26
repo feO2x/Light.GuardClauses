@@ -1,4 +1,4 @@
-#if NET8_0
+﻿#if NET8_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
 #endif
 using System;
@@ -23,7 +23,7 @@ public static partial class Check
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt")]
     public static bool InheritsFrom(
-#if NET8_0
+#if NET8_0_OR_GREATER
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
 #endif
         [NotNull] [ValidatedNotNull] this Type type,
@@ -46,7 +46,7 @@ public static partial class Check
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt; typeComparer:null => halt")]
     public static bool InheritsFrom(
-#if NET8_0
+#if NET8_0_OR_GREATER
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
 #endif
         [NotNull] [ValidatedNotNull] this Type type,

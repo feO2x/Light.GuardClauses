@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
@@ -124,7 +124,7 @@ public static class MustBeEmailAddressTests
            .WithParameterName(nameof(email));
     }
 
-#if NET8_0
+#if NET8_0_OR_GREATER
     [Theory]
     [ClassData(typeof(ValidEmailAddresses))]
     public static void ValidEmailAddress_ReadOnlySpan(string email)
