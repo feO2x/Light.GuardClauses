@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using FluentAssertions;
 using Xunit;
 
@@ -178,7 +178,7 @@ public static class MustBeApproximatelyTests
            .WithParameterName(nameof(pi));
     }
 
-#if NET8_0
+#if NET8_0_OR_GREATER
     [Theory]
     [InlineData(5.1, 5.0, 0.2)]
     [InlineData(10.3, 10.3, 0.01)]

@@ -16,7 +16,7 @@ public class InvalidUriSchemeException : UriException
     /// <param name="message">The message of the exception (optional).</param>
     public InvalidUriSchemeException(string? parameterName = null, string? message = null) : base(parameterName, message) { }
 
-#if !NET8_0
+#if !NET8_0_OR_GREATER
     /// <inheritdoc />
     protected InvalidUriSchemeException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 #endif

@@ -23,16 +23,22 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.SourceCo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.Source", "Light.GuardClauses.Source\Light.GuardClauses.Source.csproj", "{A7B9AC78-FA4F-4BDE-9DAF-B854408AB843}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Versioning", "Versioning", "{176BEDC4-CFE3-4084-8213-B4EC155A7E38}"
-	ProjectSection(SolutionItems) = preProject
-		Version.props = Version.props
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.SourceCodeTransformation.Tests", "Light.GuardClauses.SourceCodeTransformation.Tests\Light.GuardClauses.SourceCodeTransformation.Tests.csproj", "{A2067796-F167-47BE-B367-191152DCE230}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plans", "Plans", "{664661A0-3861-486B-87B5-A35A5CC5F7B7}"
 	ProjectSection(SolutionItems) = preProject
 		Plans\issue-114-must-not-be-default-or-empty-for-immutable-array.md = Plans\issue-114-must-not-be-default-or-empty-for-immutable-array.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{8A42A536-E597-454B-BE18-4F62311FA158}"
+	ProjectSection(SolutionItems) = preProject
+		..\CONTRIBUTING.md = ..\CONTRIBUTING.md
+		..\README.md = ..\README.md
+		..\LICENSE = ..\LICENSE
+		Directory.Packages.props = Directory.Packages.props
+		Version.props = Version.props
+		Light.GuardClauses.AllProjects.sln.DotSettings = Light.GuardClauses.AllProjects.sln.DotSettings
+		Light.GuardClauses.sln.DotSettings = Light.GuardClauses.sln.DotSettings
 	EndProjectSection
 EndProject
 Global

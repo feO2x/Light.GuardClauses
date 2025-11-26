@@ -35,7 +35,7 @@ public static class EnumInfo<T> where T : struct, Enum
 
     static EnumInfo()
     {
-#if NET8_0
+#if NET8_0_OR_GREATER
         EnumConstantsArray = Enum.GetValues<T>();
 #else
         EnumConstantsArray = (T[]) Enum.GetValues(typeof(T));

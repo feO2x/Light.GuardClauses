@@ -37,7 +37,7 @@ public static class IsLessThanOrApproximatelyTests
     public static void FloatWithCustomTolerance(float first, float second, float tolerance, bool expected) =>
         first.IsLessThanOrApproximately(second, tolerance).Should().Be(expected);
 
-#if NET8_0
+#if NET8_0_OR_GREATER
     [Theory]
     [InlineData(13.25, 13.5, 0.1, true)]  // Less than case
     [InlineData(13.5, 13.5, 0.1, true)]   // Equal case

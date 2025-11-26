@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 using Light.GuardClauses.ExceptionFactory;
-#if NET8_0
+#if NET8_0_OR_GREATER
 using System.Numerics;
 #endif
 
@@ -232,7 +232,7 @@ public static partial class Check
         return parameter;
     }
 
-#if NET8_0
+#if NET8_0_OR_GREATER
     /// <summary>
     /// Ensures that the specified <paramref name="parameter" /> is approximately equal to the given
     /// <paramref name="other" /> value, or otherwise throws an <see cref="ArgumentOutOfRangeException" />.

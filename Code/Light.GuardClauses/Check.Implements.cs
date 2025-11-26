@@ -1,4 +1,4 @@
-#if NET8_0
+﻿#if NET8_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
 #endif
 using System;
@@ -21,7 +21,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" /> or <paramref name="interfaceType" /> is null.</exception>
     [ContractAnnotation("type:null => halt; interfaceType:null => halt")]
     public static bool Implements(
-#if NET8_0
+#if NET8_0_OR_GREATER
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
 #endif
         [NotNull] [ValidatedNotNull] this Type type,
@@ -53,7 +53,7 @@ public static partial class Check
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type" />, or <paramref name="interfaceType" />, or <paramref name="typeComparer" /> is null.</exception>
     [ContractAnnotation("type:null => halt; interfaceType:null => halt; typeComparer:null => halt")]
     public static bool Implements(
-#if NET8_0
+#if NET8_0_OR_GREATER
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
 #endif
         [NotNull] [ValidatedNotNull] this Type type,

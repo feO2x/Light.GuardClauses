@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using FluentAssertions;
 using Xunit;
 
@@ -202,7 +202,7 @@ public static class CheckMustBeGreaterThanOrApproximatelyTests
            .WithParameterName(nameof(pi));
     }
 
-#if NET8_0
+#if NET8_0_OR_GREATER
     [Theory]
     [InlineData(15.91, 15.9, 0.1)]
     [InlineData(24.4999, 24.45, 0.0001)]

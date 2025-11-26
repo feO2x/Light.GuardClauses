@@ -37,7 +37,7 @@ public static class IsGreaterThanOrApproximatelyTests
     public static void FloatWIthCustomTolerance(float first, float second, float tolerance, bool expected) =>
         first.IsGreaterThanOrApproximately(second, tolerance).Should().Be(expected);
 
-#if NET8_0
+#if NET8_0_OR_GREATER
     [Theory]
     [InlineData(15.91, 15.9, 0.1, true)]
     [InlineData(24.449, 24.45, 0.0001, false)]
