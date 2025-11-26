@@ -1,7 +1,7 @@
 ﻿using System;
 using BenchmarkDotNet.Attributes;
 
-namespace Light.GuardClauses.Performance.StringAssertions
+namespace Light.GuardClauses.FrameworkExtensions.Performance.StringAssertions
 {
     public class ContainsOrdinalBenchmark
     {
