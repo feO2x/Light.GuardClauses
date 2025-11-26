@@ -2,8 +2,8 @@
 **A lightweight .NET library for expressive Guard Clauses.** 
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/blob/master/LICENSE)
-[![NuGet](https://img.shields.io/badge/NuGet-13.1.0-blue.svg?style=for-the-badge)](https://www.nuget.org/packages/Light.GuardClauses/)
-[![Source Code](https://img.shields.io/badge/Source%20Code-13.1.0-blue.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/blob/master/Light.GuardClauses.SingleFile.cs)
+[![NuGet](https://img.shields.io/badge/NuGet-14.0.0-blue.svg?style=for-the-badge)](https://www.nuget.org/packages/Light.GuardClauses/)
+[![Source Code](https://img.shields.io/badge/Source%20Code-14.0.0-blue.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/blob/master/Light.GuardClauses.SingleFile.cs)
 [![Documentation](https://img.shields.io/badge/Docs-Wiki-yellowgreen.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/wiki)
 [![Documentation](https://img.shields.io/badge/Docs-Changelog-yellowgreen.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/releases)
 
@@ -108,7 +108,10 @@ And, of course, the functional correctness of **Light.GuardClauses** is covered 
 
 ## Supported Platforms
 
-**Light.GuardClauses** is built against [.NET 8, .NET Standard 2.0 and 2.1](https://docs.microsoft.com/en-us/dotnet/standard/net-standard), thus it can be used with a large variaty of target frameworks like .NET 5 or newer .NET Framework 4.6.1 or newer, Unity, Mono, or UWP.
+**Light.GuardClauses** is built
+against [.NET 8, .NET Standard 2.0 and 2.1](https://docs.microsoft.com/en-us/dotnet/standard/net-standard), thus it can
+be used with a large variety of target frameworks like .NET 5 or newer .NET Framework 4.6.1 or newer, Unity, Mono, or
+UWP.
 
 ## How to Install
 

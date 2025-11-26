@@ -26,11 +26,10 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
-      Light.GuardClauses 13.1.0
+      Light.GuardClauses 14.0.0
       --------------------------------
 
-      - new assertions for ImmutableArray&lt;T&gt;: MustNotBeDefaultOrEmpty, MustHaveLength, MustHaveLengthIn, MustHaveMinimumLength, MustHaveMaximumLength
-      - new dependency: System.Collections.Immutable
+      - Breaking Change: Check.Contains(string, string, System.StringComparison) now exists in Light.GuardClauses.FrameworkExtensions to avoid conflict with other polyfill libraries
     </PackageReleaseNotes>
   </PropertyGroup>
 
