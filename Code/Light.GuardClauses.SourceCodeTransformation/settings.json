@@ -16,7 +16,7 @@
   "IncludeCallerArgumentExpressionAttribute": true,
   "RemoveCallerArgumentExpressions": false,
   "AssertionWhitelist": {
-    "IsEnabled": true,
+    "IsEnabled": false,
     "DerivesFrom": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "Equals": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "Implements": { "Include": true, "IncludeExceptionFactoryOverload": true },
