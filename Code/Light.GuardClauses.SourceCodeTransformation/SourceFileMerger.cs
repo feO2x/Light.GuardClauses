@@ -15,7 +15,7 @@ public static class SourceFileMerger
 {
     public static void CreateSingleSourceFile(SourceFileMergeOptions options)
     {
-        options.MustNotBeNull(nameof(options));
+        options.MustNotBeNull();
 
         // Prepare the target syntax
         var stringBuilder = new StringBuilder();
@@ -331,6 +331,9 @@ namespace System.Runtime.CompilerServices
         }
 
         var csharpParseOptions = new CSharpParseOptions(LanguageVersion.CSharp12);
+        var sourceParseOptions = options.AssertionWhitelist.IsEnabled ?
+            SourceReachabilityAnalyzer.NetStandardParseOptions :
+            csharpParseOptions;
         var targetSyntaxTree = CSharpSyntaxTree.ParseText(stringBuilder.ToString(), csharpParseOptions);
 
         var targetRoot = (CompilationUnitSyntax) targetSyntaxTree.GetRoot();
@@ -367,11 +370,21 @@ namespace System.Runtime.CompilerServices
                                                                               !f.FullName.Contains("bin")
                                                                      )
                                                                     .ToDictionary(f => f.Name);
+        SourceReachabilityAnalysis? reachabilityAnalysis = null;
+        if (options.AssertionWhitelist.IsEnabled)
+        {
+            Console.WriteLine("Analyzing assertion whitelist reachability...");
+            reachabilityAnalysis = SourceReachabilityAnalyzer.Analyze(options, allSourceFiles.Values);
+        }
 
         // Start with Check.cs before all other files to prepare the Check class
         Console.WriteLine("Preparing Check class...");
         var currentFile = allSourceFiles["Check.cs"];
-        var sourceSyntaxTree = CSharpSyntaxTree.ParseText(currentFile.ReadContent(), csharpParseOptions);
+        var sourceSyntaxTree = CSharpSyntaxTree.ParseText(
+            currentFile.ReadContent(),
+            sourceParseOptions,
+            currentFile.FullName
+        );
         var checkClassDeclaration = (ClassDeclarationSyntax) sourceSyntaxTree.GetRoot()
                                                                              .DescendantNodes()
                                                                              .First(
@@ -388,7 +401,11 @@ namespace System.Runtime.CompilerServices
         // Do the same thing for the Throw class
         Console.WriteLine("Preparing Throw class...");
         currentFile = allSourceFiles["Throw.cs"];
-        sourceSyntaxTree = CSharpSyntaxTree.ParseText(currentFile.ReadContent(), csharpParseOptions);
+        sourceSyntaxTree = CSharpSyntaxTree.ParseText(
+            currentFile.ReadContent(),
+            sourceParseOptions,
+            currentFile.FullName
+        );
         var throwClassDeclaration = (ClassDeclarationSyntax) sourceSyntaxTree.GetRoot()
                                                                              .DescendantNodes()
                                                                              .First(
@@ -406,18 +423,19 @@ namespace System.Runtime.CompilerServices
         Console.WriteLine("Merging remaining files...");
         foreach (var fileName in allSourceFiles.Keys)
         {
-            if (fileName == "SpanDelegates.cs")
-            {
-                
-            }
-            
+            if (fileName == "SpanDelegates.cs") { }
+
             if (!CheckIfFileShouldBeProcessed(options, fileName))
             {
                 continue;
             }
 
             currentFile = allSourceFiles[fileName];
-            sourceSyntaxTree = CSharpSyntaxTree.ParseText(currentFile.ReadContent(), csharpParseOptions);
+            sourceSyntaxTree = CSharpSyntaxTree.ParseText(
+                currentFile.ReadContent(),
+                sourceParseOptions,
+                currentFile.FullName
+            );
             var originalNamespace = DetermineOriginalNamespace(
                 options,
                 defaultNamespace,
@@ -438,8 +456,15 @@ namespace System.Runtime.CompilerServices
                                                                                          SyntaxKind.ClassDeclaration
                                                                                      )
                                                                                  );
+                var checkMembersToAdd = reachabilityAnalysis == null ?
+                    classDeclaration.Members :
+                    new (
+                        classDeclaration.Members.Where(
+                            member => reachabilityAnalysis.ShouldIncludeCheckOrThrowMember(currentFile, member)
+                        )
+                    );
                 checkClassDeclaration =
-                    checkClassDeclaration.WithMembers(checkClassDeclaration.Members.AddRange(classDeclaration.Members));
+                    checkClassDeclaration.WithMembers(checkClassDeclaration.Members.AddRange(checkMembersToAdd));
                 continue;
             }
 
@@ -453,8 +478,15 @@ namespace System.Runtime.CompilerServices
                                                                                          SyntaxKind.ClassDeclaration
                                                                                      )
                                                                                  );
+                var throwMembersToAdd = reachabilityAnalysis == null ?
+                    classDeclaration.Members :
+                    new (
+                        classDeclaration.Members.Where(
+                            member => reachabilityAnalysis.ShouldIncludeCheckOrThrowMember(currentFile, member)
+                        )
+                    );
                 throwClassDeclaration =
-                    throwClassDeclaration.WithMembers(throwClassDeclaration.Members.AddRange(classDeclaration.Members));
+                    throwClassDeclaration.WithMembers(throwClassDeclaration.Members.AddRange(throwMembersToAdd));
                 continue;
             }
 
@@ -466,6 +498,19 @@ namespace System.Runtime.CompilerServices
             }
 
             var membersToAdd = ((FileScopedNamespaceDeclarationSyntax) sourceCompilationUnit.Members[0]).Members;
+            if (reachabilityAnalysis != null && !ShouldAlwaysProcessWholeFileInWhitelistMode(currentFile.Name))
+            {
+                membersToAdd = new (
+                    membersToAdd.Where(
+                        member => reachabilityAnalysis.ShouldIncludeTopLevelDeclaration(currentFile, member)
+                    )
+                );
+            }
+
+            if (membersToAdd.Count == 0)
+            {
+                continue;
+            }
 
             var currentlyEditedNamespace = replacedNodes[originalNamespace];
             replacedNodes[originalNamespace] =
@@ -488,8 +533,13 @@ namespace System.Runtime.CompilerServices
             );
 
         // Update the target compilation unit
-        targetRoot = targetRoot.ReplaceNodes(replacedNodes.Keys, (originalNode, _) => replacedNodes[originalNode])
-                               .NormalizeWhitespace();
+        targetRoot = targetRoot.ReplaceNodes(replacedNodes.Keys, (originalNode, _) => replacedNodes[originalNode]);
+        if (options.AssertionWhitelist.IsEnabled)
+        {
+            targetRoot = RemoveConditionalCompilationTrivia(targetRoot);
+        }
+
+        targetRoot = targetRoot.NormalizeWhitespace();
 
         // Make types internal if necessary
         if (options.ChangePublicTypesToInternalTypes)
@@ -618,6 +668,23 @@ namespace System.Runtime.CompilerServices
         (fileName != "ReSharperAnnotations.cs" || options.IncludeJetBrainsAnnotations) &&
         (fileName != "ValidatedNotNullAttribute.cs" || options.IncludeValidatedNotNullAttribute);
 
+    private static bool ShouldAlwaysProcessWholeFileInWhitelistMode(string fileName) =>
+        fileName is "ReSharperAnnotations.cs" or "ValidatedNotNullAttribute.cs";
+
+    private static CompilationUnitSyntax RemoveConditionalCompilationTrivia(CompilationUnitSyntax targetRoot)
+    {
+        var triviaToRemove = targetRoot.DescendantTrivia(descendIntoTrivia: true)
+                                       .Where(IsConditionalCompilationTrivia);
+        return targetRoot.ReplaceTrivia(triviaToRemove, (_, _) => default);
+    }
+
+    private static bool IsConditionalCompilationTrivia(SyntaxTrivia trivia) =>
+        trivia.IsKind(SyntaxKind.DisabledTextTrivia) ||
+        trivia.IsKind(SyntaxKind.IfDirectiveTrivia) ||
+        trivia.IsKind(SyntaxKind.ElifDirectiveTrivia) ||
+        trivia.IsKind(SyntaxKind.ElseDirectiveTrivia) ||
+        trivia.IsKind(SyntaxKind.EndIfDirectiveTrivia);
+
     private static NamespaceDeclarationSyntax DetermineOriginalNamespace(
         SourceFileMergeOptions options,
         NamespaceDeclarationSyntax defaultNamespace,
@@ -631,9 +698,15 @@ namespace System.Runtime.CompilerServices
         var originalNamespace = defaultNamespace;
         switch (currentFile.Directory?.Name)
         {
-            case "FrameworkExtensions": originalNamespace = extensionsNamespace; break;
-            case "Exceptions":          originalNamespace = exceptionsNamespace; break;
-            case "ExceptionFactory":    originalNamespace = exceptionFactoryNamespace; break;
+            case "FrameworkExtensions":
+                originalNamespace = extensionsNamespace;
+                break;
+            case "Exceptions":
+                originalNamespace = exceptionsNamespace;
+                break;
+            case "ExceptionFactory":
+                originalNamespace = exceptionFactoryNamespace;
+                break;
             default:
             {
                 if (options.IncludeJetBrainsAnnotations && currentFile.Name == "ReSharperAnnotations.cs")

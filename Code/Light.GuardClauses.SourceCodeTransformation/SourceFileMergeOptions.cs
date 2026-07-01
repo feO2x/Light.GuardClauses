@@ -10,10 +10,14 @@ public sealed record SourceFileMergeOptions
         {
             var currentDirectory = new DirectoryInfo(".");
             while (currentDirectory != null && currentDirectory.Name != "Code")
+            {
                 currentDirectory = currentDirectory.Parent;
+            }
 
             if (currentDirectory == null)
+            {
                 return;
+            }
 
             TargetFile = Path.Combine(currentDirectory.FullName, "Light.GuardClauses.Source", "Light.GuardClauses.cs");
             SourceFolder = Path.Combine(currentDirectory.FullName, "Light.GuardClauses");
@@ -25,6 +29,8 @@ public sealed record SourceFileMergeOptions
     public string SourceFolder { get; init; } = string.Empty;
 
     public string TargetFile { get; init; } = string.Empty;
+
+    public AssertionWhitelist AssertionWhitelist { get; init; } = new ();
 
     public bool ChangePublicTypesToInternalTypes { get; init; } = true;
 

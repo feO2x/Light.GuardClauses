@@ -9,6 +9,7 @@ public static class Program
     {
         Console.WriteLine("Creating configuration...");
         var configuration = new ConfigurationBuilder().AddJsonFile("settings.json", true)
+                                                      .AddJsonFile("settings.local.json", true)
                                                       .AddCommandLine(args)
                                                       .Build();
 
@@ -18,6 +19,12 @@ public static class Program
         {
             Console.WriteLine("Merging source files...");
             SourceFileMerger.CreateSingleSourceFile(options);
+            var buildValidationExitCode = GeneratedFileBuildValidator.Validate(options.TargetFile);
+            if (buildValidationExitCode != 0)
+            {
+                return buildValidationExitCode;
+            }
+
             Console.WriteLine("Source file export completed successfully.");
             return 0;
         }
