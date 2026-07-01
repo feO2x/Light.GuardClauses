@@ -423,8 +423,6 @@ namespace System.Runtime.CompilerServices
         Console.WriteLine("Merging remaining files...");
         foreach (var fileName in allSourceFiles.Keys)
         {
-            if (fileName == "SpanDelegates.cs") { }
-
             if (!CheckIfFileShouldBeProcessed(options, fileName))
             {
                 continue;
