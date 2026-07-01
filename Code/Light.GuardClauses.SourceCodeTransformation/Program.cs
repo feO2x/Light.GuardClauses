@@ -15,6 +15,7 @@ public static class Program
 
         var options = new SourceFileMergeOptions();
         configuration.Bind(options);
+        options = ApplyDefaultPaths(options);
         try
         {
             Console.WriteLine("Merging source files...");
@@ -34,5 +35,21 @@ public static class Program
             Console.WriteLine(ex);
             return -1;
         }
+    }
+
+    private static SourceFileMergeOptions ApplyDefaultPaths(SourceFileMergeOptions options)
+    {
+        if (!string.IsNullOrWhiteSpace(options.SourceFolder) &&
+            !string.IsNullOrWhiteSpace(options.TargetFile))
+        {
+            return options;
+        }
+
+        var defaultOptions = new SourceFileMergeOptions();
+        return options with
+        {
+            SourceFolder = string.IsNullOrWhiteSpace(options.SourceFolder) ? defaultOptions.SourceFolder : options.SourceFolder,
+            TargetFile = string.IsNullOrWhiteSpace(options.TargetFile) ? defaultOptions.TargetFile : options.TargetFile
+        };
     }
 }
