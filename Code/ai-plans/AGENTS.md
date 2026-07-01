@@ -11,4 +11,3 @@ In this folder, we only keep Markdown files for AI plans. Each file has a four-d
 5. Regarding automated tests: it is usually enough to note that 'automated tests need to be written' as one check mark in the acceptance criteria list. If there are special requirements for the tests, these can be elaborated in the technical details section. But normally, you can simply leave these technical details out if the automated tests can be written in a straightforward way.
 6. When a plan should involve micro benchmarks, these need to be included in the acceptance criteria list and optionally in the technical details section. As with automated tests, if the BenchmarkDotNet benchmarks can be written in a straightforward way, leave out the technical details.
 7. In general, keep the plan concise and to the point. Do not include general information that the implementer already knows.
-8. 
