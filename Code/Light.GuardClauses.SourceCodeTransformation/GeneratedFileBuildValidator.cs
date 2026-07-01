@@ -41,9 +41,11 @@ public static class GeneratedFileBuildValidator
 
         using var process = Process.Start(startInfo) ??
                             throw new InvalidOperationException("Could not start dotnet build process.");
-        var standardOutput = process.StandardOutput.ReadToEnd();
-        var standardError = process.StandardError.ReadToEnd();
+        var standardOutputTask = process.StandardOutput.ReadToEndAsync();
+        var standardErrorTask = process.StandardError.ReadToEndAsync();
         process.WaitForExit();
+        var standardOutput = standardOutputTask.GetAwaiter().GetResult();
+        var standardError = standardErrorTask.GetAwaiter().GetResult();
 
         if (process.ExitCode == 0)
         {
