@@ -204,10 +204,7 @@ internal static class SourceReachabilityAnalyzer
                 return false;
             }
 
-            var comparableType = typeSymbol is INamedTypeSymbol namedType ?
-                namedType.OriginalDefinition :
-                typeSymbol;
-            if (!visitedTypes.Add(comparableType))
+            if (!visitedTypes.Add(typeSymbol))
             {
                 return false;
             }
