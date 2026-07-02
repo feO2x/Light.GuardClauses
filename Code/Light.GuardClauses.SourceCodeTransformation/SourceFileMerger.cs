@@ -71,7 +71,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
-{(options.IncludeJetBrainsAnnotationsUsing ? "using JetBrains.Annotations;" + Environment.NewLine : string.Empty)}using {options.BaseNamespace}.Exceptions;
+{(options.TargetFramework == SourceTargetFramework.Net8_0 ? "using System.Numerics;" + Environment.NewLine : string.Empty)}{(options.IncludeJetBrainsAnnotationsUsing ? "using JetBrains.Annotations;" + Environment.NewLine : string.Empty)}using {options.BaseNamespace}.Exceptions;
 using {options.BaseNamespace}.ExceptionFactory;
 using {options.BaseNamespace}.FrameworkExtensions;
 {(options.IncludeJetBrainsAnnotationsUsing ? "using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;" : "")}
@@ -128,7 +128,13 @@ namespace JetBrains.Annotations
             );
         }
 
-        if (options.IncludeCodeAnalysisNullableAttributes)
+        var includePolyfillAttributes = options.TargetFramework == SourceTargetFramework.NetStandard2_0;
+        var effectiveIncludeCodeAnalysisNullableAttributes =
+            options.IncludeCodeAnalysisNullableAttributes && includePolyfillAttributes;
+        var effectiveIncludeCallerArgumentExpressionAttribute =
+            options.IncludeCallerArgumentExpressionAttribute && includePolyfillAttributes;
+
+        if (effectiveIncludeCodeAnalysisNullableAttributes)
         {
             stringBuilder.AppendLine().AppendLine(
                 @"
@@ -310,7 +316,7 @@ namespace System.Diagnostics.CodeAnalysis
             );
         }
 
-        if (options.IncludeCallerArgumentExpressionAttribute)
+        if (effectiveIncludeCallerArgumentExpressionAttribute)
         {
             stringBuilder.AppendLine().AppendLine(
                 @"
@@ -330,11 +336,8 @@ namespace System.Runtime.CompilerServices
             );
         }
 
-        var csharpParseOptions = new CSharpParseOptions(LanguageVersion.CSharp12);
-        var sourceParseOptions = options.AssertionWhitelist.IsEnabled ?
-            SourceReachabilityAnalyzer.NetStandardParseOptions :
-            csharpParseOptions;
-        var targetSyntaxTree = CSharpSyntaxTree.ParseText(stringBuilder.ToString(), csharpParseOptions);
+        var sourceParseOptions = SourceReachabilityAnalyzer.CreateParseOptions(options.TargetFramework);
+        var targetSyntaxTree = CSharpSyntaxTree.ParseText(stringBuilder.ToString(), sourceParseOptions);
 
         var targetRoot = (CompilationUnitSyntax) targetSyntaxTree.GetRoot();
 
@@ -532,10 +535,7 @@ namespace System.Runtime.CompilerServices
 
         // Update the target compilation unit
         targetRoot = targetRoot.ReplaceNodes(replacedNodes.Keys, (originalNode, _) => replacedNodes[originalNode]);
-        if (options.AssertionWhitelist.IsEnabled)
-        {
-            targetRoot = RemoveConditionalCompilationTrivia(targetRoot);
-        }
+        targetRoot = RemoveConditionalCompilationTrivia(targetRoot);
 
         targetRoot = targetRoot.NormalizeWhitespace();
 

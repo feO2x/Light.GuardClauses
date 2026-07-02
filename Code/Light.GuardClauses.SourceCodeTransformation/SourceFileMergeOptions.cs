@@ -19,7 +19,7 @@ public sealed record SourceFileMergeOptions
                 return;
             }
 
-            TargetFile = Path.Combine(currentDirectory.FullName, "Light.GuardClauses.Source", "Light.GuardClauses.cs");
+            TargetFile = Path.Combine(currentDirectory.Parent!.FullName, "Light.GuardClauses.SingleFile.cs");
             SourceFolder = Path.Combine(currentDirectory.FullName, "Light.GuardClauses");
         }
         // ReSharper disable once EmptyGeneralCatchClause
@@ -29,6 +29,8 @@ public sealed record SourceFileMergeOptions
     public string SourceFolder { get; init; } = string.Empty;
 
     public string TargetFile { get; init; } = string.Empty;
+
+    public SourceTargetFramework TargetFramework { get; init; } = SourceTargetFramework.NetStandard2_0;
 
     public AssertionWhitelist AssertionWhitelist { get; init; } = new ();
 

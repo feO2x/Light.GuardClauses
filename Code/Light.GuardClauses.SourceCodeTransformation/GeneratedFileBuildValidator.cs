@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
@@ -6,33 +7,30 @@ namespace Light.GuardClauses.SourceCodeTransformation;
 
 public static class GeneratedFileBuildValidator
 {
-    public static int Validate(string targetFile)
+    private const string SourceValidationProjectDirectoryName = "Light.GuardClauses.SourceValidation";
+    private const string SourceValidationProjectFileName = "Light.GuardClauses.SourceValidation.csproj";
+
+    public static int Validate(SourceTargetFramework targetFramework, string targetFile)
     {
-        var targetDirectory = Path.GetDirectoryName(Path.GetFullPath(targetFile));
+        var absoluteTargetPath = Path.GetFullPath(targetFile);
+        var targetDirectory = Path.GetDirectoryName(absoluteTargetPath);
         if (string.IsNullOrWhiteSpace(targetDirectory) || !Directory.Exists(targetDirectory))
         {
             Console.WriteLine("Generated file build validation skipped because the target directory does not exist.");
             return 0;
         }
 
-        var projectFiles = Directory.GetFiles(targetDirectory, "*.csproj", SearchOption.TopDirectoryOnly);
-        switch (projectFiles.Length)
-        {
-            case 0:
-                Console.WriteLine(
-                    "Generated file build validation skipped because no project file was found next to the target file."
-                );
-                return 0;
+        var projectPath = FindRequiredSourceValidationProject();
 
-            case > 1:
-                Console.WriteLine(
-                    $"Warning: generated file build validation skipped because multiple project files were found in \"{targetDirectory}\"."
-                );
-                return 0;
-        }
+        var targetFrameworkMoniker = MapToTargetFrameworkMoniker(targetFramework);
 
-        Console.WriteLine($"Building generated project \"{projectFiles[0]}\"...");
-        var startInfo = new ProcessStartInfo("dotnet", $"build \"{projectFiles[0]}\"")
+        Console.WriteLine(
+            $"Building generated project \"{projectPath}\" targeting {targetFrameworkMoniker} with \"{absoluteTargetPath}\"..."
+        );
+        var startInfo = new ProcessStartInfo(
+            "dotnet",
+            $"build \"{projectPath}\" -f {targetFrameworkMoniker} -p:GeneratedSourceFile=\"{absoluteTargetPath}\""
+        )
         {
             RedirectStandardError = true,
             RedirectStandardOutput = true,
@@ -61,5 +59,92 @@ public static class GeneratedFileBuildValidator
         }
 
         return process.ExitCode;
+    }
+
+    private static string MapToTargetFrameworkMoniker(SourceTargetFramework targetFramework) =>
+        targetFramework switch
+        {
+            SourceTargetFramework.Net8_0 => "net8.0",
+            _ => "netstandard2.0",
+        };
+
+    private static string FindRequiredSourceValidationProject()
+    {
+        var searchRoots = new[]
+        {
+            AppContext.BaseDirectory,
+            Directory.GetCurrentDirectory(),
+        };
+
+        var projectPath = TryFindSourceValidationProject(searchRoots);
+        if (projectPath != null)
+        {
+            return projectPath;
+        }
+
+        throw new InvalidOperationException(
+            $"Could not find \"{SourceValidationProjectFileName}\" by searching from " +
+            $"\"{AppContext.BaseDirectory}\" and \"{Directory.GetCurrentDirectory()}\"."
+        );
+    }
+
+    public static string? TryFindSourceValidationProject(IEnumerable<string> searchRoots)
+    {
+        var searchedRoots = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var searchRoot in searchRoots)
+        {
+            if (string.IsNullOrWhiteSpace(searchRoot))
+            {
+                continue;
+            }
+
+            var fullSearchRoot = Path.GetFullPath(searchRoot);
+            if (!searchedRoots.Add(fullSearchRoot))
+            {
+                continue;
+            }
+
+            var currentDirectory = new DirectoryInfo(fullSearchRoot);
+            if (!currentDirectory.Exists)
+            {
+                continue;
+            }
+
+            while (currentDirectory != null)
+            {
+                var projectPath = FindSourceValidationProjectIn(currentDirectory.FullName);
+                if (projectPath != null)
+                {
+                    return projectPath;
+                }
+
+                var codeDirectoryProjectPath = FindSourceValidationProjectIn(
+                    Path.Combine(currentDirectory.FullName, "Code")
+                );
+                if (codeDirectoryProjectPath != null)
+                {
+                    return codeDirectoryProjectPath;
+                }
+
+                currentDirectory = currentDirectory.Parent;
+            }
+        }
+
+        return null;
+    }
+
+    private static string? FindSourceValidationProjectIn(string directoryPath)
+    {
+        if (!Directory.Exists(directoryPath))
+        {
+            return null;
+        }
+
+        var projectPath = Path.Combine(
+            directoryPath,
+            SourceValidationProjectDirectoryName,
+            SourceValidationProjectFileName
+        );
+        return File.Exists(projectPath) ? projectPath : null;
     }
 }
