@@ -14,16 +14,16 @@ The whitelist keeps its fail-loud contract: a `Check.<Name>.cs` file with no mat
 
 ## Acceptance Criteria
 
-- [ ] A new `SourceTargetFramework` enum with values `NetStandard2_0` and `Net8_0` is introduced, and `SourceFileMergeOptions` gets `public SourceTargetFramework TargetFramework { get; init; } = SourceTargetFramework.NetStandard2_0;`. Configuration binds the value by name.
-- [ ] A single factory maps `SourceTargetFramework` to `CSharpParseOptions`, and both `SourceReachabilityAnalyzer` and `SourceFileMerger` use it so reachability analysis and emitted output always agree on which branch is active. The standalone `NetStandardParseOptions` field is removed.
-- [ ] The export always flattens to the selected framework: source is parsed with that framework's symbols and all `#if` directives are removed from the output, in both whitelist and non-whitelist mode.
-- [ ] When `TargetFramework == NetStandard2_0`, the non-whitelist full export reproduces today's netstandard2.0 API surface with no `#if` directives.
-- [ ] When `TargetFramework == Net8_0`, the flattened export defines `NET8_0_OR_GREATER`, contains the net8-only members (for example `MustBeGreaterThanOrApproximately<T>` with an `INumber<T>` constraint and the `Span`/`Memory` email overloads), and contains no `#if` directives.
-- [ ] Polyfill-emitting options that duplicate types built into net8 (`IncludeCallerArgumentExpressionAttribute`, `IncludeCodeAnalysisNullableAttributes`) are derived from `SourceTargetFramework`: emitted for `NetStandard2_0`, suppressed for `Net8_0`, so a net8 export never redefines framework types.
-- [ ] The whitelist's fail-loud behavior is preserved: a `Check.<Name>.cs` file with no matching `AssertionWhitelist` property throws a clear, actionable exception.
-- [ ] The `Light.GuardClauses.Source` project is removed (and dropped from the solution) and replaced by a multi-targeted (`netstandard2.0;net8.0`) `Light.GuardClauses.SourceValidation` project that compiles a file supplied through a `GeneratedSourceFile` MSBuild property rather than a co-located source file.
-- [ ] `GeneratedFileBuildValidator` builds `Light.GuardClauses.SourceValidation` with the framework matching `SourceTargetFramework` and the generated file path passed in; on build failure it prints the captured output, returns a non-zero exit code, and leaves the generated file on disk.
-- [ ] Automated tests need to be written.
+- [x] A new `SourceTargetFramework` enum with values `NetStandard2_0` and `Net8_0` is introduced, and `SourceFileMergeOptions` gets `public SourceTargetFramework TargetFramework { get; init; } = SourceTargetFramework.NetStandard2_0;`. Configuration binds the value by name.
+- [x] A single factory maps `SourceTargetFramework` to `CSharpParseOptions`, and both `SourceReachabilityAnalyzer` and `SourceFileMerger` use it so reachability analysis and emitted output always agree on which branch is active. The standalone `NetStandardParseOptions` field is removed.
+- [x] The export always flattens to the selected framework: source is parsed with that framework's symbols and all `#if` directives are removed from the output, in both whitelist and non-whitelist mode.
+- [x] When `TargetFramework == NetStandard2_0`, the non-whitelist full export reproduces today's netstandard2.0 API surface with no `#if` directives.
+- [x] When `TargetFramework == Net8_0`, the flattened export defines `NET8_0_OR_GREATER`, contains the net8-only members (for example `MustBeGreaterThanOrApproximately<T>` with an `INumber<T>` constraint and the `Span`/`Memory` email overloads), and contains no `#if` directives.
+- [x] Polyfill-emitting options that duplicate types built into net8 (`IncludeCallerArgumentExpressionAttribute`, `IncludeCodeAnalysisNullableAttributes`) are derived from `SourceTargetFramework`: emitted for `NetStandard2_0`, suppressed for `Net8_0`, so a net8 export never redefines framework types.
+- [x] The whitelist's fail-loud behavior is preserved: a `Check.<Name>.cs` file with no matching `AssertionWhitelist` property throws a clear, actionable exception.
+- [x] The `Light.GuardClauses.Source` project is removed (and dropped from the solution) and replaced by a multi-targeted (`netstandard2.0;net8.0`) `Light.GuardClauses.SourceValidation` project that compiles a file supplied through a `GeneratedSourceFile` MSBuild property rather than a co-located source file.
+- [x] `GeneratedFileBuildValidator` builds `Light.GuardClauses.SourceValidation` with the framework matching `SourceTargetFramework` and the generated file path passed in; on build failure it prints the captured output, returns a non-zero exit code, and leaves the generated file on disk.
+- [x] Automated tests need to be written.
 
 ## Technical Details
 

@@ -20,7 +20,8 @@ public static class Program
         {
             Console.WriteLine("Merging source files...");
             SourceFileMerger.CreateSingleSourceFile(options);
-            var buildValidationExitCode = GeneratedFileBuildValidator.Validate(options.TargetFile);
+            var buildValidationExitCode =
+                GeneratedFileBuildValidator.Validate(options.TargetFramework, options.TargetFile);
             if (buildValidationExitCode != 0)
             {
                 return buildValidationExitCode;
@@ -48,8 +49,10 @@ public static class Program
         var defaultOptions = new SourceFileMergeOptions();
         return options with
         {
-            SourceFolder = string.IsNullOrWhiteSpace(options.SourceFolder) ? defaultOptions.SourceFolder : options.SourceFolder,
-            TargetFile = string.IsNullOrWhiteSpace(options.TargetFile) ? defaultOptions.TargetFile : options.TargetFile
+            SourceFolder = string.IsNullOrWhiteSpace(options.SourceFolder) ?
+                defaultOptions.SourceFolder :
+                options.SourceFolder,
+            TargetFile = string.IsNullOrWhiteSpace(options.TargetFile) ? defaultOptions.TargetFile : options.TargetFile,
         };
     }
 }

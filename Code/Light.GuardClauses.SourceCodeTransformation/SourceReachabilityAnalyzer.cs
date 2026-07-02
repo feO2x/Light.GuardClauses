@@ -11,17 +11,20 @@ namespace Light.GuardClauses.SourceCodeTransformation;
 
 internal static class SourceReachabilityAnalyzer
 {
-    internal static readonly CSharpParseOptions NetStandardParseOptions = new (
-        LanguageVersion.CSharp12,
-        preprocessorSymbols: ["NETSTANDARD", "NETSTANDARD2_0"]
-    );
+    public static CSharpParseOptions CreateParseOptions(SourceTargetFramework targetFramework) =>
+        new (
+            LanguageVersion.CSharp12,
+            preprocessorSymbols: targetFramework == SourceTargetFramework.Net8_0
+                ? ["NET8_0_OR_GREATER", "NET8_0", "NETCOREAPP"]
+                : ["NETSTANDARD", "NETSTANDARD2_0"]
+        );
 
     public static SourceReachabilityAnalysis Analyze(
         SourceFileMergeOptions options,
         IEnumerable<FileInfo> sourceFiles
     )
     {
-        var catalog = SourceCatalog.Create(sourceFiles);
+        var catalog = SourceCatalog.Create(sourceFiles, CreateParseOptions(options.TargetFramework));
         var analyzer = new Analyzer(options, catalog);
         return analyzer.Analyze();
     }
@@ -405,9 +408,9 @@ internal static class SourceReachabilityAnalyzer
         public Dictionary<string, List<SourceDeclaration>> TopLevelDeclarationsByName { get; } =
             new (StringComparer.Ordinal);
 
-        public static SourceCatalog Create(IEnumerable<FileInfo> files)
+        public static SourceCatalog Create(IEnumerable<FileInfo> files, CSharpParseOptions parseOptions)
         {
-            var sourceFiles = files.Select(SourceFile.Parse).ToArray();
+            var sourceFiles = files.Select(file => SourceFile.Parse(file, parseOptions)).ToArray();
             var compilation = CSharpCompilation.Create(
                 "Light.GuardClauses.SourceExportReachability",
                 sourceFiles.Select(sourceFile => sourceFile.SyntaxTree),
@@ -657,11 +660,11 @@ internal static class SourceReachabilityAnalyzer
 
     private sealed record SourceFile(FileInfo File, SyntaxTree SyntaxTree, CompilationUnitSyntax Root)
     {
-        public static SourceFile Parse(FileInfo file)
+        public static SourceFile Parse(FileInfo file, CSharpParseOptions parseOptions)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(
                 file.ReadContent(),
-                NetStandardParseOptions,
+                parseOptions,
                 file.FullName
             );
             return new (file, syntaxTree, (CompilationUnitSyntax) syntaxTree.GetRoot());

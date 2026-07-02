@@ -6,33 +6,34 @@ namespace Light.GuardClauses.SourceCodeTransformation;
 
 public static class GeneratedFileBuildValidator
 {
-    public static int Validate(string targetFile)
+    public static int Validate(SourceTargetFramework targetFramework, string targetFile)
     {
-        var targetDirectory = Path.GetDirectoryName(Path.GetFullPath(targetFile));
+        var absoluteTargetPath = Path.GetFullPath(targetFile);
+        var targetDirectory = Path.GetDirectoryName(absoluteTargetPath);
         if (string.IsNullOrWhiteSpace(targetDirectory) || !Directory.Exists(targetDirectory))
         {
             Console.WriteLine("Generated file build validation skipped because the target directory does not exist.");
             return 0;
         }
 
-        var projectFiles = Directory.GetFiles(targetDirectory, "*.csproj", SearchOption.TopDirectoryOnly);
-        switch (projectFiles.Length)
+        var projectPath = FindSourceValidationProject();
+        if (projectPath == null)
         {
-            case 0:
-                Console.WriteLine(
-                    "Generated file build validation skipped because no project file was found next to the target file."
-                );
-                return 0;
-
-            case > 1:
-                Console.WriteLine(
-                    $"Warning: generated file build validation skipped because multiple project files were found in \"{targetDirectory}\"."
-                );
-                return 0;
+            Console.WriteLine(
+                "Generated file build validation skipped because the Light.GuardClauses.SourceValidation project could not be found."
+            );
+            return 0;
         }
 
-        Console.WriteLine($"Building generated project \"{projectFiles[0]}\"...");
-        var startInfo = new ProcessStartInfo("dotnet", $"build \"{projectFiles[0]}\"")
+        var targetFrameworkMoniker = MapToTargetFrameworkMoniker(targetFramework);
+
+        Console.WriteLine(
+            $"Building generated project \"{projectPath}\" targeting {targetFrameworkMoniker} with \"{absoluteTargetPath}\"..."
+        );
+        var startInfo = new ProcessStartInfo(
+            "dotnet",
+            $"build \"{projectPath}\" -f {targetFrameworkMoniker} -p:GeneratedSourceFile=\"{absoluteTargetPath}\""
+        )
         {
             RedirectStandardError = true,
             RedirectStandardOutput = true,
@@ -61,5 +62,33 @@ public static class GeneratedFileBuildValidator
         }
 
         return process.ExitCode;
+    }
+
+    private static string MapToTargetFrameworkMoniker(SourceTargetFramework targetFramework) =>
+        targetFramework switch
+        {
+            SourceTargetFramework.Net8_0 => "net8.0",
+            _ => "netstandard2.0",
+        };
+
+    private static string? FindSourceValidationProject()
+    {
+        var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
+        while (currentDirectory != null && currentDirectory.Name != "Code")
+        {
+            currentDirectory = currentDirectory.Parent;
+        }
+
+        if (currentDirectory == null)
+        {
+            return null;
+        }
+
+        var projectPath = Path.Combine(
+            currentDirectory.FullName,
+            "Light.GuardClauses.SourceValidation",
+            "Light.GuardClauses.SourceValidation.csproj"
+        );
+        return File.Exists(projectPath) ? projectPath : null;
     }
 }

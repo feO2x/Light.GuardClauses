@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using FluentAssertions;
 using Microsoft.CodeAnalysis.CSharp;
@@ -9,10 +8,6 @@ namespace Light.GuardClauses.SourceCodeTransformation.Tests;
 
 public static class ParseCSharpWithRoslynTests
 {
-    private static readonly DirectoryInfo CodeDirectory;
-
-    static ParseCSharpWithRoslynTests() => CodeDirectory = FindCodeDirectory();
-
     [Fact]
     public static void ParseExpressionExtensionsFile()
     {
@@ -36,25 +31,7 @@ public static class ParseCSharpWithRoslynTests
         root.Members.Should().NotBeEmpty();
     }
 
-    private static DirectoryInfo FindCodeDirectory()
-    {
-        var currentDirectory = new DirectoryInfo(".");
-        do
-        {
-            if (currentDirectory.Name == "Code")
-            {
-                return currentDirectory;
-            }
-
-            currentDirectory = currentDirectory.Parent;
-        } while (currentDirectory != null);
-
-        throw new InvalidOperationException(
-            "This test project does not reside in a folder called \"Code\" (directly or indirectly)."
-        );
-    }
-
     private static FileInfo GetLightGuardClausesFile(string relativeFilePath) => new (
-        Path.Combine(CodeDirectory.FullName, "Light.GuardClauses", relativeFilePath)
+        Path.Combine(TestEnvironment.SourceDirectory.FullName, relativeFilePath)
     );
 }

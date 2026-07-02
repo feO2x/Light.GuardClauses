@@ -9,10 +9,7 @@ namespace Light.GuardClauses.SourceCodeTransformation.Tests;
 
 public static class SourceFileMergerWhitelistTests
 {
-    private static readonly DirectoryInfo CodeDirectory = FindCodeDirectory();
-
-    private static readonly DirectoryInfo SourceDirectory =
-        new (Path.Combine(CodeDirectory.FullName, "Light.GuardClauses"));
+    private static readonly DirectoryInfo SourceDirectory = TestEnvironment.SourceDirectory;
 
     [Fact]
     public static void DisabledWhitelistIgnoresAllEntriesAndProducesEquivalentOutput()
@@ -149,6 +146,7 @@ public static class SourceFileMergerWhitelistTests
         {
             SourceFolder = SourceDirectory.FullName,
             TargetFile = targetFile,
+            TargetFramework = SourceTargetFramework.NetStandard2_0,
             IncludeVersionComment = false,
             AssertionWhitelist = assertionWhitelist ?? new AssertionWhitelist(),
         };
@@ -183,45 +181,8 @@ public static class SourceFileMergerWhitelistTests
         return whitelist;
     }
 
-    private static DirectoryInfo FindCodeDirectory()
-    {
-        var currentDirectory = new DirectoryInfo(".");
-        do
-        {
-            if (currentDirectory.Name == "Code")
-            {
-                return currentDirectory;
-            }
-
-            currentDirectory = currentDirectory.Parent;
-        } while (currentDirectory != null);
-
-        throw new InvalidOperationException(
-            "This test project does not reside in a folder called \"Code\" (directly or indirectly)."
-        );
-    }
-
     private readonly record struct AssertionSelection(
         string AssertionName,
         bool IncludeExceptionFactoryOverload
     );
-
-    private sealed class TemporaryDirectory : IDisposable
-    {
-        public TemporaryDirectory()
-        {
-            DirectoryPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
-            Directory.CreateDirectory(DirectoryPath);
-        }
-
-        public string DirectoryPath { get; }
-
-        public void Dispose()
-        {
-            if (Directory.Exists(DirectoryPath))
-            {
-                Directory.Delete(DirectoryPath, true);
-            }
-        }
-    }
 }

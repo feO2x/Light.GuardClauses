@@ -1,6 +1,7 @@
 {
   "SourceFolder": "",
   "TargetFile": "",
+  "TargetFramework": "NetStandard2_0",
   "ChangePublicTypesToInternalTypes": true,
   "BaseNamespace": "Light.GuardClauses",
   "RemoveContractAnnotations": false,

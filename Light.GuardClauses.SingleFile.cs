@@ -4604,11 +4604,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "baseClassOrInterfaceType"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt")]
-        public static bool InheritsFrom(
-#if NET8_0_OR_GREATER
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
-#endif
-        [NotNull][ValidatedNotNull] this Type type, [NotNull][ValidatedNotNull] Type baseClassOrInterfaceType) => baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType)).IsInterface ? type.Implements(baseClassOrInterfaceType) : type.DerivesFrom(baseClassOrInterfaceType);
+        public static bool InheritsFrom([NotNull][ValidatedNotNull] this Type type, [NotNull][ValidatedNotNull] Type baseClassOrInterfaceType) => baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType)).IsInterface ? type.Implements(baseClassOrInterfaceType) : type.DerivesFrom(baseClassOrInterfaceType);
         /// <summary>
         /// Checks if the given type derives from the specified base class or interface type. This overload uses the specified <paramref name = "typeComparer"/>
         /// to compare the types.
@@ -4619,11 +4615,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/>, or <paramref name = "baseClassOrInterfaceType"/>, or <paramref name = "typeComparer"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("type:null => halt; baseClassOrInterfaceType:null => halt; typeComparer:null => halt")]
-        public static bool InheritsFrom(
-#if NET8_0_OR_GREATER
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
-#endif
-        [NotNull][ValidatedNotNull] this Type type, [NotNull][ValidatedNotNull] Type baseClassOrInterfaceType, [NotNull][ValidatedNotNull] IEqualityComparer<Type> typeComparer) => baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType)).IsInterface ? type.Implements(baseClassOrInterfaceType, typeComparer) : type.DerivesFrom(baseClassOrInterfaceType, typeComparer);
+        public static bool InheritsFrom([NotNull][ValidatedNotNull] this Type type, [NotNull][ValidatedNotNull] Type baseClassOrInterfaceType, [NotNull][ValidatedNotNull] IEqualityComparer<Type> typeComparer) => baseClassOrInterfaceType.MustNotBeNull(nameof(baseClassOrInterfaceType)).IsInterface ? type.Implements(baseClassOrInterfaceType, typeComparer) : type.DerivesFrom(baseClassOrInterfaceType, typeComparer);
         /// <summary>
         /// Ensures that the specified URI is an absolute one, or otherwise throws a <see cref = "RelativeUriException"/>.
         /// </summary>
@@ -4776,11 +4768,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "otherType"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("type:null => halt; otherType:null => halt")]
-        public static bool IsOrImplements(
-#if NET8_0_OR_GREATER
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
-#endif
-        [NotNull][ValidatedNotNull] this Type type, [NotNull][ValidatedNotNull] Type otherType) => type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.Implements(otherType);
+        public static bool IsOrImplements([NotNull][ValidatedNotNull] this Type type, [NotNull][ValidatedNotNull] Type otherType) => type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.Implements(otherType);
         /// <summary>
         /// Checks if the given <paramref name = "type"/> is equal to the specified <paramref name = "otherType"/> or if it implements it. This overload uses the specified <paramref name = "typeComparer"/>
         /// to compare the types.
@@ -4792,11 +4780,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "otherType"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("type:null => halt; otherType:null => halt")]
-        public static bool IsOrImplements(
-#if NET8_0_OR_GREATER
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
-#endif
-        [NotNull][ValidatedNotNull] this Type type, [NotNull][ValidatedNotNull] Type otherType, [NotNull][ValidatedNotNull] IEqualityComparer<Type> typeComparer) => typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type.MustNotBeNull(nameof(type)), otherType.MustNotBeNull(nameof(otherType))) || type.Implements(otherType, typeComparer);
+        public static bool IsOrImplements([NotNull][ValidatedNotNull] this Type type, [NotNull][ValidatedNotNull] Type otherType, [NotNull][ValidatedNotNull] IEqualityComparer<Type> typeComparer) => typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type.MustNotBeNull(nameof(type)), otherType.MustNotBeNull(nameof(otherType))) || type.Implements(otherType, typeComparer);
         /// <summary>
         /// Ensures that the specified <paramref name = "parameter"/> is not less than the given <paramref name = "other"/> value, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
         /// </summary>
@@ -4891,11 +4875,7 @@ namespace Light.GuardClauses
         /// <param name = "interfaceType">The interface type that <paramref name = "type"/> should implement.</param>
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "interfaceType"/> is null.</exception>
         [ContractAnnotation("type:null => halt; interfaceType:null => halt")]
-        public static bool Implements(
-#if NET8_0_OR_GREATER
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
-#endif
-        [NotNull][ValidatedNotNull] this Type type, [NotNull][ValidatedNotNull] Type interfaceType)
+        public static bool Implements([NotNull][ValidatedNotNull] this Type type, [NotNull][ValidatedNotNull] Type interfaceType)
         {
             type.MustNotBeNull();
             interfaceType.MustNotBeNull();
@@ -4920,11 +4900,7 @@ namespace Light.GuardClauses
         /// <param name = "typeComparer">The equality comparer used to compare the interface types.</param>
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/>, or <paramref name = "interfaceType"/>, or <paramref name = "typeComparer"/> is null.</exception>
         [ContractAnnotation("type:null => halt; interfaceType:null => halt; typeComparer:null => halt")]
-        public static bool Implements(
-#if NET8_0_OR_GREATER
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
-#endif
-        [NotNull][ValidatedNotNull] this Type type, [NotNull][ValidatedNotNull] Type interfaceType, [NotNull][ValidatedNotNull] IEqualityComparer<Type> typeComparer)
+        public static bool Implements([NotNull][ValidatedNotNull] this Type type, [NotNull][ValidatedNotNull] Type interfaceType, [NotNull][ValidatedNotNull] IEqualityComparer<Type> typeComparer)
         {
             type.MustNotBeNull();
             interfaceType.MustNotBeNull();
@@ -5187,11 +5163,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "otherType"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("type:null => halt; otherType:null => halt")]
-        public static bool IsOrInheritsFrom(
-#if NET8_0_OR_GREATER
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
-#endif
-        [NotNull][ValidatedNotNull] this Type type, [NotNull][ValidatedNotNull] Type otherType) => type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType);
+        public static bool IsOrInheritsFrom([NotNull][ValidatedNotNull] this Type type, [NotNull][ValidatedNotNull] Type otherType) => type.IsEquivalentTypeTo(otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType);
         /// <summary>
         /// Checks if the given <paramref name = "type"/> is equal to the specified <paramref name = "otherType"/> or if it derives from it or implements it.
         /// This overload uses the specified <paramref name = "typeComparer"/> to compare the types.
@@ -5202,11 +5174,7 @@ namespace Light.GuardClauses
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "type"/> or <paramref name = "otherType"/> is null.</exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("type:null => halt; otherType:null => halt; typeComparer:null => halt")]
-        public static bool IsOrInheritsFrom(
-#if NET8_0_OR_GREATER
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.Interfaces)]
-#endif
-        [NotNull][ValidatedNotNull] this Type type, [NotNull][ValidatedNotNull] Type otherType, [NotNull][ValidatedNotNull] IEqualityComparer<Type> typeComparer) => typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type, otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType, typeComparer);
+        public static bool IsOrInheritsFrom([NotNull][ValidatedNotNull] this Type type, [NotNull][ValidatedNotNull] Type otherType, [NotNull][ValidatedNotNull] IEqualityComparer<Type> typeComparer) => typeComparer.MustNotBeNull(nameof(typeComparer)).Equals(type, otherType.MustNotBeNull(nameof(otherType))) || type.InheritsFrom(otherType, typeComparer);
         /// <summary>
         /// Ensures that the string is shorter than the specified length, or otherwise throws a <see cref = "StringLengthException"/>.
         /// </summary>
@@ -5681,11 +5649,7 @@ namespace Light.GuardClauses
     /// <summary>
     /// Provides regular expressions that are used in string assertions.
     /// </summary>
-#if NET8_0_OR_GREATER
-public static partial class RegularExpressions
-#else
     internal static class RegularExpressions
-#endif
     {
         /// <summary>
         /// Gets the string that represents the <see cref = "EmailRegex"/>.
@@ -5697,15 +5661,7 @@ public static partial class RegularExpressions
         /// This pattern is based on https://www.rhyous.com/2010/06/15/csharp-email-regular-expression/ and
         /// was modified to satisfy all tests of https://blogs.msdn.microsoft.com/testing123/2009/02/06/email-address-test-cases/.
         /// </summary>
-        public static readonly Regex EmailRegex = 
-#if NET8_0_OR_GREATER
-        GenerateEmailRegex();
-
-    [GeneratedRegex(EmailRegexText, RegexOptions.ECMAScript | RegexOptions.CultureInvariant)]
-    private static partial Regex GenerateEmailRegex();
-#else
-        new(EmailRegexText, RegexOptions.ECMAScript | RegexOptions.CultureInvariant | RegexOptions.Compiled);
-#endif
+        public static readonly Regex EmailRegex = new(EmailRegexText, RegexOptions.ECMAScript | RegexOptions.CultureInvariant | RegexOptions.Compiled);
     }
 
     [AttributeUsage(AttributeTargets.Parameter)]
@@ -6139,11 +6095,7 @@ public static partial class RegularExpressions
 
         static EnumInfo()
         {
-#if NET8_0_OR_GREATER
-        EnumConstantsArray = Enum.GetValues<T>();
-#else
             EnumConstantsArray = (T[])Enum.GetValues(typeof(T));
-#endif
             EnumConstants = new ReadOnlyMemory<T>(EnumConstantsArray);
             if (!IsFlagsEnum)
             {
@@ -6226,12 +6178,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected EmptyCollectionException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6249,12 +6199,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected InvalidUriSchemeException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6272,12 +6220,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected InvalidDateTimeException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6295,12 +6241,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected StringException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6318,12 +6262,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected EmptyStringException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6341,12 +6283,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected ValuesNotEqualException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6364,12 +6304,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected EnumValueNotDefinedException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6387,12 +6325,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected ExistingItemException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6410,12 +6346,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected MissingItemException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6433,12 +6367,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected AbsoluteUriException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6456,12 +6388,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected EmptyGuidException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6479,12 +6409,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected NullableHasNoValueException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6502,12 +6430,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected SameObjectReferenceException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6525,12 +6451,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected TypeCastException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6548,12 +6472,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected StringLengthException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6571,12 +6493,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected WhiteSpaceStringException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6594,12 +6514,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected ValueIsNotOneOfException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6617,12 +6535,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected SubstringException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6640,12 +6556,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected InvalidConfigurationException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6663,12 +6577,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected InvalidStateException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6686,12 +6598,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected ArgumentDefaultException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6709,12 +6619,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected CollectionException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6732,12 +6640,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected UriException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6755,12 +6661,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected StringDoesNotMatchException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6778,12 +6682,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected ValuesEqualException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6801,12 +6703,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected InvalidEmailAddressException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6824,12 +6724,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected RelativeUriException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6847,12 +6745,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected ValueIsOneOfException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 
     /// <summary>
@@ -6870,12 +6766,10 @@ namespace Light.GuardClauses.Exceptions
         {
         }
 
-#if !NET8_0_OR_GREATER
         /// <inheritdoc/>
         protected InvalidCollectionCountException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 }
 
