@@ -7,6 +7,19 @@ namespace Light.GuardClauses.SourceCodeTransformation.Tests;
 public static class GeneratedFileBuildValidatorTests
 {
     [Fact]
+    public static void TryFindSourceValidationProjectFindsProjectFromRepositoryRoot()
+    {
+        var repositoryRoot = TestEnvironment.CodeDirectory.Parent!.FullName;
+        var expectedProjectPath = Path.Combine(
+            TestEnvironment.CodeDirectory.FullName,
+            "Light.GuardClauses.SourceValidation",
+            "Light.GuardClauses.SourceValidation.csproj"
+        );
+
+        GeneratedFileBuildValidator.TryFindSourceValidationProject([repositoryRoot]).Should().Be(expectedProjectPath);
+    }
+
+    [Fact]
     public static void ValidateReturnsNonZeroExitCodeAndLeavesFileOnBuildFailure()
     {
         using var temporaryDirectory = new TemporaryDirectory();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
@@ -6,6 +7,9 @@ namespace Light.GuardClauses.SourceCodeTransformation;
 
 public static class GeneratedFileBuildValidator
 {
+    private const string SourceValidationProjectDirectoryName = "Light.GuardClauses.SourceValidation";
+    private const string SourceValidationProjectFileName = "Light.GuardClauses.SourceValidation.csproj";
+
     public static int Validate(SourceTargetFramework targetFramework, string targetFile)
     {
         var absoluteTargetPath = Path.GetFullPath(targetFile);
@@ -16,14 +20,7 @@ public static class GeneratedFileBuildValidator
             return 0;
         }
 
-        var projectPath = FindSourceValidationProject();
-        if (projectPath == null)
-        {
-            Console.WriteLine(
-                "Generated file build validation skipped because the Light.GuardClauses.SourceValidation project could not be found."
-            );
-            return 0;
-        }
+        var projectPath = FindRequiredSourceValidationProject();
 
         var targetFrameworkMoniker = MapToTargetFrameworkMoniker(targetFramework);
 
@@ -71,23 +68,82 @@ public static class GeneratedFileBuildValidator
             _ => "netstandard2.0",
         };
 
-    private static string? FindSourceValidationProject()
+    private static string FindRequiredSourceValidationProject()
     {
-        var currentDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
-        while (currentDirectory != null && currentDirectory.Name != "Code")
+        var searchRoots = new[]
         {
-            currentDirectory = currentDirectory.Parent;
+            AppContext.BaseDirectory,
+            Directory.GetCurrentDirectory(),
+        };
+
+        var projectPath = TryFindSourceValidationProject(searchRoots);
+        if (projectPath != null)
+        {
+            return projectPath;
         }
 
-        if (currentDirectory == null)
+        throw new InvalidOperationException(
+            $"Could not find \"{SourceValidationProjectFileName}\" by searching from " +
+            $"\"{AppContext.BaseDirectory}\" and \"{Directory.GetCurrentDirectory()}\"."
+        );
+    }
+
+    public static string? TryFindSourceValidationProject(IEnumerable<string> searchRoots)
+    {
+        var searchedRoots = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var searchRoot in searchRoots)
+        {
+            if (string.IsNullOrWhiteSpace(searchRoot))
+            {
+                continue;
+            }
+
+            var fullSearchRoot = Path.GetFullPath(searchRoot);
+            if (!searchedRoots.Add(fullSearchRoot))
+            {
+                continue;
+            }
+
+            var currentDirectory = new DirectoryInfo(fullSearchRoot);
+            if (!currentDirectory.Exists)
+            {
+                continue;
+            }
+
+            while (currentDirectory != null)
+            {
+                var projectPath = FindSourceValidationProjectIn(currentDirectory.FullName);
+                if (projectPath != null)
+                {
+                    return projectPath;
+                }
+
+                var codeDirectoryProjectPath = FindSourceValidationProjectIn(
+                    Path.Combine(currentDirectory.FullName, "Code")
+                );
+                if (codeDirectoryProjectPath != null)
+                {
+                    return codeDirectoryProjectPath;
+                }
+
+                currentDirectory = currentDirectory.Parent;
+            }
+        }
+
+        return null;
+    }
+
+    private static string? FindSourceValidationProjectIn(string directoryPath)
+    {
+        if (!Directory.Exists(directoryPath))
         {
             return null;
         }
 
         var projectPath = Path.Combine(
-            currentDirectory.FullName,
-            "Light.GuardClauses.SourceValidation",
-            "Light.GuardClauses.SourceValidation.csproj"
+            directoryPath,
+            SourceValidationProjectDirectoryName,
+            SourceValidationProjectFileName
         );
         return File.Exists(projectPath) ? projectPath : null;
     }
