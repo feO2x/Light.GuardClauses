@@ -19,9 +19,9 @@ public static class SourceFileMergerFrameworkTests
         sourceCode.Should().Contain("using System.Numerics;");
         sourceCode.Should().Contain("INumber<T>");
         sourceCode.Should().Contain("MustBeGreaterThanOrApproximately<T>");
-        sourceCode.Should().Contain("ReadOnlySpan<char> MustBeEmailAddress");
-        sourceCode.Should().Contain("Span<char> MustBeEmailAddress");
-        sourceCode.Should().Contain("Memory<char> MustBeEmailAddress");
+        sourceCode.Should().Contain("public static ReadOnlySpan<char> MustBeEmailAddress");
+        sourceCode.Should().Contain("public static Span<char> MustBeEmailAddress");
+        sourceCode.Should().Contain("public static Memory<char> MustBeEmailAddress");
         sourceCode.Should().NotContain("#if");
     }
 
@@ -114,7 +114,7 @@ public static class SourceFileMergerFrameworkTests
             TargetFile = targetFile,
             TargetFramework = SourceTargetFramework.NetStandard2_0,
             IncludeVersionComment = false,
-            AssertionWhitelist = new AssertionWhitelist { IsEnabled = true },
+            AssertionWhitelist = new() { IsEnabled = true },
         };
 
         var act = () => SourceFileMerger.CreateSingleSourceFile(options);
