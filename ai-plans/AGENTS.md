@@ -1,5 +1,7 @@
 # AGENTS.md for AI Plans
 
+*Version 1.1*
+
 Apart from this file, this folder contains only Markdown plans. Plan file names start with the four-digit GitHub issue number they belong to.
 
 ## How to Write Plans
