@@ -1,0 +1,35 @@
+<Project>
+  <Import Project="../Directory.Build.props" />
+
+  <PropertyGroup>
+    <Description>A lightweight .NET library for expressive Guard Clauses.</Description>
+    <IsPackable>true</IsPackable>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>light-logo.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/feO2x/Light.GuardClauses</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/feO2x/Light.GuardClauses.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PackageTags>Assertions;Preconditions;GuardClauses;DesignByContract;DbC</PackageTags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReleaseNotes>
+      Light.GuardClauses 14.0.0
+      --------------------------------
+
+      - Breaking Change: Check.Contains(string, string, System.StringComparison) now exists in Light.GuardClauses.FrameworkExtensions to avoid conflict with other polyfill libraries
+    </PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildProjectDirectory)/light-logo.png" Pack="true" PackagePath="\" />
+    <None Include="$(MSBuildThisFileDirectory)../README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>

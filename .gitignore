@@ -210,7 +210,7 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
-/Code/Light.GuardClauses.Performance/BenchmarkDotNet.Artifacts
+/benchmarks/Light.GuardClauses.Performance/BenchmarkDotNet.Artifacts
 
 # VS Code files
 **/.vscode/
@@ -219,11 +219,15 @@ ModelManifest.xml
 **/TargetFrameworks.props
 
 # Local SourceCodeTransformation settings
-/Code/Light.GuardClauses.SourceCodeTransformation/settings.local.json
+/tools/source-export/Light.GuardClauses.SourceCodeTransformation/settings.local.json
 
 # JetBrains Rider
 *.sln.iml
 .idea/
-
-# The source code redistributable of Light.GuardClauses
-/Code/Light.GuardClauses.Source/Light.GuardClauses.cs
+!/.idea/
+/.idea/*
+!/.idea/.idea.Light.GuardClauses/
+/.idea/.idea.Light.GuardClauses/*
+!/.idea/.idea.Light.GuardClauses/.idea/
+/.idea/.idea.Light.GuardClauses/.idea/*
+!/.idea/.idea.Light.GuardClauses/.idea/indexLayout.xml

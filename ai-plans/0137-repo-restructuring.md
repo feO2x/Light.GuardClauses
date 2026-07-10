@@ -7,18 +7,18 @@ The repository still groups solutions, projects, build configuration, developmen
 ## Acceptance Criteria
 
 - [x] The `ai-plans` directory and its instructions reside at the repository root.
-- [ ] `AGENTS.md` and `CLAUDE.md` reside at the repository root and apply to the intended repository scope.
-- [ ] The repository contains no `Code` directory; product source, tests, benchmarks, and internal tools use the agreed purpose-specific directories.
-- [ ] A single root-level `Light.GuardClauses.sln` contains all projects and presents the repository structure through corresponding solution folders.
-- [ ] The shared `Light.GuardClauses.sln.DotSettings` file resides beside the solution, contains the intended team settings, and contains no machine-specific paths or references to the removed solution.
-- [ ] Shared MSBuild and package configuration is discovered from the repository root, with project-type defaults inherited through hierarchical `Directory.Build.props` files rather than duplicated across project files.
-- [ ] Project references and repository-path discovery work with the new layout without relying on a directory named `Code` or on prebuilt project outputs.
-- [ ] The root-level `.idea` metadata integrates `ai-plans` into Rider's Solution Explorer without individual solution-file entries and contains no references to the old solution name or location.
-- [ ] Operational documentation, ignore rules, and automation contain no stale actionable paths to the old layout; completed historical plans remain unchanged.
-- [ ] Continuous integration restores, builds, and tests the complete solution, including all three test projects.
-- [ ] The release workflow packs and publishes `Light.GuardClauses` from its new location without changing the package identity, metadata, symbols, or packaged documentation and icon.
-- [ ] The source-code transformation can locate the product sources and validation project, generate the root-level single-file distribution, and validate its supported target frameworks from the new layout.
-- [ ] The complete solution builds successfully in Release configuration and all automated tests pass on the supported .NET SDK.
+- [x] `AGENTS.md` and `CLAUDE.md` reside at the repository root and apply to the intended repository scope.
+- [x] The repository contains no `Code` directory; product source, tests, benchmarks, and internal tools use the agreed purpose-specific directories.
+- [x] A single root-level `Light.GuardClauses.sln` contains all projects and presents the repository structure through corresponding solution folders.
+- [x] The shared `Light.GuardClauses.sln.DotSettings` file resides beside the solution, contains the intended team settings, and contains no machine-specific paths or references to the removed solution.
+- [x] Shared MSBuild and package configuration is discovered from the repository root, with project-type defaults inherited through hierarchical `Directory.Build.props` files rather than duplicated across project files.
+- [x] Project references and repository-path discovery work with the new layout without relying on a directory named `Code` or on prebuilt project outputs.
+- [x] The root-level `.idea` metadata integrates `ai-plans` into Rider's Solution Explorer without individual solution-file entries and contains no references to the old solution name or location.
+- [x] Operational documentation, ignore rules, and automation contain no stale actionable paths to the old layout; completed historical plans remain unchanged.
+- [x] Continuous integration restores, builds, and tests the complete solution, including all three test projects.
+- [x] The release workflow packs and publishes `Light.GuardClauses` from its new location without changing the package identity, metadata, symbols, or packaged documentation and icon.
+- [x] The source-code transformation can locate the product sources and validation project, generate the root-level single-file distribution, and validate its supported target frameworks from the new layout.
+- [x] The complete solution builds successfully in Release configuration and all automated tests pass on the supported .NET SDK.
 
 ## Technical Details
 

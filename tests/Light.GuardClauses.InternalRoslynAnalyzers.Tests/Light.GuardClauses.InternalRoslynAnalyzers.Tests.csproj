@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../../tools/analyzers/Light.GuardClauses.InternalRoslynAnalyzers/Light.GuardClauses.InternalRoslynAnalyzers.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="Throw.cs" Link="Throw.cs">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>

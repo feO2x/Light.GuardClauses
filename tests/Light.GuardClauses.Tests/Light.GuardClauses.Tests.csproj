@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="TargetFrameworks.props" Condition="Exists('TargetFrameworks.props')" />
+
+  <PropertyGroup>
+    <TargetFramework Condition="'$(TargetFrameworks)' == '' and '$(TargetFramework)' == ''">net8.0</TargetFramework>
+    <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/Light.GuardClauses/Light.GuardClauses.csproj" />
+  </ItemGroup>
+
+</Project>
