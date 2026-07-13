@@ -3,6 +3,11 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
+  <!--
+    Roslyn packages are pinned to match the compiler shipped with the SDK selected in global.json.
+    Light.GuardClauses.InternalRoslynAnalyzers is compiler-loaded and must not reference a newer Microsoft.CodeAnalysis than the SDK compiler.
+    Keep Microsoft.CodeAnalysis.* aligned so analyzers, code fixes, and source-export tooling use one Roslyn line.
+  -->
   <ItemGroup>
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.6" />
     <PackageVersion Include="FluentAssertions" Version="[7.2.0]" />
