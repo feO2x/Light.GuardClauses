@@ -5,7 +5,7 @@ namespace Light.GuardClauses.SourceCodeTransformation.Tests;
 
 internal static class TestEnvironment
 {
-    private const string RepositoryMarkerFileName = "Light.GuardClauses.sln";
+    private const string RepositoryMarkerFileName = "Light.GuardClauses.slnx";
 
     public static DirectoryInfo RepositoryRoot { get; } = FindRepositoryRoot();
 

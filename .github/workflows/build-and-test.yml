@@ -8,7 +8,7 @@ on:
       - 'tests/**'
       - 'benchmarks/**'
       - 'tools/**'
-      - '*.sln'
+      - '*.slnx'
       - '*.props'
       - 'global.json'
       - '.github/workflows/build-and-test.yml'
@@ -19,7 +19,7 @@ on:
       - 'tests/**'
       - 'benchmarks/**'
       - 'tools/**'
-      - '*.sln'
+      - '*.slnx'
       - '*.props'
       - 'global.json'
       - '.github/workflows/build-and-test.yml'
@@ -36,8 +36,8 @@ jobs:
       with:
         global-json-file: global.json
     - name: Restore dependencies
-      run: dotnet restore ./Light.GuardClauses.sln
+      run: dotnet restore ./Light.GuardClauses.slnx
     - name: Build
-      run: dotnet build ./Light.GuardClauses.sln -c Release --no-restore
+      run: dotnet build ./Light.GuardClauses.slnx -c Release --no-restore
     - name: Test
-      run: dotnet test ./Light.GuardClauses.sln -c Release --no-build --verbosity normal
+      run: dotnet test ./Light.GuardClauses.slnx -c Release --no-build --verbosity normal

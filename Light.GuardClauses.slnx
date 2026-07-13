@@ -1,0 +1,34 @@
+<Solution>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/Light.GuardClauses.Performance/Light.GuardClauses.Performance.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="AGENTS.md" />
+    <File Path="CLAUDE.md" />
+    <File Path="CONTRIBUTING.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="LICENSE" />
+    <File Path="Light.GuardClauses.sln.DotSettings" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Light.GuardClauses/Light.GuardClauses.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Light.GuardClauses.InternalRoslynAnalyzers.Tests/Light.GuardClauses.InternalRoslynAnalyzers.Tests.csproj" />
+    <Project Path="tests/Light.GuardClauses.SourceCodeTransformation.Tests/Light.GuardClauses.SourceCodeTransformation.Tests.csproj" />
+    <Project Path="tests/Light.GuardClauses.Tests/Light.GuardClauses.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/" />
+  <Folder Name="/tools/analyzers/">
+    <Project Path="tools/analyzers/Light.GuardClauses.InternalRoslynAnalyzers.CodeFixes/Light.GuardClauses.InternalRoslynAnalyzers.CodeFixes.csproj" />
+    <Project Path="tools/analyzers/Light.GuardClauses.InternalRoslynAnalyzers/Light.GuardClauses.InternalRoslynAnalyzers.csproj" />
+  </Folder>
+  <Folder Name="/tools/source-export/">
+    <Project Path="tools/source-export/Light.GuardClauses.SourceCodeTransformation/Light.GuardClauses.SourceCodeTransformation.csproj" />
+    <Project Path="tools/source-export/Light.GuardClauses.SourceValidation/Light.GuardClauses.SourceValidation.csproj" />
+  </Folder>
+</Solution>
