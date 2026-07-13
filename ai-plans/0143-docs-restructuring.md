@@ -8,15 +8,17 @@ GitHub cannot redirect a disabled Wiki's `/wiki/...` URLs to repository files. P
 
 ## Acceptance Criteria
 
-- [ ] A `docs` directory contains a landing page and maintained equivalents of all seven current Wiki topics, with consistent navigation and no loss of useful project, usage, contribution, source-inclusion, assertion, performance-history, or background information.
-- [ ] All migrated documentation is reviewed against the current repository and public API, accurately describes the .NET 10 and .NET Standard 2.0/2.1 support matrix, uses the current repository layout and build entry points, and contains no stale version, SDK, solution, branch, or project-path guidance.
-- [ ] The assertion overview covers the current assertion families and framework-specific overloads, including the ImmutableArray assertions introduced after the last Wiki update, and uses the source files and XML documentation as its authority.
-- [ ] The source-code inclusion guide documents the committed .NET Standard 2.0 single-file distribution and the custom source-export tool, including configuration precedence, target-framework selection, conditional-code flattening, assertion whitelisting, exception-factory overload controls, dependency retention, generated-source validation, and failure behavior.
-- [ ] The performance page is explicitly presented as a historical 2018 benchmark snapshot, does not imply that its results describe the current release or runtime, and points readers to the current benchmark project for reproducible measurements.
-- [ ] `README.md`, `CONTRIBUTING.md`, badges, documentation navigation, and all other repository-controlled references point to the repository-hosted documentation using relative links where possible; no active repository content links to the Wiki or to obsolete `master`-branch paths.
-- [ ] All relative documentation links, headings, code fences, tables, and image references render correctly on GitHub, including links followed from the repository root and from every page under `docs`.
-- [ ] Each legacy Wiki page temporarily contains only a moved notice with its exact replacement link, then all Wiki pages are removed and the repository Wiki feature is disabled after the agreed transition period.
-- [ ] The final documentation and repository contain no duplicate source of truth: the root README remains the concise project entry point, `CONTRIBUTING.md` remains the contributor entry point, and detailed material is maintained under `docs`.
+- [x] A `docs` directory contains a landing page and maintained equivalents of all seven current Wiki topics, with consistent navigation and no loss of useful project, usage, contribution, source-inclusion, assertion, performance-history, or background information.
+- [x] All migrated documentation is reviewed against the current repository and public API, accurately describes the .NET 10 and .NET Standard 2.0/2.1 support matrix, uses the current repository layout and build entry points, and contains no stale version, SDK, solution, branch, or project-path guidance.
+- [x] The assertion overview covers the current assertion families and framework-specific overloads, including the ImmutableArray assertions introduced after the last Wiki update, and uses the source files and XML documentation as its authority.
+- [x] The source-code inclusion guide documents the committed .NET Standard 2.0 single-file distribution and the custom source-export tool, including configuration precedence, target-framework selection, conditional-code flattening, assertion whitelisting, exception-factory overload controls, dependency retention, generated-source validation, and failure behavior.
+- [x] The performance page is explicitly presented as a historical 2018 benchmark snapshot, does not imply that its results describe the current release or runtime, and points readers to the current benchmark project for reproducible measurements.
+- [x] `README.md`, `CONTRIBUTING.md`, badges, documentation navigation, and all other repository-controlled references point to the repository-hosted documentation using relative links where possible; no active repository content links to the Wiki or to obsolete `master`-branch paths.
+- [x] All relative documentation links, headings, code fences, tables, and image references render correctly on GitHub, including links followed from the repository root and from every page under `docs`.
+- [x] Each legacy Wiki page temporarily contains only a moved notice with its exact replacement link.
+- [x] The final documentation and repository contain no duplicate source of truth: the root README remains the concise project entry point, `CONTRIBUTING.md` remains the contributor entry point, and detailed material is maintained under `docs`.
+
+Note by the implementer: The seven moved notices were published in Wiki commit `5b6858b`. Their later removal and disabling the Wiki are intentionally deferred for the transition period.
 
 ## Technical Details
 
