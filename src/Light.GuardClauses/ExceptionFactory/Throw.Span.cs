@@ -27,6 +27,23 @@ public static partial class Throw
         );
 
     /// <summary>
+    /// Throws the default <see cref="InvalidCollectionCountException" /> indicating that a span length is outside a range.
+    /// </summary>
+    [ContractAnnotation("=> halt")]
+    [DoesNotReturn]
+    public static void SpanLengthNotInRange<T>(
+        ReadOnlySpan<T> parameter,
+        Range<int> range,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    ) =>
+        throw new InvalidCollectionCountException(
+            parameterName,
+            message ??
+            $"{parameterName ?? "The span"} must have its length between {range.CreateRangeDescriptionText("and")}, but it actually has length {parameter.Length}."
+        );
+
+    /// <summary>
     /// Throws the default <see cref="InvalidCollectionCountException" /> indicating that a span is not longer than the
     /// specified length.
     /// </summary>

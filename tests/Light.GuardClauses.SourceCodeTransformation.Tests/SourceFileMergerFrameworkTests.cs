@@ -18,6 +18,8 @@ public static class SourceFileMergerFrameworkTests
 
         sourceCode.Should().Contain("using System.Numerics;");
         sourceCode.Should().Contain("INumber<T>");
+        sourceCode.Should().Contain("IFloatingPointIeee754<T>");
+        sourceCode.Should().Contain("Ascii.IsValid(parameter)");
         sourceCode.Should().Contain("MustBeGreaterThanOrApproximately<T>");
         sourceCode.Should().Contain("public static ReadOnlySpan<char> MustBeEmailAddress");
         sourceCode.Should().Contain("public static Span<char> MustBeEmailAddress");
@@ -36,6 +38,8 @@ public static class SourceFileMergerFrameworkTests
 
         sourceCode.Should().NotContain("using System.Numerics;");
         sourceCode.Should().NotContain("INumber<T>");
+        sourceCode.Should().NotContain("IFloatingPointIeee754<T>");
+        sourceCode.Should().NotContain("Ascii.IsValid(parameter)");
         sourceCode.Should().NotContain("ReadOnlySpan<char> MustBeEmailAddress");
         sourceCode.Should().NotContain("Span<char> MustBeEmailAddress");
         sourceCode.Should().NotContain("Memory<char> MustBeEmailAddress");

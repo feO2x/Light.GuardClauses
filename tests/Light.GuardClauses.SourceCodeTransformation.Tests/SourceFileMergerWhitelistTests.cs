@@ -138,15 +138,71 @@ public static class SourceFileMergerWhitelistTests
         sourceCode.Should().Contain("public static void CustomException<T1, T2>");
     }
 
+    [Fact]
+    public static void AdditionalAssertionsRetainPortableSupportClosures()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "AdditionalPortableAssertions.cs");
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(
+                    includedAssertions:
+                    [
+                        new ("IsUuidVersion7", false),
+                        new ("MustBeUuidVersion7", true),
+                        new ("MustHaveCountIn", true),
+                        new ("MustBeAscii", true),
+                        new ("MustNotBeEmptyOrWhiteSpace", true),
+                    ]
+                )
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("struct GuidLayout");
+        sourceCode.Should().Contain("StructLayout(LayoutKind.Explicit");
+        sourceCode.Should().Contain("struct Range<T>");
+        sourceCode.Should().Contain("class EnumerableExtensions");
+        sourceCode.Should().Contain("delegate Exception ReadOnlySpanExceptionFactory<TItem>");
+        sourceCode.Should().Contain("MustBeAscii(");
+        sourceCode.Should().Contain("MustNotBeEmptyOrWhiteSpace(");
+    }
+
+    [Fact]
+    public static void FiniteWhitelistUsesTargetSpecificSurface()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var portableFile = Path.Combine(temporaryDirectory.DirectoryPath, "FinitePortable.cs");
+        var modernFile = Path.Combine(temporaryDirectory.DirectoryPath, "FiniteModern.cs");
+        var whitelist = CreateWhitelist(
+            includedAssertions:
+            [
+                new ("IsFinite", true),
+                new ("MustBeFinite", true),
+            ]
+        );
+
+        SourceFileMerger.CreateSingleSourceFile(CreateOptions(portableFile, whitelist));
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(modernFile, whitelist, SourceTargetFramework.Net10_0)
+        );
+
+        File.ReadAllText(portableFile).Should().NotContain("IFloatingPointIeee754<T>");
+        File.ReadAllText(modernFile).Should().Contain("IFloatingPointIeee754<T>");
+    }
+
     private static SourceFileMergeOptions CreateOptions(
         string targetFile,
-        AssertionWhitelist assertionWhitelist = null
+        AssertionWhitelist assertionWhitelist = null,
+        SourceTargetFramework targetFramework = SourceTargetFramework.NetStandard2_0
     ) =>
         new ()
         {
             SourceFolder = SourceDirectory.FullName,
             TargetFile = targetFile,
-            TargetFramework = SourceTargetFramework.NetStandard2_0,
+            TargetFramework = targetFramework,
             IncludeVersionComment = false,
             AssertionWhitelist = assertionWhitelist ?? new AssertionWhitelist(),
         };

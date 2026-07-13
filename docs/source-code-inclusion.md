@@ -61,7 +61,7 @@ Use the committed settings file for the exact names and defaults of all nullable
 `TargetFramework` selects exactly one source shape:
 
 - `NetStandard2_0` is the portable shape used by the committed single-file distribution.
-- `Net10_0` includes modern generic-math overloads and the .NET 10 span/memory email APIs. It suppresses code-analysis and caller-argument-expression polyfills already supplied by the framework.
+- `Net10_0` includes modern generic-math and generic IEEE 754 finiteness overloads, optimized ASCII checks, and the .NET 10 span/memory email APIs. It suppresses code-analysis and caller-argument-expression polyfills already supplied by the framework.
 
 The parser selects the appropriate conditional branches and the merger emits no `#if`, `#else`, `#endif`, or other conditional-compilation directives. The result is therefore for the selected target only, not a multi-target source file.
 

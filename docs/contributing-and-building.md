@@ -16,7 +16,7 @@ dotnet build Light.GuardClauses.slnx -c Release --no-restore
 dotnet test Light.GuardClauses.slnx -c Release --no-build
 ```
 
-The product package targets .NET Standard 2.0, .NET Standard 2.1, and .NET 10. Tests and tools run on .NET 10 by default. The benchmark project targets .NET 10 and .NET Framework 4.8; running its .NET Framework target requires a compatible Windows environment.
+The product package targets .NET Standard 2.0, .NET Standard 2.1, and .NET 10. Tests, tools, and benchmarks run on .NET 10. BenchmarkDotNet memory diagnostics are enabled by default; pass `--enable-disassembly` after the benchmark project's `--` separator to opt into platform-dependent disassembly diagnostics.
 
 ## Repository layout
 

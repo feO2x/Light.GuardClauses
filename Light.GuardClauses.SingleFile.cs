@@ -35,6 +35,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -507,6 +508,64 @@ namespace Light.GuardClauses
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsTrimmedAtEnd(this ReadOnlySpan<char> parameter) => parameter.Length == 0 || !parameter[parameter.Length - 1].IsWhiteSpace();
+        /// <summary>
+        /// Ensures that the specified single-precision floating-point value is finite, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float MustBeFinite(this float parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.IsFinite())
+            {
+                Throw.NotFinite(parameter, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified single-precision floating-point value is finite, or otherwise throws your custom exception.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("exceptionFactory:null => halt")]
+        public static float MustBeFinite(this float parameter, Func<float, Exception> exceptionFactory)
+        {
+            if (!parameter.IsFinite())
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified double-precision floating-point value is finite, or otherwise throws an <see cref = "ArgumentOutOfRangeException"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static double MustBeFinite(this double parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.IsFinite())
+            {
+                Throw.NotFinite(parameter, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified double-precision floating-point value is finite, or otherwise throws your custom exception.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("exceptionFactory:null => halt")]
+        public static double MustBeFinite(this double parameter, Func<double, Exception> exceptionFactory)
+        {
+            if (!parameter.IsFinite())
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
         /// <summary>
         /// Ensures that the <see cref = "ImmutableArray{T}"/> has at most the specified length, or otherwise throws an <see cref = "InvalidCollectionCountException"/>.
         /// </summary>
@@ -1072,6 +1131,239 @@ namespace Light.GuardClauses
             }
 
             return parameter;
+        }
+
+        /// <summary>Ensures that the character is ASCII, or otherwise throws an <see cref = "ArgumentException"/>.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static char MustBeAscii(this char parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.IsAscii())
+            {
+                Throw.Argument(parameterName, message ?? $"{parameterName ?? "The character"} must be ASCII, but it actually is '{parameter}'.");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>Ensures that the character is ASCII, or otherwise throws your custom exception.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("exceptionFactory:null => halt")]
+        public static char MustBeAscii(this char parameter, Func<char, Exception> exceptionFactory)
+        {
+            if (!parameter.IsAscii())
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>Ensures that the byte is ASCII, or otherwise throws an <see cref = "ArgumentException"/>.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static byte MustBeAscii(this byte parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.IsAscii())
+            {
+                Throw.Argument(parameterName, message ?? $"{parameterName ?? "The byte"} must be ASCII, but it actually is {parameter}.");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>Ensures that the byte is ASCII, or otherwise throws your custom exception.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("exceptionFactory:null => halt")]
+        public static byte MustBeAscii(this byte parameter, Func<byte, Exception> exceptionFactory)
+        {
+            if (!parameter.IsAscii())
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>Ensures that the string is non-null and contains only ASCII characters.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeAscii([NotNull][ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            parameter.MustNotBeNull(parameterName, message);
+            if (!parameter.IsAscii())
+            {
+                Throw.Argument(parameterName, message ?? $"{parameterName ?? "The string"} must contain only ASCII characters.");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>Ensures that the string is non-null and contains only ASCII characters, or otherwise throws your custom exception.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static string MustBeAscii([NotNull][ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        {
+            if (parameter is null || !parameter.IsAscii())
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>Ensures that the character span contains only ASCII characters.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustBeAscii(this Span<char> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter).MustBeAscii(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>Ensures that the character span contains only ASCII characters, or otherwise throws your custom exception.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustBeAscii(this Span<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter).MustBeAscii(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>Ensures that the read-only character span contains only ASCII characters.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<char> MustBeAscii(this ReadOnlySpan<char> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.IsAscii())
+            {
+                Throw.Argument(parameterName, message ?? $"{parameterName ?? "The character span"} must contain only ASCII characters.");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>Ensures that the read-only character span contains only ASCII characters, or otherwise throws your custom exception.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<char> MustBeAscii(this ReadOnlySpan<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            if (!parameter.IsAscii())
+            {
+                Throw.CustomSpanException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>Ensures that the character memory contains only ASCII characters.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustBeAscii(this Memory<char> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustBeAscii(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>Ensures that the character memory contains only ASCII characters, or otherwise throws your custom exception.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustBeAscii(this Memory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustBeAscii(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>Ensures that the read-only character memory contains only ASCII characters.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustBeAscii(this ReadOnlyMemory<char> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            parameter.Span.MustBeAscii(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>Ensures that the read-only character memory contains only ASCII characters, or otherwise throws your custom exception.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustBeAscii(this ReadOnlyMemory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            parameter.Span.MustBeAscii(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>Ensures that the byte span contains only ASCII values.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<byte> MustBeAscii(this Span<byte> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<byte>)parameter).MustBeAscii(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>Ensures that the byte span contains only ASCII values, or otherwise throws your custom exception.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<byte> MustBeAscii(this Span<byte> parameter, ReadOnlySpanExceptionFactory<byte> exceptionFactory)
+        {
+            ((ReadOnlySpan<byte>)parameter).MustBeAscii(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>Ensures that the read-only byte span contains only ASCII values.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<byte> MustBeAscii(this ReadOnlySpan<byte> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.IsAscii())
+            {
+                Throw.Argument(parameterName, message ?? $"{parameterName ?? "The byte span"} must contain only ASCII values.");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>Ensures that the read-only byte span contains only ASCII values, or otherwise throws your custom exception.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<byte> MustBeAscii(this ReadOnlySpan<byte> parameter, ReadOnlySpanExceptionFactory<byte> exceptionFactory)
+        {
+            if (!parameter.IsAscii())
+            {
+                Throw.CustomSpanException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>Ensures that the byte memory contains only ASCII values.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<byte> MustBeAscii(this Memory<byte> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<byte>)parameter.Span).MustBeAscii(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>Ensures that the byte memory contains only ASCII values, or otherwise throws your custom exception.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<byte> MustBeAscii(this Memory<byte> parameter, ReadOnlySpanExceptionFactory<byte> exceptionFactory)
+        {
+            ((ReadOnlySpan<byte>)parameter.Span).MustBeAscii(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>Ensures that the read-only byte memory contains only ASCII values.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<byte> MustBeAscii(this ReadOnlyMemory<byte> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            parameter.Span.MustBeAscii(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>Ensures that the read-only byte memory contains only ASCII values, or otherwise throws your custom exception.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<byte> MustBeAscii(this ReadOnlyMemory<byte> parameter, ReadOnlySpanExceptionFactory<byte> exceptionFactory)
+        {
+            parameter.Span.MustBeAscii(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Checks if the specified GUID structurally identifies an RFC/IETF UUID version 7.
+        /// </summary>
+        /// <param name = "parameter">The GUID to be checked.</param>
+        /// <returns>True when the UUID version is 7 and the variant is RFC/IETF, otherwise false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsUuidVersion7(this Guid parameter)
+        {
+            var layout = new GuidLayout(parameter);
+            return (layout.TimeHighAndVersion & 0xF000) == 0x7000 && (layout.ClockSequenceHighAndReserved & 0xC0) == 0x80;
         }
 
         /// <summary>
@@ -2292,6 +2584,94 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Ensures that the span length is within the specified range, or otherwise throws an <see cref = "InvalidCollectionCountException"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<T> MustHaveLengthIn<T>(this Span<T> parameter, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<T>)parameter).MustHaveLengthIn(range, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the span length is within the specified range, or otherwise throws your custom exception.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<T> MustHaveLengthIn<T>(this Span<T> parameter, Range<int> range, ReadOnlySpanExceptionFactory<T, Range<int>> exceptionFactory)
+        {
+            ((ReadOnlySpan<T>)parameter).MustHaveLengthIn(range, exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only span length is within the specified range, or otherwise throws an <see cref = "InvalidCollectionCountException"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<T> MustHaveLengthIn<T>(this ReadOnlySpan<T> parameter, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (!range.IsValueWithinRange(parameter.Length))
+            {
+                Throw.SpanLengthNotInRange(parameter, range, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only span length is within the specified range, or otherwise throws your custom exception.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<T> MustHaveLengthIn<T>(this ReadOnlySpan<T> parameter, Range<int> range, ReadOnlySpanExceptionFactory<T, Range<int>> exceptionFactory)
+        {
+            if (!range.IsValueWithinRange(parameter.Length))
+            {
+                Throw.CustomSpanException(exceptionFactory, parameter, range);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the memory length is within the specified range, or otherwise throws an <see cref = "InvalidCollectionCountException"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<T> MustHaveLengthIn<T>(this Memory<T> parameter, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<T>)parameter.Span).MustHaveLengthIn(range, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the memory length is within the specified range, or otherwise throws your custom exception.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<T> MustHaveLengthIn<T>(this Memory<T> parameter, Range<int> range, ReadOnlySpanExceptionFactory<T, Range<int>> exceptionFactory)
+        {
+            ((ReadOnlySpan<T>)parameter.Span).MustHaveLengthIn(range, exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory length is within the specified range, or otherwise throws an <see cref = "InvalidCollectionCountException"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<T> MustHaveLengthIn<T>(this ReadOnlyMemory<T> parameter, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            parameter.Span.MustHaveLengthIn(range, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory length is within the specified range, or otherwise throws your custom exception.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<T> MustHaveLengthIn<T>(this ReadOnlyMemory<T> parameter, Range<int> range, ReadOnlySpanExceptionFactory<T, Range<int>> exceptionFactory)
+        {
+            parameter.Span.MustHaveLengthIn(range, exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
         /// Checks if <paramref name = "parameter"/> and <paramref name = "other"/> point to the same object.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2645,6 +3025,51 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Ensures that the collection count is within the specified range, or otherwise throws an <see cref = "InvalidCollectionCountException"/>.
+        /// </summary>
+        /// <param name = "parameter">The collection to be checked.</param>
+        /// <param name = "range">The range in which the collection count must lie.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The original collection.</returns>
+        /// <exception cref = "InvalidCollectionCountException">Thrown when the collection count is not within <paramref name = "range"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static TCollection MustHaveCountIn<TCollection>([NotNull][ValidatedNotNull] this TCollection? parameter, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where TCollection : class, IEnumerable
+        {
+            var actualCount = parameter.Count(parameterName, message);
+            if (!range.IsValueWithinRange(actualCount))
+            {
+                Throw.CollectionCountNotInRange(parameter, actualCount, range, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the collection count is within the specified range, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The collection to be checked.</param>
+        /// <param name = "range">The range in which the collection count must lie.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "range"/> are passed to this delegate.</param>
+        /// <returns>The original collection.</returns>
+        /// <exception cref = "Exception">Your custom exception thrown when the collection is null or its count is not within <paramref name = "range"/>.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static TCollection MustHaveCountIn<TCollection>([NotNull][ValidatedNotNull] this TCollection? parameter, Range<int> range, Func<TCollection?, Range<int>, Exception> exceptionFactory)
+            where TCollection : class, IEnumerable
+        {
+            if (parameter is null || !range.IsValueWithinRange(parameter.Count()))
+            {
+                Throw.CustomException(exceptionFactory, parameter, range);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
         /// Checks if the string is either "\n" or "\r\n". This is done independently of the current value of <see cref = "Environment.NewLine"/>.
         /// </summary>
         /// <param name = "parameter">The string to be checked.</param>
@@ -2791,6 +3216,151 @@ namespace Light.GuardClauses
             return parameter;
         }
 
+        /// <summary>
+        /// Ensures that the specified span is not empty, or otherwise throws an <see cref = "EmptyCollectionException"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<T> MustNotBeEmpty<T>(this Span<T> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<T>)parameter).MustNotBeEmpty(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified span is not empty, or otherwise throws your custom exception.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<T> MustNotBeEmpty<T>(this Span<T> parameter, ReadOnlySpanExceptionFactory<T> exceptionFactory)
+        {
+            ((ReadOnlySpan<T>)parameter).MustNotBeEmpty(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified read-only span is not empty, or otherwise throws an <see cref = "EmptyCollectionException"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<T> MustNotBeEmpty<T>(this ReadOnlySpan<T> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (parameter.IsEmpty)
+            {
+                Throw.EmptyCollection(parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified read-only span is not empty, or otherwise throws your custom exception.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<T> MustNotBeEmpty<T>(this ReadOnlySpan<T> parameter, ReadOnlySpanExceptionFactory<T> exceptionFactory)
+        {
+            if (parameter.IsEmpty)
+            {
+                Throw.CustomSpanException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified memory is not empty, or otherwise throws an <see cref = "EmptyCollectionException"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<T> MustNotBeEmpty<T>(this Memory<T> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<T>)parameter.Span).MustNotBeEmpty(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified memory is not empty, or otherwise throws your custom exception.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<T> MustNotBeEmpty<T>(this Memory<T> parameter, ReadOnlySpanExceptionFactory<T> exceptionFactory)
+        {
+            ((ReadOnlySpan<T>)parameter.Span).MustNotBeEmpty(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified read-only memory is not empty, or otherwise throws an <see cref = "EmptyCollectionException"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<T> MustNotBeEmpty<T>(this ReadOnlyMemory<T> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            parameter.Span.MustNotBeEmpty(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified read-only memory is not empty, or otherwise throws your custom exception.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<T> MustNotBeEmpty<T>(this ReadOnlyMemory<T> parameter, ReadOnlySpanExceptionFactory<T> exceptionFactory)
+        {
+            parameter.Span.MustNotBeEmpty(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>Checks if the character is an ASCII code point.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsAscii(this char parameter) => parameter <= 0x7F;
+        /// <summary>Checks if the byte is an ASCII value.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsAscii(this byte parameter) => parameter <= 0x7F;
+        /// <summary>Checks if the string is non-null and contains only ASCII characters.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsAscii(this string? parameter) => parameter is not null && parameter.AsSpan().IsAscii();
+        /// <summary>Checks if the character span contains only ASCII characters.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsAscii(this Span<char> parameter) => ((ReadOnlySpan<char>)parameter).IsAscii();
+        /// <summary>Checks if the read-only character span contains only ASCII characters.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsAscii(this ReadOnlySpan<char> parameter)
+        {
+            foreach (var value in parameter)
+            {
+                if (value > 0x7F)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>Checks if the character memory contains only ASCII characters.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsAscii(this Memory<char> parameter) => parameter.Span.IsAscii();
+        /// <summary>Checks if the read-only character memory contains only ASCII characters.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsAscii(this ReadOnlyMemory<char> parameter) => parameter.Span.IsAscii();
+        /// <summary>Checks if the byte span contains only ASCII values.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsAscii(this Span<byte> parameter) => ((ReadOnlySpan<byte>)parameter).IsAscii();
+        /// <summary>Checks if the read-only byte span contains only ASCII values.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsAscii(this ReadOnlySpan<byte> parameter)
+        {
+            foreach (var value in parameter)
+            {
+                if (value > 0x7F)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>Checks if the byte memory contains only ASCII values.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsAscii(this Memory<byte> parameter) => parameter.Span.IsAscii();
+        /// <summary>Checks if the read-only byte memory contains only ASCII values.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsAscii(this ReadOnlyMemory<byte> parameter) => parameter.Span.IsAscii();
         /// <summary>
         /// Ensures that the string is either "\n" or "\r\n", or otherwise throws a <see cref = "StringException"/>. This is done independently of the current value of <see cref = "Environment.NewLine"/>.
         /// </summary>
@@ -3378,11 +3948,154 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Checks if the specified single-precision floating-point value is finite.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsFinite(this float parameter) => parameter >= float.MinValue && parameter <= float.MaxValue;
+        /// <summary>
+        /// Checks if the specified double-precision floating-point value is finite.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsFinite(this double parameter) => parameter >= double.MinValue && parameter <= double.MaxValue;
+        /// <summary>
+        /// Ensures that the character span is neither empty nor all white space.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustNotBeEmptyOrWhiteSpace(this Span<char> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter).MustNotBeEmptyOrWhiteSpace(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the character span is neither empty nor all white space, or otherwise throws your custom exception.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustNotBeEmptyOrWhiteSpace(this Span<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter).MustNotBeEmptyOrWhiteSpace(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only character span is neither empty nor all white space.
+        /// </summary>
+        /// <exception cref = "EmptyStringException">Thrown when <paramref name = "parameter"/> is empty.</exception>
+        /// <exception cref = "WhiteSpaceStringException">Thrown when <paramref name = "parameter"/> contains only white space.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<char> MustNotBeEmptyOrWhiteSpace(this ReadOnlySpan<char> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (parameter.IsEmpty)
+            {
+                Throw.EmptyString(parameterName, message);
+            }
+
+            if (parameter.IsEmptyOrWhiteSpace())
+            {
+                Throw.WhiteSpaceSpan(parameter, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only character span is neither empty nor all white space, or otherwise throws your custom exception.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<char> MustNotBeEmptyOrWhiteSpace(this ReadOnlySpan<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            if (parameter.IsEmptyOrWhiteSpace())
+            {
+                Throw.CustomSpanException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the character memory is neither empty nor all white space.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustNotBeEmptyOrWhiteSpace(this Memory<char> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustNotBeEmptyOrWhiteSpace(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the character memory is neither empty nor all white space, or otherwise throws your custom exception.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustNotBeEmptyOrWhiteSpace(this Memory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustNotBeEmptyOrWhiteSpace(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only character memory is neither empty nor all white space.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustNotBeEmptyOrWhiteSpace(this ReadOnlyMemory<char> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            parameter.Span.MustNotBeEmptyOrWhiteSpace(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only character memory is neither empty nor all white space, or otherwise throws your custom exception.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustNotBeEmptyOrWhiteSpace(this ReadOnlyMemory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            parameter.Span.MustNotBeEmptyOrWhiteSpace(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
         /// Checks if the specified GUID is an empty one.
         /// </summary>
         /// <param name = "parameter">The GUID to be checked.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsEmpty(this Guid parameter) => parameter == Guid.Empty;
+        /// <summary>
+        /// Ensures that the specified GUID structurally identifies an RFC/IETF UUID version 7, or otherwise throws an <see cref = "ArgumentException"/>.
+        /// </summary>
+        /// <param name = "parameter">The GUID to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The original GUID.</returns>
+        /// <exception cref = "ArgumentException">Thrown when the UUID version is not 7 or the variant is not RFC/IETF.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Guid MustBeUuidVersion7(this Guid parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.IsUuidVersion7())
+            {
+                Throw.Argument(parameterName, message ?? $"{parameterName ?? "The GUID"} must be an RFC/IETF UUID version 7, but it actually is \"{parameter}\".");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified GUID structurally identifies an RFC/IETF UUID version 7, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The GUID to be checked.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.</param>
+        /// <returns>The original GUID.</returns>
+        /// <exception cref = "Exception">Your custom exception thrown when the UUID version is not 7 or the variant is not RFC/IETF.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("exceptionFactory:null => halt")]
+        public static Guid MustBeUuidVersion7(this Guid parameter, Func<Guid, Exception> exceptionFactory)
+        {
+            if (!parameter.IsUuidVersion7())
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
         /// <summary>
         /// Ensures that the specified object reference is not null, or otherwise throws an <see cref = "ArgumentNullException"/>.
         /// </summary>
@@ -4539,6 +5252,46 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Ensures that the memory has the specified length, or otherwise throws an <see cref = "InvalidCollectionCountException"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<T> MustHaveLength<T>(this Memory<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<T>)parameter.Span).MustHaveLength(length, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the memory has the specified length, or otherwise throws your custom exception.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<T> MustHaveLength<T>(this Memory<T> parameter, int length, ReadOnlySpanExceptionFactory<T, int> exceptionFactory)
+        {
+            parameter.Span.MustHaveLength(length, exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory has the specified length, or otherwise throws an <see cref = "InvalidCollectionCountException"/>.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<T> MustHaveLength<T>(this ReadOnlyMemory<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            parameter.Span.MustHaveLength(length, parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory has the specified length, or otherwise throws your custom exception.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<T> MustHaveLength<T>(this ReadOnlyMemory<T> parameter, int length, ReadOnlySpanExceptionFactory<T, int> exceptionFactory)
+        {
+            parameter.Span.MustHaveLength(length, exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
         /// Ensures that the span has the specified length, or otherwise throws your custom exception.
         /// </summary>
         /// <param name = "parameter">The span to be checked.</param>
@@ -4990,6 +5743,44 @@ namespace Light.GuardClauses
         public static DateTime MustBeUtc(this DateTime parameter, Func<DateTime, Exception> exceptionFactory)
         {
             if (parameter.Kind != DateTimeKind.Utc)
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> has a zero offset, or otherwise throws an <see cref = "InvalidDateTimeException"/>.
+        /// </summary>
+        /// <param name = "parameter">The date time offset to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The original date time offset without conversion.</returns>
+        /// <exception cref = "InvalidDateTimeException">Thrown when <paramref name = "parameter"/> does not have <see cref = "TimeSpan.Zero"/> as its offset.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTimeOffset MustBeUtc(this DateTimeOffset parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (parameter.Offset != TimeSpan.Zero)
+            {
+                Throw.MustBeUtcDateTimeOffset(parameter, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> has a zero offset, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The date time offset to be checked.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.</param>
+        /// <returns>The original date time offset without conversion.</returns>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> does not have <see cref = "TimeSpan.Zero"/> as its offset.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("exceptionFactory:null => halt")]
+        public static DateTimeOffset MustBeUtc(this DateTimeOffset parameter, Func<DateTimeOffset, Exception> exceptionFactory)
+        {
+            if (parameter.Offset != TimeSpan.Zero)
             {
                 Throw.CustomException(exceptionFactory, parameter);
             }
@@ -6038,6 +6829,21 @@ namespace Light.GuardClauses
     }
 
     /// <summary>
+    /// Overlays the stable sequential GUID field layout so UUID structural fields can be inspected without allocations.
+    /// </summary>
+    [StructLayout(LayoutKind.Explicit, Size = 16)]
+    internal readonly struct GuidLayout
+    {
+        [FieldOffset(0)]
+        private readonly Guid _value;
+        [FieldOffset(6)]
+        public readonly ushort TimeHighAndVersion;
+        [FieldOffset(8)]
+        public readonly byte ClockSequenceHighAndReserved;
+        public GuidLayout(Guid value) => _value = value;
+    }
+
+    /// <summary>
     /// Represents an <see cref = "IEqualityComparer{T}"/> that uses <see cref = "Check.IsEquivalentTypeTo"/>
     /// to compare types. This check works like the normal type equality comparison, but when two
     /// generic types are compared, they are regarded as equal when one of them is a constructed generic type
@@ -6206,7 +7012,7 @@ namespace Light.GuardClauses.Exceptions
     }
 
     /// <summary>
-    /// This exception indicates that a <see cref = "DateTime"/> value is invalid.
+    /// This exception indicates that a <see cref = "DateTime"/> or <see cref = "DateTimeOffset"/> value is invalid.
     /// </summary>
     [Serializable]
     internal class InvalidDateTimeException : ArgumentException
@@ -6854,6 +7660,18 @@ namespace Light.GuardClauses.ExceptionFactory
         public static void MustBeGreaterThanOrEqualTo<T>(T parameter, T boundary, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
             where T : IComparable<T> => throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be greater than or equal to {boundary}, but it actually is {parameter}.");
         /// <summary>
+        /// Throws an <see cref = "ArgumentOutOfRangeException"/> indicating that a floating-point value is not finite.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void NotFinite<T>(T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be finite, but it actually is {parameter}.");
+        /// <summary>
+        /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that a collection count is outside a range.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void CollectionCountNotInRange(IEnumerable parameter, int actualCount, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The collection"} must have its count between {range.CreateRangeDescriptionText("and")}, but it actually has count {actualCount}.");
+        /// <summary>
         /// Throws the default <see cref = "StringException"/> indicating that a string is not equal to "\n" or "\r\n".
         /// </summary>
         [ContractAnnotation("=> halt")]
@@ -6896,6 +7714,13 @@ namespace Light.GuardClauses.ExceptionFactory
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void WhiteSpaceString(string parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new WhiteSpaceStringException(parameterName, message ?? $"{parameterName ?? "The string"} must not contain only white space, but it actually is \"{parameter}\".");
+        /// <summary>
+        /// Throws the default <see cref = "WhiteSpaceStringException"/> indicating that a character span contains only
+        /// white space, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void WhiteSpaceSpan(ReadOnlySpan<char> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new WhiteSpaceStringException(parameterName, message ?? $"{parameterName ?? "The character span"} must not contain only white space, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws an <see cref = "InvalidOperationException"/> using the optional message.
         /// </summary>
@@ -6974,6 +7799,13 @@ namespace Light.GuardClauses.ExceptionFactory
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void MustBeUtcDateTime(DateTime parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidDateTimeException(parameterName, message ?? $"{parameterName ?? "The date time"} must use kind \"{DateTimeKind.Utc}\", but it actually uses \"{parameter.Kind}\" and is \"{parameter:O}\".");
+        /// <summary>
+        /// Throws the default <see cref = "InvalidDateTimeException"/> indicating that a date time offset does not use
+        /// <see cref = "TimeSpan.Zero"/> as its offset, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void MustBeUtcDateTimeOffset(DateTimeOffset parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidDateTimeException(parameterName, message ?? $"{parameterName ?? "The date time offset"} must use offset \"{TimeSpan.Zero}\", but it actually uses \"{parameter.Offset}\" and is \"{parameter:O}\".");
         /// <summary>
         /// Throws the default <see cref = "InvalidDateTimeException"/> indicating that a date time is not using
         /// <see cref = "DateTimeKind.Local"/>, using the optional parameter name and message.
@@ -7211,6 +8043,12 @@ namespace Light.GuardClauses.ExceptionFactory
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void InvalidSpanLength<T>(ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The read-only span"} must have length {length}, but it actually has length {parameter.Length}.");
+        /// <summary>
+        /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that a span length is outside a range.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void SpanLengthNotInRange<T>(ReadOnlySpan<T> parameter, Range<int> range, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must have its length between {range.CreateRangeDescriptionText("and")}, but it actually has length {parameter.Length}.");
         /// <summary>
         /// Throws the default <see cref = "InvalidCollectionCountException"/> indicating that a span is not longer than the
         /// specified length.

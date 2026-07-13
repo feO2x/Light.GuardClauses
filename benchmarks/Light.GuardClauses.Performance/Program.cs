@@ -1,4 +1,5 @@
-﻿using BenchmarkDotNet.Configs;
+﻿using System;
+using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnosers;
 using BenchmarkDotNet.Environments;
 using BenchmarkDotNet.Jobs;
@@ -8,13 +9,32 @@ namespace Light.GuardClauses.Performance;
 
 public static class Program
 {
-    private static IConfig DefaultConfiguration =>
-        DefaultConfig
-           .Instance
-           .AddJob(Job.Default.WithRuntime(CoreRuntime.Core80))
-           .AddJob(Job.Default.WithRuntime(ClrRuntime.Net48))
-           .AddDiagnoser(MemoryDiagnoser.Default, new DisassemblyDiagnoser(new DisassemblyDiagnoserConfig()));
+    private const string EnableDisassemblyOption = "--enable-disassembly";
 
-    public static void Main(string[] arguments) =>
-        BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(arguments, DefaultConfiguration);
+    private static IConfig CreateConfiguration(bool enableDisassembly)
+    {
+        var configuration = DefaultConfig
+                           .Instance
+                           .AddJob(Job.Default.WithRuntime(CoreRuntime.Core10_0))
+                           .AddDiagnoser(MemoryDiagnoser.Default);
+
+        return enableDisassembly ?
+            configuration.AddDiagnoser(new DisassemblyDiagnoser(new DisassemblyDiagnoserConfig())) :
+            configuration;
+    }
+
+    public static void Main(string[] arguments)
+    {
+        var enableDisassembly = Array.Exists(
+            arguments,
+            argument => string.Equals(argument, EnableDisassemblyOption, StringComparison.OrdinalIgnoreCase)
+        );
+        var benchmarkArguments = Array.FindAll(
+            arguments,
+            argument => !string.Equals(argument, EnableDisassemblyOption, StringComparison.OrdinalIgnoreCase)
+        );
+
+        BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly)
+                         .Run(benchmarkArguments, CreateConfiguration(enableDisassembly));
+    }
 }

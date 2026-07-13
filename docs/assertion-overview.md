@@ -13,6 +13,7 @@ The package has .NET Standard 2.0, .NET Standard 2.1, and .NET 10 assets. The co
 The .NET 10 asset additionally provides:
 
 - generic `INumber<T>` overloads for `IsApproximately`, `MustBeApproximately`, `MustNotBeApproximately`, `IsGreaterThanOrApproximately`, `MustBeGreaterThanOrApproximately`, `IsLessThanOrApproximately`, and `MustBeLessThanOrApproximately`;
+- generic `IFloatingPointIeee754<T>` overloads for `IsFinite` and `MustBeFinite`, including `Half` but excluding `decimal`;
 - `Span<char>`, `ReadOnlySpan<char>`, `Memory<char>`, and `ReadOnlyMemory<char>` overloads for `IsEmailAddress` and `MustBeEmailAddress`; and
 - trimming annotations on the type-relation helpers where supported by the framework.
 
@@ -39,6 +40,9 @@ The seven `ImmutableArray<T>` guard families are available across all package ta
 | `MustBeOfType` | Requires a value castable to `T` and returns the cast value |
 | `IsValidEnumValue`, `MustBeValidEnumValue` | Validate defined enum constants and valid flags combinations |
 | `IsEmpty`, `MustNotBeEmpty` | Test or reject `Guid.Empty` |
+| `IsUuidVersion7`, `MustBeUuidVersion7` | Structurally test or require an RFC/IETF UUIDv7 |
+
+UUIDv7 validation checks the version-7 nibble and RFC/IETF `10xx` variant bits directly in the GUID layout without allocation. It does not claim to validate timestamp provenance, entropy, randomness, or monotonic generation.
 
 ## Condition and state assertions
 
@@ -59,6 +63,7 @@ The seven `ImmutableArray<T>` guard families are available across all package ta
 | `IsIn`, `MustBeIn` | Test or require membership in a `Range<T>` |
 | `IsNotIn`, `MustNotBeIn` | Test or require non-membership in a `Range<T>` |
 | `IsApproximately`, `MustBeApproximately`, `MustNotBeApproximately` | Compare floating-point values using a tolerance |
+| `IsFinite`, `MustBeFinite` | Test or require finite `float` and `double` values; the .NET 10 asset also supports generic IEEE 754 types |
 | `IsGreaterThanOrApproximately`, `MustBeGreaterThanOrApproximately` | Accept values greater than or within tolerance of the comparison value |
 | `IsLessThanOrApproximately`, `MustBeLessThanOrApproximately` | Accept values less than or within tolerance of the comparison value |
 
@@ -76,6 +81,7 @@ percentage.MustBeIn(Range.FromExclusive(0).ToInclusive(100));
 | `IsNullOrEmpty` | Tests `IEnumerable` or `string` for null or emptiness |
 | `MustNotBeNullOrEmpty` | Requires a non-null, non-empty collection or string |
 | `MustHaveCount` | Requires an exact collection count |
+| `MustHaveCountIn` | Requires a collection count within an inclusive/exclusive `Range<int>` |
 | `MustHaveMinimumCount`, `MustHaveMaximumCount` | Enforce inclusive collection-count bounds |
 | `IsOneOf`, `MustBeOneOf`, `MustNotBeOneOf` | Test or enforce membership among supplied values |
 | `MustContain`, `MustNotContain` | Require or reject an item in collections and immutable arrays; string overloads operate on substrings |
@@ -89,7 +95,8 @@ Collection overloads preserve and return the original collection shape where pos
 | Assertion family | Behavior |
 | --- | --- |
 | `IsNullOrWhiteSpace`, `MustNotBeNullOrWhiteSpace` | Test or reject null, empty, or all-whitespace strings |
-| `IsEmptyOrWhiteSpace` | Tests character span/memory values for emptiness or whitespace |
+| `IsEmptyOrWhiteSpace`, `MustNotBeEmptyOrWhiteSpace` | Test character span/memory values for, or reject, emptiness and all-whitespace content |
+| `IsAscii`, `MustBeAscii` | Test or require ASCII characters, bytes, strings, and character/byte span or memory values; empty inputs are valid |
 | `IsWhiteSpace`, `IsLetter`, `IsLetterOrDigit`, `IsDigit` | Character classification |
 | `IsNewLine`, `MustBeNewLine` | Recognize or require `"\n"` or `"\r\n"`, independently of the platform newline |
 | `IsTrimmed`, `MustBeTrimmed` | Test or require no leading or trailing whitespace |
@@ -102,7 +109,8 @@ Collection overloads preserve and return the original collection shape where pos
 | `IsSubstringOf`, `MustBeSubstringOf`, `MustNotBeSubstringOf` | Test, require, or reject substring relationships |
 | `MustContain`, `MustNotContain` | Require or reject substrings, with comparison overloads |
 | `MustStartWith`, `MustNotStartWith`, `MustEndWith`, `MustNotEndWith` | Enforce string boundaries; `MustNotStartWith` also has span overloads |
-| `MustHaveLength`, `MustHaveLengthIn` | Enforce exact or ranged string lengths; `MustHaveLength` also supports spans and immutable arrays |
+| `MustHaveLength`, `MustHaveLengthIn` | Enforce exact or ranged lengths for strings, spans, memory, and immutable arrays as provided by their overloads |
+| `MustNotBeEmpty` | Reject empty spans and memory while preserving the mutable or read-only input shape |
 | `MustBeLongerThan`, `MustBeLongerThanOrEqualTo` | Enforce lower string/span length bounds |
 | `MustBeShorterThan`, `MustBeShorterThanOrEqualTo` | Enforce upper string/span length bounds |
 
@@ -112,7 +120,7 @@ The `Light.GuardClauses.FrameworkExtensions.StringExtensions.Contains` companion
 
 | Assertion | Behavior |
 | --- | --- |
-| `MustBeUtc` | Requires `DateTimeKind.Utc` |
+| `MustBeUtc` | Requires `DateTimeKind.Utc` for `DateTime`, or `TimeSpan.Zero` offset for `DateTimeOffset`; values are validated without conversion |
 | `MustBeLocal` | Requires `DateTimeKind.Local` |
 | `MustBeUnspecified` | Requires `DateTimeKind.Unspecified` |
 

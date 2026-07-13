@@ -26,6 +26,23 @@ public static partial class Throw
         );
 
     /// <summary>
+    /// Throws the default <see cref="InvalidDateTimeException" /> indicating that a date time offset does not use
+    /// <see cref="TimeSpan.Zero" /> as its offset, using the optional parameter name and message.
+    /// </summary>
+    [ContractAnnotation("=> halt")]
+    [DoesNotReturn]
+    public static void MustBeUtcDateTimeOffset(
+        DateTimeOffset parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    ) =>
+        throw new InvalidDateTimeException(
+            parameterName,
+            message ??
+            $"{parameterName ?? "The date time offset"} must use offset \"{TimeSpan.Zero}\", but it actually uses \"{parameter.Offset}\" and is \"{parameter:O}\"."
+        );
+
+    /// <summary>
     /// Throws the default <see cref="InvalidDateTimeException" /> indicating that a date time is not using
     /// <see cref="DateTimeKind.Local" />, using the optional parameter name and message.
     /// </summary>

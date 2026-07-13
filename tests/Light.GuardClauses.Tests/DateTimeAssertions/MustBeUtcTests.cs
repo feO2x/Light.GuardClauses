@@ -57,4 +57,40 @@ public static class MustBeUtcTests
         act.Should().Throw<InvalidDateTimeException>()
            .WithParameterName(nameof(invalidDateTime));
     }
+
+    [Fact]
+    public static void ZeroOffsetDateTimeOffsetIsReturnedUnchanged()
+    {
+        var value = new DateTimeOffset(2026, 7, 13, 10, 30, 0, TimeSpan.Zero);
+
+        var result = value.MustBeUtc();
+
+        result.Should().Be(value);
+        result.Offset.Should().Be(TimeSpan.Zero);
+    }
+
+    [Fact]
+    public static void NonZeroOffsetIsRejectedWithoutNormalization()
+    {
+        var nonUtcValue = new DateTimeOffset(2026, 7, 13, 12, 30, 0, TimeSpan.FromHours(2));
+
+        var act = () => nonUtcValue.MustBeUtc();
+
+        act.Should().Throw<InvalidDateTimeException>()
+           .WithParameterName(nameof(nonUtcValue))
+           .WithMessage("*must use offset*");
+    }
+
+    [Fact]
+    public static void DateTimeOffsetCustomMessage() =>
+        Test.CustomMessage<InvalidDateTimeException>(message =>
+            DateTimeOffset.Now.MustBeUtc(message: message));
+
+    [Fact]
+    public static void DateTimeOffsetCustomFactoryReceivesValue()
+    {
+        var value = new DateTimeOffset(2026, 7, 13, 12, 30, 0, TimeSpan.FromHours(2));
+
+        Test.CustomException(value, (dateTimeOffset, factory) => dateTimeOffset.MustBeUtc(factory));
+    }
 }
