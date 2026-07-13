@@ -18,7 +18,17 @@
     <PackageVersion Include="xunit" Version="2.9.3" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
   </ItemGroup>
-  <ItemGroup Condition="'$(MSBuildProjectName)' == 'Light.GuardClauses.InternalRoslynAnalyzers'">
-    <PackageVersion Update="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0" />
+  <!--
+    The compiler-loaded analyzer assembly (Light.GuardClauses.InternalRoslynAnalyzers) and its
+    matching CodeFixes assembly must be built against Roslyn 4.11.0 to match the Roslyn version
+    shipped with the pinned .NET SDK 8.0.400 (see global.json). A compiler-loaded extension must
+    not reference a newer Microsoft.CodeAnalysis than the SDK's compiler. The analyzer is the only
+    consumer of Microsoft.CodeAnalysis.CSharp, so it is pinned centrally here. The CodeFixes project
+    overrides Microsoft.CodeAnalysis.CSharp.Workspaces to 4.11.0 via VersionOverride so its Roslyn
+    version matches the analyzer; the central Workspaces version stays 4.13.0 for the source-export
+    tooling, which runs on the installed SDK and is not a compiler extension.
+  -->
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
   </ItemGroup>
 </Project>
