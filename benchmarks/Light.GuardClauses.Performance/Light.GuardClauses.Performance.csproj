@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFrameworks>net8.0;net48</TargetFrameworks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../../src/Light.GuardClauses/Light.GuardClauses.csproj" />
+      <PackageReference Include="BenchmarkDotNet" />
+    </ItemGroup>
+
+</Project>
