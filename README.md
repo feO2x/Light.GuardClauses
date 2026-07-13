@@ -94,7 +94,7 @@ Every assertion is well-documented - explore them using IntelliSense or check ou
 
 ## Light.GuardClauses is optimized
 
-Since version 4, **Light.GuardClauses** is optimized for performance (measured in .NET 4.8 and .NET 8). With the incredible help of [@redknightlois](https://github.com/redknightlois) and the awesome tool [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet), most assertions are as fast as your imperative code would be.
+Since version 4, **Light.GuardClauses** is optimized for performance (measured in .NET Framework 4.8 and .NET 10). With the incredible help of [@redknightlois](https://github.com/redknightlois) and the awesome tool [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet), most assertions are as fast as your imperative code would be.
 
 **Light.GuardClauses** has support for [.NET analyzers / FxCopAnalyzers](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/overview) with the `ValidatedNotNullAttribute` and the `NotNullAttribute`. Analyzers will know when an assertion validated that a parameters is not null and consequently, CA1062 will not be raised.
 
@@ -109,8 +109,8 @@ And, of course, the functional correctness of **Light.GuardClauses** is covered 
 ## Supported Platforms
 
 **Light.GuardClauses** is built
-against [.NET 8, .NET Standard 2.0 and 2.1](https://docs.microsoft.com/en-us/dotnet/standard/net-standard), thus it can
-be used with a large variety of target frameworks like .NET 5 or newer .NET Framework 4.6.1 or newer, Unity, Mono, or
+against [.NET 10, .NET Standard 2.0 and 2.1](https://learn.microsoft.com/dotnet/standard/net-standard), thus it can
+be used with a large variety of target frameworks like .NET 5 or newer, .NET Framework 4.6.1 or newer, Unity, Mono, or
 UWP.
 
 ## How to Install

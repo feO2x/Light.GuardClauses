@@ -13,9 +13,17 @@ internal static class SourceReachabilityAnalyzer
 {
     public static CSharpParseOptions CreateParseOptions(SourceTargetFramework targetFramework) =>
         new (
-            LanguageVersion.CSharp12,
-            preprocessorSymbols: targetFramework == SourceTargetFramework.Net8_0
-                ? ["NET8_0_OR_GREATER", "NET8_0", "NETCOREAPP"]
+            LanguageVersion.CSharp14,
+            preprocessorSymbols: targetFramework == SourceTargetFramework.Net10_0
+                ?
+                [
+                    "NET",
+                    "NETCOREAPP",
+                    "NET10_0",
+                    "NET10_0_OR_GREATER",
+                    "NET9_0_OR_GREATER",
+                    "NET8_0_OR_GREATER",
+                ]
                 : ["NETSTANDARD", "NETSTANDARD2_0"]
         );
 

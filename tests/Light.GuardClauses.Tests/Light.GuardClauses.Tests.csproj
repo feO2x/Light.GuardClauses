@@ -3,7 +3,7 @@
   <Import Project="TargetFrameworks.props" Condition="Exists('TargetFrameworks.props')" />
 
   <PropertyGroup>
-    <TargetFramework Condition="'$(TargetFrameworks)' == '' and '$(TargetFramework)' == ''">net8.0</TargetFramework>
+    <TargetFramework Condition="'$(TargetFrameworks)' == '' and '$(TargetFramework)' == ''">net10.0</TargetFramework>
     <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
   </PropertyGroup>
 

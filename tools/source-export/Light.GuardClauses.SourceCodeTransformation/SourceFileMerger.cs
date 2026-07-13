@@ -71,7 +71,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
-{(options.TargetFramework == SourceTargetFramework.Net8_0 ? "using System.Numerics;" + Environment.NewLine : string.Empty)}{(options.IncludeJetBrainsAnnotationsUsing ? "using JetBrains.Annotations;" + Environment.NewLine : string.Empty)}using {options.BaseNamespace}.Exceptions;
+{(options.TargetFramework == SourceTargetFramework.Net10_0 ? "using System.Numerics;" + Environment.NewLine : string.Empty)}{(options.IncludeJetBrainsAnnotationsUsing ? "using JetBrains.Annotations;" + Environment.NewLine : string.Empty)}using {options.BaseNamespace}.Exceptions;
 using {options.BaseNamespace}.ExceptionFactory;
 using {options.BaseNamespace}.FrameworkExtensions;
 {(options.IncludeJetBrainsAnnotationsUsing ? "using NotNullAttribute = System.Diagnostics.CodeAnalysis.NotNullAttribute;" : "")}

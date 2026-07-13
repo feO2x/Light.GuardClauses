@@ -8,14 +8,14 @@ The upgrade must also keep the compiler-loaded analyzer safe after the RS1038 as
 
 ## Acceptance Criteria
 
-- [ ] `global.json` selects the .NET SDK 10.0.300 feature band with `latestPatch`, and local builds, CI, and release packaging use that SDK selection as their single source of truth.
-- [ ] The repository uses C# 14; runnable tools and test projects target `net10.0`, benchmarks target `net10.0` and `net48`, and the product package contains exactly `netstandard2.0`, `netstandard2.1`, and `net10.0` assets with no `net8.0` asset.
-- [ ] The `net10.0` product asset is Native AOT-compatible and exposes the existing modern API surface without behavioral or source-level regressions, including the span, memory, and generic-math overloads.
-- [ ] The analyzer, code-fix, and source-export projects use Roslyn 5.6.0 consistently; Release builds produce no RS1038, CS8032, or new Roslyn analyzer warnings, and analyzer and code-fix behavior remains covered by automated tests.
-- [ ] Source export replaces `Net8_0` with `Net10_0`, emits and validates the correct .NET 10 source, and preserves `NetStandard2_0` as the default for the committed single-file distribution.
-- [ ] Restore and build produce no NU1510 package-pruning warning, and the packed NuGet dependency groups contain only dependencies required by each target framework.
-- [ ] User-facing framework documentation describes the resulting .NET 10 and .NET Standard support accurately and contains no stale .NET 8 SDK, target-framework, or support claims.
-- [ ] The complete solution restores and builds without warnings in Release configuration on the pinned SDK, all automated tests pass, and a signed-equivalent package verification confirms the expected assemblies, symbols, Source Link data, documentation, icon, and target-framework dependency groups.
+- [x] `global.json` selects the .NET SDK 10.0.300 feature band with `latestPatch`, and local builds, CI, and release packaging use that SDK selection as their single source of truth.
+- [x] The repository uses C# 14; runnable tools and test projects target `net10.0`, benchmarks target `net10.0` and `net48`, and the product package contains exactly `netstandard2.0`, `netstandard2.1`, and `net10.0` assets with no `net8.0` asset.
+- [x] The `net10.0` product asset is Native AOT-compatible and exposes the existing modern API surface without behavioral or source-level regressions, including the span, memory, and generic-math overloads.
+- [x] The analyzer, code-fix, and source-export projects use Roslyn 5.6.0 consistently; Release builds produce no RS1038, CS8032, or new Roslyn analyzer warnings, and analyzer and code-fix behavior remains covered by automated tests.
+- [x] Source export replaces `Net8_0` with `Net10_0`, emits and validates the correct .NET 10 source, and preserves `NetStandard2_0` as the default for the committed single-file distribution.
+- [x] Restore and build produce no NU1510 package-pruning warning, and the packed NuGet dependency groups contain only dependencies required by each target framework.
+- [x] User-facing framework documentation describes the resulting .NET 10 and .NET Standard support accurately and contains no stale .NET 8 SDK, target-framework, or support claims.
+- [x] The complete solution restores and builds without warnings in Release configuration on the pinned SDK, all automated tests pass, and a signed-equivalent package verification confirms the expected assemblies, symbols, Source Link data, documentation, icon, and target-framework dependency groups.
 
 ## Technical Details
 

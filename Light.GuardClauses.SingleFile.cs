@@ -5564,7 +5564,7 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            if (EqualityComparer<T>.Default.Equals(parameter, default !))
+            if (EqualityComparer<T>.Default.Equals(parameter, default!))
             {
                 Throw.ArgumentDefault(parameterName, message);
             }
@@ -5595,7 +5595,7 @@ namespace Light.GuardClauses
                 return parameter;
             }
 
-            if (EqualityComparer<T>.Default.Equals(parameter, default !))
+            if (EqualityComparer<T>.Default.Equals(parameter, default!))
             {
                 Throw.CustomException(exceptionFactory);
             }
