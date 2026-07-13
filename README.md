@@ -1,40 +1,20 @@
 # Light.GuardClauses
-**A lightweight .NET library for expressive Guard Clauses.** 
 
-[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/blob/master/LICENSE)
-[![NuGet](https://img.shields.io/badge/NuGet-14.0.0-blue.svg?style=for-the-badge)](https://www.nuget.org/packages/Light.GuardClauses/)
-[![Source Code](https://img.shields.io/badge/Source%20Code-14.0.0-blue.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/blob/master/Light.GuardClauses.SingleFile.cs)
-[![Documentation](https://img.shields.io/badge/Docs-Wiki-yellowgreen.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/wiki)
-[![Documentation](https://img.shields.io/badge/Docs-Changelog-yellowgreen.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/releases)
+**A lightweight .NET library for expressive guard clauses.**
 
-## Light.GuardClauses - easy precondition checks in C# / .NET
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Light.GuardClauses.svg?style=for-the-badge&label=NuGet)](https://www.nuget.org/packages/Light.GuardClauses/)
+[![Source Code](https://img.shields.io/badge/Source%20Code-Single%20File-blue.svg?style=for-the-badge)](Light.GuardClauses.SingleFile.cs)
+[![Documentation](https://img.shields.io/badge/Docs-Repository-yellowgreen.svg?style=for-the-badge)](docs/README.md)
+[![Changelog](https://img.shields.io/badge/Docs-Changelog-yellowgreen.svg?style=for-the-badge)](https://github.com/feO2x/Light.GuardClauses/releases)
 
-[Read the full docs in the Wiki](https://github.com/feO2x/Light.GuardClauses/wiki)
-
-As a software developer, you're used to writing `if` statements at the beginning of your methods which validate the parameters that are passed in. Most often you'll probably check for null:
+Light.GuardClauses replaces repetitive parameter checks with expressive extension methods:
 
 ```csharp
 public class Foo
 {
     private readonly IBar _bar;
-    
-    public Foo(IBar? bar)
-    {
-        if (bar == null)
-            throw new ArgumentNullException(nameof(bar));
-        
-        _bar = bar;
-    }
-}
-```
 
-**Light.GuardClauses** simplifies these precondition checks for you by providing extension methods that you can directly call on your parameters:
-
-```csharp
-public class Foo
-{
-    private readonly IBar _bar;
-    
     public Foo(IBar? bar)
     {
         _bar = bar.MustNotBeNull();
@@ -42,86 +22,51 @@ public class Foo
 }
 ```
 
-> As of version 10, Light.GuardClauses supports the [CallerArgumentExpressionAttribute](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.compilerservices.callerargumentexpressionattribute) of C# 10. If your C# compiler is on a lower version, then the `CallerArgumentExpressionAttribute` might not be respected - you should then call all assertions with an explicit parameter name, e.g. `bar.MustNotBeNull(nameof(bar))`. You can use the C# 10 compiler by e.g. installing .NET 6 and/or Visual Studio 2022. The `CallerArgumentExpressionAttribute` is backwards-compatible, so it can be used with projects targeting .NET Standard 2, .NET Framework, or .NET Core.
-
-By using **Light.GuardClauses**, you'll gain access to assertions for a vast amount of scenarios like checking strings, collections, enums, URIs, `DateTime`, `Type`, `IComparable<T>`, `IEnumerable`, `IEnumerable<T>`, and `Span<T>`. Just have a look at these examples:
-
-```csharp
-public class ConsoleWriter
-{
-    private readonly ConsoleColor _foregroundColor;
-
-    public ConsoleWriter(ConsoleColor foregroundColor = ConsoleColor.Black) =>
-        _foregroundColor = foregroundColor.MustBeValidEnumValue();
-}
-```
+The guard returns the validated value, so validation and assignment can stay together. Throwing guards start with `Must`; Boolean checks such as `IsNullOrEmpty`, `IsValidEnumValue`, and `IsFileExtension` can be used in branching logic.
 
 ```csharp
 public void SetMovieRating(Guid movieId, int numberOfStars)
 {
     movieId.MustNotBeEmpty();
     numberOfStars.MustBeIn(Range.InclusiveBetween(0, 5));
-    
+
     var movie = _movieRepo.GetById(movieId);
     movie.AddRating(numberOfStars);
 }
 ```
 
-```csharp
-public class WebGateway
-{
-    private readonly HttpClient _httpClient;
-    private readonly Uri _targetUrl;
+See the [documentation index](docs/README.md), [assertion overview](docs/assertion-overview.md), and [usage guide](docs/structuring-precondition-checks.md) for more.
 
-    public WebGateway(HttpClient? httpClient, Uri? targetUrl)
-    {
-        _httpClient = httpClient.MustNotBeNull();
-        _targetUrl = targetUrl.MustBeHttpOrHttpsUrl();
-    }
-}
+## Supported platforms
+
+The NuGet package contains these assets:
+
+| Target | Purpose |
+| --- | --- |
+| .NET Standard 2.0 | Broad compatibility, including implementations of .NET Standard 2.0 |
+| .NET Standard 2.1 | Implementations of .NET Standard 2.1 |
+| .NET 10 | The current .NET asset, including modern generic-math, span, and memory overloads and Native AOT compatibility |
+
+Caller argument expressions are understood by C# 10 and newer compilers and automatically capture expressions such as `bar` for the exception parameter name. This is independent of the target framework. With an older C# compiler, pass the name explicitly:
+
+```csharp
+bar.MustNotBeNull(nameof(bar));
 ```
 
-In addition to assertions that throw exceptions (all these start with `Must`), **Light.GuardClauses** provides assertions that return a Boolean. Some examples are:
-- `string.IsNullOrWhitespace()`
-- `collection.IsNullOrEmpty()`
-- `enum.IsValidEnumValue()`
-- `string.IsFileExtension()`
-- `span.IsEmptyOrWhiteSpace()`
+## Installation
 
-You can use these in your branching logic to easily check if an assertion is true or false. 
+Light.GuardClauses is available from [NuGet](https://www.nuget.org/packages/Light.GuardClauses/).
 
-Every assertion is well-documented - explore them using IntelliSense or check out [this overview](https://github.com/feO2x/Light.GuardClauses/wiki/Overview-of-All-Assertions).
+- .NET CLI: `dotnet add package Light.GuardClauses`
+- Package Manager Console: `Install-Package Light.GuardClauses`
+- Project file: `<PackageReference Include="Light.GuardClauses" />`
 
-## Light.GuardClauses is optimized
+To embed the library without a DLL dependency, use the committed [.NET Standard 2.0 single-file distribution](Light.GuardClauses.SingleFile.cs) or create a tailored file with the [source exporter](docs/source-code-inclusion.md).
 
-Since version 4, **Light.GuardClauses** is optimized for performance (measured in .NET Framework 4.8 and .NET 10). With the incredible help of [@redknightlois](https://github.com/redknightlois) and the awesome tool [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet), most assertions are as fast as your imperative code would be.
+## Design and quality
 
-**Light.GuardClauses** has support for [.NET analyzers / FxCopAnalyzers](https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/overview) with the `ValidatedNotNullAttribute` and the `NotNullAttribute`. Analyzers will know when an assertion validated that a parameters is not null and consequently, CA1062 will not be raised.
+The library supports nullable reference types, .NET code-analysis attributes, JetBrains contract annotations, and Native AOT. Its functional behavior is covered by the test suite, and performance-sensitive assertions can be measured with the current [benchmark project](benchmarks/Light.GuardClauses.Performance/).
 
-Furthermore, **Light.GuardClauses** has support for ReSharper since version 4.x. Via [Contract Annotations](https://www.jetbrains.com/help/resharper/Contract_Annotations.html), ReSharper knows when assertions do not return a null value and thus removes squiggly lines indicating a possible `NullReferenceException`. Since version 10.1.0, Light.GuardClauses also annotates assertions that do not iterate over an `IEnumerable<T>` with ReSharper's `NoEnumerationAttribute` - ReSharper will then not indicate a "Possible multiple enumeration" (thanks to [cdonnellytx](https://github.com/cdonnellytx) for this contribution).
+For the design history behind guard clauses and design by contract, see [Guard clause background](docs/guard-clause-background.md).
 
-Since version 11, Light.GuardClauses supports Native AOT.
-
-**Light.GuardClauses** supports C#8 Nullable Reference Types since version 8.0.
-
-And, of course, the functional correctness of **Light.GuardClauses** is covered by a vast suite of automated tests.
-
-## Supported Platforms
-
-**Light.GuardClauses** is built
-against [.NET 10, .NET Standard 2.0 and 2.1](https://learn.microsoft.com/dotnet/standard/net-standard), thus it can
-be used with a large variety of target frameworks like .NET 5 or newer, .NET Framework 4.6.1 or newer, Unity, Mono, or
-UWP.
-
-## How to Install
-
-Light.GuardClauses is available as a [NuGet package](https://www.nuget.org/packages/Light.GuardClauses/).
-
-- **dotnet CLI**: `dotnet add package Light.GuardClauses`
-- **Visual Studio Package Manager Console**: `Install-Package Light.GuardClauses`
-- **Package Reference in csproj**: `<PackageReference Include="Light.GuardClauses" Version="13.1.0" />`
-
-Also, you can incorporate Light.GuardClauses as a **single source file** where the API is changed to `internal`. This is especially interesting for framework / library developers that do not want to have a dependency on the Light.GuardClauses DLL. You can grab the default .NET Standard 2.0 version in [Light.GuardClauses.SingleFile.cs](https://github.com/feO2x/Light.GuardClauses/blob/master/Light.GuardClauses.SingleFile.cs) or you can use the [Light.GuardClauses.SourceCodeTransformation](https://github.com/feO2x/Light.GuardClauses/tree/master/tools/source-export/Light.GuardClauses.SourceCodeTransformation) project to create your custom file. You can learn more about it [here](https://github.com/feO2x/Light.GuardClauses/wiki/Including-Light.GuardClauses-as-source-code).
-
-## Let there be... Light
-![Light Libraries Logo](https://raw.githubusercontent.com/feO2x/Light.GuardClauses/main/Images/light_logo.png)
+![Light Libraries logo](Images/light_logo.png)
