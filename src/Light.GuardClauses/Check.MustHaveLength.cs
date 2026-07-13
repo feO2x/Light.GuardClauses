@@ -126,6 +126,64 @@ public static partial class Check
     }
 
     /// <summary>
+    /// Ensures that the memory has the specified length, or otherwise throws an <see cref="InvalidCollectionCountException" />.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Memory<T> MustHaveLength<T>(
+        this Memory<T> parameter,
+        int length,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        ((ReadOnlySpan<T>) parameter.Span).MustHaveLength(length, parameterName, message);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the memory has the specified length, or otherwise throws your custom exception.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Memory<T> MustHaveLength<T>(
+        this Memory<T> parameter,
+        int length,
+        ReadOnlySpanExceptionFactory<T, int> exceptionFactory
+    )
+    {
+        parameter.Span.MustHaveLength(length, exceptionFactory);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the read-only memory has the specified length, or otherwise throws an <see cref="InvalidCollectionCountException" />.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ReadOnlyMemory<T> MustHaveLength<T>(
+        this ReadOnlyMemory<T> parameter,
+        int length,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        parameter.Span.MustHaveLength(length, parameterName, message);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the read-only memory has the specified length, or otherwise throws your custom exception.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ReadOnlyMemory<T> MustHaveLength<T>(
+        this ReadOnlyMemory<T> parameter,
+        int length,
+        ReadOnlySpanExceptionFactory<T, int> exceptionFactory
+    )
+    {
+        parameter.Span.MustHaveLength(length, exceptionFactory);
+        return parameter;
+    }
+
+    /// <summary>
     /// Ensures that the span has the specified length, or otherwise throws your custom exception.
     /// </summary>
     /// <param name="parameter">The span to be checked.</param>

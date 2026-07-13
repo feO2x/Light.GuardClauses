@@ -107,4 +107,128 @@ public static partial class Check
 
         return parameter;
     }
+
+    /// <summary>
+    /// Ensures that the span length is within the specified range, or otherwise throws an <see cref="InvalidCollectionCountException" />.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Span<T> MustHaveLengthIn<T>(
+        this Span<T> parameter,
+        Range<int> range,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        ((ReadOnlySpan<T>) parameter).MustHaveLengthIn(range, parameterName, message);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the span length is within the specified range, or otherwise throws your custom exception.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Span<T> MustHaveLengthIn<T>(
+        this Span<T> parameter,
+        Range<int> range,
+        ReadOnlySpanExceptionFactory<T, Range<int>> exceptionFactory
+    )
+    {
+        ((ReadOnlySpan<T>) parameter).MustHaveLengthIn(range, exceptionFactory);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the read-only span length is within the specified range, or otherwise throws an <see cref="InvalidCollectionCountException" />.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ReadOnlySpan<T> MustHaveLengthIn<T>(
+        this ReadOnlySpan<T> parameter,
+        Range<int> range,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (!range.IsValueWithinRange(parameter.Length))
+        {
+            Throw.SpanLengthNotInRange(parameter, range, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the read-only span length is within the specified range, or otherwise throws your custom exception.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ReadOnlySpan<T> MustHaveLengthIn<T>(
+        this ReadOnlySpan<T> parameter,
+        Range<int> range,
+        ReadOnlySpanExceptionFactory<T, Range<int>> exceptionFactory
+    )
+    {
+        if (!range.IsValueWithinRange(parameter.Length))
+        {
+            Throw.CustomSpanException(exceptionFactory, parameter, range);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the memory length is within the specified range, or otherwise throws an <see cref="InvalidCollectionCountException" />.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Memory<T> MustHaveLengthIn<T>(
+        this Memory<T> parameter,
+        Range<int> range,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        ((ReadOnlySpan<T>) parameter.Span).MustHaveLengthIn(range, parameterName, message);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the memory length is within the specified range, or otherwise throws your custom exception.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Memory<T> MustHaveLengthIn<T>(
+        this Memory<T> parameter,
+        Range<int> range,
+        ReadOnlySpanExceptionFactory<T, Range<int>> exceptionFactory
+    )
+    {
+        ((ReadOnlySpan<T>) parameter.Span).MustHaveLengthIn(range, exceptionFactory);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the read-only memory length is within the specified range, or otherwise throws an <see cref="InvalidCollectionCountException" />.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ReadOnlyMemory<T> MustHaveLengthIn<T>(
+        this ReadOnlyMemory<T> parameter,
+        Range<int> range,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        parameter.Span.MustHaveLengthIn(range, parameterName, message);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the read-only memory length is within the specified range, or otherwise throws your custom exception.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ReadOnlyMemory<T> MustHaveLengthIn<T>(
+        this ReadOnlyMemory<T> parameter,
+        Range<int> range,
+        ReadOnlySpanExceptionFactory<T, Range<int>> exceptionFactory
+    )
+    {
+        parameter.Span.MustHaveLengthIn(range, exceptionFactory);
+        return parameter;
+    }
 }

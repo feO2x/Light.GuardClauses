@@ -45,4 +45,120 @@ public static partial class Check
         }
         return parameter;
     }
+
+    /// <summary>
+    /// Ensures that the specified span is not empty, or otherwise throws an <see cref="EmptyCollectionException" />.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Span<T> MustNotBeEmpty<T>(
+        this Span<T> parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        ((ReadOnlySpan<T>) parameter).MustNotBeEmpty(parameterName, message);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified span is not empty, or otherwise throws your custom exception.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Span<T> MustNotBeEmpty<T>(
+        this Span<T> parameter,
+        ReadOnlySpanExceptionFactory<T> exceptionFactory
+    )
+    {
+        ((ReadOnlySpan<T>) parameter).MustNotBeEmpty(exceptionFactory);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified read-only span is not empty, or otherwise throws an <see cref="EmptyCollectionException" />.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ReadOnlySpan<T> MustNotBeEmpty<T>(
+        this ReadOnlySpan<T> parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (parameter.IsEmpty)
+        {
+            Throw.EmptyCollection(parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified read-only span is not empty, or otherwise throws your custom exception.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ReadOnlySpan<T> MustNotBeEmpty<T>(
+        this ReadOnlySpan<T> parameter,
+        ReadOnlySpanExceptionFactory<T> exceptionFactory
+    )
+    {
+        if (parameter.IsEmpty)
+        {
+            Throw.CustomSpanException(exceptionFactory, parameter);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified memory is not empty, or otherwise throws an <see cref="EmptyCollectionException" />.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Memory<T> MustNotBeEmpty<T>(
+        this Memory<T> parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        ((ReadOnlySpan<T>) parameter.Span).MustNotBeEmpty(parameterName, message);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified memory is not empty, or otherwise throws your custom exception.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Memory<T> MustNotBeEmpty<T>(
+        this Memory<T> parameter,
+        ReadOnlySpanExceptionFactory<T> exceptionFactory
+    )
+    {
+        ((ReadOnlySpan<T>) parameter.Span).MustNotBeEmpty(exceptionFactory);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified read-only memory is not empty, or otherwise throws an <see cref="EmptyCollectionException" />.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ReadOnlyMemory<T> MustNotBeEmpty<T>(
+        this ReadOnlyMemory<T> parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        parameter.Span.MustNotBeEmpty(parameterName, message);
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified read-only memory is not empty, or otherwise throws your custom exception.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ReadOnlyMemory<T> MustNotBeEmpty<T>(
+        this ReadOnlyMemory<T> parameter,
+        ReadOnlySpanExceptionFactory<T> exceptionFactory
+    )
+    {
+        parameter.Span.MustNotBeEmpty(exceptionFactory);
+        return parameter;
+    }
 }

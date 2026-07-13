@@ -4,7 +4,7 @@
 
 > **Archive notice:** These results were measured in early August 2018 against Light.GuardClauses 5.0 and 3.5, BenchmarkDotNet 0.11.0, .NET Core 2.1.2, and .NET Framework 4.7.2. They are preserved as project history. They do not describe the current release, .NET 10, current JITs, or current hardware.
 
-For reproducible measurements of the current code, run the [current BenchmarkDotNet project](../benchmarks/Light.GuardClauses.Performance/). It targets .NET 10 and .NET Framework 4.8; benchmark source and configuration, rather than this archive, are the authority for current scenarios.
+For reproducible measurements of the current code, run the [current BenchmarkDotNet project](../benchmarks/Light.GuardClauses.Performance/). It targets .NET 10; benchmark source and configuration, rather than this archive, are the authority for current scenarios.
 
 The archived tables compare:
 

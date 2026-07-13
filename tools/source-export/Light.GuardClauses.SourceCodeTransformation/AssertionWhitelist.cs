@@ -23,6 +23,8 @@ public sealed class AssertionWhitelist
 
     public AssertionEntry InvalidState { get; init; } = new();
 
+    public AssertionEntry IsAscii { get; init; } = new();
+
     public AssertionEntry IsApproximately { get; init; } = new();
 
     public AssertionEntry IsDigit { get; init; } = new();
@@ -36,6 +38,8 @@ public sealed class AssertionWhitelist
     public AssertionEntry IsEquivalentTypeTo { get; init; } = new();
 
     public AssertionEntry IsFileExtension { get; init; } = new();
+
+    public AssertionEntry IsFinite { get; init; } = new();
 
     public AssertionEntry IsGreaterThanOrApproximately { get; init; } = new();
 
@@ -75,9 +79,13 @@ public sealed class AssertionWhitelist
 
     public AssertionEntry IsTrimmedAtStart { get; init; } = new();
 
+    public AssertionEntry IsUuidVersion7 { get; init; } = new();
+
     public AssertionEntry IsValidEnumValue { get; init; } = new();
 
     public AssertionEntry IsWhiteSpace { get; init; } = new();
+
+    public AssertionEntry MustBeAscii { get; init; } = new();
 
     public AssertionEntry MustBe { get; init; } = new();
 
@@ -88,6 +96,8 @@ public sealed class AssertionWhitelist
     public AssertionEntry MustBeEmailAddress { get; init; } = new();
 
     public AssertionEntry MustBeFileExtension { get; init; } = new();
+
+    public AssertionEntry MustBeFinite { get; init; } = new();
 
     public AssertionEntry MustBeGreaterThan { get; init; } = new();
 
@@ -139,6 +149,8 @@ public sealed class AssertionWhitelist
 
     public AssertionEntry MustBeUtc { get; init; } = new();
 
+    public AssertionEntry MustBeUuidVersion7 { get; init; } = new();
+
     public AssertionEntry MustBeValidEnumValue { get; init; } = new();
 
     public AssertionEntry MustContain { get; init; } = new();
@@ -146,6 +158,8 @@ public sealed class AssertionWhitelist
     public AssertionEntry MustEndWith { get; init; } = new();
 
     public AssertionEntry MustHaveCount { get; init; } = new();
+
+    public AssertionEntry MustHaveCountIn { get; init; } = new();
 
     public AssertionEntry MustHaveLength { get; init; } = new();
 
@@ -176,6 +190,8 @@ public sealed class AssertionWhitelist
     public AssertionEntry MustNotBeDefaultOrEmpty { get; init; } = new();
 
     public AssertionEntry MustNotBeEmpty { get; init; } = new();
+
+    public AssertionEntry MustNotBeEmptyOrWhiteSpace { get; init; } = new();
 
     public AssertionEntry MustNotBeGreaterThan { get; init; } = new();
 

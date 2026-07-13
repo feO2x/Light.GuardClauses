@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace Light.GuardClauses.Exceptions;
 
 /// <summary>
-/// This exception indicates that a <see cref="DateTime" /> value is invalid.
+/// This exception indicates that a <see cref="DateTime" /> or <see cref="DateTimeOffset" /> value is invalid.
 /// </summary>
 [Serializable]
 public class InvalidDateTimeException : ArgumentException
