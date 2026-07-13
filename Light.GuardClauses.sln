@@ -10,6 +10,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.Performa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.InternalRoslynAnalyzers", "tools\analyzers\Light.GuardClauses.InternalRoslynAnalyzers\Light.GuardClauses.InternalRoslynAnalyzers.csproj", "{DB4A3982-5312-4923-9C79-C39D18A5899C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.InternalRoslynAnalyzers.CodeFixes", "tools\analyzers\Light.GuardClauses.InternalRoslynAnalyzers.CodeFixes\Light.GuardClauses.InternalRoslynAnalyzers.CodeFixes.csproj", "{0D6B435A-E59C-48EB-A13D-69FDB5B6F4A1}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.InternalRoslynAnalyzers.Tests", "tests\Light.GuardClauses.InternalRoslynAnalyzers.Tests\Light.GuardClauses.InternalRoslynAnalyzers.Tests.csproj", "{2FE2D52E-21B8-4C51-9983-9C1812BDEBA0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Light.GuardClauses.SourceCodeTransformation", "tools\source-export\Light.GuardClauses.SourceCodeTransformation\Light.GuardClauses.SourceCodeTransformation.csproj", "{ECE42390-E3B5-49D4-9452-3B0CC04C633A}"
@@ -66,6 +68,10 @@ Global
 		{DB4A3982-5312-4923-9C79-C39D18A5899C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB4A3982-5312-4923-9C79-C39D18A5899C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB4A3982-5312-4923-9C79-C39D18A5899C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D6B435A-E59C-48EB-A13D-69FDB5B6F4A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D6B435A-E59C-48EB-A13D-69FDB5B6F4A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D6B435A-E59C-48EB-A13D-69FDB5B6F4A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D6B435A-E59C-48EB-A13D-69FDB5B6F4A1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2FE2D52E-21B8-4C51-9983-9C1812BDEBA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2FE2D52E-21B8-4C51-9983-9C1812BDEBA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FE2D52E-21B8-4C51-9983-9C1812BDEBA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -93,6 +99,7 @@ Global
 		{A2067796-F167-47BE-B367-191152DCE230} = {22B02CC1-06EC-4A20-8964-B7E941FAEB49}
 		{F4EE1A0F-60E0-4077-BFC4-82387535352A} = {33B02CC1-06EC-4A20-8964-B7E941FAEB49}
 		{DB4A3982-5312-4923-9C79-C39D18A5899C} = {55B02CC1-06EC-4A20-8964-B7E941FAEB49}
+		{0D6B435A-E59C-48EB-A13D-69FDB5B6F4A1} = {55B02CC1-06EC-4A20-8964-B7E941FAEB49}
 		{ECE42390-E3B5-49D4-9452-3B0CC04C633A} = {66B02CC1-06EC-4A20-8964-B7E941FAEB49}
 		{B546B7B7-9CA5-456C-96CD-15C21E64B7DF} = {66B02CC1-06EC-4A20-8964-B7E941FAEB49}
 		{55B02CC1-06EC-4A20-8964-B7E941FAEB49} = {44B02CC1-06EC-4A20-8964-B7E941FAEB49}

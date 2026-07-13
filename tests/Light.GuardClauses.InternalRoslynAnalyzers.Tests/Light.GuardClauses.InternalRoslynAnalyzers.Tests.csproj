@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../../tools/analyzers/Light.GuardClauses.InternalRoslynAnalyzers/Light.GuardClauses.InternalRoslynAnalyzers.csproj" />
+        <ProjectReference Include="../../tools/analyzers/Light.GuardClauses.InternalRoslynAnalyzers.CodeFixes/Light.GuardClauses.InternalRoslynAnalyzers.CodeFixes.csproj" />
     </ItemGroup>
 
     <ItemGroup>

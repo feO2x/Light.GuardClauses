@@ -8,13 +8,13 @@ Split the assembly following the standard Roslyn pattern: the compiler-loaded an
 
 ## Acceptance Criteria
 
-- [ ] Building the complete solution in Release configuration produces no RS1038 warning and no new warnings.
-- [ ] The `Light.GuardClauses.InternalRoslynAnalyzers` assembly references only compiler-layer Roslyn packages and contains no code fix providers; the two code fix providers reside in a new `Light.GuardClauses.InternalRoslynAnalyzers.CodeFixes` assembly.
-- [ ] The product project receives both assemblies as analyzer references, so command-line builds still run the XML-comment analyzer and IDEs can still load the code fixes.
-- [ ] Introducing a non-default `parameterName` or `message` XML comment on a standard exception assertion in the product project still produces the corresponding `LightGuardClauses_*` diagnostic during a command-line build.
-- [ ] The existing analyzer and code-fix tests pass against the split assemblies, and the complete solution's tests all pass.
-- [ ] `Directory.Packages.props` contains no project-name-conditional version override; the Roslyn version constraint for compiler-loaded assemblies is documented where the version is pinned.
-- [ ] The new project appears in `Light.GuardClauses.sln` under the `tools/analyzers` solution folder hierarchy.
+- [x] Building the complete solution in Release configuration produces no RS1038 warning and no new warnings.
+- [x] The `Light.GuardClauses.InternalRoslynAnalyzers` assembly references only compiler-layer Roslyn packages and contains no code fix providers; the two code fix providers reside in a new `Light.GuardClauses.InternalRoslynAnalyzers.CodeFixes` assembly.
+- [x] The product project receives both assemblies as analyzer references, so command-line builds still run the XML-comment analyzer and IDEs can still load the code fixes.
+- [x] Introducing a non-default `parameterName` or `message` XML comment on a standard exception assertion in the product project still produces the corresponding `LightGuardClauses_*` diagnostic during a command-line build.
+- [x] The existing analyzer and code-fix tests pass against the split assemblies, and the complete solution's tests all pass.
+- [x] `Directory.Packages.props` contains no project-name-conditional version override; the Roslyn version constraint for compiler-loaded assemblies is documented where the version is pinned.
+- [x] The new project appears in `Light.GuardClauses.sln` under the `tools/analyzers` solution folder hierarchy.
 
 ## Technical Details
 
