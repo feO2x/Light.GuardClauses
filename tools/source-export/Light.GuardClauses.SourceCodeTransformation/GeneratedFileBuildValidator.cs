@@ -63,7 +63,7 @@ public static class GeneratedFileBuildValidator
     private static string MapToTargetFrameworkMoniker(SourceTargetFramework targetFramework) =>
         targetFramework switch
         {
-            SourceTargetFramework.Net8_0 => "net8.0",
+            SourceTargetFramework.Net10_0 => "net10.0",
             _ => "netstandard2.0",
         };
 

@@ -4,11 +4,6 @@ on:
   release:
     types: [published]
   workflow_dispatch:
-    inputs:
-      dotnetVersion:
-        description: "The version of .NET to use"
-        required: false
-        default: "8.0.x"
 
 jobs:
   release-to-nuget:
@@ -20,7 +15,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ github.event.inputs.dotnetVersion || '8.0.x' }}
+          global-json-file: global.json
       - name: Prepare SNK file
         env:
           LIGHT_GUARDCLAUSES_SNK: ${{ secrets.LIGHT_GUARDCLAUSES_SNK }}

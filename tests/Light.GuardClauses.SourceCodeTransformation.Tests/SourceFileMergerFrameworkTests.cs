@@ -8,12 +8,12 @@ namespace Light.GuardClauses.SourceCodeTransformation.Tests;
 public static class SourceFileMergerFrameworkTests
 {
     [Fact]
-    public static void Net8ExportContainsNet8MembersAndNoDirectives()
+    public static void Net10ExportContainsModernMembersAndNoDirectives()
     {
         using var temporaryDirectory = new TemporaryDirectory();
-        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "Net8Export.cs");
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "Net10Export.cs");
 
-        SourceFileMerger.CreateSingleSourceFile(CreateOptions(targetFile, SourceTargetFramework.Net8_0));
+        SourceFileMerger.CreateSingleSourceFile(CreateOptions(targetFile, SourceTargetFramework.Net10_0));
         var sourceCode = File.ReadAllText(targetFile);
 
         sourceCode.Should().Contain("using System.Numerics;");
@@ -26,7 +26,7 @@ public static class SourceFileMergerFrameworkTests
     }
 
     [Fact]
-    public static void NetStandardExportOmitsNet8MembersAndNoDirectives()
+    public static void NetStandardExportOmitsModernMembersAndNoDirectives()
     {
         using var temporaryDirectory = new TemporaryDirectory();
         var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "NetStandardExport.cs");
@@ -43,12 +43,12 @@ public static class SourceFileMergerFrameworkTests
     }
 
     [Fact]
-    public static void Net8ExportOmitsPolyfillAttributes()
+    public static void Net10ExportOmitsPolyfillAttributes()
     {
         using var temporaryDirectory = new TemporaryDirectory();
-        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "Net8Polyfill.cs");
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "Net10Polyfill.cs");
 
-        SourceFileMerger.CreateSingleSourceFile(CreateOptions(targetFile, SourceTargetFramework.Net8_0));
+        SourceFileMerger.CreateSingleSourceFile(CreateOptions(targetFile, SourceTargetFramework.Net10_0));
         var sourceCode = File.ReadAllText(targetFile);
 
         sourceCode.Should().NotContain("class AllowNullAttribute");
@@ -69,14 +69,14 @@ public static class SourceFileMergerFrameworkTests
     }
 
     [Fact]
-    public static void Net8ExportValidatesAgainstNet8()
+    public static void Net10ExportValidatesAgainstNet10()
     {
         using var temporaryDirectory = new TemporaryDirectory();
-        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "Net8Validation.cs");
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "Net10Validation.cs");
 
-        SourceFileMerger.CreateSingleSourceFile(CreateOptions(targetFile, SourceTargetFramework.Net8_0));
+        SourceFileMerger.CreateSingleSourceFile(CreateOptions(targetFile, SourceTargetFramework.Net10_0));
 
-        GeneratedFileBuildValidator.Validate(SourceTargetFramework.Net8_0, targetFile).Should().Be(0);
+        GeneratedFileBuildValidator.Validate(SourceTargetFramework.Net10_0, targetFile).Should().Be(0);
     }
 
     [Fact]

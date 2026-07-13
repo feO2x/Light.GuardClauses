@@ -6,7 +6,7 @@ namespace Light.GuardClauses.SourceCodeTransformation;
 
 internal static class RepositoryLayout
 {
-    private const string RepositoryMarkerFileName = "Light.GuardClauses.sln";
+    private const string RepositoryMarkerFileName = "Light.GuardClauses.slnx";
 
     public static DirectoryInfo? TryFindRepositoryRoot(IEnumerable<string> searchRoots)
     {

@@ -47,18 +47,18 @@ public static class GeneratedFileBuildValidatorTests
         var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "Generated.cs");
         File.WriteAllText(targetFile, "namespace ValidationSample; public static class Generated { this is invalid }");
 
-        GeneratedFileBuildValidator.Validate(SourceTargetFramework.Net8_0, targetFile).Should().NotBe(0);
+        GeneratedFileBuildValidator.Validate(SourceTargetFramework.Net10_0, targetFile).Should().NotBe(0);
         File.Exists(targetFile).Should().BeTrue();
     }
 
     [Fact]
-    public static void ValidateReturnsZeroForCompilingFileOnNet8()
+    public static void ValidateReturnsZeroForCompilingFileOnNet10()
     {
         using var temporaryDirectory = new TemporaryDirectory();
         var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "Generated.cs");
         File.WriteAllText(targetFile, "namespace ValidationSample; public static class Generated { }");
 
-        GeneratedFileBuildValidator.Validate(SourceTargetFramework.Net8_0, targetFile).Should().Be(0);
+        GeneratedFileBuildValidator.Validate(SourceTargetFramework.Net10_0, targetFile).Should().Be(0);
     }
 
     [Fact]
