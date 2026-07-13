@@ -84,7 +84,7 @@ public static class MustBeUtcTests
     [Fact]
     public static void DateTimeOffsetCustomMessage() =>
         Test.CustomMessage<InvalidDateTimeException>(message =>
-            DateTimeOffset.Now.MustBeUtc(message: message));
+            new DateTimeOffset(2026, 7, 13, 12, 30, 0, TimeSpan.FromHours(2)).MustBeUtc(message: message));
 
     [Fact]
     public static void DateTimeOffsetCustomFactoryReceivesValue()
