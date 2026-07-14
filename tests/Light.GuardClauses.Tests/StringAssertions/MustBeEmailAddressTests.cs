@@ -29,7 +29,7 @@ public static class MustBeEmailAddressTests
     [ClassData(typeof(InvalidEmailAddresses))]
     public static void InvalidEmailAddressArgumentName(string emailAddress)
     {
-        Action act = () => emailAddress.MustBeEmailAddress(nameof(emailAddress));
+        Action act = () => emailAddress.MustBeEmailAddress();
 
         act.Should().Throw<InvalidEmailAddressException>()
            .And.Message.Should().Contain(
@@ -43,7 +43,7 @@ public static class MustBeEmailAddressTests
     {
         const string customMessage = "This email address is not valid";
 
-        Action act = () => emailAddress.MustBeEmailAddress(nameof(emailAddress), customMessage);
+        Action act = () => emailAddress.MustBeEmailAddress(message: customMessage);
 
         act.Should().Throw<InvalidEmailAddressException>()
            .And.Message.Should().Contain(customMessage);
@@ -232,7 +232,7 @@ public static class MustBeEmailAddressTests
         var act = () =>
         {
             var span = new Span<char>(emailChars);
-            span.MustBeEmailAddress(nameof(span));
+            span.MustBeEmailAddress();
         };
         act.Should().Throw<InvalidEmailAddressException>()
            .And.Message.Should().Contain("span");
@@ -247,7 +247,7 @@ public static class MustBeEmailAddressTests
         var act = () =>
         {
             var span = new Span<char>(emailChars);
-            span.MustBeEmailAddress(nameof(span), customMessage);
+            span.MustBeEmailAddress(message: customMessage);
         };
         act.Should().Throw<InvalidEmailAddressException>()
            .And.Message.Should().Contain(customMessage);
@@ -324,7 +324,7 @@ public static class MustBeEmailAddressTests
     public static void InvalidEmailAddressArgumentName_Memory(string email)
     {
         var memory = email.ToCharArray().AsMemory();
-        Action act = () => memory.MustBeEmailAddress(nameof(memory));
+        Action act = () => memory.MustBeEmailAddress();
         act.Should().Throw<InvalidEmailAddressException>()
            .And.Message.Should().Contain(nameof(memory));
     }
@@ -335,7 +335,7 @@ public static class MustBeEmailAddressTests
     {
         const string customMessage = "This email address is not valid";
         var memory = email.ToCharArray().AsMemory();
-        Action act = () => memory.MustBeEmailAddress(nameof(memory), customMessage);
+        Action act = () => memory.MustBeEmailAddress(message: customMessage);
         act.Should().Throw<InvalidEmailAddressException>()
            .And.Message.Should().Contain(customMessage);
     }
@@ -407,7 +407,7 @@ public static class MustBeEmailAddressTests
     public static void InvalidEmailAddressArgumentName_ReadOnlyMemory(string email)
     {
         var readOnlyMemory = email.AsMemory();
-        Action act = () => readOnlyMemory.MustBeEmailAddress(nameof(readOnlyMemory));
+        Action act = () => readOnlyMemory.MustBeEmailAddress();
         act.Should().Throw<InvalidEmailAddressException>()
            .And.Message.Should().Contain(nameof(readOnlyMemory));
     }
@@ -418,7 +418,7 @@ public static class MustBeEmailAddressTests
     {
         const string customMessage = "This email address is not valid";
         var readOnlyMemory = email.AsMemory();
-        Action act = () => readOnlyMemory.MustBeEmailAddress(nameof(readOnlyMemory), customMessage);
+        Action act = () => readOnlyMemory.MustBeEmailAddress(message: customMessage);
         act.Should().Throw<InvalidEmailAddressException>()
            .And.Message.Should().Contain(customMessage);
     }
@@ -463,6 +463,36 @@ public static class MustBeEmailAddressTests
         Test.CustomMessage<InvalidEmailAddressException>(
             message => readOnlyMemory.MustBeEmailAddress(CustomRegex, message: message)
         );
+    }
+
+    [Fact]
+    public static void EveryBufferOverloadReturnsValidEmailAddressesWithoutInvokingFactories()
+    {
+        const string email = "user@example.com";
+        var characters = email.ToCharArray();
+        var span = characters.AsSpan();
+        ReadOnlySpan<char> readOnlySpan = characters;
+        var memory = characters.AsMemory();
+        ReadOnlyMemory<char> readOnlyMemory = characters;
+
+        readOnlySpan.MustBeEmailAddress(_ => throw new InvalidOperationException()).ToString().Should().Be(email);
+        readOnlySpan.MustBeEmailAddress(CustomRegex).ToString().Should().Be(email);
+        readOnlySpan.MustBeEmailAddress(CustomRegex, (_, _) => throw new InvalidOperationException())
+                    .ToString().Should().Be(email);
+
+        span.MustBeEmailAddress(_ => throw new InvalidOperationException()).ToString().Should().Be(email);
+        span.MustBeEmailAddress(CustomRegex).ToString().Should().Be(email);
+        span.MustBeEmailAddress(CustomRegex, (_, _) => throw new InvalidOperationException()).ToString().Should()
+            .Be(email);
+
+        memory.MustBeEmailAddress(_ => throw new InvalidOperationException()).Should().Be(memory);
+        memory.MustBeEmailAddress(CustomRegex).Should().Be(memory);
+        memory.MustBeEmailAddress(CustomRegex, (_, _) => throw new InvalidOperationException()).Should().Be(memory);
+
+        readOnlyMemory.MustBeEmailAddress(_ => throw new InvalidOperationException()).Should().Be(readOnlyMemory);
+        readOnlyMemory.MustBeEmailAddress(CustomRegex).Should().Be(readOnlyMemory);
+        readOnlyMemory.MustBeEmailAddress(CustomRegex, (_, _) => throw new InvalidOperationException())
+                      .Should().Be(readOnlyMemory);
     }
 #endif
 }

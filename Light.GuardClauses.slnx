@@ -15,9 +15,12 @@
     <File Path="README.md" />
   </Folder>
   <Folder Name="/src/">
+    <File Path="src/Directory.Build.props" />
     <Project Path="src/Light.GuardClauses/Light.GuardClauses.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <File Path="tests/AGENTS.md" />
+    <File Path="tests/Directory.Build.props" />
     <Project Path="tests/Light.GuardClauses.InternalRoslynAnalyzers.Tests/Light.GuardClauses.InternalRoslynAnalyzers.Tests.csproj" />
     <Project Path="tests/Light.GuardClauses.SourceCodeTransformation.Tests/Light.GuardClauses.SourceCodeTransformation.Tests.csproj" />
     <Project Path="tests/Light.GuardClauses.Tests/Light.GuardClauses.Tests.csproj" />

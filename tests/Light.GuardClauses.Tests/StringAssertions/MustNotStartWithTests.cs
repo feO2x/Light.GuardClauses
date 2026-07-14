@@ -21,7 +21,9 @@ public static class MustNotStartWithTests
         var act = () => x.MustNotStartWith(y);
 
         var exception = act.Should().Throw<SubstringException>().Which;
-        exception.Message.Should().StartWith($"{nameof(x)} must not start with \"{y}\" (CurrentCulture), but it actually is \"{x}\"");
+        exception.Message.Should().StartWith(
+            $"{nameof(x)} must not start with \"{y}\" (CurrentCulture), but it actually is \"{x}\""
+        );
         exception.ParamName.Should().BeSameAs(nameof(x));
     }
 
@@ -33,14 +35,16 @@ public static class MustNotStartWithTests
         var act = () => x.MustNotStartWith(y, comparisonType);
 
         var exception = act.Should().Throw<SubstringException>().Which;
-        exception.Message.Should().StartWith($"{nameof(x)} must not start with \"{y}\" ({comparisonType}), but it actually is \"{x}\"");
+        exception.Message.Should().StartWith(
+            $"{nameof(x)} must not start with \"{y}\" ({comparisonType}), but it actually is \"{x}\""
+        );
         exception.ParamName.Should().BeSameAs(nameof(x));
     }
 
     [Fact]
     public static void ParameterNull()
     {
-        var act = () => ((string)null).MustNotStartWith("Foo");
+        var act = () => ((string) null).MustNotStartWith("Foo");
 
         act.Should().Throw<ArgumentNullException>();
     }
@@ -59,15 +63,15 @@ public static class MustNotStartWithTests
 
     [Fact]
     public static void CustomMessageParameterNull() =>
-        Test.CustomMessage<ArgumentNullException>(message => ((string)null).MustNotStartWith("Bar", message: message));
+        Test.CustomMessage<ArgumentNullException>(message => ((string) null).MustNotStartWith("Bar", message: message));
 
     [Fact]
     public static void NotStartsWithCustomException() =>
-        "Bar".MustNotStartWith("Foo", (_, _) => new Exception()).Should().Be("Bar");
+        "Bar".MustNotStartWith("Foo", (_, _) => new ()).Should().Be("Bar");
 
     [Fact]
     public static void NotStartsWithCustomExceptionAndComparisonType() =>
-        "Bar".MustNotStartWith("foo", StringComparison.OrdinalIgnoreCase, (_, _, _) => new Exception()).Should().Be("Bar");
+        "Bar".MustNotStartWith("foo", StringComparison.OrdinalIgnoreCase, (_, _, _) => new ()).Should().Be("Bar");
 
     [Theory]
     [InlineData("Foo", "Foo")]
@@ -81,5 +85,47 @@ public static class MustNotStartWithTests
     [InlineData(null, "Bar", StringComparison.Ordinal)]
     [InlineData("Baz", null, StringComparison.Ordinal)]
     public static void CustomExceptionWithComparisonType(string a, string b, StringComparison comparisonType) =>
-        Test.CustomException(a, b, comparisonType, (s1, s2, ct, exceptionFactory) => s1.MustNotStartWith(s2, ct, exceptionFactory));
+        Test.CustomException(
+            a,
+            b,
+            comparisonType,
+            (s1, s2, ct, exceptionFactory) => s1.MustNotStartWith(s2, ct, exceptionFactory)
+        );
+
+    [Fact]
+    public static void SpanOverloadsSupportSuccessAndFailurePaths()
+    {
+        ReadOnlySpan<char> parameter = "value";
+        ReadOnlySpan<char> other = "prefix";
+
+        parameter.MustNotStartWith(other, StringComparison.Ordinal).ToString().Should().Be("value");
+        parameter.MustNotStartWith(other, (_, _) => throw new InvalidOperationException()).ToString().Should()
+                 .Be("value");
+        parameter.MustNotStartWith(other, StringComparison.Ordinal, (_, _, _) => throw new InvalidOperationException())
+                 .ToString().Should().Be("value");
+
+        var defaultFailure = () =>
+        {
+            ReadOnlySpan<char> invalid = "prefix-value";
+            invalid.MustNotStartWith("prefix", StringComparison.Ordinal);
+        };
+        var factoryFailure = () =>
+        {
+            ReadOnlySpan<char> invalid = "prefix-value";
+            invalid.MustNotStartWith("prefix", (_, _) => new InvalidOperationException());
+        };
+        var comparisonFactoryFailure = () =>
+        {
+            ReadOnlySpan<char> invalid = "PREFIX-value";
+            invalid.MustNotStartWith(
+                "prefix",
+                StringComparison.OrdinalIgnoreCase,
+                (_, _, _) => new InvalidOperationException()
+            );
+        };
+
+        defaultFailure.Should().Throw<SubstringException>();
+        factoryFailure.Should().Throw<InvalidOperationException>();
+        comparisonFactoryFailure.Should().Throw<InvalidOperationException>();
+    }
 }
