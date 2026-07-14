@@ -193,6 +193,45 @@ public static class SourceFileMergerWhitelistTests
         File.ReadAllText(modernFile).Should().Contain("IFloatingPointIeee754<T>");
     }
 
+    [Fact]
+    public static void SignGuardWhitelistsUseTargetSpecificSurface()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var portableFile = Path.Combine(temporaryDirectory.DirectoryPath, "SignGuardsPortable.cs");
+        var modernFile = Path.Combine(temporaryDirectory.DirectoryPath, "SignGuardsModern.cs");
+        var whitelist = CreateWhitelist(
+            includedAssertions:
+            [
+                new ("MustBePositive", true),
+                new ("MustBeNegative", true),
+                new ("MustNotBePositive", true),
+                new ("MustNotBeNegative", true),
+                new ("MustNotBeZero", false),
+            ]
+        );
+
+        SourceFileMerger.CreateSingleSourceFile(CreateOptions(portableFile, whitelist));
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(modernFile, whitelist, SourceTargetFramework.Net10_0)
+        );
+        var portableCode = File.ReadAllText(portableFile);
+        var modernCode = File.ReadAllText(modernFile);
+
+        portableCode.Should().Contain("public static int MustBePositive(");
+        portableCode.Should().Contain("public static decimal MustBeNegative(");
+        portableCode.Should().Contain("public static TimeSpan MustNotBeNegative(");
+        portableCode.Should().Contain("public static double MustNotBeZero(");
+        portableCode.Should().Contain("MustBePositive(this int parameter, Func<int, Exception> exceptionFactory)");
+        portableCode.Should().NotContain("MustNotBeZero(this int parameter, Func<int, Exception> exceptionFactory)");
+        portableCode.Should().NotContain("INumber<T>");
+        modernCode.Should().Contain("MustBePositive<T>");
+        modernCode.Should().Contain("MustBeNegative<T>");
+        modernCode.Should().Contain("MustNotBePositive<T>");
+        modernCode.Should().Contain("MustNotBeNegative<T>");
+        modernCode.Should().Contain("MustNotBeZero<T>");
+        modernCode.Should().Contain("INumber<T>");
+    }
+
     private static SourceFileMergeOptions CreateOptions(
         string targetFile,
         AssertionWhitelist assertionWhitelist = null,

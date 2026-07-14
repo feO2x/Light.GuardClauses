@@ -368,11 +368,13 @@ namespace System.Runtime.CompilerServices
             replacedNodes.Add(jetBrainsNamespace, jetBrainsNamespace);
         }
 
+        // GetFiles returns entries in filesystem-dependent order - sort by name so the merged output is deterministic
         var allSourceFiles = new DirectoryInfo(options.SourceFolder).GetFiles("*.cs", SearchOption.AllDirectories)
                                                                     .Where(
                                                                          f => !f.FullName.Contains("obj") &&
                                                                               !f.FullName.Contains("bin")
                                                                      )
+                                                                    .OrderBy(f => f.Name, StringComparer.Ordinal)
                                                                     .ToDictionary(f => f.Name);
         SourceReachabilityAnalysis? reachabilityAnalysis = null;
         if (options.AssertionWhitelist.IsEnabled)

@@ -8,17 +8,17 @@ The additions must preserve the library's fluent return values, exception-factor
 
 ## Acceptance Criteria
 
-- [ ] The five throwing guard families `MustBePositive`, `MustBeNegative`, `MustNotBePositive`, `MustNotBeNegative`, and `MustNotBeZero` are available for `int`, `long`, `decimal`, `float`, `double`, and `TimeSpan` on .NET Standard 2.0, .NET Standard 2.1, and .NET 10.
-- [ ] The .NET 10 asset additionally provides generic overloads of all five families constrained to `INumber<T>`, so types without concrete overloads (such as `short`, `byte`, or `Half`) are covered on the modern target.
-- [ ] Sign semantics are defined by comparing the value against zero with the type's comparison operators: `MustBePositive` accepts only values greater than zero, `MustBeNegative` only values less than zero, `MustNotBePositive` only values less than or equal to zero, `MustNotBeNegative` only values greater than or equal to zero, and `MustNotBeZero` only values not equal to zero.
-- [ ] For IEEE 754 floating-point inputs, `NaN` is rejected by all four sign guards and accepted by `MustNotBeZero`, positive and negative infinity satisfy the guards that match their sign, and negative zero — including `decimal`'s signed zero representations — is treated exactly like zero; these outcomes are identical on all targets and for both concrete and generic overloads.
-- [ ] A failed guard throws `ArgumentOutOfRangeException` by default and reports the violated sign requirement and the actual value.
-- [ ] Every new guard returns the successfully validated input, captures the guarded expression for the default exception, accepts an optional custom message, and provides an exception-factory overload consistent with the existing API.
-- [ ] Automated tests cover successful values, failing values, zero and negative-zero boundaries (floating-point and `decimal`), `NaN`, infinity, and subnormal handling, `TimeSpan.Zero`, default exceptions, custom messages, custom exception factories, caller argument expressions, return values, and the .NET 10 generic overloads including at least one type without a concrete overload.
-- [ ] The source-export whitelist catalog and committed settings contain the five new assertion families, and focused source-export tests cover the new entries.
-- [ ] The committed .NET Standard 2.0 single-file distribution is regenerated and validates with the new portable API surface.
-- [ ] The assertion overview documents the new families, including their zero, negative-zero, and `NaN` semantics and the .NET 10-only generic overloads.
-- [ ] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
+- [x] The five throwing guard families `MustBePositive`, `MustBeNegative`, `MustNotBePositive`, `MustNotBeNegative`, and `MustNotBeZero` are available for `int`, `long`, `decimal`, `float`, `double`, and `TimeSpan` on .NET Standard 2.0, .NET Standard 2.1, and .NET 10.
+- [x] The .NET 10 asset additionally provides generic overloads of all five families constrained to `INumber<T>`, so types without concrete overloads (such as `short`, `byte`, or `Half`) are covered on the modern target.
+- [x] Sign semantics are defined by comparing the value against zero with the type's comparison operators: `MustBePositive` accepts only values greater than zero, `MustBeNegative` only values less than zero, `MustNotBePositive` only values less than or equal to zero, `MustNotBeNegative` only values greater than or equal to zero, and `MustNotBeZero` only values not equal to zero.
+- [x] For IEEE 754 floating-point inputs, `NaN` is rejected by all four sign guards and accepted by `MustNotBeZero`, positive and negative infinity satisfy the guards that match their sign, and negative zero — including `decimal`'s signed zero representations — is treated exactly like zero; these outcomes are identical on all targets and for both concrete and generic overloads.
+- [x] A failed guard throws `ArgumentOutOfRangeException` by default and reports the violated sign requirement and the actual value.
+- [x] Every new guard returns the successfully validated input, captures the guarded expression for the default exception, accepts an optional custom message, and provides an exception-factory overload consistent with the existing API.
+- [x] Automated tests cover successful values, failing values, zero and negative-zero boundaries (floating-point and `decimal`), `NaN`, infinity, and subnormal handling, `TimeSpan.Zero`, default exceptions, custom messages, custom exception factories, caller argument expressions, return values, and the .NET 10 generic overloads including at least one type without a concrete overload.
+- [x] The source-export whitelist catalog and committed settings contain the five new assertion families, and focused source-export tests cover the new entries.
+- [x] The committed .NET Standard 2.0 single-file distribution is regenerated and validates with the new portable API surface.
+- [x] The assertion overview documents the new families, including their zero, negative-zero, and `NaN` semantics and the .NET 10-only generic overloads.
+- [x] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
 
 ## Technical Details
 
