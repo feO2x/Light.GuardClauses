@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../../src/Light.GuardClauses/Light.GuardClauses.csproj" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" />

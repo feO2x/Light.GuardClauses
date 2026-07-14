@@ -197,6 +197,8 @@ public sealed class AssertionWhitelist
 
     public AssertionEntry MustHaveCountIn { get; init; } = new();
 
+    public AssertionEntry MustHaveSameCountAs { get; init; } = new();
+
     public AssertionEntry MustHaveLength { get; init; } = new();
 
     public AssertionEntry MustHaveLengthIn { get; init; } = new();

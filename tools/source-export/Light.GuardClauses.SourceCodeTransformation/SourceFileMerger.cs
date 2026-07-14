@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Light.GuardClauses.FrameworkExtensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -15,7 +14,7 @@ public static class SourceFileMerger
 {
     public static void CreateSingleSourceFile(SourceFileMergeOptions options)
     {
-        options.MustNotBeNull();
+        ArgumentNullException.ThrowIfNull(options);
 
         // Prepare the target syntax
         var stringBuilder = new StringBuilder();
@@ -32,9 +31,13 @@ public static class SourceFileMerger
         }
 
         Console.WriteLine("Creating default file layout...");
-        stringBuilder.AppendLineIf(!options.IncludeVersionComment, "/*")
-                     .AppendLine(
-                          $@"License information for Light.GuardClauses
+        if (!options.IncludeVersionComment)
+        {
+            stringBuilder.AppendLine("/*");
+        }
+
+        stringBuilder.AppendLine(
+             $@"License information for Light.GuardClauses
 
 The MIT License (MIT)
 Copyright (c) 2016, 2025 Kenny Pflug mailto:kenny.pflug@live.de
@@ -497,7 +500,7 @@ namespace System.Runtime.CompilerServices
 
             // Else just get the members of the first namespace and add them to the corresponding one
             var sourceCompilationUnit = (CompilationUnitSyntax) sourceSyntaxTree.GetRoot();
-            if (sourceCompilationUnit.Members.IsNullOrEmpty())
+            if (sourceCompilationUnit.Members.Count == 0)
             {
                 continue;
             }

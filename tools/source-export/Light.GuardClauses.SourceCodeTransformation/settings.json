@@ -112,6 +112,7 @@
     "MustEndWith": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustHaveCount": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustHaveCountIn": { "Include": true, "IncludeExceptionFactoryOverload": true },
+    "MustHaveSameCountAs": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustHaveLength": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustHaveLengthIn": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustHaveMaximumCount": { "Include": true, "IncludeExceptionFactoryOverload": true },
