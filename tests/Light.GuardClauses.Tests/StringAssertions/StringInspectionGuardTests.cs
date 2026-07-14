@@ -1,5 +1,6 @@
 using System;
 using FluentAssertions;
+using Light.GuardClauses.ExceptionFactory;
 using Light.GuardClauses.Exceptions;
 using Xunit;
 
@@ -25,6 +26,18 @@ public static class StringInspectionGuardTests
         ReadOnlyMemory<char>.Empty.MustBeBase64().IsEmpty.Should().BeTrue();
         Span<char>.Empty.MustBeHexadecimal().IsEmpty.Should().BeTrue();
         ReadOnlySpan<char>.Empty.MustNotContainWhiteSpace().IsEmpty.Should().BeTrue();
+    }
+
+    [Fact]
+    public static void EveryFactoryGuardReturnsEveryOriginalReceiverShape()
+    {
+        AssertEveryFactoryShape("1٢３", GuardFamily.Digits);
+        AssertEveryFactoryShape("AzΩ٢", GuardFamily.LettersOrDigits);
+        AssertEveryFactoryShape("AΩ 123!", GuardFamily.UpperCase);
+        AssertEveryFactoryShape("aω 123!", GuardFamily.LowerCase);
+        AssertEveryFactoryShape("T W\tF\ru\n", GuardFamily.Base64);
+        AssertEveryFactoryShape("09aAfF", GuardFamily.Hexadecimal);
+        AssertEveryFactoryShape("Az-09", GuardFamily.NoWhiteSpace);
     }
 
     [Fact]
@@ -97,34 +110,15 @@ public static class StringInspectionGuardTests
     }
 
     [Fact]
-    public static void BufferFactoriesReceiveEveryReceiverShape()
+    public static void EveryBufferFactoryReceivesEveryInvalidReceiverShape()
     {
-        Test.CustomSpanException(
-            "a".ToCharArray().AsSpan(),
-            (value, factory) => value.MustContainOnlyDigits(factory)
-        );
-        Test.CustomSpanException(
-            (ReadOnlySpan<char>) "!".ToCharArray(),
-            (value, factory) => value.MustContainOnlyLettersOrDigits(factory)
-        );
-        Test.CustomMemoryException(
-            "a".ToCharArray().AsMemory(),
-            (value, factory) => value.MustBeUpperCase(factory)
-        );
-        Test.CustomMemoryException(
-            (ReadOnlyMemory<char>) "A".ToCharArray(),
-            (value, factory) => value.MustBeLowerCase(factory)
-        );
-
-        Test.CustomSpanException("_".ToCharArray().AsSpan(), (value, factory) => value.MustBeBase64(factory));
-        Test.CustomSpanException(
-            (ReadOnlySpan<char>) "g".ToCharArray(),
-            (value, factory) => value.MustBeHexadecimal(factory)
-        );
-        Test.CustomMemoryException(
-            " ".ToCharArray().AsMemory(),
-            (value, factory) => value.MustNotContainWhiteSpace(factory)
-        );
+        AssertEveryBufferFactoryFailure("a", GuardFamily.Digits);
+        AssertEveryBufferFactoryFailure("!", GuardFamily.LettersOrDigits);
+        AssertEveryBufferFactoryFailure("a", GuardFamily.UpperCase);
+        AssertEveryBufferFactoryFailure("A", GuardFamily.LowerCase);
+        AssertEveryBufferFactoryFailure("_", GuardFamily.Base64);
+        AssertEveryBufferFactoryFailure("g", GuardFamily.Hexadecimal);
+        AssertEveryBufferFactoryFailure(" ", GuardFamily.NoWhiteSpace);
     }
 
     [Fact]
@@ -209,6 +203,180 @@ public static class StringInspectionGuardTests
                 (readOnlySpan.MustNotContainWhiteSpace() == readOnlySpan).Should().BeTrue();
                 memory.MustNotContainWhiteSpace().Should().Be(memory);
                 readOnlyMemory.MustNotContainWhiteSpace().Should().Be(readOnlyMemory);
+                break;
+            default: throw new ArgumentOutOfRangeException(nameof(family), family, null);
+        }
+    }
+
+    private static void AssertEveryFactoryShape(string value, GuardFamily family)
+    {
+        var characters = value.ToCharArray();
+        var span = characters.AsSpan();
+        ReadOnlySpan<char> readOnlySpan = characters;
+        var memory = characters.AsMemory();
+        ReadOnlyMemory<char> readOnlyMemory = characters;
+        Func<string, Exception> stringFactory = _ => new ("The factory should not be invoked.");
+        ReadOnlySpanExceptionFactory<char> bufferFactory = _ => new ("The factory should not be invoked.");
+
+        switch (family)
+        {
+            case GuardFamily.Digits:
+                value.MustContainOnlyDigits(stringFactory).Should().BeSameAs(value);
+                (span.MustContainOnlyDigits(bufferFactory) == span).Should().BeTrue();
+                (readOnlySpan.MustContainOnlyDigits(bufferFactory) == readOnlySpan).Should().BeTrue();
+                memory.MustContainOnlyDigits(bufferFactory).Should().Be(memory);
+                readOnlyMemory.MustContainOnlyDigits(bufferFactory).Should().Be(readOnlyMemory);
+                break;
+            case GuardFamily.LettersOrDigits:
+                value.MustContainOnlyLettersOrDigits(stringFactory).Should().BeSameAs(value);
+                (span.MustContainOnlyLettersOrDigits(bufferFactory) == span).Should().BeTrue();
+                (readOnlySpan.MustContainOnlyLettersOrDigits(bufferFactory) == readOnlySpan).Should().BeTrue();
+                memory.MustContainOnlyLettersOrDigits(bufferFactory).Should().Be(memory);
+                readOnlyMemory.MustContainOnlyLettersOrDigits(bufferFactory).Should().Be(readOnlyMemory);
+                break;
+            case GuardFamily.UpperCase:
+                value.MustBeUpperCase(stringFactory).Should().BeSameAs(value);
+                (span.MustBeUpperCase(bufferFactory) == span).Should().BeTrue();
+                (readOnlySpan.MustBeUpperCase(bufferFactory) == readOnlySpan).Should().BeTrue();
+                memory.MustBeUpperCase(bufferFactory).Should().Be(memory);
+                readOnlyMemory.MustBeUpperCase(bufferFactory).Should().Be(readOnlyMemory);
+                break;
+            case GuardFamily.LowerCase:
+                value.MustBeLowerCase(stringFactory).Should().BeSameAs(value);
+                (span.MustBeLowerCase(bufferFactory) == span).Should().BeTrue();
+                (readOnlySpan.MustBeLowerCase(bufferFactory) == readOnlySpan).Should().BeTrue();
+                memory.MustBeLowerCase(bufferFactory).Should().Be(memory);
+                readOnlyMemory.MustBeLowerCase(bufferFactory).Should().Be(readOnlyMemory);
+                break;
+            case GuardFamily.Base64:
+                value.MustBeBase64(stringFactory).Should().BeSameAs(value);
+                (span.MustBeBase64(bufferFactory) == span).Should().BeTrue();
+                (readOnlySpan.MustBeBase64(bufferFactory) == readOnlySpan).Should().BeTrue();
+                memory.MustBeBase64(bufferFactory).Should().Be(memory);
+                readOnlyMemory.MustBeBase64(bufferFactory).Should().Be(readOnlyMemory);
+                break;
+            case GuardFamily.Hexadecimal:
+                value.MustBeHexadecimal(stringFactory).Should().BeSameAs(value);
+                (span.MustBeHexadecimal(bufferFactory) == span).Should().BeTrue();
+                (readOnlySpan.MustBeHexadecimal(bufferFactory) == readOnlySpan).Should().BeTrue();
+                memory.MustBeHexadecimal(bufferFactory).Should().Be(memory);
+                readOnlyMemory.MustBeHexadecimal(bufferFactory).Should().Be(readOnlyMemory);
+                break;
+            case GuardFamily.NoWhiteSpace:
+                value.MustNotContainWhiteSpace(stringFactory).Should().BeSameAs(value);
+                (span.MustNotContainWhiteSpace(bufferFactory) == span).Should().BeTrue();
+                (readOnlySpan.MustNotContainWhiteSpace(bufferFactory) == readOnlySpan).Should().BeTrue();
+                memory.MustNotContainWhiteSpace(bufferFactory).Should().Be(memory);
+                readOnlyMemory.MustNotContainWhiteSpace(bufferFactory).Should().Be(readOnlyMemory);
+                break;
+            default: throw new ArgumentOutOfRangeException(nameof(family), family, null);
+        }
+    }
+
+    private static void AssertEveryBufferFactoryFailure(string invalidValue, GuardFamily family)
+    {
+        var characters = invalidValue.ToCharArray();
+
+        switch (family)
+        {
+            case GuardFamily.Digits:
+                Test.CustomSpanException(characters.AsSpan(), (value, factory) => value.MustContainOnlyDigits(factory));
+                Test.CustomSpanException(
+                    (ReadOnlySpan<char>) characters,
+                    (value, factory) => value.MustContainOnlyDigits(factory)
+                );
+                Test.CustomMemoryException(
+                    characters.AsMemory(),
+                    (value, factory) => value.MustContainOnlyDigits(factory)
+                );
+                Test.CustomMemoryException(
+                    (ReadOnlyMemory<char>) characters,
+                    (value, factory) => value.MustContainOnlyDigits(factory)
+                );
+                break;
+            case GuardFamily.LettersOrDigits:
+                Test.CustomSpanException(
+                    characters.AsSpan(),
+                    (value, factory) => value.MustContainOnlyLettersOrDigits(factory)
+                );
+                Test.CustomSpanException(
+                    (ReadOnlySpan<char>) characters,
+                    (value, factory) => value.MustContainOnlyLettersOrDigits(factory)
+                );
+                Test.CustomMemoryException(
+                    characters.AsMemory(),
+                    (value, factory) => value.MustContainOnlyLettersOrDigits(factory)
+                );
+                Test.CustomMemoryException(
+                    (ReadOnlyMemory<char>) characters,
+                    (value, factory) => value.MustContainOnlyLettersOrDigits(factory)
+                );
+                break;
+            case GuardFamily.UpperCase:
+                Test.CustomSpanException(characters.AsSpan(), (value, factory) => value.MustBeUpperCase(factory));
+                Test.CustomSpanException(
+                    (ReadOnlySpan<char>) characters,
+                    (value, factory) => value.MustBeUpperCase(factory)
+                );
+                Test.CustomMemoryException(characters.AsMemory(), (value, factory) => value.MustBeUpperCase(factory));
+                Test.CustomMemoryException(
+                    (ReadOnlyMemory<char>) characters,
+                    (value, factory) => value.MustBeUpperCase(factory)
+                );
+                break;
+            case GuardFamily.LowerCase:
+                Test.CustomSpanException(characters.AsSpan(), (value, factory) => value.MustBeLowerCase(factory));
+                Test.CustomSpanException(
+                    (ReadOnlySpan<char>) characters,
+                    (value, factory) => value.MustBeLowerCase(factory)
+                );
+                Test.CustomMemoryException(characters.AsMemory(), (value, factory) => value.MustBeLowerCase(factory));
+                Test.CustomMemoryException(
+                    (ReadOnlyMemory<char>) characters,
+                    (value, factory) => value.MustBeLowerCase(factory)
+                );
+                break;
+            case GuardFamily.Base64:
+                Test.CustomSpanException(characters.AsSpan(), (value, factory) => value.MustBeBase64(factory));
+                Test.CustomSpanException(
+                    (ReadOnlySpan<char>) characters,
+                    (value, factory) => value.MustBeBase64(factory)
+                );
+                Test.CustomMemoryException(characters.AsMemory(), (value, factory) => value.MustBeBase64(factory));
+                Test.CustomMemoryException(
+                    (ReadOnlyMemory<char>) characters,
+                    (value, factory) => value.MustBeBase64(factory)
+                );
+                break;
+            case GuardFamily.Hexadecimal:
+                Test.CustomSpanException(characters.AsSpan(), (value, factory) => value.MustBeHexadecimal(factory));
+                Test.CustomSpanException(
+                    (ReadOnlySpan<char>) characters,
+                    (value, factory) => value.MustBeHexadecimal(factory)
+                );
+                Test.CustomMemoryException(characters.AsMemory(), (value, factory) => value.MustBeHexadecimal(factory));
+                Test.CustomMemoryException(
+                    (ReadOnlyMemory<char>) characters,
+                    (value, factory) => value.MustBeHexadecimal(factory)
+                );
+                break;
+            case GuardFamily.NoWhiteSpace:
+                Test.CustomSpanException(
+                    characters.AsSpan(),
+                    (value, factory) => value.MustNotContainWhiteSpace(factory)
+                );
+                Test.CustomSpanException(
+                    (ReadOnlySpan<char>) characters,
+                    (value, factory) => value.MustNotContainWhiteSpace(factory)
+                );
+                Test.CustomMemoryException(
+                    characters.AsMemory(),
+                    (value, factory) => value.MustNotContainWhiteSpace(factory)
+                );
+                Test.CustomMemoryException(
+                    (ReadOnlyMemory<char>) characters,
+                    (value, factory) => value.MustNotContainWhiteSpace(factory)
+                );
                 break;
             default: throw new ArgumentOutOfRangeException(nameof(family), family, null);
         }

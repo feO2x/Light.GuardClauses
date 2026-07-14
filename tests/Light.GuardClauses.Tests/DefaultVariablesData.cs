@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
+using Xunit;
 using Xunit.Sdk;
+using Xunit.v3;
 
 namespace Light.GuardClauses.Tests;
 
@@ -22,15 +25,20 @@ public sealed class DefaultVariablesData : DataAttribute
             "Fred",
             "Plugh",
             "Xyzzy",
-            "Thud"
+            "Thud",
         };
 
-    private static readonly List<object[]> TransformedVariables =
-        All.Select(variable => new object[] { variable }).ToList();
+    private static readonly IReadOnlyCollection<ITheoryDataRow> TransformedVariables =
+        All.Select(ITheoryDataRow (variable) => new TheoryDataRow(variable)).ToArray();
 
     private readonly int _numberOfConstants;
 
     public DefaultVariablesData(int numberOfConstants = 3) => _numberOfConstants = numberOfConstants;
 
-    public override IEnumerable<object[]> GetData(MethodInfo testMethod) => TransformedVariables.Take(_numberOfConstants);
+    public override ValueTask<IReadOnlyCollection<ITheoryDataRow>> GetData(
+        MethodInfo testMethod,
+        DisposalTracker disposalTracker
+    ) => new (TransformedVariables.Take(_numberOfConstants).ToArray());
+
+    public override bool SupportsDiscoveryEnumeration() => true;
 }
