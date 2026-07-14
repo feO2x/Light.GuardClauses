@@ -88,6 +88,7 @@ percentage.MustBeIn(Range.FromExclusive(0).ToInclusive(100));
 | `MustNotBeNullOrEmpty` | Requires a non-null, non-empty collection or string |
 | `MustHaveCount` | Requires an exact collection count |
 | `MustHaveCountIn` | Requires a collection count within an inclusive/exclusive `Range<int>` |
+| `MustHaveSameCountAs` | Requires two reference collections implementing `IEnumerable` to have equal counts, even when their concrete and element types differ |
 | `MustHaveMinimumCount`, `MustHaveMaximumCount` | Enforce inclusive collection-count bounds |
 | `IsOneOf`, `MustBeOneOf`, `MustNotBeOneOf` | Test or enforce membership among supplied values |
 | `MustContain`, `MustNotContain` | Require or reject an item in collections and immutable arrays; string overloads operate on substrings |
@@ -98,6 +99,8 @@ percentage.MustBeIn(Range.FromExclusive(0).ToInclusive(100));
 | `MustHaveLength`, `MustHaveLengthIn`, `MustHaveMinimumLength`, `MustHaveMaximumLength` | Validate string, span, or immutable-array length as provided by their overloads |
 
 Collection overloads preserve and return the original collection shape where possible. Check the XML documentation before using an `IEnumerable` guard in a hot path; annotations identify guards that do not enumerate.
+
+`MustHaveSameCountAs` validates both collection references before observing either count, returns the original receiver, and compares counts without comparing contents. Null inputs throw `ArgumentNullException`, while differing counts throw `InvalidCollectionCountException`. Existing count-property fast paths avoid enumeration; otherwise, each input is enumerated at most once and its enumerator is disposed. Comparing a collection with itself returns immediately without enumeration.
 
 The two collection-content guards treat empty collections and empty or default immutable arrays as valid. Arrays, lists, and other supported indexable receivers are inspected by index without allocating an enumerator; arbitrary enumerable receivers are enumerated at most once and dispose that enumerator normally. Both paths stop at the first invalid item, use O(n) time, and require constant additional space. `MustNotContainNull` uses non-generic item access for reference collections so it can preserve any receiver shape without knowing the item type; consequently, value-type items are boxed by that overload. Its dedicated immutable-array overload uses generic indexed access and avoids that cost.
 

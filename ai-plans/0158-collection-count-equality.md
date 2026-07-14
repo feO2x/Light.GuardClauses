@@ -8,16 +8,16 @@ The guard must support collections with different element and concrete types, pr
 
 ## Acceptance Criteria
 
-- [ ] `MustHaveSameCountAs` is available with identical semantics on .NET Standard 2.0, .NET Standard 2.1, and .NET 10 for any two reference collections implementing `IEnumerable`, including collections with different element types.
-- [ ] The guard accepts equal counts, including two empty collections, and returns the original receiver in its concrete type without comparing collection contents.
-- [ ] A null receiver or comparison collection throws `ArgumentNullException` by default; unequal counts throw `InvalidCollectionCountException` whose parameter name identifies the receiver and whose default message reports both observed counts.
-- [ ] The default overload captures the receiver expression, accepts an optional custom message, and the custom-exception-factory overload receives both original nullable collections and is used for null inputs as well as unequal counts.
-- [ ] Count-property fast paths supported by the existing helpers do not enumerate their inputs; each arbitrary enumerable is enumerated at most once per invocation, its enumerator is disposed, and failure-message construction does not enumerate either input again.
-- [ ] Automated tests cover equal and unequal counts; empty inputs; different collection and element types; null values in both argument positions; default exception details; custom messages and exception factories; caller argument expressions; fluent concrete-type preservation; count-property fast paths; same-instance inputs; and distinct lazy/single-use enumerables.
-- [ ] The source-export whitelist catalog and committed settings contain `MustHaveSameCountAs`, and focused source-export tests cover its count-helper, throw-helper, exception, and custom-factory reachability and trimming.
-- [ ] The committed .NET Standard 2.0 single-file distribution is regenerated with the new guard and validates for both supported source-export targets.
-- [ ] XML documentation and the assertion overview describe the cross-collection semantics, supported receiver shapes, null and failure behavior, fluent return value, and enumeration characteristics.
-- [ ] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
+- [x] `MustHaveSameCountAs` is available with identical semantics on .NET Standard 2.0, .NET Standard 2.1, and .NET 10 for any two reference collections implementing `IEnumerable`, including collections with different element types.
+- [x] The guard accepts equal counts, including two empty collections, and returns the original receiver in its concrete type without comparing collection contents.
+- [x] A null receiver or comparison collection throws `ArgumentNullException` by default; unequal counts throw `InvalidCollectionCountException` whose parameter name identifies the receiver and whose default message reports both observed counts.
+- [x] The default overload captures the receiver expression, accepts an optional custom message, and the custom-exception-factory overload receives both original nullable collections and is used for null inputs as well as unequal counts.
+- [x] Count-property fast paths supported by the existing helpers do not enumerate their inputs; each arbitrary enumerable is enumerated at most once per invocation, its enumerator is disposed, and failure-message construction does not enumerate either input again.
+- [x] Automated tests cover equal and unequal counts; empty inputs; different collection and element types; null values in both argument positions; default exception details; custom messages and exception factories; caller argument expressions; fluent concrete-type preservation; count-property fast paths; same-instance inputs; and distinct lazy/single-use enumerables.
+- [x] The source-export whitelist catalog and committed settings contain `MustHaveSameCountAs`, and focused source-export tests cover its count-helper, throw-helper, exception, and custom-factory reachability and trimming.
+- [x] The committed .NET Standard 2.0 single-file distribution is regenerated with the new guard and validates for both supported source-export targets.
+- [x] XML documentation and the assertion overview describe the cross-collection semantics, supported receiver shapes, null and failure behavior, fluent return value, and enumeration characteristics.
+- [x] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
 
 ## Technical Details
 

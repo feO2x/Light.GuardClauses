@@ -171,6 +171,55 @@ public static class SourceFileMergerWhitelistTests
     }
 
     [Fact]
+    public static void MustHaveSameCountAsWhitelistRetainsCountAndExceptionClosuresOnBothTargets()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var portableFile = Path.Combine(temporaryDirectory.DirectoryPath, "SameCountPortable.cs");
+        var modernFile = Path.Combine(temporaryDirectory.DirectoryPath, "SameCountModern.cs");
+        var whitelist = CreateWhitelist(
+            includedAssertions: [new ("MustHaveSameCountAs", true)]
+        );
+
+        SourceFileMerger.CreateSingleSourceFile(CreateOptions(portableFile, whitelist));
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(modernFile, whitelist, SourceTargetFramework.Net10_0)
+        );
+
+        foreach (var sourceCode in new[] { File.ReadAllText(portableFile), File.ReadAllText(modernFile) })
+        {
+            sourceCode.Should().Contain("MustHaveSameCountAs<TCollection, TOtherCollection>(");
+            sourceCode.Should().Contain("public static int Count(");
+            sourceCode.Should().Contain("public static void CollectionCountsNotEqual(");
+            sourceCode.Should().Contain("class InvalidCollectionCountException : CollectionException");
+            sourceCode.Should()
+                      .Contain("Func<TCollection?, TOtherCollection?, Exception> exceptionFactory");
+            sourceCode.Should().Contain("public static void CustomException<T1, T2>(");
+            sourceCode.Should().NotContain("MustHaveCountIn<TCollection>(");
+        }
+    }
+
+    [Fact]
+    public static void MustHaveSameCountAsWhitelistTrimsItsExceptionFactoryOverload()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "SameCountWithoutFactory.cs");
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(includedAssertions: [new ("MustHaveSameCountAs", false)])
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("MustHaveSameCountAs<TCollection, TOtherCollection>(");
+        sourceCode.Should().Contain("public static int Count(");
+        sourceCode.Should().Contain("public static void CollectionCountsNotEqual(");
+        sourceCode.Should().Contain("class InvalidCollectionCountException : CollectionException");
+        sourceCode.Should().NotContain("Func<TCollection?, TOtherCollection?, Exception> exceptionFactory");
+    }
+
+    [Fact]
     public static void FiniteWhitelistUsesTargetSpecificSurface()
     {
         using var temporaryDirectory = new TemporaryDirectory();
