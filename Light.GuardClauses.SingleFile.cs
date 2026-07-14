@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -4421,6 +4422,53 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Ensures that the specified stream supports reading and returns the original stream, or otherwise throws an
+        /// <see cref = "ArgumentException"/>. Validation reads only <see cref = "Stream.CanRead"/> and performs no I/O.
+        /// </summary>
+        /// <param name = "parameter">The stream to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "parameter"/> does not support reading.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static TStream MustBeReadable<TStream>([NotNull, ValidatedNotNull] this TStream? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where TStream : Stream
+        {
+            if (parameter is null)
+            {
+                Throw.ArgumentNull(parameterName, message);
+            }
+
+            if (parameter.CanRead == false)
+            {
+                Throw.MustBeReadable(parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified stream supports reading and returns the original stream, or otherwise throws your
+        /// custom exception. Validation reads only <see cref = "Stream.CanRead"/> and performs no I/O.
+        /// </summary>
+        /// <param name = "parameter">The stream to be checked.</param>
+        /// <param name = "exceptionFactory">The delegate that creates the exception to be thrown. <paramref name = "parameter"/> is passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> does not support reading, or when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static TStream MustBeReadable<TStream>([NotNull, ValidatedNotNull] this TStream? parameter, Func<TStream?, Exception> exceptionFactory)
+            where TStream : Stream
+        {
+            if (parameter is null || parameter.CanRead == false)
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
         /// Ensures that the specified URI is a relative one, or otherwise throws an <see cref = "AbsoluteUriException"/>.
         /// </summary>
         /// <param name = "parameter">The URI to be checked.</param>
@@ -4451,6 +4499,53 @@ namespace Light.GuardClauses
         public static Uri MustBeRelativeUri([NotNull][ValidatedNotNull] this Uri? parameter, Func<Uri?, Exception> exceptionFactory)
         {
             if (parameter is null || parameter.IsAbsoluteUri)
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified stream supports seeking and returns the original stream, or otherwise throws an
+        /// <see cref = "ArgumentException"/>. Validation reads only <see cref = "Stream.CanSeek"/> and performs no I/O.
+        /// </summary>
+        /// <param name = "parameter">The stream to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "parameter"/> does not support seeking.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static TStream MustBeSeekable<TStream>([NotNull, ValidatedNotNull] this TStream? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where TStream : Stream
+        {
+            if (parameter is null)
+            {
+                Throw.ArgumentNull(parameterName, message);
+            }
+
+            if (parameter.CanSeek == false)
+            {
+                Throw.MustBeSeekable(parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified stream supports seeking and returns the original stream, or otherwise throws your
+        /// custom exception. Validation reads only <see cref = "Stream.CanSeek"/> and performs no I/O.
+        /// </summary>
+        /// <param name = "parameter">The stream to be checked.</param>
+        /// <param name = "exceptionFactory">The delegate that creates the exception to be thrown. <paramref name = "parameter"/> is passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> does not support seeking, or when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static TStream MustBeSeekable<TStream>([NotNull, ValidatedNotNull] this TStream? parameter, Func<TStream?, Exception> exceptionFactory)
+            where TStream : Stream
+        {
+            if (parameter is null || parameter.CanSeek == false)
             {
                 Throw.CustomException(exceptionFactory, parameter);
             }
@@ -5252,6 +5347,53 @@ namespace Light.GuardClauses
             where T : struct, Enum
         {
             if (!EnumInfo<T>.IsValidEnumValue(parameter))
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified stream supports writing and returns the original stream, or otherwise throws an
+        /// <see cref = "ArgumentException"/>. Validation reads only <see cref = "Stream.CanWrite"/> and performs no I/O.
+        /// </summary>
+        /// <param name = "parameter">The stream to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ArgumentException">Thrown when <paramref name = "parameter"/> does not support writing.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static TStream MustBeWritable<TStream>([NotNull, ValidatedNotNull] this TStream? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where TStream : Stream
+        {
+            if (parameter is null)
+            {
+                Throw.ArgumentNull(parameterName, message);
+            }
+
+            if (parameter.CanWrite == false)
+            {
+                Throw.MustBeWritable(parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified stream supports writing and returns the original stream, or otherwise throws your
+        /// custom exception. Validation reads only <see cref = "Stream.CanWrite"/> and performs no I/O.
+        /// </summary>
+        /// <param name = "parameter">The stream to be checked.</param>
+        /// <param name = "exceptionFactory">The delegate that creates the exception to be thrown. <paramref name = "parameter"/> is passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> does not support writing, or when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static TStream MustBeWritable<TStream>([NotNull, ValidatedNotNull] this TStream? parameter, Func<TStream?, Exception> exceptionFactory)
+            where TStream : Stream
+        {
+            if (parameter is null || parameter.CanWrite == false)
             {
                 Throw.CustomException(exceptionFactory, parameter);
             }
@@ -11675,6 +11817,27 @@ namespace Light.GuardClauses.ExceptionFactory
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void SpanMustBeShorterThanOrEqualTo<T>(ReadOnlySpan<T> parameter, int length, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidCollectionCountException(parameterName, message ?? $"{parameterName ?? "The span"} must be shorter than or equal to {length}, but it actually has length {parameter.Length}.");
+        /// <summary>
+        /// Throws the default <see cref = "ArgumentException"/> indicating that a stream does not support reading, using
+        /// the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void MustBeReadable(string? parameterName = null, string? message = null) => throw new ArgumentException(message ?? $"{parameterName ?? "The stream"} must be readable.", parameterName);
+        /// <summary>
+        /// Throws the default <see cref = "ArgumentException"/> indicating that a stream does not support writing, using
+        /// the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void MustBeWritable(string? parameterName = null, string? message = null) => throw new ArgumentException(message ?? $"{parameterName ?? "The stream"} must be writable.", parameterName);
+        /// <summary>
+        /// Throws the default <see cref = "ArgumentException"/> indicating that a stream does not support seeking, using
+        /// the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void MustBeSeekable(string? parameterName = null, string? message = null) => throw new ArgumentException(message ?? $"{parameterName ?? "The stream"} must be seekable.", parameterName);
         /// <summary>
         /// Throws the default <see cref = "SubstringException"/> indicating that a string does not contain another string as
         /// a substring, using the optional parameter name and message.
