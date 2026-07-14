@@ -8,17 +8,17 @@ The additions must preserve the library's fluent return values, exception-factor
 
 ## Acceptance Criteria
 
-- [ ] `MustContainKey` and `MustNotContainKey` are available for `IReadOnlyDictionary<TKey, TValue>` receivers on .NET Standard 2.0, .NET Standard 2.1, and .NET 10 with identical semantics, and both type arguments are inferred at the call site without explicit specification.
-- [ ] Additional overloads for `Dictionary<TKey, TValue>` preserve and return the concrete dictionary shape, while receivers of other dictionary types implementing `IReadOnlyDictionary<TKey, TValue>` (such as `ConcurrentDictionary`, `SortedDictionary`, `ReadOnlyDictionary`, `ImmutableDictionary`, and `FrozenDictionary` on .NET 10) bind to the interface overloads without overload-resolution ambiguity.
-- [ ] The guards check key presence exclusively through `ContainsKey`, so they never enumerate the dictionary and respect its configured key comparer.
-- [ ] A null dictionary thrown into the default overloads produces the established `ArgumentNullException` null behavior; the exception-factory overloads pass the dictionary and the key to the factory.
-- [ ] A failed `MustContainKey` throws the new `MissingKeyException` and a failed `MustNotContainKey` throws the new `ExistingKeyException`; both derive from `CollectionException`, report the offending key, and follow the existing serialization conventions.
-- [ ] Every new guard returns the successfully validated input, captures the guarded expression for the default exception, accepts an optional custom message, and provides an exception-factory overload consistent with the existing API.
-- [ ] Automated tests cover present and absent keys, null dictionaries, comparer-sensitive lookups (for example an `OrdinalIgnoreCase` dictionary), default exceptions, custom messages, custom exception factories, caller argument expressions, returned values including the preserved `Dictionary<TKey, TValue>` shape, and successful binding for several dictionary types.
-- [ ] The source-export whitelist catalog and committed settings contain the two new assertion families with their exceptions and throw helpers, and focused source-export tests cover the new entries.
-- [ ] The committed .NET Standard 2.0 single-file distribution is regenerated and validates with the new portable API surface.
-- [ ] The assertion overview documents the new guards, including the shapes they accept and the `IDictionary<TKey, TValue>`-only limitation described below.
-- [ ] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
+- [x] `MustContainKey` and `MustNotContainKey` are available for `IReadOnlyDictionary<TKey, TValue>` receivers on .NET Standard 2.0, .NET Standard 2.1, and .NET 10 with identical semantics, and both type arguments are inferred at the call site without explicit specification.
+- [x] Additional overloads for `Dictionary<TKey, TValue>` preserve and return the concrete dictionary shape, while receivers of other dictionary types implementing `IReadOnlyDictionary<TKey, TValue>` (such as `ConcurrentDictionary`, `SortedDictionary`, `ReadOnlyDictionary`, `ImmutableDictionary`, and `FrozenDictionary` on .NET 10) bind to the interface overloads without overload-resolution ambiguity.
+- [x] The guards check key presence exclusively through `ContainsKey`, so they never enumerate the dictionary and respect its configured key comparer.
+- [x] A null dictionary thrown into the default overloads produces the established `ArgumentNullException` null behavior; the exception-factory overloads pass the dictionary and the key to the factory.
+- [x] A failed `MustContainKey` throws the new `MissingKeyException` and a failed `MustNotContainKey` throws the new `ExistingKeyException`; both derive from `CollectionException`, report the offending key, and follow the existing serialization conventions.
+- [x] Every new guard returns the successfully validated input, captures the guarded expression for the default exception, accepts an optional custom message, and provides an exception-factory overload consistent with the existing API.
+- [x] Automated tests cover present and absent keys, null dictionaries, comparer-sensitive lookups (for example an `OrdinalIgnoreCase` dictionary), default exceptions, custom messages, custom exception factories, caller argument expressions, returned values including the preserved `Dictionary<TKey, TValue>` shape, and successful binding for several dictionary types.
+- [x] The source-export whitelist catalog and committed settings contain the two new assertion families with their exceptions and throw helpers, and focused source-export tests cover the new entries.
+- [x] The committed .NET Standard 2.0 single-file distribution is regenerated and validates with the new portable API surface.
+- [x] The assertion overview documents the new guards, including the shapes they accept and the `IDictionary<TKey, TValue>`-only limitation described below.
+- [x] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
 
 ## Technical Details
 

@@ -159,6 +159,8 @@ public sealed class AssertionWhitelist
 
     public AssertionEntry MustContain { get; init; } = new();
 
+    public AssertionEntry MustContainKey { get; init; } = new();
+
     public AssertionEntry MustEndWith { get; init; } = new();
 
     public AssertionEntry MustHaveCount { get; init; } = new();
@@ -228,6 +230,8 @@ public sealed class AssertionWhitelist
     public AssertionEntry MustNotBeZero { get; init; } = new();
 
     public AssertionEntry MustNotContain { get; init; } = new();
+
+    public AssertionEntry MustNotContainKey { get; init; } = new();
 
     public AssertionEntry MustNotEndWith { get; init; } = new();
 

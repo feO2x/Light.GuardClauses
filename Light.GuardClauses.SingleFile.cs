@@ -4264,6 +4264,96 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Ensures that the dictionary contains the specified key, or otherwise throws a <see cref = "MissingKeyException"/>.
+        /// The check is performed via <see cref = "IReadOnlyDictionary{TKey, TValue}.ContainsKey"/>, so the dictionary is
+        /// never enumerated and its key comparer is respected.
+        /// </summary>
+        /// <param name = "parameter">The dictionary to be checked.</param>
+        /// <param name = "key">The key that must be present in the dictionary.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "MissingKeyException">Thrown when <paramref name = "parameter"/> does not contain <paramref name = "key"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static IReadOnlyDictionary<TKey, TValue> MustContainKey<TKey, TValue>([NotNull][ValidatedNotNull] this IReadOnlyDictionary<TKey, TValue>? parameter, TKey key, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.MustNotBeNull(parameterName, message).ContainsKey(key))
+            {
+                Throw.MissingKey(parameter, key, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the dictionary contains the specified key, or otherwise throws your custom exception.
+        /// The check is performed via <see cref = "IReadOnlyDictionary{TKey, TValue}.ContainsKey"/>, so the dictionary is
+        /// never enumerated and its key comparer is respected.
+        /// </summary>
+        /// <param name = "parameter">The dictionary to be checked.</param>
+        /// <param name = "key">The key that must be present in the dictionary.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "key"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> does not contain <paramref name = "key"/>, or when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static IReadOnlyDictionary<TKey, TValue> MustContainKey<TKey, TValue>([NotNull][ValidatedNotNull] this IReadOnlyDictionary<TKey, TValue>? parameter, TKey key, Func<IReadOnlyDictionary<TKey, TValue>?, TKey, Exception> exceptionFactory)
+        {
+            if (parameter is null || !parameter.ContainsKey(key))
+            {
+                Throw.CustomException(exceptionFactory, parameter, key);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the dictionary contains the specified key, or otherwise throws a <see cref = "MissingKeyException"/>.
+        /// The check is performed via <see cref = "Dictionary{TKey, TValue}.ContainsKey"/>, so the dictionary is
+        /// never enumerated and its key comparer is respected.
+        /// </summary>
+        /// <param name = "parameter">The dictionary to be checked.</param>
+        /// <param name = "key">The key that must be present in the dictionary.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "MissingKeyException">Thrown when <paramref name = "parameter"/> does not contain <paramref name = "key"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static Dictionary<TKey, TValue> MustContainKey<TKey, TValue>([NotNull][ValidatedNotNull] this Dictionary<TKey, TValue>? parameter, TKey key, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where TKey : notnull
+        {
+            if (!parameter.MustNotBeNull(parameterName, message).ContainsKey(key))
+            {
+                Throw.MissingKey(parameter, key, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the dictionary contains the specified key, or otherwise throws your custom exception.
+        /// The check is performed via <see cref = "Dictionary{TKey, TValue}.ContainsKey"/>, so the dictionary is
+        /// never enumerated and its key comparer is respected.
+        /// </summary>
+        /// <param name = "parameter">The dictionary to be checked.</param>
+        /// <param name = "key">The key that must be present in the dictionary.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "key"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> does not contain <paramref name = "key"/>, or when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static Dictionary<TKey, TValue> MustContainKey<TKey, TValue>([NotNull][ValidatedNotNull] this Dictionary<TKey, TValue>? parameter, TKey key, Func<Dictionary<TKey, TValue>?, TKey, Exception> exceptionFactory)
+            where TKey : notnull
+        {
+            if (parameter is null || !parameter.ContainsKey(key))
+            {
+                Throw.CustomException(exceptionFactory, parameter, key);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
         /// Ensures that the string ends with the specified value, or otherwise throws a <see cref = "SubstringException"/>.
         /// </summary>
         /// <param name = "parameter">The string to be checked.</param>
@@ -7429,6 +7519,96 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Ensures that the dictionary does not contain the specified key, or otherwise throws an <see cref = "ExistingKeyException"/>.
+        /// The check is performed via <see cref = "IReadOnlyDictionary{TKey, TValue}.ContainsKey"/>, so the dictionary is
+        /// never enumerated and its key comparer is respected.
+        /// </summary>
+        /// <param name = "parameter">The dictionary to be checked.</param>
+        /// <param name = "key">The key that must not be present in the dictionary.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ExistingKeyException">Thrown when <paramref name = "parameter"/> contains <paramref name = "key"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static IReadOnlyDictionary<TKey, TValue> MustNotContainKey<TKey, TValue>([NotNull][ValidatedNotNull] this IReadOnlyDictionary<TKey, TValue>? parameter, TKey key, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (parameter.MustNotBeNull(parameterName, message).ContainsKey(key))
+            {
+                Throw.ExistingKey(parameter, key, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the dictionary does not contain the specified key, or otherwise throws your custom exception.
+        /// The check is performed via <see cref = "IReadOnlyDictionary{TKey, TValue}.ContainsKey"/>, so the dictionary is
+        /// never enumerated and its key comparer is respected.
+        /// </summary>
+        /// <param name = "parameter">The dictionary to be checked.</param>
+        /// <param name = "key">The key that must not be present in the dictionary.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "key"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> contains <paramref name = "key"/>, or when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static IReadOnlyDictionary<TKey, TValue> MustNotContainKey<TKey, TValue>([NotNull][ValidatedNotNull] this IReadOnlyDictionary<TKey, TValue>? parameter, TKey key, Func<IReadOnlyDictionary<TKey, TValue>?, TKey, Exception> exceptionFactory)
+        {
+            if (parameter is null || parameter.ContainsKey(key))
+            {
+                Throw.CustomException(exceptionFactory, parameter, key);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the dictionary does not contain the specified key, or otherwise throws an <see cref = "ExistingKeyException"/>.
+        /// The check is performed via <see cref = "Dictionary{TKey, TValue}.ContainsKey"/>, so the dictionary is
+        /// never enumerated and its key comparer is respected.
+        /// </summary>
+        /// <param name = "parameter">The dictionary to be checked.</param>
+        /// <param name = "key">The key that must not be present in the dictionary.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ExistingKeyException">Thrown when <paramref name = "parameter"/> contains <paramref name = "key"/>.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static Dictionary<TKey, TValue> MustNotContainKey<TKey, TValue>([NotNull][ValidatedNotNull] this Dictionary<TKey, TValue>? parameter, TKey key, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where TKey : notnull
+        {
+            if (parameter.MustNotBeNull(parameterName, message).ContainsKey(key))
+            {
+                Throw.ExistingKey(parameter, key, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the dictionary does not contain the specified key, or otherwise throws your custom exception.
+        /// The check is performed via <see cref = "Dictionary{TKey, TValue}.ContainsKey"/>, so the dictionary is
+        /// never enumerated and its key comparer is respected.
+        /// </summary>
+        /// <param name = "parameter">The dictionary to be checked.</param>
+        /// <param name = "key">The key that must not be present in the dictionary.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> and <paramref name = "key"/> are passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> contains <paramref name = "key"/>, or when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static Dictionary<TKey, TValue> MustNotContainKey<TKey, TValue>([NotNull][ValidatedNotNull] this Dictionary<TKey, TValue>? parameter, TKey key, Func<Dictionary<TKey, TValue>?, TKey, Exception> exceptionFactory)
+            where TKey : notnull
+        {
+            if (parameter is null || parameter.ContainsKey(key))
+            {
+                Throw.CustomException(exceptionFactory, parameter, key);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
         /// Ensures that the string does not end with the specified value, or otherwise throws a <see cref = "SubstringException"/>.
         /// </summary>
         /// <param name = "parameter">The string to be checked.</param>
@@ -8458,6 +8638,27 @@ namespace Light.GuardClauses.Exceptions
     }
 
     /// <summary>
+    /// This exception indicates that a dictionary contains a key that must not be part of it.
+    /// </summary>
+    [Serializable]
+    internal class ExistingKeyException : CollectionException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "ExistingKeyException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public ExistingKeyException(string? parameterName = null, string? message = null) : base(parameterName, message)
+        {
+        }
+
+        /// <inheritdoc/>
+        protected ExistingKeyException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+    }
+
+    /// <summary>
     /// This exception indicates that a collection has an invalid number of items.
     /// </summary>
     [Serializable]
@@ -8600,6 +8801,27 @@ namespace Light.GuardClauses.Exceptions
 
         /// <inheritdoc/>
         protected MissingItemException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+    }
+
+    /// <summary>
+    /// This exception indicates that a key is not present in a dictionary.
+    /// </summary>
+    [Serializable]
+    internal class MissingKeyException : CollectionException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "MissingKeyException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public MissingKeyException(string? parameterName = null, string? message = null) : base(parameterName, message)
+        {
+        }
+
+        /// <inheritdoc/>
+        protected MissingKeyException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }
@@ -9059,6 +9281,13 @@ namespace Light.GuardClauses.ExceptionFactory
         [DoesNotReturn]
         public static void ExistingItem<TItem>(IEnumerable<TItem> parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new ExistingItemException(parameterName, message ?? new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must not contain {item.ToStringOrNull()}, but it actually does.").AppendCollectionContent(parameter).ToString());
         /// <summary>
+        /// Throws the default <see cref = "ExistingKeyException"/> indicating that a dictionary contains the specified key
+        /// that should not be part of it, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void ExistingKey<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> parameter, TKey key, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new ExistingKeyException(parameterName, message ?? $"{parameterName ?? "The dictionary"} must not contain key {key.ToStringOrNull()}, but it actually does.");
+        /// <summary>
         /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that an <see cref = "ImmutableArray{T}"/>'s length is not within the
         /// given range, using the optional parameter name and message.
         /// </summary>
@@ -9158,6 +9387,13 @@ namespace Light.GuardClauses.ExceptionFactory
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void MissingItem<TItem>(IEnumerable<TItem> parameter, TItem item, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new MissingItemException(parameterName, message ?? new StringBuilder().AppendLine($"{parameterName ?? "The collection"} must contain {item.ToStringOrNull()}, but it actually does not.").AppendCollectionContent(parameter).ToString());
+        /// <summary>
+        /// Throws the default <see cref = "MissingKeyException"/> indicating that a dictionary is not containing the
+        /// specified key, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void MissingKey<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> parameter, TKey key, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new MissingKeyException(parameterName, message ?? new StringBuilder().AppendLine($"{parameterName ?? "The dictionary"} must contain key {key.ToStringOrNull()}, but it actually does not.").AppendCollectionContent(parameter.Keys, "Keys of the dictionary:").ToString());
         /// <summary>
         /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that a value must be approximately
         /// equal to another value within a specified tolerance, using the optional parameter name and message.
