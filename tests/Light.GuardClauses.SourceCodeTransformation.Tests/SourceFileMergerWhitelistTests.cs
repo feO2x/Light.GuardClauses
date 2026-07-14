@@ -339,6 +339,69 @@ public static class SourceFileMergerWhitelistTests
         sourceCode.Should().NotContain("MustNotContainNull<TCollection>");
     }
 
+    [Fact]
+    public static void StringInspectionWhitelistsRetainPredicatesHelpersAndPortableBase64()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "StringInspection.cs");
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(
+                    includedAssertions:
+                    [
+                        new ("MustContainOnlyDigits", true),
+                        new ("MustContainOnlyLettersOrDigits", true),
+                        new ("MustBeUpperCase", true),
+                        new ("MustBeLowerCase", true),
+                        new ("MustBeBase64", true),
+                        new ("MustBeHexadecimal", true),
+                        new ("MustNotContainWhiteSpace", true),
+                    ]
+                )
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("ContainsOnlyDigits(this ReadOnlySpan<char> parameter)");
+        sourceCode.Should().Contain("ContainsOnlyLettersOrDigits(this ReadOnlySpan<char> parameter)");
+        sourceCode.Should().Contain("IsUpperCase(this ReadOnlySpan<char> parameter)");
+        sourceCode.Should().Contain("IsLowerCase(this ReadOnlySpan<char> parameter)");
+        sourceCode.Should().Contain("IsBase64Portable(ReadOnlySpan<char> parameter)");
+        sourceCode.Should().Contain("IsHexadecimal(this ReadOnlySpan<char> parameter)");
+        sourceCode.Should().Contain("ContainsWhiteSpace(ReadOnlySpan<char> parameter)");
+        sourceCode.Should().Contain("public static void InvalidStringContent(");
+        sourceCode.Should().Contain("class StringException : ArgumentException");
+        sourceCode.Should().Contain("delegate Exception ReadOnlySpanExceptionFactory<TItem>");
+        sourceCode.Should().NotContain("Base64.IsValid(parameter)");
+        sourceCode.Should().NotContain("MustBeAscii(");
+    }
+
+    [Fact]
+    public static void StringInspectionWhitelistTrimsExceptionFactories()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "StringInspectionWithoutFactories.cs");
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(
+                    includedAssertions: [new ("MustBeBase64", false)]
+                )
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("MustBeBase64(");
+        sourceCode.Should().Contain("IsBase64Portable(ReadOnlySpan<char> parameter)");
+        sourceCode.Should().Contain("public static void InvalidStringContent(");
+        sourceCode.Should().NotContain("Func<string?, Exception> exceptionFactory");
+        sourceCode.Should().NotContain("ReadOnlySpanExceptionFactory<char> exceptionFactory");
+        sourceCode.Should().NotContain("public static void CustomSpanException");
+    }
+
     private static SourceFileMergeOptions CreateOptions(
         string targetFile,
         AssertionWhitelist assertionWhitelist = null,

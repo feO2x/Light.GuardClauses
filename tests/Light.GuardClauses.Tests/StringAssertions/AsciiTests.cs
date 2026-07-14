@@ -1,5 +1,6 @@
 using System;
 using FluentAssertions;
+using Light.GuardClauses.Exceptions;
 using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertions;
@@ -75,13 +76,16 @@ public static class AsciiTests
     {
         const char invalidCharacter = 'é';
         const byte invalidByte = 128;
+        const string invalidText = "é";
         string nullText = null;
 
-        ((Action) (() => invalidCharacter.MustBeAscii())).Should().Throw<ArgumentException>()
+        ((Action) (() => invalidCharacter.MustBeAscii())).Should().ThrowExactly<ArgumentException>()
                                                             .WithParameterName(nameof(invalidCharacter));
-        ((Action) (() => invalidByte.MustBeAscii(message: "custom"))).Should().Throw<ArgumentException>()
+        ((Action) (() => invalidByte.MustBeAscii(message: "custom"))).Should().ThrowExactly<ArgumentException>()
                                                                          .WithParameterName(nameof(invalidByte))
                                                                          .WithMessage("*custom*");
+        ((Action) (() => invalidText.MustBeAscii())).Should().ThrowExactly<StringException>()
+                                                       .WithParameterName(nameof(invalidText));
         ((Action) (() => nullText.MustBeAscii())).Should().Throw<ArgumentNullException>()
                                                    .WithParameterName(nameof(nullText));
         Test.CustomException(invalidCharacter, (value, factory) => value.MustBeAscii(factory));
@@ -126,14 +130,24 @@ public static class AsciiTests
             ReadOnlySpan<byte> invalidByteSpan = new byte[] { 128 };
             invalidByteSpan.MustBeAscii(message: "custom");
         };
+        var readOnlyCharacterSpanAct = () =>
+        {
+            ReadOnlySpan<char> invalidCharacterSpan = "é";
+            invalidCharacterSpan.MustBeAscii();
+        };
         var invalidCharacterMemory = "é".ToCharArray().AsMemory();
+        ReadOnlyMemory<char> invalidReadOnlyCharacterMemory = "é".ToCharArray();
         ReadOnlyMemory<byte> invalidByteMemory = new byte[] { 128 };
 
-        spanAct.Should().Throw<ArgumentException>().WithParameterName("invalidCharacterSpan");
-        readOnlySpanAct.Should().Throw<ArgumentException>().WithParameterName("invalidByteSpan").WithMessage("*custom*");
-        ((Action) (() => invalidCharacterMemory.MustBeAscii())).Should().Throw<ArgumentException>()
+        spanAct.Should().ThrowExactly<StringException>().WithParameterName("invalidCharacterSpan");
+        readOnlyCharacterSpanAct.Should().ThrowExactly<StringException>()
+                                .WithParameterName("invalidCharacterSpan");
+        readOnlySpanAct.Should().ThrowExactly<ArgumentException>().WithParameterName("invalidByteSpan").WithMessage("*custom*");
+        ((Action) (() => invalidCharacterMemory.MustBeAscii())).Should().ThrowExactly<StringException>()
                                                                 .WithParameterName(nameof(invalidCharacterMemory));
-        ((Action) (() => invalidByteMemory.MustBeAscii())).Should().Throw<ArgumentException>()
+        ((Action) (() => invalidReadOnlyCharacterMemory.MustBeAscii())).Should().ThrowExactly<StringException>()
+                                                                         .WithParameterName(nameof(invalidReadOnlyCharacterMemory));
+        ((Action) (() => invalidByteMemory.MustBeAscii())).Should().ThrowExactly<ArgumentException>()
                                                          .WithParameterName(nameof(invalidByteMemory));
     }
 

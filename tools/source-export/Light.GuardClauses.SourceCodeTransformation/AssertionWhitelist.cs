@@ -9,6 +9,10 @@ public sealed class AssertionWhitelist
 {
     public bool IsEnabled { get; init; } = false;
 
+    public AssertionEntry ContainsOnlyDigits { get; init; } = new();
+
+    public AssertionEntry ContainsOnlyLettersOrDigits { get; init; } = new();
+
     public AssertionEntry DerivesFrom { get; init; } = new();
 
     public new AssertionEntry Equals { get; init; } = new();
@@ -24,6 +28,8 @@ public sealed class AssertionWhitelist
     public AssertionEntry InvalidState { get; init; } = new();
 
     public AssertionEntry IsAscii { get; init; } = new();
+
+    public AssertionEntry IsBase64 { get; init; } = new();
 
     public AssertionEntry IsApproximately { get; init; } = new();
 
@@ -43,6 +49,8 @@ public sealed class AssertionWhitelist
 
     public AssertionEntry IsGreaterThanOrApproximately { get; init; } = new();
 
+    public AssertionEntry IsHexadecimal { get; init; } = new();
+
     public AssertionEntry IsIn { get; init; } = new();
 
     public AssertionEntry IsLessThanOrApproximately { get; init; } = new();
@@ -50,6 +58,8 @@ public sealed class AssertionWhitelist
     public AssertionEntry IsLetter { get; init; } = new();
 
     public AssertionEntry IsLetterOrDigit { get; init; } = new();
+
+    public AssertionEntry IsLowerCase { get; init; } = new();
 
     public AssertionEntry IsNewLine { get; init; } = new();
 
@@ -79,6 +89,8 @@ public sealed class AssertionWhitelist
 
     public AssertionEntry IsTrimmedAtStart { get; init; } = new();
 
+    public AssertionEntry IsUpperCase { get; init; } = new();
+
     public AssertionEntry IsUuidVersion7 { get; init; } = new();
 
     public AssertionEntry IsValidEnumValue { get; init; } = new();
@@ -88,6 +100,8 @@ public sealed class AssertionWhitelist
     public AssertionEntry MustBeAscii { get; init; } = new();
 
     public AssertionEntry MustBe { get; init; } = new();
+
+    public AssertionEntry MustBeBase64 { get; init; } = new();
 
     public AssertionEntry MustBeAbsoluteUri { get; init; } = new();
 
@@ -104,6 +118,8 @@ public sealed class AssertionWhitelist
     public AssertionEntry MustBeGreaterThanOrApproximately { get; init; } = new();
 
     public AssertionEntry MustBeGreaterThanOrEqualTo { get; init; } = new();
+
+    public AssertionEntry MustBeHexadecimal { get; init; } = new();
 
     public AssertionEntry MustBeHttpOrHttpsUrl { get; init; } = new();
 
@@ -124,6 +140,8 @@ public sealed class AssertionWhitelist
     public AssertionEntry MustBeLongerThan { get; init; } = new();
 
     public AssertionEntry MustBeLongerThanOrEqualTo { get; init; } = new();
+
+    public AssertionEntry MustBeLowerCase { get; init; } = new();
 
     public AssertionEntry MustBeNegative { get; init; } = new();
 
@@ -151,6 +169,8 @@ public sealed class AssertionWhitelist
 
     public AssertionEntry MustBeUnspecified { get; init; } = new();
 
+    public AssertionEntry MustBeUpperCase { get; init; } = new();
+
     public AssertionEntry MustBeUtc { get; init; } = new();
 
     public AssertionEntry MustBeUuidVersion7 { get; init; } = new();
@@ -158,6 +178,10 @@ public sealed class AssertionWhitelist
     public AssertionEntry MustBeValidEnumValue { get; init; } = new();
 
     public AssertionEntry MustContain { get; init; } = new();
+
+    public AssertionEntry MustContainOnlyDigits { get; init; } = new();
+
+    public AssertionEntry MustContainOnlyLettersOrDigits { get; init; } = new();
 
     public AssertionEntry MustContainKey { get; init; } = new();
 
@@ -236,6 +260,8 @@ public sealed class AssertionWhitelist
     public AssertionEntry MustNotContainNull { get; init; } = new();
 
     public AssertionEntry MustNotContainNullOrWhiteSpace { get; init; } = new();
+
+    public AssertionEntry MustNotContainWhiteSpace { get; init; } = new();
 
     public AssertionEntry MustNotEndWith { get; init; } = new();
 

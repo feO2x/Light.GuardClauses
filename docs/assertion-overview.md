@@ -110,6 +110,13 @@ The dictionary key guards bind to any dictionary type implementing `IReadOnlyDic
 | `IsNullOrWhiteSpace`, `MustNotBeNullOrWhiteSpace` | Test or reject null, empty, or all-whitespace strings |
 | `IsEmptyOrWhiteSpace`, `MustNotBeEmptyOrWhiteSpace` | Test character span/memory values for, or reject, emptiness and all-whitespace content |
 | `IsAscii`, `MustBeAscii` | Test or require ASCII characters, bytes, strings, and character/byte span or memory values; empty inputs are valid |
+| `ContainsOnlyDigits`, `MustContainOnlyDigits` | Test or require Unicode decimal-digit content |
+| `ContainsOnlyLettersOrDigits`, `MustContainOnlyLettersOrDigits` | Test or require Unicode letter-or-decimal-digit content |
+| `IsUpperCase`, `MustBeUpperCase` | Test or require the absence of Unicode lowercase characters |
+| `IsLowerCase`, `MustBeLowerCase` | Test or require the absence of Unicode uppercase characters |
+| `MustNotContainWhiteSpace` | Reject any Unicode whitespace character |
+| `IsBase64`, `MustBeBase64` | Test or require structurally valid standard Base64 without decoding |
+| `IsHexadecimal`, `MustBeHexadecimal` | Test or require ASCII hexadecimal characters (`0`-`9`, `A`-`F`, and `a`-`f`) |
 | `IsWhiteSpace`, `IsLetter`, `IsLetterOrDigit`, `IsDigit` | Character classification |
 | `IsNewLine`, `MustBeNewLine` | Recognize or require `"\n"` or `"\r\n"`, independently of the platform newline |
 | `IsTrimmed`, `MustBeTrimmed` | Test or require no leading or trailing whitespace |
@@ -128,6 +135,10 @@ The dictionary key guards bind to any dictionary type implementing `IReadOnlyDic
 | `MustBeShorterThan`, `MustBeShorterThanOrEqualTo` | Enforce upper string/span length bounds |
 
 The `Light.GuardClauses.FrameworkExtensions.StringExtensions.Contains` companion method supplies `string.Contains(string, StringComparison)` without colliding with the `Check` assertion namespace.
+
+The string-inspection predicates and guards support `string`, `Span<char>`, `ReadOnlySpan<char>`, `Memory<char>`, and `ReadOnlyMemory<char>`. A null string fails predicates and causes default guards to throw `ArgumentNullException`; empty inputs satisfy every inspection. Digit, letter-or-digit, casing, and whitespace checks use .NET's invariant Unicode character classification. “Upper case” means no lowercase character is present, while “lower case” means no uppercase character is present, so uncased letters, digits, punctuation, symbols, whitespace, and empty inputs can satisfy both. Hexadecimal deliberately accepts only ASCII characters and imposes no length, prefix, or numeric-range rule.
+
+Base64 inspection validates the standard `A`-`Z`, `a`-`z`, `0`-`9`, `+`, and `/` alphabet and legal quartet/padding structure. It ignores only space, tab, carriage return, and line feed anywhere in the input; Base64Url-only characters are invalid. No inspection allocates, copies, normalizes, changes case, decodes, invokes a regular expression, or uses LINQ. All scans stop as soon as failure is known and otherwise use O(n) time with constant additional space. .NET 10 delegates Base64 validation to the framework's optimized `Base64.IsValid`; portable targets use the equivalent allocation-free scalar validator. Other Unicode-sensitive scans stay single-pass scalar implementations on every target so their observable classification remains identical.
 
 ## Date and time assertions
 
