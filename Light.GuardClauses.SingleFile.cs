@@ -7609,6 +7609,327 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Ensures that the collection does not contain a null item, or otherwise throws an <see cref = "ExistingItemException"/>.
+        /// </summary>
+        /// <param name = "parameter">The collection to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ExistingItemException">Thrown when <paramref name = "parameter"/> contains a null item.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        /// <remarks>
+        /// This method inspects the collection once, stops at the first null item, runs in O(n) time, and uses constant
+        /// additional space. <see cref = "IList"/> receivers are inspected by index without allocating an enumerator; other
+        /// receivers are enumerated once. Empty collections succeed. Non-generic access boxes value-type items.
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static TCollection MustNotContainNull<TCollection>([NotNull][ValidatedNotNull] this TCollection? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where TCollection : class, IEnumerable
+        {
+            var position = FindNullItem(parameter.MustNotBeNull(parameterName, message));
+            if (position >= 0)
+            {
+                Throw.NullItem(position, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the collection does not contain a null item, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The collection to be checked.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or contains a null item.</exception>
+        /// <remarks>
+        /// This method inspects the collection once, stops at the first null item, runs in O(n) time, and uses constant
+        /// additional space. <see cref = "IList"/> receivers are inspected by index without allocating an enumerator; other
+        /// receivers are enumerated once. Empty collections succeed. Non-generic access boxes value-type items.
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static TCollection MustNotContainNull<TCollection>([NotNull][ValidatedNotNull] this TCollection? parameter, Func<TCollection?, Exception> exceptionFactory)
+            where TCollection : class, IEnumerable
+        {
+            if (parameter is null)
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            if (FindNullItem(parameter) >= 0)
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the <see cref = "ImmutableArray{T}"/> does not contain a null item, or otherwise throws an <see cref = "ExistingItemException"/>.
+        /// </summary>
+        /// <param name = "parameter">The immutable array to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ExistingItemException">Thrown when <paramref name = "parameter"/> contains a null item.</exception>
+        /// <remarks>
+        /// This method inspects an initialized array by index without allocating an enumerator, stops at the first null
+        /// item, runs in O(n) time, and uses constant additional space. Empty and default immutable arrays succeed.
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> MustNotContainNull<T>(this ImmutableArray<T> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (parameter.IsDefault)
+            {
+                return parameter;
+            }
+
+            for (var position = 0; position < parameter.Length; ++position)
+            {
+                if (parameter[position] is null)
+                {
+                    Throw.NullItem(position, parameterName, message);
+                }
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the <see cref = "ImmutableArray{T}"/> does not contain a null item, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The immutable array to be checked.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> contains a null item.</exception>
+        /// <remarks>
+        /// This method inspects an initialized array by index without allocating an enumerator, stops at the first null
+        /// item, runs in O(n) time, and uses constant additional space. Empty and default immutable arrays succeed.
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("exceptionFactory:null => halt")]
+        public static ImmutableArray<T> MustNotContainNull<T>(this ImmutableArray<T> parameter, Func<ImmutableArray<T>, Exception> exceptionFactory)
+        {
+            if (parameter.IsDefault)
+            {
+                return parameter;
+            }
+
+            for (var position = 0; position < parameter.Length; ++position)
+            {
+                if (parameter[position] is null)
+                {
+                    Throw.CustomException(exceptionFactory, parameter);
+                }
+            }
+
+            return parameter;
+        }
+
+        private static int FindNullItem(IEnumerable parameter)
+        {
+            if (parameter is IList list)
+            {
+                for (var position = 0; position < list.Count; ++position)
+                {
+                    if (list[position] is null)
+                    {
+                        return position;
+                    }
+                }
+
+                return -1;
+            }
+
+            var currentPosition = 0;
+            foreach (var item in parameter)
+            {
+                if (item is null)
+                {
+                    return currentPosition;
+                }
+
+                ++currentPosition;
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Ensures that the collection does not contain a null, empty, or white-space-only string, or otherwise throws an <see cref = "ExistingItemException"/>.
+        /// </summary>
+        /// <param name = "parameter">The collection to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ExistingItemException">Thrown when <paramref name = "parameter"/> contains a null, empty, or white-space-only string.</exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        /// <remarks>
+        /// This method inspects the collection once, stops at the first invalid item, runs in O(n) time, and uses constant
+        /// additional space. <see cref = "IList{T}"/> and <see cref = "IReadOnlyList{T}"/> receivers are inspected by index
+        /// without allocating an enumerator; other receivers are enumerated once. Empty collections succeed. White space
+        /// is classified with the same Unicode semantics as <see cref = "string.IsNullOrWhiteSpace(string? )"/>.
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static TCollection MustNotContainNullOrWhiteSpace<TCollection>([NotNull][ValidatedNotNull] this TCollection? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+            where TCollection : class, IEnumerable<string?>
+        {
+            var position = FindNullOrWhiteSpaceItem(parameter.MustNotBeNull(parameterName, message), out var invalidItem);
+            if (position >= 0)
+            {
+                Throw.NullOrWhiteSpaceItem(invalidItem, position, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the collection does not contain a null, empty, or white-space-only string, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The collection to be checked.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> is null or contains a null, empty, or white-space-only string.</exception>
+        /// <remarks>
+        /// This method inspects the collection once, stops at the first invalid item, runs in O(n) time, and uses constant
+        /// additional space. <see cref = "IList{T}"/> and <see cref = "IReadOnlyList{T}"/> receivers are inspected by index
+        /// without allocating an enumerator; other receivers are enumerated once. Empty collections succeed. White space
+        /// is classified with the same Unicode semantics as <see cref = "string.IsNullOrWhiteSpace(string? )"/>.
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static TCollection MustNotContainNullOrWhiteSpace<TCollection>([NotNull][ValidatedNotNull] this TCollection? parameter, Func<TCollection?, Exception> exceptionFactory)
+            where TCollection : class, IEnumerable<string?>
+        {
+            if (parameter is null)
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            if (FindNullOrWhiteSpaceItem(parameter, out _) >= 0)
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the immutable array does not contain a null, empty, or white-space-only string, or otherwise throws an <see cref = "ExistingItemException"/>.
+        /// </summary>
+        /// <param name = "parameter">The immutable array to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ExistingItemException">Thrown when <paramref name = "parameter"/> contains a null, empty, or white-space-only string.</exception>
+        /// <remarks>
+        /// This method inspects an initialized array by index without allocating an enumerator, stops at the first invalid
+        /// item, runs in O(n) time, and uses constant additional space. Empty and default immutable arrays succeed. White
+        /// space is classified with the same Unicode semantics as <see cref = "string.IsNullOrWhiteSpace(string? )"/>.
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<string?> MustNotContainNullOrWhiteSpace(this ImmutableArray<string?> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (parameter.IsDefault)
+            {
+                return parameter;
+            }
+
+            for (var position = 0; position < parameter.Length; ++position)
+            {
+                var item = parameter[position];
+                if (item.IsNullOrWhiteSpace())
+                {
+                    Throw.NullOrWhiteSpaceItem(item, position, parameterName, message);
+                }
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the immutable array does not contain a null, empty, or white-space-only string, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The immutable array to be checked.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "parameter"/> contains a null, empty, or white-space-only string.</exception>
+        /// <remarks>
+        /// This method inspects an initialized array by index without allocating an enumerator, stops at the first invalid
+        /// item, runs in O(n) time, and uses constant additional space. Empty and default immutable arrays succeed. White
+        /// space is classified with the same Unicode semantics as <see cref = "string.IsNullOrWhiteSpace(string? )"/>.
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("exceptionFactory:null => halt")]
+        public static ImmutableArray<string?> MustNotContainNullOrWhiteSpace(this ImmutableArray<string?> parameter, Func<ImmutableArray<string?>, Exception> exceptionFactory)
+        {
+            if (parameter.IsDefault)
+            {
+                return parameter;
+            }
+
+            for (var position = 0; position < parameter.Length; ++position)
+            {
+                if (parameter[position].IsNullOrWhiteSpace())
+                {
+                    Throw.CustomException(exceptionFactory, parameter);
+                }
+            }
+
+            return parameter;
+        }
+
+        private static int FindNullOrWhiteSpaceItem(IEnumerable<string?> parameter, out string? invalidItem)
+        {
+            if (parameter is IList<string?> list)
+            {
+                return FindNullOrWhiteSpaceItem(list, out invalidItem);
+            }
+
+            if (parameter is IReadOnlyList<string?> readOnlyList)
+            {
+                for (var position = 0; position < readOnlyList.Count; ++position)
+                {
+                    var item = readOnlyList[position];
+                    if (item.IsNullOrWhiteSpace())
+                    {
+                        invalidItem = item;
+                        return position;
+                    }
+                }
+
+                invalidItem = null;
+                return -1;
+            }
+
+            var currentPosition = 0;
+            foreach (var item in parameter)
+            {
+                if (item.IsNullOrWhiteSpace())
+                {
+                    invalidItem = item;
+                    return currentPosition;
+                }
+
+                ++currentPosition;
+            }
+
+            invalidItem = null;
+            return -1;
+        }
+
+        private static int FindNullOrWhiteSpaceItem(IList<string?> list, out string? invalidItem)
+        {
+            for (var position = 0; position < list.Count; ++position)
+            {
+                var item = list[position];
+                if (item.IsNullOrWhiteSpace())
+                {
+                    invalidItem = item;
+                    return position;
+                }
+            }
+
+            invalidItem = null;
+            return -1;
+        }
+
+        /// <summary>
         /// Ensures that the string does not end with the specified value, or otherwise throws a <see cref = "SubstringException"/>.
         /// </summary>
         /// <param name = "parameter">The string to be checked.</param>
@@ -9563,6 +9884,20 @@ namespace Light.GuardClauses.ExceptionFactory
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void NotTrimmedAtStart(string? parameter, string? parameterName, string? message) => throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} must be trimmed at the start, but it actually is {parameter.ToStringOrNull()}.");
+        /// <summary>
+        /// Throws the default <see cref = "ExistingItemException"/> indicating that a collection contains a null item.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void NullItem(int position, string? parameterName = null, string? message = null) => throw new ExistingItemException(parameterName, message ?? $"{parameterName ?? "The collection"} must not contain null items, but a null item was found at position {position}.");
+        /// <summary>
+        /// Throws the default <see cref = "ExistingItemException"/> indicating that a collection contains a null, empty,
+        /// or white-space-only string.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void NullOrWhiteSpaceItem(string? item, int position, string? parameterName = null, string? message = null) => throw new ExistingItemException(parameterName, message ?? $"{parameterName ?? "The collection"} must not contain null, empty, or white-space-only strings, but {GetFailureCategory(item)} was found at position {position}.");
+        private static string GetFailureCategory(string? item) => item is null ? "a null string" : item.Length == 0 ? "an empty string" : "a white-space-only string";
         /// <summary>
         /// Throws the default <see cref = "NullableHasNoValueException"/> indicating that a <see cref = "Nullable{T}"/> has
         /// no value, using the optional parameter name and message.

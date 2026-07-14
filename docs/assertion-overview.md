@@ -91,11 +91,15 @@ percentage.MustBeIn(Range.FromExclusive(0).ToInclusive(100));
 | `MustHaveMinimumCount`, `MustHaveMaximumCount` | Enforce inclusive collection-count bounds |
 | `IsOneOf`, `MustBeOneOf`, `MustNotBeOneOf` | Test or enforce membership among supplied values |
 | `MustContain`, `MustNotContain` | Require or reject an item in collections and immutable arrays; string overloads operate on substrings |
+| `MustNotContainNull` | Reject null items in reference collections implementing non-generic `IEnumerable`, with a dedicated `ImmutableArray<T>` overload |
+| `MustNotContainNullOrWhiteSpace` | Reject null, empty, or Unicode-whitespace-only strings in reference collections implementing `IEnumerable<string?>`, with a dedicated immutable-array overload |
 | `MustContainKey`, `MustNotContainKey` | Require or reject a dictionary key via `ContainsKey`, never enumerating and honoring the dictionary's key comparer; accept `IReadOnlyDictionary<TKey, TValue>` receivers, with dedicated overloads preserving the `Dictionary<TKey, TValue>` shape |
 | `MustNotBeDefaultOrEmpty` | Requires an initialized, non-empty `ImmutableArray<T>` |
 | `MustHaveLength`, `MustHaveLengthIn`, `MustHaveMinimumLength`, `MustHaveMaximumLength` | Validate string, span, or immutable-array length as provided by their overloads |
 
 Collection overloads preserve and return the original collection shape where possible. Check the XML documentation before using an `IEnumerable` guard in a hot path; annotations identify guards that do not enumerate.
+
+The two collection-content guards treat empty collections and empty or default immutable arrays as valid. Arrays, lists, and other supported indexable receivers are inspected by index without allocating an enumerator; arbitrary enumerable receivers are enumerated at most once and dispose that enumerator normally. Both paths stop at the first invalid item, use O(n) time, and require constant additional space. `MustNotContainNull` uses non-generic item access for reference collections so it can preserve any receiver shape without knowing the item type; consequently, value-type items are boxed by that overload. Its dedicated immutable-array overload uses generic indexed access and avoids that cost.
 
 The dictionary key guards bind to any dictionary type implementing `IReadOnlyDictionary<TKey, TValue>` (such as `ConcurrentDictionary`, `SortedDictionary`, `ReadOnlyDictionary`, `ImmutableDictionary`, and `FrozenDictionary` on .NET 10). A receiver statically typed as `IDictionary<TKey, TValue>` cannot use them; call `dictionary.Keys.MustContain(key)` as a workaround — the key collections of the BCL dictionaries implement `ICollection<TKey>.Contains` via `ContainsKey`, so this stays O(1).
 

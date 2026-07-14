@@ -130,6 +130,8 @@
     "MustNotBeZero": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustNotContain": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustNotContainKey": { "Include": true, "IncludeExceptionFactoryOverload": true },
+    "MustNotContainNull": { "Include": true, "IncludeExceptionFactoryOverload": true },
+    "MustNotContainNullOrWhiteSpace": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustNotEndWith": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustNotStartWith": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustStartWith": { "Include": true, "IncludeExceptionFactoryOverload": true }
