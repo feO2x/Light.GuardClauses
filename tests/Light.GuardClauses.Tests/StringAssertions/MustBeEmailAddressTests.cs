@@ -43,7 +43,7 @@ public static class MustBeEmailAddressTests
     {
         const string customMessage = "This email address is not valid";
 
-        Action act = () => emailAddress.MustBeEmailAddress(customMessage);
+        Action act = () => emailAddress.MustBeEmailAddress(message: customMessage);
 
         act.Should().Throw<InvalidEmailAddressException>()
            .And.Message.Should().Contain(customMessage);
@@ -247,7 +247,7 @@ public static class MustBeEmailAddressTests
         var act = () =>
         {
             var span = new Span<char>(emailChars);
-            span.MustBeEmailAddress(customMessage);
+            span.MustBeEmailAddress(message: customMessage);
         };
         act.Should().Throw<InvalidEmailAddressException>()
            .And.Message.Should().Contain(customMessage);
@@ -335,7 +335,7 @@ public static class MustBeEmailAddressTests
     {
         const string customMessage = "This email address is not valid";
         var memory = email.ToCharArray().AsMemory();
-        Action act = () => memory.MustBeEmailAddress(customMessage);
+        Action act = () => memory.MustBeEmailAddress(message: customMessage);
         act.Should().Throw<InvalidEmailAddressException>()
            .And.Message.Should().Contain(customMessage);
     }
@@ -418,7 +418,7 @@ public static class MustBeEmailAddressTests
     {
         const string customMessage = "This email address is not valid";
         var readOnlyMemory = email.AsMemory();
-        Action act = () => readOnlyMemory.MustBeEmailAddress(customMessage);
+        Action act = () => readOnlyMemory.MustBeEmailAddress(message: customMessage);
         act.Should().Throw<InvalidEmailAddressException>()
            .And.Message.Should().Contain(customMessage);
     }
