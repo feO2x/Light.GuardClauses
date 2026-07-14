@@ -153,7 +153,11 @@ public sealed class AssertionWhitelist
 
     public AssertionEntry MustBePositive { get; init; } = new();
 
+    public AssertionEntry MustBeReadable { get; init; } = new();
+
     public AssertionEntry MustBeRelativeUri { get; init; } = new();
+
+    public AssertionEntry MustBeSeekable { get; init; } = new();
 
     public AssertionEntry MustBeShorterThan { get; init; } = new();
 
@@ -176,6 +180,8 @@ public sealed class AssertionWhitelist
     public AssertionEntry MustBeUuidVersion7 { get; init; } = new();
 
     public AssertionEntry MustBeValidEnumValue { get; init; } = new();
+
+    public AssertionEntry MustBeWritable { get; init; } = new();
 
     public AssertionEntry MustContain { get; init; } = new();
 

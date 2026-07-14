@@ -8,16 +8,16 @@ The guards must be thin, allocation-free checks of the corresponding `Stream` ca
 
 ## Acceptance Criteria
 
-- [ ] `MustBeReadable`, `MustBeWritable`, and `MustBeSeekable` are available for `Stream` instances and subclasses on .NET Standard 2.0, .NET Standard 2.1, and .NET 10 with identical semantics.
-- [ ] Each guard accepts a non-null stream exactly when its corresponding `CanRead`, `CanWrite`, or `CanSeek` property returns `true`; it does not inspect other capabilities, probe the stream with an I/O operation, change its position, or otherwise mutate it.
-- [ ] A null stream throws `ArgumentNullException` by default, while a stream lacking the required capability throws `ArgumentException` with the captured guarded expression and a capability-specific message; no new public exception type is introduced.
-- [ ] Every guard returns the original successfully validated instance in its concrete stream shape, accepts an optional custom message, and provides a custom-exception-factory overload consistent with the existing nullable reference APIs.
-- [ ] Successful default and custom-factory guards perform no heap allocation.
-- [ ] Automated tests cover all supported and unsupported capability states, null values, default exception contracts, custom messages, custom exception factories, caller argument expressions, preservation of the original instance and concrete type, and confirmation that each guard reads only its matching capability property.
-- [ ] The source-export whitelist catalog and committed settings contain all three assertion families, and focused source-export tests cover their guard, throw-helper, and exception-factory reachability.
-- [ ] The committed .NET Standard 2.0 single-file distribution is regenerated with the new stream guards, and generated source validates for both .NET Standard 2.0 and .NET 10.
-- [ ] XML documentation and the assertion overview describe the three guards, their null and failure behavior, fluent return values, and property-only validation semantics.
-- [ ] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
+- [x] `MustBeReadable`, `MustBeWritable`, and `MustBeSeekable` are available for `Stream` instances and subclasses on .NET Standard 2.0, .NET Standard 2.1, and .NET 10 with identical semantics.
+- [x] Each guard accepts a non-null stream exactly when its corresponding `CanRead`, `CanWrite`, or `CanSeek` property returns `true`; it does not inspect other capabilities, probe the stream with an I/O operation, change its position, or otherwise mutate it.
+- [x] A null stream throws `ArgumentNullException` by default, while a stream lacking the required capability throws `ArgumentException` with the captured guarded expression and a capability-specific message; no new public exception type is introduced.
+- [x] Every guard returns the original successfully validated instance in its concrete stream shape, accepts an optional custom message, and provides a custom-exception-factory overload consistent with the existing nullable reference APIs.
+- [x] Successful default and custom-factory guards perform no heap allocation.
+- [x] Automated tests cover all supported and unsupported capability states, null values, default exception contracts, custom messages, custom exception factories, caller argument expressions, preservation of the original instance and concrete type, and confirmation that each guard reads only its matching capability property.
+- [x] The source-export whitelist catalog and committed settings contain all three assertion families, and focused source-export tests cover their guard, throw-helper, and exception-factory reachability.
+- [x] The committed .NET Standard 2.0 single-file distribution is regenerated with the new stream guards, and generated source validates for both .NET Standard 2.0 and .NET 10.
+- [x] XML documentation and the assertion overview describe the three guards, their null and failure behavior, fluent return values, and property-only validation semantics.
+- [x] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
 
 ## Technical Details
 

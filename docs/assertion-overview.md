@@ -148,6 +148,19 @@ Base64 inspection validates the standard `A`-`Z`, `a`-`z`, `0`-`9`, `+`, and `/`
 | `MustBeLocal` | Requires `DateTimeKind.Local` |
 | `MustBeUnspecified` | Requires `DateTimeKind.Unspecified` |
 
+## Stream assertions
+
+| Assertion | Behavior |
+| --- | --- |
+| `MustBeReadable` | Requires a non-null stream whose `CanRead` property is `true` |
+| `MustBeWritable` | Requires a non-null stream whose `CanWrite` property is `true` |
+| `MustBeSeekable` | Requires a non-null stream whose `CanSeek` property is `true` |
+
+Each stream guard reads only its matching capability property: it performs no I/O, does not inspect the other
+capabilities, and does not change the stream position or any other state. A null stream throws
+`ArgumentNullException`; a missing capability throws `ArgumentException`. Successful guards return the same instance
+while preserving its concrete stream type, and all three guards support custom messages and exception factories.
+
 ## Type-relation assertions
 
 | Assertion | Behavior |

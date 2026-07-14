@@ -402,6 +402,59 @@ public static class SourceFileMergerWhitelistTests
         sourceCode.Should().NotContain("public static void CustomSpanException");
     }
 
+    [Fact]
+    public static void StreamGuardWhitelistsRetainTheirGuardsThrowHelpersAndExceptionFactories()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "StreamGuards.cs");
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(
+                    includedAssertions:
+                    [
+                        new ("MustBeReadable", true),
+                        new ("MustBeWritable", true),
+                        new ("MustBeSeekable", true),
+                    ]
+                )
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("TStream MustBeReadable<TStream>(");
+        sourceCode.Should().Contain("TStream MustBeWritable<TStream>(");
+        sourceCode.Should().Contain("TStream MustBeSeekable<TStream>(");
+        sourceCode.Should().Contain("public static void MustBeReadable(");
+        sourceCode.Should().Contain("public static void MustBeWritable(");
+        sourceCode.Should().Contain("public static void MustBeSeekable(");
+        sourceCode.Should().Contain("Func<TStream?, Exception> exceptionFactory");
+        sourceCode.Should().Contain("public static void CustomException<T>(");
+        sourceCode.Should().NotContain("MustBeAbsoluteUri(");
+    }
+
+    [Fact]
+    public static void StreamGuardWhitelistTrimsFactoryAndUnrelatedStreamThrowHelpers()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "ReadableStreamGuard.cs");
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(includedAssertions: [new ("MustBeReadable", false)])
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("TStream MustBeReadable<TStream>(");
+        sourceCode.Should().Contain("public static void MustBeReadable(");
+        sourceCode.Should().NotContain("Func<TStream?, Exception> exceptionFactory");
+        sourceCode.Should().NotContain("public static void MustBeWritable(");
+        sourceCode.Should().NotContain("public static void MustBeSeekable(");
+    }
+
     private static SourceFileMergeOptions CreateOptions(
         string targetFile,
         AssertionWhitelist assertionWhitelist = null,
