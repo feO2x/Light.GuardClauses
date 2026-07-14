@@ -125,11 +125,15 @@ public sealed class AssertionWhitelist
 
     public AssertionEntry MustBeLongerThanOrEqualTo { get; init; } = new();
 
+    public AssertionEntry MustBeNegative { get; init; } = new();
+
     public AssertionEntry MustBeNewLine { get; init; } = new();
 
     public AssertionEntry MustBeOfType { get; init; } = new();
 
     public AssertionEntry MustBeOneOf { get; init; } = new();
+
+    public AssertionEntry MustBePositive { get; init; } = new();
 
     public AssertionEntry MustBeRelativeUri { get; init; } = new();
 
@@ -203,6 +207,8 @@ public sealed class AssertionWhitelist
 
     public AssertionEntry MustNotBeLessThanOrEqualTo { get; init; } = new();
 
+    public AssertionEntry MustNotBeNegative { get; init; } = new();
+
     public AssertionEntry MustNotBeNull { get; init; } = new();
 
     public AssertionEntry MustNotBeNullOrEmpty { get; init; } = new();
@@ -213,9 +219,13 @@ public sealed class AssertionWhitelist
 
     public AssertionEntry MustNotBeOneOf { get; init; } = new();
 
+    public AssertionEntry MustNotBePositive { get; init; } = new();
+
     public AssertionEntry MustNotBeSameAs { get; init; } = new();
 
     public AssertionEntry MustNotBeSubstringOf { get; init; } = new();
+
+    public AssertionEntry MustNotBeZero { get; init; } = new();
 
     public AssertionEntry MustNotContain { get; init; } = new();
 
