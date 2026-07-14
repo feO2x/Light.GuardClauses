@@ -1,7 +1,6 @@
 ﻿using System;
 using FluentAssertions;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Light.GuardClauses.Tests.StringAssertions;
 
@@ -10,7 +9,7 @@ public sealed class OrdinalIgnoreWhiteSpaceComparerTests
     private static readonly OrdinalIgnoreWhiteSpaceComparer Comparer = new ();
     private readonly ITestOutputHelper _output;
 
-    public OrdinalIgnoreWhiteSpaceComparerTests(ITestOutputHelper output) => _output = output.MustNotBeNull(nameof(output));
+    public OrdinalIgnoreWhiteSpaceComparerTests(ITestOutputHelper output) => _output = output.MustNotBeNull();
 
     [Theory]
     [InlineData("Foo", "   Foo", true)]
@@ -41,7 +40,7 @@ public sealed class OrdinalIgnoreWhiteSpaceComparerTests
     [InlineData("Foo", "Foo")]
     [InlineData("  Bar", "Bar  ")]
     [InlineData("{\r\n\t\"foo\": 42\r\n}\r\n", "{\"foo\": 42}")]
-    public static void CheckGetHashCode(string x, string y) => 
+    public static void CheckGetHashCode(string x, string y) =>
         Comparer.GetHashCode(x).Should().Be(Comparer.GetHashCode(y));
 
     [Fact]

@@ -13,8 +13,11 @@ From the repository root, use the single solution entry point:
 ```shell
 dotnet restore Light.GuardClauses.slnx
 dotnet build Light.GuardClauses.slnx -c Release --no-restore
-dotnet test Light.GuardClauses.slnx -c Release --no-build
+dotnet test --solution Light.GuardClauses.slnx -c Release --no-build --no-restore
 ```
+
+Tests run on Microsoft Testing Platform. To collect Cobertura coverage locally, add
+`--results-directory artifacts/test-results --coverage --coverage-output-format cobertura` to the test command.
 
 The product package targets .NET Standard 2.0, .NET Standard 2.1, and .NET 10. Tests, tools, and benchmarks run on .NET 10. BenchmarkDotNet memory diagnostics are enabled by default; pass `--enable-disassembly` after the benchmark project's `--` separator to opt into platform-dependent disassembly diagnostics.
 

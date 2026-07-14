@@ -1,7 +1,6 @@
 ﻿using System;
 using FluentAssertions;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Light.GuardClauses.Tests.StringAssertions;
 
@@ -10,7 +9,7 @@ public sealed class OrdinalIgnoreCaseIgnoreWhiteSpaceComparerTests
     private static readonly OrdinalIgnoreCaseIgnoreWhiteSpaceComparer Comparer = new ();
     private readonly ITestOutputHelper _output;
 
-    public OrdinalIgnoreCaseIgnoreWhiteSpaceComparerTests(ITestOutputHelper output) => _output = output.MustNotBeNull(nameof(output));
+    public OrdinalIgnoreCaseIgnoreWhiteSpaceComparerTests(ITestOutputHelper output) => _output = output.MustNotBeNull();
 
     [Theory]
     [InlineData("Foo", "FOO", true)]

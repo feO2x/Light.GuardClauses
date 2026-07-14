@@ -12,8 +12,11 @@ public static class ParseCSharpWithRoslynTests
     public static void ParseExpressionExtensionsFile()
     {
         var fileInfo = GetLightGuardClausesFile("FrameworkExtensions/ExpressionExtensions.cs");
-        var syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(fileInfo.FullName));
-        var root = (CompilationUnitSyntax) syntaxTree.GetRoot();
+        var syntaxTree = CSharpSyntaxTree.ParseText(
+            File.ReadAllText(fileInfo.FullName),
+            cancellationToken: TestContext.Current.CancellationToken
+        );
+        var root = (CompilationUnitSyntax) syntaxTree.GetRoot(TestContext.Current.CancellationToken);
 
         root.Members.Should().NotBeEmpty();
     }
@@ -24,9 +27,10 @@ public static class ParseCSharpWithRoslynTests
         var fileInfo = GetLightGuardClausesFile("ExceptionFactory/SpanDelegates.cs");
         var syntaxTree = CSharpSyntaxTree.ParseText(
             File.ReadAllText(fileInfo.FullName),
-            new (LanguageVersion.CSharp7_3, preprocessorSymbols: ["NETSTANDARD2_0"])
+            new (LanguageVersion.CSharp7_3, preprocessorSymbols: ["NETSTANDARD2_0"]),
+            cancellationToken: TestContext.Current.CancellationToken
         );
-        var root = (CompilationUnitSyntax) syntaxTree.GetRoot();
+        var root = (CompilationUnitSyntax) syntaxTree.GetRoot(TestContext.Current.CancellationToken);
 
         root.Members.Should().NotBeEmpty();
     }

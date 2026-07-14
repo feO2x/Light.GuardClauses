@@ -55,6 +55,118 @@ namespace Light.GuardClauses
     internal static class Check
     {
         /// <summary>
+        /// Checks if the specified string is non-null and every character is a Unicode decimal digit. Empty strings are valid.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <returns>
+        /// True if <paramref name = "parameter"/> is non-null and every character is a Unicode decimal digit, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ContainsOnlyDigits(this string? parameter) => parameter is not null && parameter.AsSpan().ContainsOnlyDigits();
+        /// <summary>
+        /// Checks if every character in the specified span is a Unicode decimal digit. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <returns>
+        /// True if every character in <paramref name = "parameter"/> is a Unicode decimal digit, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ContainsOnlyDigits(this Span<char> parameter) => ((ReadOnlySpan<char>)parameter).ContainsOnlyDigits();
+        /// <summary>
+        /// Checks if every character in the specified read-only span is a Unicode decimal digit. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <returns>
+        /// True if every character in <paramref name = "parameter"/> is a Unicode decimal digit, otherwise false.
+        /// </returns>
+        public static bool ContainsOnlyDigits(this ReadOnlySpan<char> parameter)
+        {
+            foreach (var character in parameter)
+            {
+                if (!char.IsDigit(character))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Checks if every character in the specified memory is a Unicode decimal digit. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <returns>
+        /// True if every character in <paramref name = "parameter"/> is a Unicode decimal digit, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ContainsOnlyDigits(this Memory<char> parameter) => parameter.Span.ContainsOnlyDigits();
+        /// <summary>
+        /// Checks if every character in the specified read-only memory is a Unicode decimal digit. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <returns>
+        /// True if every character in <paramref name = "parameter"/> is a Unicode decimal digit, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ContainsOnlyDigits(this ReadOnlyMemory<char> parameter) => parameter.Span.ContainsOnlyDigits();
+        /// <summary>
+        /// Checks if the specified string is non-null and every character is a Unicode letter or decimal digit. Empty strings are valid.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <returns>
+        /// True if <paramref name = "parameter"/> is non-null and every character is a Unicode letter or decimal digit, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ContainsOnlyLettersOrDigits(this string? parameter) => parameter is not null && parameter.AsSpan().ContainsOnlyLettersOrDigits();
+        /// <summary>
+        /// Checks if every character in the specified span is a Unicode letter or decimal digit. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <returns>
+        /// True if every character in <paramref name = "parameter"/> is a Unicode letter or decimal digit, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ContainsOnlyLettersOrDigits(this Span<char> parameter) => ((ReadOnlySpan<char>)parameter).ContainsOnlyLettersOrDigits();
+        /// <summary>
+        /// Checks if every character in the specified read-only span is a Unicode letter or decimal digit. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <returns>
+        /// True if every character in <paramref name = "parameter"/> is a Unicode letter or decimal digit, otherwise false.
+        /// </returns>
+        public static bool ContainsOnlyLettersOrDigits(this ReadOnlySpan<char> parameter)
+        {
+            foreach (var character in parameter)
+            {
+                if (!char.IsLetterOrDigit(character))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Checks if every character in the specified memory is a Unicode letter or decimal digit. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <returns>
+        /// True if every character in <paramref name = "parameter"/> is a Unicode letter or decimal digit, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ContainsOnlyLettersOrDigits(this Memory<char> parameter) => parameter.Span.ContainsOnlyLettersOrDigits();
+        /// <summary>
+        /// Checks if every character in the specified read-only memory is a Unicode letter or decimal digit. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <returns>
+        /// True if every character in <paramref name = "parameter"/> is a Unicode letter or decimal digit, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ContainsOnlyLettersOrDigits(this ReadOnlyMemory<char> parameter) => parameter.Span.ContainsOnlyLettersOrDigits();
+        /// <summary>
         /// Checks if the specified type derives from the other type. Internally, this method uses <see cref = "IsEquivalentTypeTo"/>
         /// by default so that constructed generic types and their corresponding generic type definitions are regarded as equal.
         /// </summary>
@@ -388,6 +500,129 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsAscii(this ReadOnlyMemory<byte> parameter) => parameter.Span.IsAscii();
         /// <summary>
+        /// Checks if the string is non-null and valid standard Base64. Space, tab, carriage return, and line feed are ignored.
+        /// Empty and whitespace-only strings are valid.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <returns>True if <paramref name = "parameter"/> is non-null and contains valid standard Base64, otherwise false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsBase64(this string? parameter) => parameter is not null && parameter.AsSpan().IsBase64();
+        /// <summary>
+        /// Checks if the span is valid standard Base64. Space, tab, carriage return, and line feed are ignored.
+        /// Empty and whitespace-only spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <returns>True if <paramref name = "parameter"/> contains valid standard Base64, otherwise false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsBase64(this Span<char> parameter) => ((ReadOnlySpan<char>)parameter).IsBase64();
+        /// <summary>
+        /// Checks if the read-only span is valid standard Base64. Space, tab, carriage return, and line feed are ignored.
+        /// Empty and whitespace-only spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <returns>True if <paramref name = "parameter"/> contains valid standard Base64, otherwise false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsBase64(this ReadOnlySpan<char> parameter)
+        {
+            return IsBase64Portable(parameter);
+        }
+
+        /// <summary>
+        /// Checks if the memory is valid standard Base64. Space, tab, carriage return, and line feed are ignored.
+        /// Empty and whitespace-only memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <returns>True if <paramref name = "parameter"/> contains valid standard Base64, otherwise false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsBase64(this Memory<char> parameter) => parameter.Span.IsBase64();
+        /// <summary>
+        /// Checks if the read-only memory is valid standard Base64. Space, tab, carriage return, and line feed are ignored.
+        /// Empty and whitespace-only memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <returns>True if <paramref name = "parameter"/> contains valid standard Base64, otherwise false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsBase64(this ReadOnlyMemory<char> parameter) => parameter.Span.IsBase64();
+        private static bool IsBase64Portable(ReadOnlySpan<char> parameter)
+        {
+            var nonWhiteSpaceCount = 0;
+            var paddingCount = 0;
+            var lastDataValue = 0;
+            foreach (var character in parameter)
+            {
+                if (character is ' ' or '\t' or '\r' or '\n')
+                {
+                    continue;
+                }
+
+                ++nonWhiteSpaceCount;
+                if (character == '=')
+                {
+                    if (++paddingCount > 2)
+                    {
+                        return false;
+                    }
+
+                    continue;
+                }
+
+                if (paddingCount != 0 || !TryGetBase64Value(character, out lastDataValue))
+                {
+                    return false;
+                }
+            }
+
+            if ((nonWhiteSpaceCount & 3) != 0)
+            {
+                return false;
+            }
+
+            return paddingCount switch
+            {
+                0 => true,
+                1 => nonWhiteSpaceCount >= 4 && (lastDataValue & 0b11) == 0,
+                2 => nonWhiteSpaceCount >= 4 && (lastDataValue & 0b1111) == 0,
+                _ => false,
+            };
+        }
+
+        private static bool TryGetBase64Value(char character, out int value)
+        {
+            if (character is >= 'A' and <= 'Z')
+            {
+                value = character - 'A';
+                return true;
+            }
+
+            if (character is >= 'a' and <= 'z')
+            {
+                value = character - 'a' + 26;
+                return true;
+            }
+
+            if (character is >= '0' and <= '9')
+            {
+                value = character - '0' + 52;
+                return true;
+            }
+
+            if (character == '+')
+            {
+                value = 62;
+                return true;
+            }
+
+            if (character == '/')
+            {
+                value = 63;
+                return true;
+            }
+
+            value = 0;
+            return false;
+        }
+
+        /// <summary>
         /// Checks if the specified character is a digit.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -609,6 +844,64 @@ namespace Light.GuardClauses
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsGreaterThanOrApproximately(this float value, float other) => value > other || value.IsApproximately(other);
         /// <summary>
+        /// Checks if the specified string is non-null and contains only ASCII hexadecimal characters. Empty strings are valid.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <returns>
+        /// True if <paramref name = "parameter"/> is non-null and contains only ASCII hexadecimal characters, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsHexadecimal(this string? parameter) => parameter is not null && parameter.AsSpan().IsHexadecimal();
+        /// <summary>
+        /// Checks if the specified span contains only ASCII hexadecimal characters. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <returns>
+        /// True if <paramref name = "parameter"/> contains only ASCII hexadecimal characters, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsHexadecimal(this Span<char> parameter) => ((ReadOnlySpan<char>)parameter).IsHexadecimal();
+        /// <summary>
+        /// Checks if the specified read-only span contains only ASCII hexadecimal characters. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <returns>
+        /// True if <paramref name = "parameter"/> contains only ASCII hexadecimal characters, otherwise false.
+        /// </returns>
+        public static bool IsHexadecimal(this ReadOnlySpan<char> parameter)
+        {
+            foreach (var character in parameter)
+            {
+                if (!IsAsciiHexDigit(character))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsAsciiHexDigit(char character) => character is >= '0' and <= '9' or >= 'A' and <= 'F' or >= 'a' and <= 'f';
+        /// <summary>
+        /// Checks if the specified memory contains only ASCII hexadecimal characters. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <returns>
+        /// True if <paramref name = "parameter"/> contains only ASCII hexadecimal characters, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsHexadecimal(this Memory<char> parameter) => parameter.Span.IsHexadecimal();
+        /// <summary>
+        /// Checks if the specified read-only memory contains only ASCII hexadecimal characters. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <returns>
+        /// True if <paramref name = "parameter"/> contains only ASCII hexadecimal characters, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsHexadecimal(this ReadOnlyMemory<char> parameter) => parameter.Span.IsHexadecimal();
+        /// <summary>
         /// Checks if the value is within the specified range.
         /// </summary>
         /// <param name = "parameter">The comparable to be checked.</param>
@@ -674,6 +967,54 @@ namespace Light.GuardClauses
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsLetterOrDigit(this char character) => char.IsLetterOrDigit(character);
+        /// <summary>
+        /// Checks if the specified string is non-null and contains no Unicode uppercase character. Empty strings are valid.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <returns>
+        /// True if <paramref name = "parameter"/> is non-null and contains no Unicode uppercase character, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsLowerCase(this string? parameter) => parameter is not null && parameter.AsSpan().IsLowerCase();
+        /// <summary>
+        /// Checks if the specified span contains no Unicode uppercase character. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <returns>True if <paramref name = "parameter"/> contains no Unicode uppercase character, otherwise false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsLowerCase(this Span<char> parameter) => ((ReadOnlySpan<char>)parameter).IsLowerCase();
+        /// <summary>
+        /// Checks if the specified read-only span contains no Unicode uppercase character. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <returns>True if <paramref name = "parameter"/> contains no Unicode uppercase character, otherwise false.</returns>
+        public static bool IsLowerCase(this ReadOnlySpan<char> parameter)
+        {
+            foreach (var character in parameter)
+            {
+                if (char.IsUpper(character))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Checks if the specified memory contains no Unicode uppercase character. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <returns>True if <paramref name = "parameter"/> contains no Unicode uppercase character, otherwise false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsLowerCase(this Memory<char> parameter) => parameter.Span.IsLowerCase();
+        /// <summary>
+        /// Checks if the specified read-only memory contains no Unicode uppercase character. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <returns>True if <paramref name = "parameter"/> contains no Unicode uppercase character, otherwise false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsLowerCase(this ReadOnlyMemory<char> parameter) => parameter.Span.IsLowerCase();
         /// <summary>
         /// Checks if the string is either "\n" or "\r\n". This is done independently of the current value of <see cref = "Environment.NewLine"/>.
         /// </summary>
@@ -924,6 +1265,54 @@ namespace Light.GuardClauses
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsTrimmedAtStart(this ReadOnlySpan<char> parameter) => parameter.Length == 0 || !parameter[0].IsWhiteSpace();
+        /// <summary>
+        /// Checks if the specified string is non-null and contains no Unicode lowercase character. Empty strings are valid.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <returns>
+        /// True if <paramref name = "parameter"/> is non-null and contains no Unicode lowercase character, otherwise false.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsUpperCase(this string? parameter) => parameter is not null && parameter.AsSpan().IsUpperCase();
+        /// <summary>
+        /// Checks if the specified span contains no Unicode lowercase character. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <returns>True if <paramref name = "parameter"/> contains no Unicode lowercase character, otherwise false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsUpperCase(this Span<char> parameter) => ((ReadOnlySpan<char>)parameter).IsUpperCase();
+        /// <summary>
+        /// Checks if the specified read-only span contains no Unicode lowercase character. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <returns>True if <paramref name = "parameter"/> contains no Unicode lowercase character, otherwise false.</returns>
+        public static bool IsUpperCase(this ReadOnlySpan<char> parameter)
+        {
+            foreach (var character in parameter)
+            {
+                if (char.IsLower(character))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Checks if the specified memory contains no Unicode lowercase character. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <returns>True if <paramref name = "parameter"/> contains no Unicode lowercase character, otherwise false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsUpperCase(this Memory<char> parameter) => parameter.Span.IsUpperCase();
+        /// <summary>
+        /// Checks if the specified read-only memory contains no Unicode lowercase character. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <returns>True if <paramref name = "parameter"/> contains no Unicode lowercase character, otherwise false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsUpperCase(this ReadOnlyMemory<char> parameter) => parameter.Span.IsUpperCase();
         /// <summary>
         /// Checks if the specified GUID structurally identifies an RFC/IETF UUID version 7.
         /// </summary>
@@ -1329,7 +1718,13 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the character is ASCII, or otherwise throws an <see cref = "ArgumentException"/>.</summary>
+        /// <summary>
+        /// Ensures that the character is ASCII, or otherwise throws an <see cref = "ArgumentException"/>.
+        /// </summary>
+        /// <param name = "parameter">The character to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated character.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static char MustBeAscii(this char parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
@@ -1341,7 +1736,14 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the character is ASCII, or otherwise throws your custom exception.</summary>
+        /// <summary>
+        /// Ensures that the character is ASCII, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The character to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated character.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("exceptionFactory:null => halt")]
         public static char MustBeAscii(this char parameter, Func<char, Exception> exceptionFactory)
@@ -1354,7 +1756,13 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the byte is ASCII, or otherwise throws an <see cref = "ArgumentException"/>.</summary>
+        /// <summary>
+        /// Ensures that the byte is ASCII, or otherwise throws an <see cref = "ArgumentException"/>.
+        /// </summary>
+        /// <param name = "parameter">The byte to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated byte.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static byte MustBeAscii(this byte parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
@@ -1366,7 +1774,14 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the byte is ASCII, or otherwise throws your custom exception.</summary>
+        /// <summary>
+        /// Ensures that the byte is ASCII, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The byte to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated byte.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("exceptionFactory:null => halt")]
         public static byte MustBeAscii(this byte parameter, Func<byte, Exception> exceptionFactory)
@@ -1379,7 +1794,13 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the string is non-null and contains only ASCII characters.</summary>
+        /// <summary>
+        /// Ensures that the string is non-null and contains only ASCII characters, or otherwise throws a <see cref = "StringException"/>.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated string.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
         public static string MustBeAscii([NotNull][ValidatedNotNull] this string? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
@@ -1387,13 +1808,20 @@ namespace Light.GuardClauses
             parameter.MustNotBeNull(parameterName, message);
             if (!parameter.IsAscii())
             {
-                Throw.Argument(parameterName, message ?? $"{parameterName ?? "The string"} must contain only ASCII characters.");
+                Throw.InvalidStringContent(parameterName, message, "must contain only ASCII characters");
             }
 
             return parameter;
         }
 
-        /// <summary>Ensures that the string is non-null and contains only ASCII characters, or otherwise throws your custom exception.</summary>
+        /// <summary>
+        /// Ensures that the string is non-null and contains only ASCII characters, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated string.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
         public static string MustBeAscii([NotNull][ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
@@ -1406,7 +1834,13 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the character span contains only ASCII characters.</summary>
+        /// <summary>
+        /// Ensures that the character span contains only ASCII characters, or otherwise throws a <see cref = "StringException"/>.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated character span.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<char> MustBeAscii(this Span<char> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
@@ -1414,7 +1848,14 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the character span contains only ASCII characters, or otherwise throws your custom exception.</summary>
+        /// <summary>
+        /// Ensures that the character span contains only ASCII characters, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated character span.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<char> MustBeAscii(this Span<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
         {
@@ -1422,19 +1863,32 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the read-only character span contains only ASCII characters.</summary>
+        /// <summary>
+        /// Ensures that the read-only character span contains only ASCII characters, or otherwise throws a <see cref = "StringException"/>.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only character span.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<char> MustBeAscii(this ReadOnlySpan<char> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
             if (!parameter.IsAscii())
             {
-                Throw.Argument(parameterName, message ?? $"{parameterName ?? "The character span"} must contain only ASCII characters.");
+                Throw.InvalidStringContent(parameterName, message, "must contain only ASCII characters");
             }
 
             return parameter;
         }
 
-        /// <summary>Ensures that the read-only character span contains only ASCII characters, or otherwise throws your custom exception.</summary>
+        /// <summary>
+        /// Ensures that the read-only character span contains only ASCII characters, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only character span.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<char> MustBeAscii(this ReadOnlySpan<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
         {
@@ -1446,7 +1900,13 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the character memory contains only ASCII characters.</summary>
+        /// <summary>
+        /// Ensures that the character memory contains only ASCII characters, or otherwise throws a <see cref = "StringException"/>.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated character memory.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<char> MustBeAscii(this Memory<char> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
@@ -1454,7 +1914,14 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the character memory contains only ASCII characters, or otherwise throws your custom exception.</summary>
+        /// <summary>
+        /// Ensures that the character memory contains only ASCII characters, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated character memory.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<char> MustBeAscii(this Memory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
         {
@@ -1462,7 +1929,13 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the read-only character memory contains only ASCII characters.</summary>
+        /// <summary>
+        /// Ensures that the read-only character memory contains only ASCII characters, or otherwise throws a <see cref = "StringException"/>.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only character memory.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<char> MustBeAscii(this ReadOnlyMemory<char> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
@@ -1470,7 +1943,14 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the read-only character memory contains only ASCII characters, or otherwise throws your custom exception.</summary>
+        /// <summary>
+        /// Ensures that the read-only character memory contains only ASCII characters, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only character memory.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<char> MustBeAscii(this ReadOnlyMemory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
         {
@@ -1478,7 +1958,13 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the byte span contains only ASCII values.</summary>
+        /// <summary>
+        /// Ensures that the byte span contains only ASCII values.
+        /// </summary>
+        /// <param name = "parameter">The byte span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated byte span.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<byte> MustBeAscii(this Span<byte> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
@@ -1486,7 +1972,14 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the byte span contains only ASCII values, or otherwise throws your custom exception.</summary>
+        /// <summary>
+        /// Ensures that the byte span contains only ASCII values, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The byte span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated byte span.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<byte> MustBeAscii(this Span<byte> parameter, ReadOnlySpanExceptionFactory<byte> exceptionFactory)
         {
@@ -1494,7 +1987,13 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the read-only byte span contains only ASCII values.</summary>
+        /// <summary>
+        /// Ensures that the read-only byte span contains only ASCII values.
+        /// </summary>
+        /// <param name = "parameter">The read-only byte span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only byte span.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<byte> MustBeAscii(this ReadOnlySpan<byte> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
@@ -1506,7 +2005,14 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the read-only byte span contains only ASCII values, or otherwise throws your custom exception.</summary>
+        /// <summary>
+        /// Ensures that the read-only byte span contains only ASCII values, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only byte span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only byte span.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<byte> MustBeAscii(this ReadOnlySpan<byte> parameter, ReadOnlySpanExceptionFactory<byte> exceptionFactory)
         {
@@ -1518,7 +2024,13 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the byte memory contains only ASCII values.</summary>
+        /// <summary>
+        /// Ensures that the byte memory contains only ASCII values.
+        /// </summary>
+        /// <param name = "parameter">The byte memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated byte memory.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<byte> MustBeAscii(this Memory<byte> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
@@ -1526,7 +2038,14 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the byte memory contains only ASCII values, or otherwise throws your custom exception.</summary>
+        /// <summary>
+        /// Ensures that the byte memory contains only ASCII values, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The byte memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated byte memory.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<byte> MustBeAscii(this Memory<byte> parameter, ReadOnlySpanExceptionFactory<byte> exceptionFactory)
         {
@@ -1534,7 +2053,13 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the read-only byte memory contains only ASCII values.</summary>
+        /// <summary>
+        /// Ensures that the read-only byte memory contains only ASCII values.
+        /// </summary>
+        /// <param name = "parameter">The read-only byte memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only byte memory.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<byte> MustBeAscii(this ReadOnlyMemory<byte> parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
         {
@@ -1542,11 +2067,183 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        /// <summary>Ensures that the read-only byte memory contains only ASCII values, or otherwise throws your custom exception.</summary>
+        /// <summary>
+        /// Ensures that the read-only byte memory contains only ASCII values, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only byte memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only byte memory.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<byte> MustBeAscii(this ReadOnlyMemory<byte> parameter, ReadOnlySpanExceptionFactory<byte> exceptionFactory)
         {
             parameter.Span.MustBeAscii(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string is standard Base64 with valid padding. Space, tab, carriage return, and line feed are ignored.
+        /// Empty and whitespace-only strings are valid.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated string.</returns>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        /// <exception cref = "StringException">Thrown when the string is not valid Base64.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeBase64([NotNull][ValidatedNotNull] this string? parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            parameter.MustNotBeNull(parameterName, message);
+            if (!parameter.IsBase64())
+            {
+                Throw.InvalidStringContent(parameterName, message, "must be valid standard Base64");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string is valid standard Base64, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated string.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static string MustBeBase64([NotNull][ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        {
+            if (parameter is null || !parameter.IsBase64())
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the span is valid standard Base64. Empty and supported-whitespace-only spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated character span.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustBeBase64(this Span<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter).MustBeBase64(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the span is valid standard Base64, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated character span.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustBeBase64(this Span<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter).MustBeBase64(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only span is valid standard Base64. Empty and supported-whitespace-only spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only character span.</returns>
+        public static ReadOnlySpan<char> MustBeBase64(this ReadOnlySpan<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.IsBase64())
+            {
+                Throw.InvalidStringContent(parameterName, message, "must be valid standard Base64");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only span is valid standard Base64, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only character span.</returns>
+        public static ReadOnlySpan<char> MustBeBase64(this ReadOnlySpan<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            if (!parameter.IsBase64())
+            {
+                Throw.CustomSpanException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the memory is valid standard Base64. Empty and supported-whitespace-only memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustBeBase64(this Memory<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustBeBase64(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the memory is valid standard Base64, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustBeBase64(this Memory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustBeBase64(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory is valid standard Base64. Empty and supported-whitespace-only memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustBeBase64(this ReadOnlyMemory<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            parameter.Span.MustBeBase64(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory is valid standard Base64, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustBeBase64(this ReadOnlyMemory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            parameter.Span.MustBeBase64(exceptionFactory);
             return parameter;
         }
 
@@ -2106,6 +2803,170 @@ namespace Light.GuardClauses
                 Throw.CustomException(exceptionFactory, parameter!, other);
             }
 
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string contains only ASCII hexadecimal characters. Empty strings are valid.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated string.</returns>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        /// <exception cref = "StringException">Thrown when the string contains a non-hexadecimal character.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeHexadecimal([NotNull][ValidatedNotNull] this string? parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            parameter.MustNotBeNull(parameterName, message);
+            if (!parameter.IsHexadecimal())
+            {
+                Throw.InvalidStringContent(parameterName, message, "must contain only ASCII hexadecimal characters");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string contains only ASCII hexadecimal characters, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated string.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static string MustBeHexadecimal([NotNull][ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        {
+            if (parameter is null || !parameter.IsHexadecimal())
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the span contains only ASCII hexadecimal characters. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated character span.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustBeHexadecimal(this Span<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter).MustBeHexadecimal(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the span contains only ASCII hexadecimal characters, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated character span.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustBeHexadecimal(this Span<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter).MustBeHexadecimal(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only span contains only ASCII hexadecimal characters. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only character span.</returns>
+        public static ReadOnlySpan<char> MustBeHexadecimal(this ReadOnlySpan<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.IsHexadecimal())
+            {
+                Throw.InvalidStringContent(parameterName, message, "must contain only ASCII hexadecimal characters");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only span contains only ASCII hexadecimal characters, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only character span.</returns>
+        public static ReadOnlySpan<char> MustBeHexadecimal(this ReadOnlySpan<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            if (!parameter.IsHexadecimal())
+            {
+                Throw.CustomSpanException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the memory contains only ASCII hexadecimal characters. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustBeHexadecimal(this Memory<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustBeHexadecimal(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the memory contains only ASCII hexadecimal characters, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustBeHexadecimal(this Memory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustBeHexadecimal(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory contains only ASCII hexadecimal characters. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustBeHexadecimal(this ReadOnlyMemory<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            parameter.Span.MustBeHexadecimal(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory contains only ASCII hexadecimal characters, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustBeHexadecimal(this ReadOnlyMemory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            parameter.Span.MustBeHexadecimal(exceptionFactory);
             return parameter;
         }
 
@@ -2747,6 +3608,170 @@ namespace Light.GuardClauses
                 Throw.CustomSpanException(exceptionFactory, parameter, length);
             }
 
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string contains no Unicode uppercase character. Empty and uncased strings are valid.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated string.</returns>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        /// <exception cref = "StringException">Thrown when the string contains an uppercase character.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeLowerCase([NotNull][ValidatedNotNull] this string? parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            parameter.MustNotBeNull(parameterName, message);
+            if (!parameter.IsLowerCase())
+            {
+                Throw.InvalidStringContent(parameterName, message, "must contain no Unicode uppercase characters");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string contains no Unicode uppercase character, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated string.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static string MustBeLowerCase([NotNull][ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        {
+            if (parameter is null || !parameter.IsLowerCase())
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the span contains no Unicode uppercase character. Empty and uncased spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated character span.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustBeLowerCase(this Span<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter).MustBeLowerCase(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the span contains no Unicode uppercase character, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated character span.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustBeLowerCase(this Span<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter).MustBeLowerCase(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only span contains no Unicode uppercase character. Empty and uncased spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only character span.</returns>
+        public static ReadOnlySpan<char> MustBeLowerCase(this ReadOnlySpan<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.IsLowerCase())
+            {
+                Throw.InvalidStringContent(parameterName, message, "must contain no Unicode uppercase characters");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only span contains no Unicode uppercase character, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only character span.</returns>
+        public static ReadOnlySpan<char> MustBeLowerCase(this ReadOnlySpan<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            if (!parameter.IsLowerCase())
+            {
+                Throw.CustomSpanException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the memory contains no Unicode uppercase character. Empty and uncased memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustBeLowerCase(this Memory<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustBeLowerCase(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the memory contains no Unicode uppercase character, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustBeLowerCase(this Memory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustBeLowerCase(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory contains no Unicode uppercase character. Empty and uncased memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustBeLowerCase(this ReadOnlyMemory<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            parameter.Span.MustBeLowerCase(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory contains no Unicode uppercase character, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustBeLowerCase(this ReadOnlyMemory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            parameter.Span.MustBeLowerCase(exceptionFactory);
             return parameter;
         }
 
@@ -3915,6 +4940,170 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Ensures that the string contains no Unicode lowercase character. Empty and uncased strings are valid.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated string.</returns>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        /// <exception cref = "StringException">Thrown when the string contains a lowercase character.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeUpperCase([NotNull][ValidatedNotNull] this string? parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            parameter.MustNotBeNull(parameterName, message);
+            if (!parameter.IsUpperCase())
+            {
+                Throw.InvalidStringContent(parameterName, message, "must contain no Unicode lowercase characters");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string contains no Unicode lowercase character, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated string.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static string MustBeUpperCase([NotNull][ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        {
+            if (parameter is null || !parameter.IsUpperCase())
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the span contains no Unicode lowercase character. Empty and uncased spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated character span.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustBeUpperCase(this Span<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter).MustBeUpperCase(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the span contains no Unicode lowercase character, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated character span.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustBeUpperCase(this Span<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter).MustBeUpperCase(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only span contains no Unicode lowercase character. Empty and uncased spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only character span.</returns>
+        public static ReadOnlySpan<char> MustBeUpperCase(this ReadOnlySpan<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.IsUpperCase())
+            {
+                Throw.InvalidStringContent(parameterName, message, "must contain no Unicode lowercase characters");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only span contains no Unicode lowercase character, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only character span.</returns>
+        public static ReadOnlySpan<char> MustBeUpperCase(this ReadOnlySpan<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            if (!parameter.IsUpperCase())
+            {
+                Throw.CustomSpanException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the memory contains no Unicode lowercase character. Empty and uncased memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustBeUpperCase(this Memory<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustBeUpperCase(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the memory contains no Unicode lowercase character, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustBeUpperCase(this Memory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustBeUpperCase(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory contains no Unicode lowercase character. Empty and uncased memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustBeUpperCase(this ReadOnlyMemory<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            parameter.Span.MustBeUpperCase(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory contains no Unicode lowercase character, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustBeUpperCase(this ReadOnlyMemory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            parameter.Span.MustBeUpperCase(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
         /// Ensures that the specified <paramref name = "parameter"/> uses <see cref = "DateTimeKind.Utc"/>, or otherwise throws an <see cref = "InvalidDateTimeException"/>.
         /// </summary>
         /// <param name = "parameter">The date time to be checked.</param>
@@ -4350,6 +5539,334 @@ namespace Light.GuardClauses
                 Throw.CustomException(exceptionFactory, parameter, key);
             }
 
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string contains only Unicode decimal digits. Empty strings are valid.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated string.</returns>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        /// <exception cref = "StringException">Thrown when the string contains a non-digit character.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustContainOnlyDigits([NotNull][ValidatedNotNull] this string? parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            parameter.MustNotBeNull(parameterName, message);
+            if (!parameter.ContainsOnlyDigits())
+            {
+                Throw.InvalidStringContent(parameterName, message, "must contain only Unicode decimal digits");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string contains only Unicode decimal digits, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated string.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static string MustContainOnlyDigits([NotNull][ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        {
+            if (parameter is null || !parameter.ContainsOnlyDigits())
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the span contains only Unicode decimal digits. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated character span.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustContainOnlyDigits(this Span<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter).MustContainOnlyDigits(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the span contains only Unicode decimal digits, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated character span.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustContainOnlyDigits(this Span<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter).MustContainOnlyDigits(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only span contains only Unicode decimal digits. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only character span.</returns>
+        public static ReadOnlySpan<char> MustContainOnlyDigits(this ReadOnlySpan<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.ContainsOnlyDigits())
+            {
+                Throw.InvalidStringContent(parameterName, message, "must contain only Unicode decimal digits");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only span contains only Unicode decimal digits, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only character span.</returns>
+        public static ReadOnlySpan<char> MustContainOnlyDigits(this ReadOnlySpan<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            if (!parameter.ContainsOnlyDigits())
+            {
+                Throw.CustomSpanException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the memory contains only Unicode decimal digits. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustContainOnlyDigits(this Memory<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustContainOnlyDigits(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the memory contains only Unicode decimal digits, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustContainOnlyDigits(this Memory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustContainOnlyDigits(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory contains only Unicode decimal digits. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustContainOnlyDigits(this ReadOnlyMemory<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            parameter.Span.MustContainOnlyDigits(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory contains only Unicode decimal digits, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustContainOnlyDigits(this ReadOnlyMemory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            parameter.Span.MustContainOnlyDigits(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string contains only Unicode letters or decimal digits. Empty strings are valid.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated string.</returns>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        /// <exception cref = "StringException">Thrown when the string contains another character.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustContainOnlyLettersOrDigits([NotNull][ValidatedNotNull] this string? parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            parameter.MustNotBeNull(parameterName, message);
+            if (!parameter.ContainsOnlyLettersOrDigits())
+            {
+                Throw.InvalidStringContent(parameterName, message, "must contain only Unicode letters or decimal digits");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string contains only Unicode letters or decimal digits, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated string.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static string MustContainOnlyLettersOrDigits([NotNull][ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        {
+            if (parameter is null || !parameter.ContainsOnlyLettersOrDigits())
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the span contains only Unicode letters or decimal digits. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated character span.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustContainOnlyLettersOrDigits(this Span<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter).MustContainOnlyLettersOrDigits(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the span contains only Unicode letters or decimal digits, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated character span.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustContainOnlyLettersOrDigits(this Span<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter).MustContainOnlyLettersOrDigits(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only span contains only Unicode letters or decimal digits. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only character span.</returns>
+        public static ReadOnlySpan<char> MustContainOnlyLettersOrDigits(this ReadOnlySpan<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            if (!parameter.ContainsOnlyLettersOrDigits())
+            {
+                Throw.InvalidStringContent(parameterName, message, "must contain only Unicode letters or decimal digits");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only span contains only Unicode letters or decimal digits, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only character span.</returns>
+        public static ReadOnlySpan<char> MustContainOnlyLettersOrDigits(this ReadOnlySpan<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            if (!parameter.ContainsOnlyLettersOrDigits())
+            {
+                Throw.CustomSpanException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the memory contains only Unicode letters or decimal digits. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustContainOnlyLettersOrDigits(this Memory<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustContainOnlyLettersOrDigits(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the memory contains only Unicode letters or decimal digits, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustContainOnlyLettersOrDigits(this Memory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustContainOnlyLettersOrDigits(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory contains only Unicode letters or decimal digits. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustContainOnlyLettersOrDigits(this ReadOnlyMemory<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            parameter.Span.MustContainOnlyLettersOrDigits(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory contains only Unicode letters or decimal digits, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustContainOnlyLettersOrDigits(this ReadOnlyMemory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            parameter.Span.MustContainOnlyLettersOrDigits(exceptionFactory);
             return parameter;
         }
 
@@ -7874,29 +9391,14 @@ namespace Light.GuardClauses
             return parameter;
         }
 
-        private static int FindNullOrWhiteSpaceItem(IEnumerable<string?> parameter, out string? invalidItem)
+        private static int FindNullOrWhiteSpaceItem(IEnumerable<string?> parameter, out string? invalidItem) => parameter switch
         {
-            if (parameter is IList<string?> list)
-            {
-                return FindNullOrWhiteSpaceItem(list, out invalidItem);
-            }
-
-            if (parameter is IReadOnlyList<string?> readOnlyList)
-            {
-                for (var position = 0; position < readOnlyList.Count; ++position)
-                {
-                    var item = readOnlyList[position];
-                    if (item.IsNullOrWhiteSpace())
-                    {
-                        invalidItem = item;
-                        return position;
-                    }
-                }
-
-                invalidItem = null;
-                return -1;
-            }
-
+            IList<string?> list => FindNullOrWhiteSpaceItem(list, out invalidItem),
+            IReadOnlyList<string?> readOnlyList => FindNullOrWhiteSpaceItem(readOnlyList, out invalidItem),
+            _ => FindNullOrWhiteSpaceItemViaForeach(parameter, out invalidItem),
+        };
+        private static int FindNullOrWhiteSpaceItemViaForeach(IEnumerable<string?> parameter, out string? invalidItem)
+        {
             var currentPosition = 0;
             foreach (var item in parameter)
             {
@@ -7927,6 +9429,200 @@ namespace Light.GuardClauses
 
             invalidItem = null;
             return -1;
+        }
+
+        private static int FindNullOrWhiteSpaceItem(IReadOnlyList<string?> list, out string? invalidItem)
+        {
+            for (var position = 0; position < list.Count; ++position)
+            {
+                var item = list[position];
+                if (item.IsNullOrWhiteSpace())
+                {
+                    invalidItem = item;
+                    return position;
+                }
+            }
+
+            invalidItem = null;
+            return -1;
+        }
+
+        /// <summary>
+        /// Ensures that the string contains no Unicode whitespace character. Empty strings are valid.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated string.</returns>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        /// <exception cref = "StringException">Thrown when the string contains a whitespace character.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustNotContainWhiteSpace([NotNull][ValidatedNotNull] this string? parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            parameter.MustNotBeNull(parameterName, message);
+            parameter.AsSpan().MustNotContainWhiteSpace(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the string contains no Unicode whitespace character, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated string.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static string MustNotContainWhiteSpace([NotNull][ValidatedNotNull] this string? parameter, Func<string?, Exception> exceptionFactory)
+        {
+            if (parameter is null)
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            if (ContainsWhiteSpace(parameter.AsSpan()))
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the span contains no Unicode whitespace character. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated character span.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustNotContainWhiteSpace(this Span<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter).MustNotContainWhiteSpace(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the span contains no Unicode whitespace character, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The character span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated character span.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<char> MustNotContainWhiteSpace(this Span<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter).MustNotContainWhiteSpace(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only span contains no Unicode whitespace character. Empty spans are valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only character span.</returns>
+        public static ReadOnlySpan<char> MustNotContainWhiteSpace(this ReadOnlySpan<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            if (ContainsWhiteSpace(parameter))
+            {
+                Throw.InvalidStringContent(parameterName, message, "must contain no Unicode whitespace characters");
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only span contains no Unicode whitespace character, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only character span to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only character span.</returns>
+        public static ReadOnlySpan<char> MustNotContainWhiteSpace(this ReadOnlySpan<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            if (ContainsWhiteSpace(parameter))
+            {
+                Throw.CustomSpanException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the memory contains no Unicode whitespace character. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustNotContainWhiteSpace(this Memory<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustNotContainWhiteSpace(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the memory contains no Unicode whitespace character, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The character memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<char> MustNotContainWhiteSpace(this Memory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            ((ReadOnlySpan<char>)parameter.Span).MustNotContainWhiteSpace(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory contains no Unicode whitespace character. Empty memory is valid.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The validated read-only character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustNotContainWhiteSpace(this ReadOnlyMemory<char> parameter, [CallerArgumentExpression(nameof(parameter))] string? parameterName = null, string? message = null)
+        {
+            parameter.Span.MustNotContainWhiteSpace(parameterName, message);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the read-only memory contains no Unicode whitespace character, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The read-only character memory to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <returns>The validated read-only character memory.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyMemory<char> MustNotContainWhiteSpace(this ReadOnlyMemory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
+        {
+            parameter.Span.MustNotContainWhiteSpace(exceptionFactory);
+            return parameter;
+        }
+
+        private static bool ContainsWhiteSpace(ReadOnlySpan<char> parameter)
+        {
+            foreach (var character in parameter)
+            {
+                if (char.IsWhiteSpace(character))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -9694,6 +11390,15 @@ namespace Light.GuardClauses.ExceptionFactory
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void InvalidState(string? message = null) => throw new InvalidStateException(message);
+        /// <summary>
+        /// Throws a <see cref = "StringException"/> for character content that violates a required invariant.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter that contains the invalid string (optional).</param>
+        /// <param name = "message">The message that will be passed to the exception (optional).</param>
+        /// <param name = "requirement">A description of the requirement that the string violates.</param>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void InvalidStringContent(string? parameterName, string? message, string requirement) => throw new StringException(parameterName, message ?? $"{parameterName ?? "The string"} {requirement}.");
         /// <summary>
         /// Throws the default <see cref = "TypeCastException"/> indicating that a reference cannot be downcast, using the
         /// optional parameter name and message.
