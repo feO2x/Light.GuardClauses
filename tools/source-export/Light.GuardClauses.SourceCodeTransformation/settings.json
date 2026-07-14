@@ -93,6 +93,7 @@
     "MustBeUuidVersion7": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustBeValidEnumValue": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustContain": { "Include": true, "IncludeExceptionFactoryOverload": true },
+    "MustContainKey": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustEndWith": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustHaveCount": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustHaveCountIn": { "Include": true, "IncludeExceptionFactoryOverload": true },
@@ -128,6 +129,7 @@
     "MustNotBeSubstringOf": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustNotBeZero": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustNotContain": { "Include": true, "IncludeExceptionFactoryOverload": true },
+    "MustNotContainKey": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustNotEndWith": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustNotStartWith": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustStartWith": { "Include": true, "IncludeExceptionFactoryOverload": true }

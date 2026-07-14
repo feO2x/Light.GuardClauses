@@ -232,6 +232,60 @@ public static class SourceFileMergerWhitelistTests
         modernCode.Should().Contain("INumber<T>");
     }
 
+    [Fact]
+    public static void MustContainKeyWhitelistExportsGuardWithExceptionAndThrowHelper()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "MustContainKey.cs");
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(
+                    includedAssertions: [new ("MustContainKey", true)]
+                )
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("MustContainKey<TKey, TValue>(");
+        sourceCode.Should().Contain("this IReadOnlyDictionary<TKey, TValue>? parameter");
+        sourceCode.Should().Contain("this Dictionary<TKey, TValue>? parameter");
+        sourceCode.Should().Contain("class MissingKeyException : CollectionException");
+        sourceCode.Should().Contain("public static void MissingKey<TKey, TValue>(");
+        sourceCode.Should()
+                  .Contain("Func<IReadOnlyDictionary<TKey, TValue>?, TKey, Exception> exceptionFactory");
+        sourceCode.Should().Contain("Func<Dictionary<TKey, TValue>?, TKey, Exception> exceptionFactory");
+        sourceCode.Should().NotContain("MustNotContainKey");
+        sourceCode.Should().NotContain("class ExistingKeyException");
+    }
+
+    [Fact]
+    public static void MustNotContainKeyWhitelistExportsGuardAndTrimsExceptionFactoryOverloads()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "MustNotContainKey.cs");
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(
+                    includedAssertions: [new ("MustNotContainKey", false)]
+                )
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("MustNotContainKey<TKey, TValue>(");
+        sourceCode.Should().Contain("this IReadOnlyDictionary<TKey, TValue>? parameter");
+        sourceCode.Should().Contain("this Dictionary<TKey, TValue>? parameter");
+        sourceCode.Should().Contain("class ExistingKeyException : CollectionException");
+        sourceCode.Should().Contain("public static void ExistingKey<TKey, TValue>(");
+        sourceCode.Should().NotContain("TKey, Exception> exceptionFactory");
+        sourceCode.Should().NotContain("MustContainKey<TKey, TValue>(");
+        sourceCode.Should().NotContain("class MissingKeyException");
+    }
+
     private static SourceFileMergeOptions CreateOptions(
         string targetFile,
         AssertionWhitelist assertionWhitelist = null,

@@ -91,10 +91,13 @@ percentage.MustBeIn(Range.FromExclusive(0).ToInclusive(100));
 | `MustHaveMinimumCount`, `MustHaveMaximumCount` | Enforce inclusive collection-count bounds |
 | `IsOneOf`, `MustBeOneOf`, `MustNotBeOneOf` | Test or enforce membership among supplied values |
 | `MustContain`, `MustNotContain` | Require or reject an item in collections and immutable arrays; string overloads operate on substrings |
+| `MustContainKey`, `MustNotContainKey` | Require or reject a dictionary key via `ContainsKey`, never enumerating and honoring the dictionary's key comparer; accept `IReadOnlyDictionary<TKey, TValue>` receivers, with dedicated overloads preserving the `Dictionary<TKey, TValue>` shape |
 | `MustNotBeDefaultOrEmpty` | Requires an initialized, non-empty `ImmutableArray<T>` |
 | `MustHaveLength`, `MustHaveLengthIn`, `MustHaveMinimumLength`, `MustHaveMaximumLength` | Validate string, span, or immutable-array length as provided by their overloads |
 
 Collection overloads preserve and return the original collection shape where possible. Check the XML documentation before using an `IEnumerable` guard in a hot path; annotations identify guards that do not enumerate.
+
+The dictionary key guards bind to any dictionary type implementing `IReadOnlyDictionary<TKey, TValue>` (such as `ConcurrentDictionary`, `SortedDictionary`, `ReadOnlyDictionary`, `ImmutableDictionary`, and `FrozenDictionary` on .NET 10). A receiver statically typed as `IDictionary<TKey, TValue>` cannot use them; call `dictionary.Keys.MustContain(key)` as a workaround — the key collections of the BCL dictionaries implement `ICollection<TKey>.Contains` via `ContainsKey`, so this stays O(1).
 
 ## Text, character, span, and memory assertions
 
