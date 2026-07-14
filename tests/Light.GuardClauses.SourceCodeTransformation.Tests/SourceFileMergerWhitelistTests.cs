@@ -286,6 +286,59 @@ public static class SourceFileMergerWhitelistTests
         sourceCode.Should().NotContain("class MissingKeyException");
     }
 
+    [Fact]
+    public static void MustNotContainNullWhitelistExportsDependenciesAndTrimsExceptionFactories()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "MustNotContainNull.cs");
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(
+                    includedAssertions: [new ("MustNotContainNull", false)]
+                )
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("MustNotContainNull<TCollection>(");
+        sourceCode.Should().Contain("where TCollection : class, IEnumerable");
+        sourceCode.Should().Contain("ImmutableArray<T> MustNotContainNull<T>(");
+        sourceCode.Should().Contain("class ExistingItemException : CollectionException");
+        sourceCode.Should().Contain("public static void NullItem(");
+        sourceCode.Should().NotContain("Func<TCollection?, Exception> exceptionFactory");
+        sourceCode.Should().NotContain("Func<ImmutableArray<T>, Exception> exceptionFactory");
+        sourceCode.Should().NotContain("MustNotContainNullOrWhiteSpace");
+    }
+
+    [Fact]
+    public static void MustNotContainNullOrWhiteSpaceWhitelistExportsDependenciesAndTrimsExceptionFactories()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "MustNotContainNullOrWhiteSpace.cs");
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(
+                    includedAssertions: [new ("MustNotContainNullOrWhiteSpace", false)]
+                )
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("MustNotContainNullOrWhiteSpace<TCollection>(");
+        sourceCode.Should().Contain("where TCollection : class, IEnumerable<string?>");
+        sourceCode.Should().Contain("ImmutableArray<string?> MustNotContainNullOrWhiteSpace(");
+        sourceCode.Should().Contain("class ExistingItemException : CollectionException");
+        sourceCode.Should().Contain("public static void NullOrWhiteSpaceItem(");
+        sourceCode.Should().Contain("public static bool IsNullOrWhiteSpace(");
+        sourceCode.Should().NotContain("Func<TCollection?, Exception> exceptionFactory");
+        sourceCode.Should().NotContain("Func<ImmutableArray<string?>, Exception> exceptionFactory");
+        sourceCode.Should().NotContain("MustNotContainNull<TCollection>");
+    }
+
     private static SourceFileMergeOptions CreateOptions(
         string targetFile,
         AssertionWhitelist assertionWhitelist = null,

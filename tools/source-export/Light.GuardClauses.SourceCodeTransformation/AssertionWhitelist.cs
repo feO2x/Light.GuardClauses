@@ -233,6 +233,10 @@ public sealed class AssertionWhitelist
 
     public AssertionEntry MustNotContainKey { get; init; } = new();
 
+    public AssertionEntry MustNotContainNull { get; init; } = new();
+
+    public AssertionEntry MustNotContainNullOrWhiteSpace { get; init; } = new();
+
     public AssertionEntry MustNotEndWith { get; init; } = new();
 
     public AssertionEntry MustNotStartWith { get; init; } = new();
