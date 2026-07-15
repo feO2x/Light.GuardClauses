@@ -17,7 +17,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
-      Light.GuardClauses 14.0.0
+      Light.GuardClauses 15.0.0
       --------------------------------
 
       - Breaking Change: Check.Contains(string, string, System.StringComparison) now exists in Light.GuardClauses.FrameworkExtensions to avoid conflict with other polyfill libraries
