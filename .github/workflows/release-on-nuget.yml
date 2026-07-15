@@ -20,12 +20,13 @@ jobs:
         env:
           LIGHT_GUARDCLAUSES_SNK: ${{ secrets.LIGHT_GUARDCLAUSES_SNK }}
         run: |
-          echo $LIGHT_GUARDCLAUSES_SNK | base64 --decode > ./src/Light.GuardClauses/Light.GuardClauses.snk
+          printf '%s' "$LIGHT_GUARDCLAUSES_SNK" | base64 --decode > "./src/Light.GuardClauses/Light.GuardClauses.snk"
       - name: Create NuGet packages
         run: dotnet pack ./src/Light.GuardClauses/Light.GuardClauses.csproj -c Release /p:SignAssembly=true /p:AssemblyOriginatorKeyFile=Light.GuardClauses.snk /p:ContinuousIntegrationBuild=true
       - name: Delete SNK file
-        run: rm ./src/Light.GuardClauses/Light.GuardClauses.snk
+        if: always()
+        run: rm -f "./src/Light.GuardClauses/Light.GuardClauses.snk"
       - name: Push nupkg package
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-        run: dotnet nuget push "./src/Light.GuardClauses/bin/Release/Light.GuardClauses.*.nupkg" --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push "./src/Light.GuardClauses/bin/Release/Light.GuardClauses.*.nupkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json

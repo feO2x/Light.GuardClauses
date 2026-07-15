@@ -17,10 +17,18 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
-      Light.GuardClauses 14.0.0
+      Light.GuardClauses 15.0.0
       --------------------------------
 
-      - Breaking Change: Check.Contains(string, string, System.StringComparison) now exists in Light.GuardClauses.FrameworkExtensions to avoid conflict with other polyfill libraries
+      - new assertions: IsUuidVersion7, MustBeUuidVersion7, IsFinite, MustBeFinite, IsAscii, MustBeAscii, and MustHaveCountIn
+      - new numeric sign guards: MustBePositive, MustBeNegative, MustNotBePositive, MustNotBeNegative, and MustNotBeZero
+      - new dictionary key guards: MustContainKey and MustNotContainKey
+      - new collection content guards: MustNotContainNull and MustNotContainNullOrWhiteSpace
+      - new string inspection assertions: ContainsOnlyDigits, MustContainOnlyDigits, ContainsOnlyLettersOrDigits, MustContainOnlyLettersOrDigits, IsUpperCase, MustBeUpperCase, IsLowerCase, MustBeLowerCase, IsBase64, MustBeBase64, IsHexadecimal, MustBeHexadecimal, and MustNotContainWhiteSpace
+      - new stream capability guards: MustBeReadable, MustBeWritable, and MustBeSeekable
+      - new collection count guard: MustHaveSameCountAs
+      - expanded span and memory support for MustNotBeEmpty, MustHaveLength, MustHaveLengthIn, and MustNotBeEmptyOrWhiteSpace, plus DateTimeOffset support for MustBeUtc
+      - breaking: the modern package target was updated from .NET 8 to .NET 10; .NET Standard 2.0 and 2.1 remain supported
     </PackageReleaseNotes>
   </PropertyGroup>
 

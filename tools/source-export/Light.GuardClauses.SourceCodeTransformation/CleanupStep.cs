@@ -110,11 +110,11 @@ public static class CleanupStep
         }
 
         nextLine = text.Slice(startIndex);
-        var newLineIndex = nextLine.IndexOf(Environment.NewLine);
+        var newLineIndex = nextLine.IndexOf('\n');
         if (newLineIndex == -1)
             return true;
 
-        nextLine = nextLine.Slice(0, newLineIndex + Environment.NewLine.Length);
+        nextLine = nextLine.Slice(0, newLineIndex + 1);
         return true;
     }
 }
