@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using FluentAssertions;
 using Xunit;
 
@@ -103,6 +104,50 @@ public sealed class IsEmailAddressTests
         var isValid = memory.IsEmailAddress();
 
         isValid.Should().BeTrue();
+    }
+
+    private static readonly Regex CustomPattern = new (@"\A[a-z]+@[a-z]+\.com\z");
+
+    [Theory]
+    [InlineData("kenny@feo.com", true)]
+    [InlineData("Kenny@Feo.com", false)]
+    public void CustomPattern_Span(string email, bool expected) =>
+        new Span<char>(email.ToCharArray()).IsEmailAddress(CustomPattern).Should().Be(expected);
+
+    [Theory]
+    [InlineData("kenny@feo.com", true)]
+    [InlineData("Kenny@Feo.com", false)]
+    public void CustomPattern_Memory(string email, bool expected) =>
+        email.ToCharArray().AsMemory().IsEmailAddress(CustomPattern).Should().Be(expected);
+
+    [Theory]
+    [InlineData("kenny@feo.com", true)]
+    [InlineData("Kenny@Feo.com", false)]
+    public void CustomPattern_ReadOnlyMemory(string email, bool expected) =>
+        new ReadOnlyMemory<char>(email.ToCharArray()).IsEmailAddress(CustomPattern).Should().Be(expected);
+
+    [Fact]
+    public void CustomPatternNull_Span()
+    {
+        var act = () => new Span<char>("foo@bar.com".ToCharArray()).IsEmailAddress(null!);
+
+        act.Should().Throw<ArgumentNullException>().WithParameterName("emailAddressPattern");
+    }
+
+    [Fact]
+    public void CustomPatternNull_Memory()
+    {
+        var act = () => "foo@bar.com".ToCharArray().AsMemory().IsEmailAddress(null!);
+
+        act.Should().Throw<ArgumentNullException>().WithParameterName("emailAddressPattern");
+    }
+
+    [Fact]
+    public void CustomPatternNull_ReadOnlyMemory()
+    {
+        var act = () => new ReadOnlyMemory<char>("foo@bar.com".ToCharArray()).IsEmailAddress(null!);
+
+        act.Should().Throw<ArgumentNullException>().WithParameterName("emailAddressPattern");
     }
 #endif
 }

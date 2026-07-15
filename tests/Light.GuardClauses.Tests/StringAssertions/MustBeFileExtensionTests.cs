@@ -37,7 +37,7 @@ public static class MustBeFileExtensionTests
         var nullString = default(string);
 
         // ReSharper disable once ExpressionIsAlwaysNull
-        var act = () => nullString.MustBeFileExtension(nameof(nullString));
+        var act = () => nullString.MustBeFileExtension();
 
         act.Should().Throw<ArgumentNullException>()
            .WithParameterName(nameof(nullString));
@@ -47,7 +47,7 @@ public static class MustBeFileExtensionTests
     [MemberData(nameof(InvalidFileExtensionsData))]
     public static void InvalidFileExtensions(string invalidString)
     {
-        var act = () => invalidString.MustBeFileExtension(nameof(invalidString));
+        var act = () => invalidString.MustBeFileExtension();
 
         act.Should().Throw<ArgumentException>()
            .And.Message.Should().Contain(
@@ -79,6 +79,55 @@ public static class MustBeFileExtensionTests
 
         act.Should().Throw<ArgumentException>()
            .WithParameterName(nameof(invalidString));
+    }
+
+    [Theory]
+    [MemberData(nameof(ValidFileExtensionsData))]
+    public static void CustomExceptionNotThrownForValidFileExtensions(string input) =>
+        input.MustBeFileExtension(_ => new ()).Should().BeSameAs(input);
+
+    [Theory]
+    [MemberData(nameof(ValidFileExtensionsData))]
+    public static void CustomExceptionNotThrownForValidFileExtensions_ReadOnlySpan(string input)
+    {
+        var span = input.AsSpan();
+
+        var result = span.MustBeFileExtension(_ => new ());
+
+        result.Equals(span, StringComparison.Ordinal).Should().BeTrue();
+    }
+
+    [Theory]
+    [MemberData(nameof(ValidFileExtensionsData))]
+    public static void CustomExceptionNotThrownForValidFileExtensions_Span(string input)
+    {
+        var span = input.ToCharArray().AsSpan();
+
+        var result = span.MustBeFileExtension(_ => new ());
+
+        result.ToString().Should().Be(input);
+    }
+
+    [Theory]
+    [MemberData(nameof(ValidFileExtensionsData))]
+    public static void CustomExceptionNotThrownForValidFileExtensions_Memory(string input)
+    {
+        var memory = input.ToCharArray().AsMemory();
+
+        var result = memory.MustBeFileExtension(_ => new ());
+
+        result.ToString().Should().Be(input);
+    }
+
+    [Theory]
+    [MemberData(nameof(ValidFileExtensionsData))]
+    public static void CustomExceptionNotThrownForValidFileExtensions_ReadOnlyMemory(string input)
+    {
+        var memory = input.AsMemory();
+
+        var result = memory.MustBeFileExtension(_ => new ());
+
+        result.Equals(memory).Should().BeTrue();
     }
 
     [Theory]

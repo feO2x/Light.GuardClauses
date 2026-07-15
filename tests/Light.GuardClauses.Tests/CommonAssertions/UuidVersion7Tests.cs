@@ -14,7 +14,8 @@ public static class UuidVersion7Tests
 
 #if NET9_0_OR_GREATER
     [Fact]
-    public static void FrameworkGeneratedValueIsUuidVersion7() => Guid.CreateVersion7().IsUuidVersion7().Should().BeTrue();
+    public static void FrameworkGeneratedValueIsUuidVersion7() =>
+        Guid.CreateVersion7().IsUuidVersion7().Should().BeTrue();
 #endif
 
     [Theory]
@@ -45,4 +46,8 @@ public static class UuidVersion7Tests
     [Fact]
     public static void CustomFactoryReceivesValue() =>
         Test.CustomException(WrongVariant, (value, factory) => value.MustBeUuidVersion7(factory));
+
+    [Fact]
+    public static void CustomFactoryNotInvokedForValidValue() =>
+        RfcExample.MustBeUuidVersion7(_ => null).Should().Be(RfcExample);
 }

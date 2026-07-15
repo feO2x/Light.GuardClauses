@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Light.GuardClauses.Exceptions;
 using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertions;
@@ -34,19 +35,19 @@ public static class EqualsTests
     [InlineData(null, null, true)]
     [InlineData(null, "Foo", false)]
     [InlineData("Bar", null, false)]
-    public static void OrdinalIgnoreCaseIgnoreWhiteSpace(string x, string y, bool expected) => 
+    public static void OrdinalIgnoreCaseIgnoreWhiteSpace(string x, string y, bool expected) =>
         x.Equals(y, StringComparisonType.OrdinalIgnoreCaseIgnoreWhiteSpace).Should().Be(expected);
 
     [Theory]
     [InlineData("Foo", "Foo", true)]
     [InlineData("Bar", "bar", false)]
-    public static void FallbackToOrdinal(string x, string y, bool expected) => 
+    public static void FallbackToOrdinal(string x, string y, bool expected) =>
         x.Equals(y, StringComparisonType.Ordinal).Should().Be(expected);
 
     [Theory]
     [InlineData("Foo", "foo", true)]
     [InlineData("Foo", "Bar", false)]
-    public static void FallbackToOrdinalIgnoreCase(string x, string y, bool expected) => 
+    public static void FallbackToOrdinalIgnoreCase(string x, string y, bool expected) =>
         x.Equals(y, StringComparisonType.OrdinalIgnoreCase).Should().Be(expected);
 
     [Theory]
@@ -72,4 +73,13 @@ public static class EqualsTests
     [InlineData("Foo", "Bar", false)]
     public static void FallbackToInvariantCultureIgnoreCase(string x, string y, bool expected) =>
         x.Equals(y, StringComparisonType.InvariantCultureIgnoreCase).Should().Be(expected);
+
+    [Fact]
+    public static void InvalidComparisonType()
+    {
+        var act = () => "Foo".Equals("Bar", (StringComparisonType) 42);
+
+        act.Should().Throw<EnumValueNotDefinedException>()
+           .WithParameterName("comparisonType");
+    }
 }

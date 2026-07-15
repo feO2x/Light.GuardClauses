@@ -19,7 +19,7 @@ public static class MustNotContainKeyTests
     {
         var dictionary = new Dictionary<string, int> { ["Foo"] = 1, ["Bar"] = 2 };
 
-        Action act = () => dictionary.MustNotContainKey("Foo", nameof(dictionary));
+        Action act = () => dictionary.MustNotContainKey("Foo");
 
         act.Should().Throw<ExistingKeyException>()
            .And.Message.Should()
@@ -39,7 +39,7 @@ public static class MustNotContainKeyTests
     {
         IReadOnlyDictionary<string, object> dictionary = new Dictionary<string, object> { ["Foo"] = 1 };
 
-        Action act = () => dictionary.MustNotContainKey("Foo", nameof(dictionary));
+        Action act = () => dictionary.MustNotContainKey("Foo");
 
         act.Should().Throw<ExistingKeyException>()
            .And.Message.Should()
@@ -125,7 +125,15 @@ public static class MustNotContainKeyTests
     {
         var dictionary = new Dictionary<string, int> { ["Foo"] = 1 };
 
-        dictionary.MustNotContainKey("Bar", (_, _) => new Exception()).Should().BeSameAs(dictionary);
+        dictionary.MustNotContainKey("Bar", (_, _) => new ()).Should().BeSameAs(dictionary);
+    }
+
+    [Fact]
+    public static void InterfaceCustomExceptionNotThrown()
+    {
+        IReadOnlyDictionary<string, int> dictionary = new Dictionary<string, int> { ["Foo"] = 1 };
+
+        dictionary.MustNotContainKey("Bar", (_, _) => new ()).Should().BeSameAs(dictionary);
     }
 
     [Fact]
@@ -156,7 +164,7 @@ public static class MustNotContainKeyTests
     {
         var map = new Dictionary<string, string> { ["endpoint"] = "https://example.com" };
 
-        Dictionary<string, string> result = map.MustNotBeNull().MustNotContainKey("proxy");
+        var result = map.MustNotBeNull().MustNotContainKey("proxy");
 
         result.Should().BeSameAs(map);
     }

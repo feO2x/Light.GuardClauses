@@ -1,5 +1,6 @@
 using System;
 using FluentAssertions;
+using Light.GuardClauses.ExceptionFactory;
 using Light.GuardClauses.Exceptions;
 using Xunit;
 
@@ -41,9 +42,9 @@ public static class AdditionalSpanAndMemoryGuardsTests
         spanAct.Should().Throw<EmptyCollectionException>().WithParameterName("emptySpan");
         readOnlySpanAct.Should().Throw<EmptyCollectionException>().WithParameterName("emptyReadOnlySpan");
         ((Action) (() => emptyMemory.MustNotBeEmpty())).Should().Throw<EmptyCollectionException>()
-                                                      .WithParameterName(nameof(emptyMemory));
+                                                       .WithParameterName(nameof(emptyMemory));
         ((Action) (() => emptyReadOnlyMemory.MustNotBeEmpty())).Should().Throw<EmptyCollectionException>()
-                                                              .WithParameterName(nameof(emptyReadOnlyMemory));
+                                                               .WithParameterName(nameof(emptyReadOnlyMemory));
     }
 
     [Fact]
@@ -53,6 +54,22 @@ public static class AdditionalSpanAndMemoryGuardsTests
         Test.CustomSpanException(ReadOnlySpan<int>.Empty, (value, factory) => value.MustNotBeEmpty(factory));
         Test.CustomMemoryException(Memory<int>.Empty, (value, factory) => value.MustNotBeEmpty(factory));
         Test.CustomMemoryException(ReadOnlyMemory<int>.Empty, (value, factory) => value.MustNotBeEmpty(factory));
+    }
+
+    [Fact]
+    public static void NonEmptyFactoriesDoNotThrowForEveryValidShape()
+    {
+        var array = new[] { 1, 2 };
+        var span = array.AsSpan();
+        ReadOnlySpan<int> readOnlySpan = array;
+        var memory = array.AsMemory();
+        ReadOnlyMemory<int> readOnlyMemory = array;
+        ReadOnlySpanExceptionFactory<int> factory = _ => new ("The factory should not be invoked.");
+
+        (span.MustNotBeEmpty(factory) == span).Should().BeTrue();
+        (readOnlySpan.MustNotBeEmpty(factory) == readOnlySpan).Should().BeTrue();
+        memory.MustNotBeEmpty(factory).Should().Be(memory);
+        readOnlyMemory.MustNotBeEmpty(factory).Should().Be(readOnlyMemory);
     }
 
     [Fact]
@@ -81,14 +98,44 @@ public static class AdditionalSpanAndMemoryGuardsTests
     public static void RangedLengthFactoriesReceiveEveryShape()
     {
         var invalidRange = Range.InclusiveBetween(2, 3);
-        Test.CustomSpanException(Span<int>.Empty, invalidRange,
-            (value, range, factory) => value.MustHaveLengthIn(range, factory));
-        Test.CustomSpanException(ReadOnlySpan<int>.Empty, invalidRange,
-            (value, range, factory) => value.MustHaveLengthIn(range, factory));
-        Test.CustomMemoryException(Memory<int>.Empty, invalidRange,
-            (value, range, factory) => value.MustHaveLengthIn(range, factory));
-        Test.CustomMemoryException(ReadOnlyMemory<int>.Empty, invalidRange,
-            (value, range, factory) => value.MustHaveLengthIn(range, factory));
+        Test.CustomSpanException(
+            Span<int>.Empty,
+            invalidRange,
+            (value, range, factory) => value.MustHaveLengthIn(range, factory)
+        );
+        Test.CustomSpanException(
+            ReadOnlySpan<int>.Empty,
+            invalidRange,
+            (value, range, factory) => value.MustHaveLengthIn(range, factory)
+        );
+        Test.CustomMemoryException(
+            Memory<int>.Empty,
+            invalidRange,
+            (value, range, factory) => value.MustHaveLengthIn(range, factory)
+        );
+        Test.CustomMemoryException(
+            ReadOnlyMemory<int>.Empty,
+            invalidRange,
+            (value, range, factory) => value.MustHaveLengthIn(range, factory)
+        );
+    }
+
+    [Fact]
+    public static void RangedLengthFactoriesDoNotThrowForEveryValidShape()
+    {
+        var array = new[] { 1, 2, 3 };
+        var validRange = Range.InclusiveBetween(3, 3);
+        var span = array.AsSpan();
+        ReadOnlySpan<int> readOnlySpan = array;
+        var memory = array.AsMemory();
+        ReadOnlyMemory<int> readOnlyMemory = array;
+        ReadOnlySpanExceptionFactory<int, Range<int>> factory =
+            (_, _) => new ("The factory should not be invoked.");
+
+        (span.MustHaveLengthIn(validRange, factory) == span).Should().BeTrue();
+        (readOnlySpan.MustHaveLengthIn(validRange, factory) == readOnlySpan).Should().BeTrue();
+        memory.MustHaveLengthIn(validRange, factory).Should().Be(memory);
+        readOnlyMemory.MustHaveLengthIn(validRange, factory).Should().Be(readOnlyMemory);
     }
 
     [Fact]
@@ -112,8 +159,22 @@ public static class AdditionalSpanAndMemoryGuardsTests
            .WithParameterName(nameof(memory))
            .WithMessage("*custom*");
         Test.CustomMemoryException(memory, 1, (value, length, factory) => value.MustHaveLength(length, factory));
-        Test.CustomMemoryException(readOnlyMemory, 1,
-            (value, length, factory) => value.MustHaveLength(length, factory));
+        Test.CustomMemoryException(
+            readOnlyMemory,
+            1,
+            (value, length, factory) => value.MustHaveLength(length, factory)
+        );
+    }
+
+    [Fact]
+    public static void MemoryExactLengthFactoriesDoNotThrowForValidLengths()
+    {
+        var memory = new[] { 1, 2 }.AsMemory();
+        ReadOnlyMemory<int> readOnlyMemory = memory;
+        ReadOnlySpanExceptionFactory<int, int> factory = (_, _) => new ("The factory should not be invoked.");
+
+        memory.MustHaveLength(2, factory).Should().Be(memory);
+        readOnlyMemory.MustHaveLength(2, factory).Should().Be(readOnlyMemory);
     }
 
     [Fact]
@@ -153,15 +214,39 @@ public static class AdditionalSpanAndMemoryGuardsTests
     }
 
     [Fact]
+    public static void WhitespaceFactoriesDoNotThrowForEveryValidShape()
+    {
+        var characters = " a".ToCharArray();
+        var span = characters.AsSpan();
+        ReadOnlySpan<char> readOnlySpan = characters;
+        var memory = characters.AsMemory();
+        ReadOnlyMemory<char> readOnlyMemory = characters;
+        ReadOnlySpanExceptionFactory<char> factory = _ => new ("The factory should not be invoked.");
+
+        (span.MustNotBeEmptyOrWhiteSpace(factory) == span).Should().BeTrue();
+        (readOnlySpan.MustNotBeEmptyOrWhiteSpace(factory) == readOnlySpan).Should().BeTrue();
+        memory.MustNotBeEmptyOrWhiteSpace(factory).Should().Be(memory);
+        readOnlyMemory.MustNotBeEmptyOrWhiteSpace(factory).Should().Be(readOnlyMemory);
+    }
+
+    [Fact]
     public static void WhitespaceFactoriesReceiveEveryShape()
     {
-        Test.CustomSpanException(" ".ToCharArray().AsSpan(),
-            (value, factory) => value.MustNotBeEmptyOrWhiteSpace(factory));
-        Test.CustomSpanException((ReadOnlySpan<char>) " ".ToCharArray(),
-            (value, factory) => value.MustNotBeEmptyOrWhiteSpace(factory));
-        Test.CustomMemoryException(" ".ToCharArray().AsMemory(),
-            (value, factory) => value.MustNotBeEmptyOrWhiteSpace(factory));
-        Test.CustomMemoryException((ReadOnlyMemory<char>) " ".ToCharArray(),
-            (value, factory) => value.MustNotBeEmptyOrWhiteSpace(factory));
+        Test.CustomSpanException(
+            " ".ToCharArray().AsSpan(),
+            (value, factory) => value.MustNotBeEmptyOrWhiteSpace(factory)
+        );
+        Test.CustomSpanException(
+            (ReadOnlySpan<char>) " ".ToCharArray(),
+            (value, factory) => value.MustNotBeEmptyOrWhiteSpace(factory)
+        );
+        Test.CustomMemoryException(
+            " ".ToCharArray().AsMemory(),
+            (value, factory) => value.MustNotBeEmptyOrWhiteSpace(factory)
+        );
+        Test.CustomMemoryException(
+            (ReadOnlyMemory<char>) " ".ToCharArray(),
+            (value, factory) => value.MustNotBeEmptyOrWhiteSpace(factory)
+        );
     }
 }

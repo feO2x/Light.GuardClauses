@@ -7,21 +7,24 @@ namespace Light.GuardClauses.Tests.UriAssertions;
 
 public static class MustHaveSchemeTests
 {
-    [Theory(DisplayName = "MustHaveScheme must throw an InvalidUriSchemeException when the URI does not have the specified scheme.")]
+    [Theory(
+        DisplayName =
+            "MustHaveScheme must throw an InvalidUriSchemeException when the URI does not have the specified scheme."
+    )]
     [MemberData(nameof(InvalidSchemeData))]
     public static void InvalidScheme(Uri uri, string scheme)
     {
-        Action act = () => uri.MustHaveScheme(scheme, nameof(uri));
+        Action act = () => uri.MustHaveScheme(scheme);
 
         act.Should().Throw<InvalidUriSchemeException>()
            .And.Message.Should().Contain($"{nameof(uri)} must use the scheme \"{scheme}\"");
     }
 
     public static readonly TheoryData<Uri, string> InvalidSchemeData =
-        new()
+        new ()
         {
-            { new Uri("http://localhost:8080"), "https" },
-            { new Uri("http://my.service.com/upload"), "ftp" }
+            { new ("http://localhost:8080"), "https" },
+            { new ("http://my.service.com/upload"), "ftp" },
         };
 
     [Theory(DisplayName = "MustHaveScheme must not throw an exception when the specified scheme is used by the URI.")]
@@ -34,10 +37,10 @@ public static class MustHaveSchemeTests
     }
 
     public static readonly TheoryData<Uri, string> ValidSchemeData =
-        new()
+        new ()
         {
-            { new Uri("https://www.google.com"), "https" },
-            { new Uri("ftps://192.168.177.2"), "ftps" }
+            { new ("https://www.google.com"), "https" },
+            { new ("ftps://192.168.177.2"), "ftps" },
         };
 
     [Fact(DisplayName = "MustHaveScheme must throw an ArgumentNullException when the specified URI is null.")]
@@ -59,28 +62,39 @@ public static class MustHaveSchemeTests
     [Theory]
     [MemberData(nameof(CustomExceptionData))]
     public static void CustomException(Uri uri, string urlScheme) =>
-        Test.CustomException(uri,
-                             urlScheme,
-                             (url, scheme, exceptionFactory) => url.MustHaveScheme(scheme, exceptionFactory));
+        Test.CustomException(
+            uri,
+            urlScheme,
+            (url, scheme, exceptionFactory) => url.MustHaveScheme(scheme, exceptionFactory)
+        );
 
     public static readonly TheoryData<Uri, string> CustomExceptionData =
-        new()
+        new ()
         {
-            { new Uri("https://www.microsoft.com"), "http" },
+            { new ("https://www.microsoft.com"), "http" },
             { null, "ftp" },
-            { new Uri("https://duckduckgo.com/", UriKind.Absolute), null }
+            { new ("https://duckduckgo.com/", UriKind.Absolute), null },
         };
 
     [Fact]
-    public static void CustomExceptionNoScheme() => 
-        Test.CustomException(new Uri("/contact", UriKind.Relative),
-                             (url, exceptionFactory) => url.MustHaveScheme("ssl", exceptionFactory));
+    public static void CustomExceptionNoScheme() =>
+        Test.CustomException(
+            new Uri("/contact", UriKind.Relative),
+            (url, exceptionFactory) => url.MustHaveScheme("ssl", exceptionFactory)
+        );
+
+    [Fact]
+    public static void CustomExceptionNoSchemeInvalidScheme() =>
+        Test.CustomException(
+            new Uri("http://www.example.com"),
+            (url, exceptionFactory) => url.MustHaveScheme("https", exceptionFactory)
+        );
 
     [Fact]
     public static void CustomExceptionNoSchemeUriValid()
     {
         var url = new Uri("https://www.hbo.com/westworld");
-        url.MustHaveScheme("https", _ => new Exception()).Should().BeSameAs(url);
+        url.MustHaveScheme("https", _ => new ()).Should().BeSameAs(url);
     }
 
     [Fact]
@@ -92,10 +106,12 @@ public static class MustHaveSchemeTests
 
     [Fact]
     public static void CustomMessage() =>
-        Test.CustomMessage<InvalidUriSchemeException>(message => new Uri("ftp://foo.com").MustHaveScheme("https", message: message));
+        Test.CustomMessage<InvalidUriSchemeException>(
+            message => new Uri("ftp://foo.com").MustHaveScheme("https", message: message)
+        );
 
     [Fact]
-    public static void CustomMessageUriNull() => 
+    public static void CustomMessageUriNull() =>
         Test.CustomMessage<ArgumentNullException>(message => ((Uri) null).MustHaveScheme("http", message: message));
 
     [Fact]

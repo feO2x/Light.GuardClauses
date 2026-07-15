@@ -14,10 +14,12 @@ public static class MustBeTests
     [InlineData("Baz", "Qux")]
     public static void ValuesNotEqual(string x, string y)
     {
-        Action act = () => x.MustBe(y, nameof(x));
+        Action act = () => x.MustBe(y);
 
         act.Should().Throw<ValuesNotEqualException>()
-           .And.Message.Should().Contain($"{nameof(x)} must be equal to {y.ToStringOrNull()}, but it actually is {x.ToStringOrNull()}.");
+           .And.Message.Should().Contain(
+                $"{nameof(x)} must be equal to {y.ToStringOrNull()}, but it actually is {x.ToStringOrNull()}."
+            );
     }
 
     [Theory]
@@ -28,13 +30,15 @@ public static class MustBeTests
 
     [Fact]
     public static void CustomException() =>
-        Test.CustomException("Foo",
-                             "Bar",
-                             (x, y, exceptionFactory) => x.MustBe(y, exceptionFactory));
+        Test.CustomException(
+            "Foo",
+            "Bar",
+            (x, y, exceptionFactory) => x.MustBe(y, exceptionFactory)
+        );
 
     [Fact]
-    public static void CustomExceptionValuesEqual() => 
-        87.MustBe(87, (_, _) => new Exception()).MustBe(87);
+    public static void CustomExceptionValuesEqual() =>
+        87.MustBe(87, (_, _) => new ()).MustBe(87);
 
     [Fact]
     public static void CustomMessage() =>
@@ -48,34 +52,49 @@ public static class MustBeTests
         Action act = () => myString.MustBe("Bar", new EqualityComparerStub<string>(false));
 
         act.Should().Throw<ValuesNotEqualException>()
-           .And.Message.Should().Contain($"myString must be equal to {"Bar".ToStringOrNull()}, but it actually is {"Foo".ToStringOrNull()}.");
+           .And.Message.Should().Contain(
+                $"myString must be equal to {"Bar".ToStringOrNull()}, but it actually is {"Foo".ToStringOrNull()}."
+            );
     }
 
     [Fact]
-    public static void ValuesEqualCustomEqualityComparer() => 42.MustBe(42, new EqualityComparerStub<int>(true)).Should().Be(42);
+    public static void ValuesEqualCustomEqualityComparer() =>
+        42.MustBe(42, new EqualityComparerStub<int>(true)).Should().Be(42);
 
     [Fact]
     public static void CustomExceptionEqualityComparer() =>
-        Test.CustomException("Foo",
-                             "Bar",
-                             (IEqualityComparer<string>) new EqualityComparerStub<string>(false),
-                             (x, y, comparer, exceptionFactory) => x.MustBe(y, comparer, exceptionFactory));
+        Test.CustomException(
+            "Foo",
+            "Bar",
+            (IEqualityComparer<string>) new EqualityComparerStub<string>(false),
+            (x, y, comparer, exceptionFactory) => x.MustBe(y, comparer, exceptionFactory)
+        );
 
     [Fact]
-    public static void CustomExceptionEqualityComparerNull() => 
-        Test.CustomException(35L,
-                             22L,
-                             (IEqualityComparer<long>) null,
-                             (x, y, comparer, exceptionFactory) => x.MustBe(y, comparer, exceptionFactory));
+    public static void CustomExceptionEqualityComparerNull() =>
+        Test.CustomException(
+            35L,
+            22L,
+            (IEqualityComparer<long>) null,
+            (x, y, comparer, exceptionFactory) => x.MustBe(y, comparer, exceptionFactory)
+        );
+
+    [Fact]
+    public static void CustomExceptionEqualityComparerValuesEqual() =>
+        42.MustBe(42, new EqualityComparerStub<int>(true), (_, _, _) => null).Should().Be(42);
 
     [Fact]
     public static void CustomMessageEqualityComparer() =>
-        Test.CustomMessage<ValuesNotEqualException>(message => 99m.MustBe(100m, new EqualityComparerStub<decimal>(false), message: message));
+        Test.CustomMessage<ValuesNotEqualException>(
+            message => 99m.MustBe(100m, new EqualityComparerStub<decimal>(false), message: message)
+        );
 
     [Fact]
-    public static void CustomMessageEqualityComparerNull() => 
+    public static void CustomMessageEqualityComparerNull() =>
         // ReSharper disable once AssignNullToNotNullAttribute
-        Test.CustomMessage<ArgumentNullException>(message => 42.MustBe(42, (IEqualityComparer<int>) null, message: message));
+        Test.CustomMessage<ArgumentNullException>(
+            message => 42.MustBe(42, (IEqualityComparer<int>) null, message: message)
+        );
 
     [Fact]
     public static void CallerArgumentExpression()

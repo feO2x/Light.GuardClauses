@@ -12,10 +12,12 @@ public static class MustBeUtcTests
     {
         var invalidDateTime = DateTime.Now;
 
-        Action act = () => invalidDateTime.MustBeUtc(nameof(invalidDateTime));
+        Action act = () => invalidDateTime.MustBeUtc();
 
         act.Should().Throw<InvalidDateTimeException>()
-           .And.Message.Should().Contain($"{nameof(invalidDateTime)} must use kind \"{DateTimeKind.Utc}\", but it actually uses \"{invalidDateTime.Kind}\" and is \"{invalidDateTime:O}\".");
+           .And.Message.Should().Contain(
+                $"{nameof(invalidDateTime)} must use kind \"{DateTimeKind.Utc}\", but it actually uses \"{invalidDateTime.Kind}\" and is \"{invalidDateTime:O}\"."
+            );
     }
 
     [Fact]
@@ -30,8 +32,10 @@ public static class MustBeUtcTests
 
     [Fact]
     public static void CustomException() =>
-        Test.CustomException(new DateTime(2018, 2, 18, 16, 51, 00, DateTimeKind.Local),
-                             (value, exceptionFactory) => value.MustBeUtc(exceptionFactory));
+        Test.CustomException(
+            new DateTime(2018, 2, 18, 16, 51, 00, DateTimeKind.Local),
+            (value, exceptionFactory) => value.MustBeUtc(exceptionFactory)
+        );
 
     [Fact]
     public static void NoCustomException()
@@ -45,7 +49,7 @@ public static class MustBeUtcTests
 
     [Fact]
     public static void CustomMessage() =>
-        Test.CustomMessage<InvalidDateTimeException>(message => DateTime.Now.MustBeUtc(message:message));
+        Test.CustomMessage<InvalidDateTimeException>(message => DateTime.Now.MustBeUtc(message: message));
 
     [Fact]
     public static void CallerArgumentExpression()
@@ -83,8 +87,10 @@ public static class MustBeUtcTests
 
     [Fact]
     public static void DateTimeOffsetCustomMessage() =>
-        Test.CustomMessage<InvalidDateTimeException>(message =>
-            new DateTimeOffset(2026, 7, 13, 12, 30, 0, TimeSpan.FromHours(2)).MustBeUtc(message: message));
+        Test.CustomMessage<InvalidDateTimeException>(
+            message =>
+                new DateTimeOffset(2026, 7, 13, 12, 30, 0, TimeSpan.FromHours(2)).MustBeUtc(message: message)
+        );
 
     [Fact]
     public static void DateTimeOffsetCustomFactoryReceivesValue()
@@ -92,5 +98,15 @@ public static class MustBeUtcTests
         var value = new DateTimeOffset(2026, 7, 13, 12, 30, 0, TimeSpan.FromHours(2));
 
         Test.CustomException(value, (dateTimeOffset, factory) => dateTimeOffset.MustBeUtc(factory));
+    }
+
+    [Fact]
+    public static void DateTimeOffsetNoCustomException()
+    {
+        var value = new DateTimeOffset(2026, 7, 13, 10, 30, 0, TimeSpan.Zero);
+
+        var result = value.MustBeUtc(_ => null);
+
+        result.Should().Be(value);
     }
 }

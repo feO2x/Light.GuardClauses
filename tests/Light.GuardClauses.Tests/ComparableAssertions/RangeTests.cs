@@ -56,8 +56,8 @@ public static class RangeTests
     }
 
     [Theory]
-    [InlineData(0, 10, 0)]  // Lower boundary
-    [InlineData(0, 10, 5)]  // Middle value
+    [InlineData(0, 10, 0)] // Lower boundary
+    [InlineData(0, 10, 5)] // Middle value
     [InlineData(0, 10, 10)] // Upper boundary
     public static void InclusiveBetween_ValuesInRange(int from, int to, int value)
     {
@@ -69,8 +69,8 @@ public static class RangeTests
     }
 
     [Theory]
-    [InlineData(0, 10, -1)]  // Below range
-    [InlineData(0, 10, 11)]  // Above range
+    [InlineData(0, 10, -1)] // Below range
+    [InlineData(0, 10, 11)] // Above range
     public static void InclusiveBetween_ValuesOutOfRange(int from, int to, int value)
     {
         var range = Range.InclusiveBetween(from, to);
@@ -81,9 +81,9 @@ public static class RangeTests
     }
 
     [Theory]
-    [InlineData(0, 10, 1)]   // Just above lower boundary
-    [InlineData(0, 10, 5)]   // Middle value
-    [InlineData(0, 10, 9)]   // Just below upper boundary
+    [InlineData(0, 10, 1)] // Just above lower boundary
+    [InlineData(0, 10, 5)] // Middle value
+    [InlineData(0, 10, 9)] // Just below upper boundary
     public static void ExclusiveBetween_ValuesInRange(int from, int to, int value)
     {
         var range = Range.ExclusiveBetween(from, to);
@@ -94,10 +94,10 @@ public static class RangeTests
     }
 
     [Theory]
-    [InlineData(0, 10, 0)]   // Lower boundary
-    [InlineData(0, 10, 10)]  // Upper boundary
-    [InlineData(0, 10, -1)]  // Below range
-    [InlineData(0, 10, 11)]  // Above range
+    [InlineData(0, 10, 0)] // Lower boundary
+    [InlineData(0, 10, 10)] // Upper boundary
+    [InlineData(0, 10, -1)] // Below range
+    [InlineData(0, 10, 11)] // Above range
     public static void ExclusiveBetween_ValuesOutOfRange(int from, int to, int value)
     {
         var range = Range.ExclusiveBetween(from, to);
@@ -107,24 +107,24 @@ public static class RangeTests
         result.Should().BeFalse();
     }
 
-        [Theory]
-    [InlineData(10, 5)]      // To less than From
-    [InlineData(-5, -10)]    // Negative To less than From
+    [Theory]
+    [InlineData(10, 5)] // To less than From
+    [InlineData(-5, -10)] // Negative To less than From
     public static void InclusiveBetween_InvalidRange_ThrowsException(int from, int to)
     {
         Action inclusiveAct = () => Range.InclusiveBetween(from, to);
         inclusiveAct.Should().Throw<ArgumentOutOfRangeException>()
-            .And.Message.Should().Contain($"{nameof(to)} must not be less than {from}");
+                    .And.Message.Should().Contain($"{nameof(to)} must not be less than {from}");
     }
 
-        [Theory]
-    [InlineData(10, 5)]      // To less than From
-    [InlineData(-5, -10)]    // Negative To less than From
+    [Theory]
+    [InlineData(10, 5)] // To less than From
+    [InlineData(-5, -10)] // Negative To less than From
     public static void ExclusiveBetween_InvalidRange_ThrowsException(int from, int to)
     {
         Action exclusiveAct = () => Range.ExclusiveBetween(from, to);
         exclusiveAct.Should().Throw<ArgumentOutOfRangeException>()
-            .And.Message.Should().Contain($"{nameof(to)} must not be less than {from}");
+                    .And.Message.Should().Contain($"{nameof(to)} must not be less than {from}");
     }
 
     [Theory]
@@ -140,14 +140,13 @@ public static class RangeTests
     }
 
     public static readonly TheoryData<IEnumerable> Collections =
-        new ()
-        {
-            new List<int> { 1, 2, 3, 4 },
-            "This is a long string",
-            new[] { 'a', 'b', 'c', 'd' },
-            new ObservableCollection<long> { 1, -1 },
-            new ArrayList()
-        };
+    [
+        new List<int> { 1, 2, 3, 4 },
+        "This is a long string",
+        new[] { 'a', 'b', 'c', 'd' },
+        new ObservableCollection<long> { 1, -1 },
+        new ArrayList(),
+    ];
 
     [Fact]
     public static void EnumerableNull()
@@ -176,7 +175,7 @@ public static class RangeTests
             Array.Empty<char>(),
             new List<char> { 'a', 'b', 'c' },
             "007",
-            new ArraySegment<char>(new[] { 'a' })
+            new ArraySegment<char>(new[] { 'a' }),
         };
 
     [Fact]
@@ -234,6 +233,71 @@ public static class RangeTests
         {
             new[] { 1, 2, 3, 4 },
             Enumerable.Range(1, 500).ToArray(),
-            Array.Empty<int>()
+            Array.Empty<int>(),
         };
+
+    [Theory]
+    [MemberData(nameof(ArraySegments))]
+    public static void RangeForArraySegment(ArraySegment<char> segment)
+    {
+        var range = Range.For(segment);
+
+        var expectedRange = new Range<int>(0, segment.Count, true, false);
+        range.Should().Be(expectedRange);
+    }
+
+    public static readonly TheoryData<ArraySegment<char>> ArraySegments =
+        new ()
+        {
+            new ArraySegment<char>(new[] { 'a', 'b', 'c' }),
+            new ArraySegment<char>(new[] { 'a', 'b', 'c', 'd' }, 1, 2),
+            new ArraySegment<char>(Array.Empty<char>()),
+        };
+
+    [Fact]
+    public static void EqualityOperatorWithEqualRanges() =>
+        (Range.InclusiveBetween(1, 5) == Range.InclusiveBetween(1, 5)).Should().BeTrue();
+
+    [Fact]
+    public static void EqualityOperatorWithDifferentRanges() =>
+        (Range.InclusiveBetween(1, 5) == Range.InclusiveBetween(1, 6)).Should().BeFalse();
+
+    [Fact]
+    public static void InequalityOperatorWithEqualRanges() =>
+        (Range.ExclusiveBetween(1, 5) != Range.ExclusiveBetween(1, 5)).Should().BeFalse();
+
+    [Fact]
+    public static void InequalityOperatorWithDifferentRanges() =>
+        (Range.ExclusiveBetween(1, 5) != Range.ExclusiveBetween(2, 5)).Should().BeTrue();
+
+    [Theory]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    public static void RangesWithDifferentInclusivenessAreNotEqual(bool isFromInclusive, bool isToInclusive)
+    {
+        var range = new Range<int>(1, 5, isFromInclusive, isToInclusive);
+        var otherRange = new Range<int>(1, 5, !isFromInclusive, isToInclusive);
+
+        range.Equals(otherRange).Should().BeFalse();
+    }
+
+    [Fact]
+    public static void RangeDoesNotEqualNull() =>
+        Range.InclusiveBetween(1, 5).Equals(null).Should().BeFalse();
+
+    [Fact]
+    public static void RangeDoesNotEqualInstanceOfOtherType() =>
+        Range.InclusiveBetween(1, 5).Equals("no range").Should().BeFalse();
+
+    [Fact]
+    public static void RangeEqualsBoxedEqualRange() =>
+        Range.InclusiveBetween(1, 5).Equals((object) Range.InclusiveBetween(1, 5)).Should().BeTrue();
+
+    [Fact]
+    public static void EqualRangesHaveEqualHashCodes() =>
+        Range.InclusiveBetween(1, 5).GetHashCode().Should().Be(Range.InclusiveBetween(1, 5).GetHashCode());
+
+    [Fact]
+    public static void DifferentRangesHaveDifferentHashCodes() =>
+        Range.InclusiveBetween(1, 5).GetHashCode().Should().NotBe(Range.ExclusiveBetween(1, 5).GetHashCode());
 }

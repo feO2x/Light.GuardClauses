@@ -62,6 +62,16 @@ public static class DerivesFromTests
     public static void WrongBaseType() =>
         TestIsDerivingFrom(typeof(Exception), typeof(ArgumentException), false);
 
+    [Fact]
+    public static void WrongBaseTypeWithCustomTypeComparer() =>
+        typeof(Exception).DerivesFrom(typeof(ArgumentException), EquivalentTypeComparer.Instance)
+                         .Should().BeFalse();
+
+    [Fact]
+    public static void ValidBaseClassWithCustomTypeComparer() =>
+        typeof(StringDictionary).DerivesFrom(typeof(Dictionary<,>), EquivalentTypeComparer.Instance)
+                                .Should().BeTrue();
+
     private static void TestIsDerivingFrom(Type type, Type baseClass, bool expected) =>
         type.DerivesFrom(baseClass).Should().Be(expected);
 
@@ -70,7 +80,7 @@ public static class DerivesFromTests
     {
         var type = default(Type);
 
-        // ReSharper disable once ExpressionIsAlwaysNull
+        // ReSharper disable once AssignNullToNotNullAttribute
         Action act = () => type.DerivesFrom(typeof(object));
 
         act.Should().Throw<ArgumentNullException>()
@@ -82,7 +92,7 @@ public static class DerivesFromTests
     {
         var baseClass = default(Type);
 
-        // ReSharper disable once ExpressionIsAlwaysNull
+        // ReSharper disable once AssignNullToNotNullAttribute
         Action act = () => typeof(string).DerivesFrom(baseClass);
 
         act.Should().Throw<ArgumentNullException>()

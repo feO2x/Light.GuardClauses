@@ -25,7 +25,7 @@ public static class MustHaveLengthInTests
     [MemberData(nameof(LengthNotInRangeData))]
     public static void LengthNotInRange(ImmutableArray<int> array, Range<int> range)
     {
-        var act = () => array.MustHaveLengthIn(range, nameof(array));
+        var act = () => array.MustHaveLengthIn(range);
 
         act.Should().Throw<ArgumentOutOfRangeException>()
            .And.Message.Should().Contain($"must have its length in between {range.CreateRangeDescriptionText("and")}")
@@ -48,6 +48,16 @@ public static class MustHaveLengthInTests
             Range.FromInclusive(5).ToInclusive(10),
             (array, r, exceptionFactory) => array.MustHaveLengthIn(r, exceptionFactory)
         );
+
+    [Fact]
+    public static void CustomExceptionNotThrown()
+    {
+        var array = ImmutableArray.Create(1, 2, 3);
+
+        var result = array.MustHaveLengthIn(Range.InclusiveBetween(1, 3), (_, _) => new ());
+
+        result.Should().Equal(array);
+    }
 
     [Fact]
     public static void CustomMessage() =>
@@ -84,7 +94,7 @@ public static class MustHaveLengthInTests
     {
         var defaultArray = default(ImmutableArray<int>);
 
-        var act = () => defaultArray.MustHaveLengthIn(Range.FromInclusive(1).ToInclusive(5), nameof(defaultArray));
+        var act = () => defaultArray.MustHaveLengthIn(Range.FromInclusive(1).ToInclusive(5));
 
         act.Should().Throw<ArgumentOutOfRangeException>()
            .And.Message.Should().Contain("must have its length in between 1 (inclusive) and 5 (inclusive)")

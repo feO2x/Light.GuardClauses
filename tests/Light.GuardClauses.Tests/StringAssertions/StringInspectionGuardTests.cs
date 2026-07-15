@@ -6,66 +6,99 @@ using Xunit;
 
 namespace Light.GuardClauses.Tests.StringAssertions;
 
+// The string-inspection guards exist for seven families (digits, letters-or-digits, upper case,
+// lower case, Base64, hexadecimal, and no-white-space) across five receiver shapes (string,
+// Span, ReadOnlySpan, Memory, ReadOnlyMemory). The theories below run one test case per family
+// so that a failing case immediately identifies the defective guard family, while the shape
+// helpers keep the five receiver shapes in a Single Point of Truth.
 public static class StringInspectionGuardTests
 {
-    [Fact]
-    public static void EveryGuardReturnsEveryOriginalReceiverShape()
-    {
-        AssertDigitReturns("1٢３");
-        AssertLetterOrDigitReturns("AzΩ٢");
-        AssertUpperCaseReturns("AΩ 123!");
-        AssertLowerCaseReturns("aω 123!");
-        AssertBase64Returns("T W\tF\ru\n");
-        AssertHexadecimalReturns("09aAfF");
-        AssertNoWhiteSpaceReturns("Az-09");
+    [Theory]
+    [InlineData(GuardFamily.Digits, "1٢３")]
+    [InlineData(GuardFamily.LettersOrDigits, "AzΩ٢")]
+    [InlineData(GuardFamily.UpperCase, "AΩ 123!")]
+    [InlineData(GuardFamily.LowerCase, "aω 123!")]
+    [InlineData(GuardFamily.Base64, "T W\tF\ru\n")]
+    [InlineData(GuardFamily.Hexadecimal, "09aAfF")]
+    [InlineData(GuardFamily.NoWhiteSpace, "Az-09")]
+    [InlineData(GuardFamily.Digits, "")]
+    [InlineData(GuardFamily.LettersOrDigits, "")]
+    [InlineData(GuardFamily.UpperCase, "")]
+    [InlineData(GuardFamily.LowerCase, "")]
+    [InlineData(GuardFamily.Base64, "")]
+    [InlineData(GuardFamily.Hexadecimal, "")]
+    [InlineData(GuardFamily.NoWhiteSpace, "")]
+    public static void GuardReturnsEveryOriginalReceiverShape(GuardFamily family, string validValue) =>
+        AssertEveryShape(validValue, family);
 
-        string.Empty.MustContainOnlyDigits().Should().BeEmpty();
-        Span<char>.Empty.MustContainOnlyLettersOrDigits().IsEmpty.Should().BeTrue();
-        ReadOnlySpan<char>.Empty.MustBeUpperCase().IsEmpty.Should().BeTrue();
-        Memory<char>.Empty.MustBeLowerCase().IsEmpty.Should().BeTrue();
-        ReadOnlyMemory<char>.Empty.MustBeBase64().IsEmpty.Should().BeTrue();
-        Span<char>.Empty.MustBeHexadecimal().IsEmpty.Should().BeTrue();
-        ReadOnlySpan<char>.Empty.MustNotContainWhiteSpace().IsEmpty.Should().BeTrue();
+    [Theory]
+    [InlineData(GuardFamily.Digits, "1٢３")]
+    [InlineData(GuardFamily.LettersOrDigits, "AzΩ٢")]
+    [InlineData(GuardFamily.UpperCase, "AΩ 123!")]
+    [InlineData(GuardFamily.LowerCase, "aω 123!")]
+    [InlineData(GuardFamily.Base64, "T W\tF\ru\n")]
+    [InlineData(GuardFamily.Hexadecimal, "09aAfF")]
+    [InlineData(GuardFamily.NoWhiteSpace, "Az-09")]
+    public static void FactoryGuardReturnsEveryOriginalReceiverShape(GuardFamily family, string validValue) =>
+        AssertEveryFactoryShape(validValue, family);
+
+    [Theory]
+    [InlineData(GuardFamily.Digits)]
+    [InlineData(GuardFamily.LettersOrDigits)]
+    [InlineData(GuardFamily.UpperCase)]
+    [InlineData(GuardFamily.LowerCase)]
+    [InlineData(GuardFamily.Base64)]
+    [InlineData(GuardFamily.Hexadecimal)]
+    [InlineData(GuardFamily.NoWhiteSpace)]
+    public static void NullStringThrowsArgumentNullException(GuardFamily family)
+    {
+        var act = () => InvokeStringGuard(family, null);
+
+        act.Should().ThrowExactly<ArgumentNullException>()
+           .WithParameterName("value");
     }
 
-    [Fact]
-    public static void EveryFactoryGuardReturnsEveryOriginalReceiverShape()
+    [Theory]
+    [InlineData(GuardFamily.Digits, "a")]
+    [InlineData(GuardFamily.LettersOrDigits, "!")]
+    [InlineData(GuardFamily.UpperCase, "a")]
+    [InlineData(GuardFamily.LowerCase, "A")]
+    [InlineData(GuardFamily.Base64, "_")]
+    [InlineData(GuardFamily.Hexadecimal, "g")]
+    [InlineData(GuardFamily.NoWhiteSpace, " ")]
+    public static void InvalidStringContentThrowsStringException(GuardFamily family, string invalidValue)
     {
-        AssertEveryFactoryShape("1٢３", GuardFamily.Digits);
-        AssertEveryFactoryShape("AzΩ٢", GuardFamily.LettersOrDigits);
-        AssertEveryFactoryShape("AΩ 123!", GuardFamily.UpperCase);
-        AssertEveryFactoryShape("aω 123!", GuardFamily.LowerCase);
-        AssertEveryFactoryShape("T W\tF\ru\n", GuardFamily.Base64);
-        AssertEveryFactoryShape("09aAfF", GuardFamily.Hexadecimal);
-        AssertEveryFactoryShape("Az-09", GuardFamily.NoWhiteSpace);
+        var act = () => InvokeStringGuard(family, invalidValue);
+
+        act.Should().ThrowExactly<StringException>();
     }
 
-    [Fact]
-    public static void NullStringsThrowArgumentNullExceptionForEveryDefaultGuard()
-    {
-        string nullText = null;
+    [Theory]
+    [InlineData(GuardFamily.Digits, null)]
+    [InlineData(GuardFamily.Digits, "a")]
+    [InlineData(GuardFamily.LettersOrDigits, "!")]
+    [InlineData(GuardFamily.UpperCase, "a")]
+    [InlineData(GuardFamily.LowerCase, "A")]
+    [InlineData(GuardFamily.Base64, "_")]
+    [InlineData(GuardFamily.Hexadecimal, "g")]
+    [InlineData(GuardFamily.NoWhiteSpace, null)]
+    [InlineData(GuardFamily.NoWhiteSpace, " ")]
+    public static void StringFactoryReceivesNullOrInvalidContent(GuardFamily family, string invalidValue) =>
+        Test.CustomException(
+            invalidValue,
+            (value, factory) => InvokeStringFactoryGuard(family, value, factory)
+        );
 
-        ((Action) (() => nullText.MustContainOnlyDigits())).Should().ThrowExactly<ArgumentNullException>()
-                                                           .WithParameterName(nameof(nullText));
-        ((Action) (() => nullText.MustContainOnlyLettersOrDigits())).Should().ThrowExactly<ArgumentNullException>();
-        ((Action) (() => nullText.MustBeUpperCase())).Should().ThrowExactly<ArgumentNullException>();
-        ((Action) (() => nullText.MustBeLowerCase())).Should().ThrowExactly<ArgumentNullException>();
-        ((Action) (() => nullText.MustBeBase64())).Should().ThrowExactly<ArgumentNullException>();
-        ((Action) (() => nullText.MustBeHexadecimal())).Should().ThrowExactly<ArgumentNullException>();
-        ((Action) (() => nullText.MustNotContainWhiteSpace())).Should().ThrowExactly<ArgumentNullException>();
-    }
-
-    [Fact]
-    public static void InvalidStringContentThrowsStringExceptionForEveryGuard()
-    {
-        AssertStringFailure("a", value => value.MustContainOnlyDigits());
-        AssertStringFailure("!", value => value.MustContainOnlyLettersOrDigits());
-        AssertStringFailure("a", value => value.MustBeUpperCase());
-        AssertStringFailure("A", value => value.MustBeLowerCase());
-        AssertStringFailure("_", value => value.MustBeBase64());
-        AssertStringFailure("g", value => value.MustBeHexadecimal());
-        AssertStringFailure(" ", value => value.MustNotContainWhiteSpace());
-    }
+    [Theory]
+    [InlineData(GuardFamily.Digits, "a")]
+    [InlineData(GuardFamily.LettersOrDigits, "!")]
+    [InlineData(GuardFamily.UpperCase, "a")]
+    [InlineData(GuardFamily.LowerCase, "A")]
+    [InlineData(GuardFamily.Base64, "_")]
+    [InlineData(GuardFamily.Hexadecimal, "g")]
+    [InlineData(GuardFamily.NoWhiteSpace, " ")]
+    public static void BufferFactoryReceivesEveryInvalidReceiverShape(GuardFamily family, string invalidValue) =>
+        AssertEveryBufferFactoryFailure(invalidValue, family);
 
     [Fact]
     public static void DefaultBufferFailuresCaptureExpressionsAndSupportCustomMessages()
@@ -95,55 +128,92 @@ public static class StringInspectionGuardTests
                                                                          );
     }
 
-    [Fact]
-    public static void EveryStringFactoryReceivesNullAndInvalidContent()
-    {
-        string nullText = null;
-        Test.CustomException(nullText, (value, factory) => value.MustContainOnlyDigits(factory));
-        Test.CustomException("a", (value, factory) => value.MustContainOnlyDigits(factory));
-        Test.CustomException("!", (value, factory) => value.MustContainOnlyLettersOrDigits(factory));
-        Test.CustomException("a", (value, factory) => value.MustBeUpperCase(factory));
-        Test.CustomException("A", (value, factory) => value.MustBeLowerCase(factory));
-        Test.CustomException("_", (value, factory) => value.MustBeBase64(factory));
-        Test.CustomException("g", (value, factory) => value.MustBeHexadecimal(factory));
-        Test.CustomException(" ", (value, factory) => value.MustNotContainWhiteSpace(factory));
-    }
+    [Theory]
+    [InlineData("!", "invalidReadOnlySpan must contain only Unicode letters or decimal digits.")]
+    public static void DefaultReadOnlySpanFailure_LettersOrDigits(string invalidValue, string expectedMessage) =>
+        AssertReadOnlySpanFailure(
+            invalidValue,
+            expectedMessage,
+            (invalidReadOnlySpan, parameterName) => invalidReadOnlySpan.MustContainOnlyLettersOrDigits(parameterName)
+        );
+
+    [Theory]
+    [InlineData("a", "invalidReadOnlySpan must contain no Unicode lowercase characters.")]
+    public static void DefaultReadOnlySpanFailure_UpperCase(string invalidValue, string expectedMessage) =>
+        AssertReadOnlySpanFailure(
+            invalidValue,
+            expectedMessage,
+            (invalidReadOnlySpan, parameterName) => invalidReadOnlySpan.MustBeUpperCase(parameterName)
+        );
+
+    [Theory]
+    [InlineData("A", "invalidReadOnlySpan must contain no Unicode uppercase characters.")]
+    public static void DefaultReadOnlySpanFailure_LowerCase(string invalidValue, string expectedMessage) =>
+        AssertReadOnlySpanFailure(
+            invalidValue,
+            expectedMessage,
+            (invalidReadOnlySpan, parameterName) => invalidReadOnlySpan.MustBeLowerCase(parameterName)
+        );
+
+    [Theory]
+    [InlineData("_", "invalidReadOnlySpan must be valid standard Base64.")]
+    public static void DefaultReadOnlySpanFailure_Base64(string invalidValue, string expectedMessage) =>
+        AssertReadOnlySpanFailure(
+            invalidValue,
+            expectedMessage,
+            (invalidReadOnlySpan, parameterName) => invalidReadOnlySpan.MustBeBase64(parameterName)
+        );
+
+    [Theory]
+    [InlineData("g", "invalidReadOnlySpan must contain only ASCII hexadecimal characters.")]
+    public static void DefaultReadOnlySpanFailure_Hexadecimal(string invalidValue, string expectedMessage) =>
+        AssertReadOnlySpanFailure(
+            invalidValue,
+            expectedMessage,
+            (invalidReadOnlySpan, parameterName) => invalidReadOnlySpan.MustBeHexadecimal(parameterName)
+        );
+
+    [Theory]
+    [InlineData("\u00A0abc")]
+    [InlineData("ab\u2003cd")]
+    [InlineData("abc\u2029")]
+    public static void WhiteSpaceGuardUsesUnicodeClassificationAtEveryPosition(string invalidValue) =>
+        invalidValue.Invoking(value => value.MustNotContainWhiteSpace())
+                    .Should().ThrowExactly<StringException>();
 
     [Fact]
-    public static void EveryBufferFactoryReceivesEveryInvalidReceiverShape()
-    {
-        AssertEveryBufferFactoryFailure("a", GuardFamily.Digits);
-        AssertEveryBufferFactoryFailure("!", GuardFamily.LettersOrDigits);
-        AssertEveryBufferFactoryFailure("a", GuardFamily.UpperCase);
-        AssertEveryBufferFactoryFailure("A", GuardFamily.LowerCase);
-        AssertEveryBufferFactoryFailure("_", GuardFamily.Base64);
-        AssertEveryBufferFactoryFailure("g", GuardFamily.Hexadecimal);
-        AssertEveryBufferFactoryFailure(" ", GuardFamily.NoWhiteSpace);
-    }
-
-    [Fact]
-    public static void WhiteSpaceGuardUsesUnicodeClassificationAtEveryPosition()
-    {
-        "\u00A0abc".Invoking(value => value.MustNotContainWhiteSpace()).Should().ThrowExactly<StringException>();
-        "ab\u2003cd".Invoking(value => value.MustNotContainWhiteSpace()).Should().ThrowExactly<StringException>();
-        "abc\u2029".Invoking(value => value.MustNotContainWhiteSpace()).Should().ThrowExactly<StringException>();
+    public static void WhiteSpaceGuardAcceptsContentWithoutWhiteSpace() =>
         "abc-def".MustNotContainWhiteSpace().Should().Be("abc-def");
-    }
 
-    private static void AssertDigitReturns(string value) => AssertEveryShape(value, GuardFamily.Digits);
+    private static string InvokeStringGuard(GuardFamily family, string value) =>
+        family switch
+        {
+            GuardFamily.Digits => value.MustContainOnlyDigits(),
+            GuardFamily.LettersOrDigits => value.MustContainOnlyLettersOrDigits(),
+            GuardFamily.UpperCase => value.MustBeUpperCase(),
+            GuardFamily.LowerCase => value.MustBeLowerCase(),
+            GuardFamily.Base64 => value.MustBeBase64(),
+            GuardFamily.Hexadecimal => value.MustBeHexadecimal(),
+            GuardFamily.NoWhiteSpace => value.MustNotContainWhiteSpace(),
+            _ => throw new ArgumentOutOfRangeException(nameof(family), family, null),
+        };
 
-    private static void AssertLetterOrDigitReturns(string value) =>
-        AssertEveryShape(value, GuardFamily.LettersOrDigits);
-
-    private static void AssertUpperCaseReturns(string value) => AssertEveryShape(value, GuardFamily.UpperCase);
-
-    private static void AssertLowerCaseReturns(string value) => AssertEveryShape(value, GuardFamily.LowerCase);
-
-    private static void AssertBase64Returns(string value) => AssertEveryShape(value, GuardFamily.Base64);
-
-    private static void AssertHexadecimalReturns(string value) => AssertEveryShape(value, GuardFamily.Hexadecimal);
-
-    private static void AssertNoWhiteSpaceReturns(string value) => AssertEveryShape(value, GuardFamily.NoWhiteSpace);
+    private static string InvokeStringFactoryGuard(
+        GuardFamily family,
+        string value,
+        Func<string, Exception> exceptionFactory
+    ) =>
+        family switch
+        {
+            GuardFamily.Digits => value.MustContainOnlyDigits(exceptionFactory),
+            GuardFamily.LettersOrDigits => value.MustContainOnlyLettersOrDigits(exceptionFactory),
+            GuardFamily.UpperCase => value.MustBeUpperCase(exceptionFactory),
+            GuardFamily.LowerCase => value.MustBeLowerCase(exceptionFactory),
+            GuardFamily.Base64 => value.MustBeBase64(exceptionFactory),
+            GuardFamily.Hexadecimal => value.MustBeHexadecimal(exceptionFactory),
+            GuardFamily.NoWhiteSpace => value.MustNotContainWhiteSpace(exceptionFactory),
+            _ => throw new ArgumentOutOfRangeException(nameof(family), family, null),
+        };
 
     private static void AssertEveryShape(string value, GuardFamily family)
     {
@@ -382,11 +452,26 @@ public static class StringInspectionGuardTests
         }
     }
 
-    private static void AssertStringFailure(string invalidValue, Action<string> guard) =>
-        guard.Invoking(assertion => assertion(invalidValue))
-             .Should().ThrowExactly<StringException>();
+    private static void AssertReadOnlySpanFailure(
+        string invalidValue,
+        string expectedMessage,
+        ReadOnlySpanGuard guard
+    )
+    {
+        var act = () =>
+        {
+            ReadOnlySpan<char> invalidReadOnlySpan = invalidValue;
+            guard(invalidReadOnlySpan, nameof(invalidReadOnlySpan));
+        };
 
-    private enum GuardFamily
+        act.Should().ThrowExactly<StringException>()
+           .WithParameterName("invalidReadOnlySpan")
+           .WithMessage($"{expectedMessage}*");
+    }
+
+    private delegate ReadOnlySpan<char> ReadOnlySpanGuard(ReadOnlySpan<char> value, string parameterName);
+
+    public enum GuardFamily
     {
         Digits,
         LettersOrDigits,

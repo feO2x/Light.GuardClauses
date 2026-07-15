@@ -20,20 +20,14 @@ public static class IsValidEnumValueTests
     [InlineData(UInt64Enum.AllLow | UInt64Enum.High1)]
     [InlineData(UInt64Enum.AllHigh)]
     [InlineData(UInt64Enum.MaxValue)]
-    public static void EnumValueValid<T>(T enumValue) where T : struct, Enum, IComparable
-    {
-        if (enumValue is BindingFlags)
-        {
-
-        }
-
+    public static void EnumValueValid<T>(T enumValue) where T : struct, Enum, IComparable =>
         enumValue.IsValidEnumValue().Should().BeTrue();
-    }
 
     [Theory]
     [InlineData(2000)]
     [InlineData(-5)]
-    public static void EnumValueInvalid(int invalidDateTimeKindValue) => ((DateTimeKind) invalidDateTimeKindValue).IsValidEnumValue().Should().BeFalse();
+    public static void EnumValueInvalid(int invalidDateTimeKindValue) =>
+        ((DateTimeKind) invalidDateTimeKindValue).IsValidEnumValue().Should().BeFalse();
 
     [Theory]
     [InlineData(-1)]
@@ -44,7 +38,8 @@ public static class IsValidEnumValueTests
     [InlineData(2055)]
     [InlineData(4096)]
     [InlineData(int.MaxValue)]
-    public static void InvalidNumberStyles(int invalidValue) => ((NumberStyles) invalidValue).IsValidEnumValue().Should().BeFalse();
+    public static void InvalidNumberStyles(int invalidValue) =>
+        ((NumberStyles) invalidValue).IsValidEnumValue().Should().BeFalse();
 
     [Flags]
     public enum UInt64Enum : ulong
@@ -59,7 +54,41 @@ public static class IsValidEnumValueTests
         High3 = 1 << 61,
         High4 = 1 << 62,
         AllHigh = High1 | High2 | High3 | High4,
-        MaxValue = ulong.MaxValue
+        MaxValue = ulong.MaxValue,
+    }
+
+    [Theory]
+    [InlineData(ByteFlags.One)]
+    [InlineData(ByteFlags.One | ByteFlags.Two)]
+    [InlineData(ByteFlags.One | ByteFlags.Four)]
+    public static void ByteSizedFlagsEnumValueValid(ByteFlags value) => value.IsValidEnumValue().Should().BeTrue();
+
+    [Fact]
+    public static void ByteSizedFlagsEnumValueInvalid() => ((ByteFlags) 8).IsValidEnumValue().Should().BeFalse();
+
+    [Flags]
+    public enum ByteFlags : byte
+    {
+        One = 1,
+        Two = 2,
+        Four = 4,
+    }
+
+    [Theory]
+    [InlineData(UInt16Flags.One)]
+    [InlineData(UInt16Flags.One | UInt16Flags.Two)]
+    [InlineData(UInt16Flags.Two | UInt16Flags.Four)]
+    public static void UInt16SizedFlagsEnumValueValid(UInt16Flags value) => value.IsValidEnumValue().Should().BeTrue();
+
+    [Fact]
+    public static void UInt16SizedFlagsEnumValueInvalid() => ((UInt16Flags) 8).IsValidEnumValue().Should().BeFalse();
+
+    [Flags]
+    public enum UInt16Flags : ushort
+    {
+        One = 1,
+        Two = 2,
+        Four = 4,
     }
 
     [Fact]
@@ -72,5 +101,4 @@ public static class IsValidEnumValueTests
 
     [Flags]
     public enum EmptyFlagsEnum { }
-
 }

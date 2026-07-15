@@ -60,18 +60,15 @@ public static class StreamGuardTests
         }
     }
 
-    [Fact]
-    public static void GuardsPreserveConcreteTypeAndOriginalInstance()
+    [Theory]
+    [InlineData(Capability.Readable)]
+    [InlineData(Capability.Writable)]
+    [InlineData(Capability.Seekable)]
+    public static void GuardsPreserveConcreteTypeAndOriginalInstance(Capability capability)
     {
         var stream = new TrackingStream(true, true, true);
 
-        var readable = stream.MustBeReadable();
-        var writable = stream.MustBeWritable();
-        var seekable = stream.MustBeSeekable();
-
-        readable.Should().BeSameAs(stream);
-        writable.Should().BeSameAs(stream);
-        seekable.Should().BeSameAs(stream);
+        InvokeDefault(stream, capability).Should().BeSameAs(stream);
     }
 
     [Theory]

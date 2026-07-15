@@ -38,7 +38,7 @@ public static class ImplementsTests
     {
         var type = default(Type);
 
-        // ReSharper disable once ExpressionIsAlwaysNull
+        // ReSharper disable once AssignNullToNotNullAttribute
         Action act = () => type.Implements(typeof(IComparable));
 
         act.Should().Throw<ArgumentNullException>()
@@ -50,13 +50,23 @@ public static class ImplementsTests
     {
         var interfaceType = default(Type);
 
-        // ReSharper disable once ExpressionIsAlwaysNull
+        // ReSharper disable once AssignNullToNotNullAttribute
         Action act = () => typeof(List<object>).Implements(interfaceType);
 
         act.Should().Throw<ArgumentNullException>()
            .WithParameterName(nameof(interfaceType));
     }
 
-    private static void CheckImplements(Type type, Type interfaceType, bool expected) => 
+    [Fact]
+    public static void InterfaceNotImplementedWithCustomTypeComparer() =>
+        typeof(Exception).Implements(typeof(IObservable<>), EquivalentTypeComparer.Instance)
+                         .Should().BeFalse();
+
+    [Fact]
+    public static void InterfaceImplementedWithCustomTypeComparer() =>
+        typeof(List<string>).Implements(typeof(IList<>), EquivalentTypeComparer.Instance)
+                            .Should().BeTrue();
+
+    private static void CheckImplements(Type type, Type interfaceType, bool expected) =>
         type.Implements(interfaceType).Should().Be(expected);
 }

@@ -160,11 +160,35 @@ public static class MustNotContainNullOrWhiteSpaceTests
     }
 
     [Fact]
+    public static void InvalidReadOnlyIndexableReceiverThrowsAtItsPosition()
+    {
+        var values = new ReadOnlyIndexableOnlyList<string?>(["Alpha", " ", "Gamma"]);
+
+        Action act = () => values.MustNotContainNullOrWhiteSpace();
+
+        act.Should().Throw<ExistingItemException>()
+           .WithParameterName(nameof(values))
+           .WithMessage("*position 1*");
+    }
+
+    [Fact]
     public static void ImmutableArrayCustomFactoryReceivesOriginalShape() =>
         Test.CustomException(
             ImmutableArray.Create<string?>(" "),
             (values, factory) => values.MustNotContainNullOrWhiteSpace(factory)
         );
+
+    [Fact]
+    public static void ValidImmutableArrayDoesNotInvokeCustomFactory()
+    {
+        var values = ImmutableArray.Create<string?>("Alpha", "Beta");
+
+        var result = values.MustNotContainNullOrWhiteSpace(
+            _ => new InvalidOperationException("The factory must not be invoked.")
+        );
+
+        result.Should().Equal(values);
+    }
 
     [Fact]
     public static void DefaultImmutableArrayDoesNotInvokeCustomFactory()
