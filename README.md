@@ -12,7 +12,7 @@
 
 - 🧰 **130+ assertions** cover nullability, collections, text, numbers, ranges, dates, URIs, types, streams, and more.
 - ⚡ **As fast as handwritten guards** — most assertions are optimized and benchmarked against equivalent imperative checks using a dedicated BenchmarkDotNet suite.
-- 🏷️ **Automatic parameter names** - with C# 10 and newer, `CallerArgumentExpression` produce clear exceptions without repetitive `nameof` calls.
+- 🏷️ **Automatic parameter names** - with C# 10 and newer, `CallerArgumentExpression` produces clear exceptions without repetitive `nameof` calls.
 - 🔄 **Validation and assignment in one statement** works because throwing guards return the successfully validated value.
 - 🧩 **Custom exception factories** let you control exception construction when the built-in exception does not fit your application.
 - 🧠 **Tooling-aware contracts** support Nullable Reference Types for Roslyn, .NET code analysis, and JetBrains annotations.
