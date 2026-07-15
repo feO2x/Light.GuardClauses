@@ -84,13 +84,33 @@ public static class SourceFileMergerFrameworkTests
     public static void ExportUsesLfLineEndings()
     {
         using var temporaryDirectory = new TemporaryDirectory();
+        var sourceFolder = Path.Combine(temporaryDirectory.DirectoryPath, "Source");
+        Directory.CreateDirectory(sourceFolder);
+        File.WriteAllText(
+            Path.Combine(sourceFolder, "Check.cs"),
+            "namespace Light.GuardClauses; public static partial class Check { }"
+        );
+        File.WriteAllText(
+            Path.Combine(sourceFolder, "Throw.cs"),
+            "namespace Light.GuardClauses.ExceptionFactory; public static partial class Throw { }"
+        );
+        File.WriteAllText(
+            Path.Combine(sourceFolder, "CrLfComment.cs"),
+            "namespace Light.GuardClauses;\r\n/* First line\r\nSecond line */\r\npublic static class CrLfComment { }"
+        );
         var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "LfLineEndings.cs");
+        var options = CreateOptions(targetFile, SourceTargetFramework.NetStandard2_0) with
+        {
+            SourceFolder = sourceFolder,
+        };
 
-        SourceFileMerger.CreateSingleSourceFile(CreateOptions(targetFile, SourceTargetFramework.NetStandard2_0));
+        SourceFileMerger.CreateSingleSourceFile(options);
         var sourceCode = File.ReadAllText(targetFile);
 
+        sourceCode.Should().Contain("First line\nSecond line");
         sourceCode.Should().Contain("\n");
         sourceCode.Should().NotContain("\r");
+        sourceCode.Should().EndWith("\n");
     }
 
     [Fact]

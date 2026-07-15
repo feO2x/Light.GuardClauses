@@ -660,6 +660,11 @@ namespace System.Runtime.CompilerServices
 
         Console.WriteLine("File is cleaned up...");
         targetFileContent = CleanupStep.Cleanup(targetFileContent, options).ToString();
+        targetFileContent = targetFileContent.ReplaceLineEndings("\n");
+        if (!targetFileContent.EndsWith('\n'))
+        {
+            targetFileContent += '\n';
+        }
 
         // Write the target file 
         Console.WriteLine("File is written to disk...");
