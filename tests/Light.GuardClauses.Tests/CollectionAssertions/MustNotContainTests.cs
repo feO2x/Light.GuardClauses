@@ -17,10 +17,12 @@ public static class MustNotContainTests
     [InlineData(new[] { "Corge", "Grault", null }, null)]
     public static void ItemExists(string[] collection, string item)
     {
-        Action act = () => collection.MustNotContain(item, nameof(collection));
+        Action act = () => collection.MustNotContain(item);
 
         var assertions = act.Should().Throw<ExistingItemException>().Which;
-        assertions.Message.Should().Contain($"{nameof(collection)} must not contain {item.ToStringOrNull()}, but it actually does.");
+        assertions.Message.Should().Contain(
+            $"{nameof(collection)} must not contain {item.ToStringOrNull()}, but it actually does."
+        );
         assertions.ParamName.Should().BeSameAs(nameof(collection));
     }
 
@@ -34,37 +36,72 @@ public static class MustNotContainTests
     [Fact]
     public static void CollectionNull()
     {
-        Action act = () => ((ObservableCollection<object>)null).MustNotContain(new object());
+        Action act = () => ((ObservableCollection<object>) null).MustNotContain(new object());
 
         act.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
     public static void CustomException() =>
-        Test.CustomException(new List<string> { "Foo" },
-                             "Foo",
-                             (collection, value, exceptionFactory) => collection.MustNotContain(value, exceptionFactory));
+        Test.CustomException(
+            new List<string> { "Foo" },
+            "Foo",
+            (collection, value, exceptionFactory) => collection.MustNotContain(value, exceptionFactory)
+        );
 
     [Fact]
     public static void CustomExceptionCollectionNull() =>
-        Test.CustomException((Collection<int>)null,
-                             42,
-                             (collection, i, exceptionFactory) => collection.MustNotContain(i, exceptionFactory));
+        Test.CustomException(
+            (Collection<int>) null,
+            42,
+            (collection, i, exceptionFactory) => collection.MustNotContain(i, exceptionFactory)
+        );
 
     [Fact]
     public static void NoCustomExceptionThrown()
     {
         var collection = new[] { 1, 2 };
-        collection.MustNotContain(3, (_, _) => new Exception()).Should().BeSameAs(collection);
+        collection.MustNotContain(3, (_, _) => new ()).Should().BeSameAs(collection);
+    }
+
+    [Fact]
+    public static void LazyEnumerableItemExists()
+    {
+        var enumerable = new TrackingEnumerable<int>([1, 2, 3], false);
+
+        var act = () => enumerable.MustNotContain(2);
+
+        act.Should().Throw<ExistingItemException>()
+           .WithParameterName(nameof(enumerable));
+    }
+
+    [Fact]
+    public static void LazyEnumerableItemExistsNot()
+    {
+        var enumerable = new TrackingEnumerable<int>([1, 2, 3], false);
+
+        enumerable.MustNotContain(42).Should().BeSameAs(enumerable);
+    }
+
+    [Fact]
+    public static void NoCustomExceptionThrownLazyEnumerable()
+    {
+        var enumerable = new TrackingEnumerable<int>([1, 2, 3], false);
+
+        enumerable.MustNotContain(42, (_, _) => new ()).Should().BeSameAs(enumerable);
     }
 
     [Fact]
     public static void CustomMessage() =>
-        Test.CustomMessage<ExistingItemException>(message => new HashSet<int> { 42 }.MustNotContain(42, message: message));
+        Test.CustomMessage<ExistingItemException>(
+            message => new HashSet<int> { 42 }.MustNotContain(42, message: message)
+        );
 
     [Fact]
     public static void CustomMessageCollectionNull() =>
-        Test.CustomMessage<ArgumentNullException>(message => ((List<bool>)null).MustNotContain(false, message: message));
+        Test.CustomMessage<ArgumentNullException>(
+            message => ((List<bool>) null).MustNotContain(false, message: message)
+        );
 
     [Fact]
     public static void CallerArgumentExpression()
@@ -85,7 +122,7 @@ public static class MustNotContainTests
     {
         var array = ImmutableArray.Create(items);
 
-        Action act = () => array.MustNotContain(item, nameof(array));
+        Action act = () => array.MustNotContain(item);
 
         var assertions = act.Should().Throw<ExistingItemException>().Which;
         assertions.Message.Should()
@@ -172,7 +209,7 @@ public static class MustNotContainTests
         var defaultArray = default(ImmutableArray<object>);
 
         // Default instance should not throw even with custom message
-        var result = defaultArray.MustNotContain(new object(), message: "Custom message");
+        var result = defaultArray.MustNotContain(new (), message: "Custom message");
 
         result.IsDefault.Should().BeTrue();
     }

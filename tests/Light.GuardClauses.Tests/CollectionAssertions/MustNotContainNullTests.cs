@@ -180,6 +180,18 @@ public static class MustNotContainNullTests
         );
 
     [Fact]
+    public static void ValidImmutableArrayDoesNotInvokeCustomFactory()
+    {
+        var values = ImmutableArray.Create<string?>("Alpha", "Beta");
+
+        var result = values.MustNotContainNull(
+            _ => new InvalidOperationException("The factory must not be invoked.")
+        );
+
+        result.Should().Equal(values);
+    }
+
+    [Fact]
     public static void DefaultImmutableArrayDoesNotInvokeCustomFactory()
     {
         var values = default(ImmutableArray<string?>);

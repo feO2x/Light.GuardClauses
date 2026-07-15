@@ -12,10 +12,12 @@ public static class MustNotBeSameAsTests
     [InlineData("Bar")]
     public static void ReferencesEqual(string reference)
     {
-        Action act = () => reference.MustNotBeSameAs(reference, nameof(reference));
+        Action act = () => reference.MustNotBeSameAs(reference);
 
         act.Should().Throw<SameObjectReferenceException>()
-           .And.Message.Should().Contain($"{nameof(reference)} must not point to object \"{reference}\", but it actually does.");
+           .And.Message.Should().Contain(
+                $"{nameof(reference)} must not point to object \"{reference}\", but it actually does."
+            );
     }
 
     [Theory]
@@ -29,9 +31,15 @@ public static class MustNotBeSameAsTests
     }
 
     [Fact]
-    public static void CustomException() => 
-        Test.CustomException("Baz",
-                             (reference, exceptionFactory) => reference.MustNotBeSameAs(reference, exceptionFactory));
+    public static void CustomException() =>
+        Test.CustomException(
+            "Baz",
+            (reference, exceptionFactory) => reference.MustNotBeSameAs(reference, exceptionFactory)
+        );
+
+    [Fact]
+    public static void CustomExceptionReferencesDifferent() =>
+        "Foo".MustNotBeSameAs("Bar", _ => null).Should().Be("Foo");
 
     [Fact]
     public static void CustomMessage() =>

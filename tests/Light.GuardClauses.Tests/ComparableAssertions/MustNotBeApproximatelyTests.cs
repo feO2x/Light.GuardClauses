@@ -29,7 +29,7 @@ public static class MustNotBeApproximatelyTests
     [InlineData(0.0001, 0.00015, 0.0001)]
     public static void ValuesApproximatelyEqual_Double(double value, double other, double tolerance)
     {
-        var act = () => value.MustNotBeApproximately(other, tolerance, nameof(value));
+        var act = () => value.MustNotBeApproximately(other, tolerance);
 
         var exceptionAssertion = act.Should().Throw<ArgumentOutOfRangeException>().Which;
         exceptionAssertion.Message.Should().Contain(
@@ -45,7 +45,7 @@ public static class MustNotBeApproximatelyTests
     [InlineData(0.0001f, 0.00015f, 0.0001f)]
     public static void ValuesApproximatelyEqual_Float(float value, float other, float tolerance)
     {
-        var act = () => value.MustNotBeApproximately(other, tolerance, nameof(value));
+        var act = () => value.MustNotBeApproximately(other, tolerance);
 
         var exceptionAssertion = act.Should().Throw<ArgumentOutOfRangeException>().Which;
         exceptionAssertion.Message.Should().Contain(
@@ -180,6 +180,14 @@ public static class MustNotBeApproximatelyTests
            .WithParameterName(nameof(pi));
     }
 
+    [Fact]
+    public static void NoCustomExceptionThrownWithDefaultTolerance_Double() =>
+        5.1.MustNotBeApproximately(5.0, (_, _) => null).Should().Be(5.1);
+
+    [Fact]
+    public static void NoCustomExceptionThrownWithDefaultTolerance_Float() =>
+        5.1f.MustNotBeApproximately(5.0f, (_, _) => null).Should().Be(5.1f);
+
 #if NET8_0_OR_GREATER
     [Theory]
     [InlineData(5.3, 5.0, 0.2)]
@@ -196,7 +204,7 @@ public static class MustNotBeApproximatelyTests
     [InlineData(0.0001, 0.00015, 0.0001)]
     public static void ValuesApproximatelyEqual_Generic(double value, double other, double tolerance)
     {
-        var act = () => value.MustNotBeApproximately<double>(other, tolerance, nameof(value));
+        var act = () => value.MustNotBeApproximately<double>(other, tolerance);
 
         var exceptionAssertion = act.Should().Throw<ArgumentOutOfRangeException>().Which;
         exceptionAssertion.Message.Should().Contain(
@@ -217,7 +225,7 @@ public static class MustNotBeApproximatelyTests
     [Fact]
     public static void NoCustomExceptionThrown_Generic() =>
         5.2.MustNotBeApproximately<double>(5.0, 0.1, (_, _, _) => null).Should().Be(5.2);
-    
+
     [Fact]
     public static void CustomMessage_Generic() =>
         Test.CustomMessage<ArgumentOutOfRangeException>(

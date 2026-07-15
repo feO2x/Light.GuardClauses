@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using FluentAssertions;
 using Light.GuardClauses.Exceptions;
@@ -18,10 +19,12 @@ public static class MustHaveOneSchemeOfTests
         Action act = () => new Uri(uri).MustHaveOneSchemeOf(schemes, nameof(uri));
 
         var exceptionAssertion = act.Should().Throw<InvalidUriSchemeException>().Which;
-        exceptionAssertion.Message.Should().Contain(new StringBuilder().AppendLine($"{nameof(uri)} must use one of the following schemes")
-                                                                       .AppendItemsWithNewLine(schemes)
-                                                                       .AppendLine($"but it actually is \"{uri}\".")
-                                                                       .ToString());
+        exceptionAssertion.Message.Should().Contain(
+            new StringBuilder().AppendLine($"{nameof(uri)} must use one of the following schemes")
+                               .AppendItemsWithNewLine(schemes)
+                               .AppendLine($"but it actually is \"{uri}\".")
+                               .ToString()
+        );
         exceptionAssertion.ParamName.Should().BeSameAs(nameof(uri));
     }
 
@@ -33,6 +36,36 @@ public static class MustHaveOneSchemeOfTests
         var instance = new Uri(uri);
 
         instance.MustHaveOneSchemeOf(schemes).Should().BeSameAs(instance);
+    }
+
+    [Fact]
+    public static void SchemePresentInLazySchemes()
+    {
+        var instance = new Uri("https://www.example.com");
+        var schemes = new[] { "http", "https" }.Select(scheme => scheme);
+
+        instance.MustHaveOneSchemeOf(schemes).Should().BeSameAs(instance);
+    }
+
+    [Fact]
+    public static void SchemeNotPresentInLazySchemes()
+    {
+        var uri = new Uri("ftp://example.com");
+        var schemes = new[] { "http", "https" }.Select(scheme => scheme);
+
+        var act = () => uri.MustHaveOneSchemeOf(schemes);
+
+        act.Should().Throw<InvalidUriSchemeException>()
+           .WithParameterName(nameof(uri));
+    }
+
+    [Fact]
+    public static void CustomExceptionNotThrownForLazySchemes()
+    {
+        var url = new Uri("https://www.example.com");
+        var schemes = new[] { "http", "https" }.Select(scheme => scheme);
+
+        url.MustHaveOneSchemeOf(schemes, (_, _) => new ()).Should().BeSameAs(url);
     }
 
     [Fact]
@@ -54,33 +87,43 @@ public static class MustHaveOneSchemeOfTests
     [Theory]
     [MemberData(nameof(CustomExceptionData))]
     public static void CustomException(Uri url, List<string> urlSchemes) =>
-        Test.CustomException(url,
-                             urlSchemes,
-                             (uri, schemes, exceptionFactory) => uri.MustHaveOneSchemeOf(schemes, exceptionFactory));
+        Test.CustomException(
+            url,
+            urlSchemes,
+            (uri, schemes, exceptionFactory) => uri.MustHaveOneSchemeOf(schemes, exceptionFactory)
+        );
 
     public static readonly TheoryData<Uri, List<string>> CustomExceptionData =
         new ()
         {
-            { new Uri("https://www.microsoft.com"), new List<string> { "http", "ftp" } },
-            { null, new List<string> { "http", "https" } },
-            { new Uri("https://github.com"), null }
+            { new ("https://www.microsoft.com"), new() { "http", "ftp" } },
+            { null, new() { "http", "https" } },
+            { new ("https://github.com"), null },
         };
 
     [Fact]
     public static void CustomMessage() =>
-        Test.CustomMessage<InvalidUriSchemeException>(message => new Uri("https://go.com").MustHaveOneSchemeOf(new[] { "http" }, message: message));
+        Test.CustomMessage<InvalidUriSchemeException>(
+            message => new Uri("https://go.com").MustHaveOneSchemeOf(new[] { "http" }, message: message)
+        );
 
     [Fact]
     public static void CustomMessageUrlRelative() =>
-        Test.CustomMessage<RelativeUriException>(message => new Uri("/api", UriKind.Relative).MustHaveOneSchemeOf(new[] { "https" }, message: message));
+        Test.CustomMessage<RelativeUriException>(
+            message => new Uri("/api", UriKind.Relative).MustHaveOneSchemeOf(new[] { "https" }, message: message)
+        );
 
     [Fact]
     public static void CustomMessageUrlNull() =>
-        Test.CustomMessage<ArgumentNullException>(message => ((Uri) null).MustHaveOneSchemeOf(new[] { "http" }, message: message));
+        Test.CustomMessage<ArgumentNullException>(
+            message => ((Uri) null).MustHaveOneSchemeOf(new[] { "http" }, message: message)
+        );
 
     [Fact]
     public static void CustomMessageSchemesNull() =>
-        Test.CustomMessage<ArgumentNullException>(message => new Uri("https://www.dict.cc").MustHaveOneSchemeOf(null!, message: message));
+        Test.CustomMessage<ArgumentNullException>(
+            message => new Uri("https://www.dict.cc").MustHaveOneSchemeOf(null!, message: message)
+        );
 
     [Fact]
     public static void CallerArgumentExpression()

@@ -69,7 +69,7 @@ public static class Test
         }
         catch (ExceptionDummy exception)
         {
-            exception.Should().BeSameAs(exception);
+            exception.Should().BeSameAs(Exception);
             capturedParameter.Should().Equal(invalidValue.ToArray());
         }
     }
@@ -91,7 +91,7 @@ public static class Test
         }
         catch (ExceptionDummy exception)
         {
-            exception.Should().BeSameAs(exception);
+            exception.Should().BeSameAs(Exception);
             capturedParameter.Should().Equal(invalidValue.ToArray());
         }
     }
@@ -116,7 +116,7 @@ public static class Test
         }
         catch (ExceptionDummy exception)
         {
-            exception.Should().BeSameAs(exception);
+            exception.Should().BeSameAs(Exception);
             capturedParameter.ToArray().Should().Equal(invalidValue.ToArray());
         }
     }
@@ -141,7 +141,7 @@ public static class Test
         }
         catch (ExceptionDummy exception)
         {
-            exception.Should().BeSameAs(exception);
+            exception.Should().BeSameAs(Exception);
             capturedParameter.ToArray().Should().Equal(invalidValue.ToArray());
         }
     }
@@ -198,7 +198,7 @@ public static class Test
         }
         catch (ExceptionDummy exception)
         {
-            exception.Should().BeSameAs(exception);
+            exception.Should().BeSameAs(Exception);
             capturedFirst.Should().Equal(invalidValue.ToArray());
             capturedSecond.Should().Be(additionalValue);
         }
@@ -227,7 +227,7 @@ public static class Test
         }
         catch (ExceptionDummy exception)
         {
-            exception.Should().BeSameAs(exception);
+            exception.Should().BeSameAs(Exception);
             capturedFirst.Should().Equal(invalidValue.ToArray());
             capturedSecond.Should().Be(additionalValue);
         }
@@ -256,7 +256,7 @@ public static class Test
         }
         catch (ExceptionDummy exception)
         {
-            exception.Should().BeSameAs(exception);
+            exception.Should().BeSameAs(Exception);
             capturedFirst.ToArray().Should().Equal(invalidValue.ToArray());
             capturedSecond.Should().Be(additionalValue);
         }
@@ -285,7 +285,7 @@ public static class Test
         }
         catch (ExceptionDummy exception)
         {
-            exception.Should().BeSameAs(exception);
+            exception.Should().BeSameAs(Exception);
             capturedFirst.ToArray().Should().Equal(invalidValue.ToArray());
             capturedSecond.Should().Be(additionalValue);
         }

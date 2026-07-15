@@ -15,7 +15,7 @@ public static class MustContainTests
     [InlineData(new[] { -5491, 6199 }, 42)]
     public static void ItemNotPartOf(int[] collection, int item)
     {
-        Action act = () => collection.MustContain(item, nameof(collection));
+        Action act = () => collection.MustContain(item);
 
         var assertion = act.Should().Throw<MissingItemException>().Which;
         assertion.Message.Should().Contain($"{nameof(collection)} must contain {item}, but it actually does not.");
@@ -41,15 +41,44 @@ public static class MustContainTests
     [InlineData(new[] { long.MinValue, long.MaxValue }, 42L)]
     [InlineData(null, 42L)]
     public static void CustomException(long[] array, long item) =>
-        Test.CustomException(array,
-                             item,
-                             (collection, i, exceptionFactory) => collection.MustContain(i, exceptionFactory));
+        Test.CustomException(
+            array,
+            item,
+            (collection, i, exceptionFactory) => collection.MustContain(i, exceptionFactory)
+        );
 
     [Fact]
     public static void CustomExceptionNotThrown()
     {
         var collection = new List<int> { 1, 2, 3 };
-        collection.MustContain(2, (_, _) => new Exception()).Should().BeSameAs(collection);
+        collection.MustContain(2, (_, _) => new ()).Should().BeSameAs(collection);
+    }
+
+    [Fact]
+    public static void LazyEnumerableItemPartOf()
+    {
+        var enumerable = new TrackingEnumerable<int>([1, 2, 3], false);
+
+        enumerable.MustContain(2).Should().BeSameAs(enumerable);
+    }
+
+    [Fact]
+    public static void LazyEnumerableItemNotPartOf()
+    {
+        var enumerable = new TrackingEnumerable<int>([1, 2, 3], false);
+
+        var act = () => enumerable.MustContain(42);
+
+        act.Should().Throw<MissingItemException>()
+           .WithParameterName(nameof(enumerable));
+    }
+
+    [Fact]
+    public static void CustomExceptionNotThrownLazyEnumerable()
+    {
+        var enumerable = new TrackingEnumerable<int>([1, 2, 3], false);
+
+        enumerable.MustContain(3, (_, _) => new ()).Should().BeSameAs(enumerable);
     }
 
     [Fact]
@@ -57,13 +86,15 @@ public static class MustContainTests
         Test.CustomMessage<MissingItemException>(message => new List<string>().MustContain("Foo", message: message));
 
     [Fact]
-    public static void CustomMessageCollectionNull() => 
-        Test.CustomMessage<ArgumentNullException>(message => ((ObservableCollection<string>) null).MustContain("Foo", message: message));
+    public static void CustomMessageCollectionNull() =>
+        Test.CustomMessage<ArgumentNullException>(
+            message => ((ObservableCollection<string>) null).MustContain("Foo", message: message)
+        );
 
     [Fact]
     public static void CallerArgumentExpression()
     {
-        var array = new [] { "Foo", "Bar" };
+        var array = new[] { "Foo", "Bar" };
 
         var act = () => array.MustContain("Baz");
 
@@ -77,7 +108,7 @@ public static class MustContainTests
     public static void ImmutableArrayItemNotPartOf(int[] source, int item)
     {
         var immutableArray = source.ToImmutableArray();
-        Action act = () => immutableArray.MustContain(item, nameof(immutableArray));
+        Action act = () => immutableArray.MustContain(item);
 
         var assertion = act.Should().Throw<MissingItemException>().Which;
         assertion.Message.Should().Contain($"{nameof(immutableArray)} must contain {item}, but it actually does not.");
@@ -119,7 +150,7 @@ public static class MustContainTests
     public static void ImmutableArrayCustomExceptionNotThrown()
     {
         var immutableArray = ImmutableArray.Create(1, 2, 3);
-        immutableArray.MustContain(2, (_, _) => new Exception()).Should().Equal(immutableArray);
+        immutableArray.MustContain(2, (_, _) => new ()).Should().Equal(immutableArray);
     }
 
     [Fact]

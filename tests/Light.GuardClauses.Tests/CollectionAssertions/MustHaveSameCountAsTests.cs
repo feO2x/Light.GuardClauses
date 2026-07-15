@@ -54,6 +54,7 @@ public static class MustHaveSameCountAsTests
     {
         int[] values = null;
 
+        // ReSharper disable once ExpressionIsAlwaysNull
         Action act = () => values.MustHaveSameCountAs(Array.Empty<string>());
 
         act.Should().Throw<ArgumentNullException>().WithParameterName(nameof(values));
@@ -65,6 +66,7 @@ public static class MustHaveSameCountAsTests
         var values = new TrackingEnumerable<int>([1]);
         string[] other = null;
 
+        // ReSharper disable once ExpressionIsAlwaysNull
         Action act = () => values.MustHaveSameCountAs(other);
 
         act.Should().Throw<ArgumentNullException>().WithParameterName("otherCollection");
@@ -111,6 +113,19 @@ public static class MustHaveSameCountAsTests
 
         act.Should().Throw<Exception>().Which.Should().BeSameAs(expectedException);
         invocationCount.Should().Be(1);
+    }
+
+    [Fact]
+    public static void CustomFactoryIsNotInvokedWhenComparingACollectionWithItself()
+    {
+        var collection = new TrackingEnumerable<int>([1, 2]);
+
+        collection.MustHaveSameCountAs(
+                       collection,
+                       (_, _) => throw new InvalidOperationException("The factory must not be invoked.")
+                   )
+                  .Should().BeSameAs(collection);
+        collection.EnumeratorCount.Should().Be(0);
     }
 
     [Fact]

@@ -29,7 +29,7 @@ public static class MustBeApproximatelyTests
     [InlineData(0.0001, 0.0002, 0.00005)]
     public static void ValuesNotApproximatelyEqual_Double(double value, double other, double tolerance)
     {
-        var act = () => value.MustBeApproximately(other, tolerance, nameof(value));
+        var act = () => value.MustBeApproximately(other, tolerance);
 
         var exceptionAssertion = act.Should().Throw<ArgumentOutOfRangeException>().Which;
         exceptionAssertion.Message.Should().Contain(
@@ -45,7 +45,7 @@ public static class MustBeApproximatelyTests
     [InlineData(0.0001f, 0.0002f, 0.00005f)]
     public static void ValuesNotApproximatelyEqual_Float(float value, float other, float tolerance)
     {
-        var act = () => value.MustBeApproximately(other, tolerance, nameof(value));
+        var act = () => value.MustBeApproximately(other, tolerance);
 
         var exceptionAssertion = act.Should().Throw<ArgumentOutOfRangeException>().Which;
         exceptionAssertion.Message.Should().Contain(
@@ -55,27 +55,39 @@ public static class MustBeApproximatelyTests
     }
 
     [Fact]
-    public static void DefaultTolerance_Double()
+    public static void DifferenceWithinDefaultTolerance_Double()
     {
-        // Should pass - difference is 0.00005 which is less than default tolerance 0.0001
+        // The difference 0.00005 is less than the default tolerance 0.0001
         const double value = 1.00005;
-        value.MustBeApproximately(1.0).Should().Be(value);
 
-        // Should throw - difference is 0.0002 which is greater than default tolerance 0.0001
+        value.MustBeApproximately(1.0).Should().Be(value);
+    }
+
+    [Fact]
+    public static void DifferenceExceedsDefaultTolerance_Double()
+    {
+        // The difference 0.0002 is greater than the default tolerance 0.0001
         Action act = () => 1.0002.MustBeApproximately(1.0, "parameter");
+
         act.Should().Throw<ArgumentOutOfRangeException>()
            .WithParameterName("parameter");
     }
 
     [Fact]
-    public static void DefaultTolerance_Float()
+    public static void DifferenceWithinDefaultTolerance_Float()
     {
-        // Should pass - difference is 0.00005f which is less than default tolerance 0.0001f
+        // The difference 0.00005f is less than the default tolerance 0.0001f
         const float value = 1.00005f;
-        value.MustBeApproximately(1.0f).Should().Be(value);
 
-        // Should throw - difference is 0.0002f which is greater than default tolerance 0.0001f
+        value.MustBeApproximately(1.0f).Should().Be(value);
+    }
+
+    [Fact]
+    public static void DifferenceExceedsDefaultTolerance_Float()
+    {
+        // The difference 0.0002f is greater than the default tolerance 0.0001f
         Action act = () => 1.0002f.MustBeApproximately(1.0f, "parameter");
+
         act.Should().Throw<ArgumentOutOfRangeException>()
            .WithParameterName("parameter");
     }
@@ -121,6 +133,14 @@ public static class MustBeApproximatelyTests
     [Fact]
     public static void NoCustomExceptionThrown_Float() =>
         5.0f.MustBeApproximately(5.05f, 0.1f, (_, _, _) => null).Should().Be(5.0f);
+
+    [Fact]
+    public static void NoCustomExceptionThrownWithDefaultTolerance_Double() =>
+        5.0.MustBeApproximately(5.00005, (_, _) => null).Should().Be(5.0);
+
+    [Fact]
+    public static void NoCustomExceptionThrownWithDefaultTolerance_Float() =>
+        5.0f.MustBeApproximately(5.00005f, (_, _) => null).Should().Be(5.0f);
 
     [Fact]
     public static void CustomMessage_Double() =>
@@ -194,7 +214,7 @@ public static class MustBeApproximatelyTests
     [InlineData(0.0001, 0.0002, 0.00005)]
     public static void ValuesNotApproximatelyEqual_Generic(double value, double other, double tolerance)
     {
-        var act = () => value.MustBeApproximately<double>(other, tolerance, nameof(value));
+        var act = () => value.MustBeApproximately<double>(other, tolerance);
 
         var exceptionAssertion = act.Should().Throw<ArgumentOutOfRangeException>().Which;
         exceptionAssertion.Message.Should().Contain(
@@ -215,7 +235,7 @@ public static class MustBeApproximatelyTests
     [Fact]
     public static void NoCustomExceptionThrown_Generic() =>
         5.0.MustBeApproximately<double>(5.05, 0.1, (_, _, _) => null).Should().Be(5.0);
-    
+
     [Fact]
     public static void CustomMessage_Generic() =>
         Test.CustomMessage<ArgumentOutOfRangeException>(
