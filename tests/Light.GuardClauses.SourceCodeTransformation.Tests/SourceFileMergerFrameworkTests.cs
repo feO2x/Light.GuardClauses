@@ -81,6 +81,19 @@ public static class SourceFileMergerFrameworkTests
     }
 
     [Fact]
+    public static void ExportUsesLfLineEndings()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "LfLineEndings.cs");
+
+        SourceFileMerger.CreateSingleSourceFile(CreateOptions(targetFile, SourceTargetFramework.NetStandard2_0));
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("\n");
+        sourceCode.Should().NotContain("\r");
+    }
+
+    [Fact]
     public static void Net10ExportValidatesAgainstNet10()
     {
         using var temporaryDirectory = new TemporaryDirectory();

@@ -40,7 +40,7 @@ public static class SourceFileMerger
              $@"License information for Light.GuardClauses
 
 The MIT License (MIT)
-Copyright (c) 2016, 2025 Kenny Pflug mailto:kenny.pflug@live.de
+Copyright (c) 2016, 2026 Kenny Pflug mailto:kenny.pflug@live.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the ""Software""), to deal
@@ -544,7 +544,7 @@ namespace System.Runtime.CompilerServices
         targetRoot = targetRoot.ReplaceNodes(replacedNodes.Keys, (originalNode, _) => replacedNodes[originalNode]);
         targetRoot = RemoveConditionalCompilationTrivia(targetRoot);
 
-        targetRoot = targetRoot.NormalizeWhitespace();
+        targetRoot = targetRoot.NormalizeWhitespace(eol: "\n");
 
         // Make types internal if necessary
         if (options.ChangePublicTypesToInternalTypes)
