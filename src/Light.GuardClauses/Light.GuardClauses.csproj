@@ -16,11 +16,13 @@
     <ProjectReference
       Include="../../tools/analyzers/Light.GuardClauses.InternalRoslynAnalyzers/Light.GuardClauses.InternalRoslynAnalyzers.csproj"
       OutputItemType="Analyzer"
-      ReferenceOutputAssembly="false" />
+      ReferenceOutputAssembly="false"
+      GlobalPropertiesToRemove="SignAssembly;AssemblyOriginatorKeyFile" />
     <ProjectReference
       Include="../../tools/analyzers/Light.GuardClauses.InternalRoslynAnalyzers.CodeFixes/Light.GuardClauses.InternalRoslynAnalyzers.CodeFixes.csproj"
       OutputItemType="Analyzer"
-      ReferenceOutputAssembly="false" />
+      ReferenceOutputAssembly="false"
+      GlobalPropertiesToRemove="SignAssembly;AssemblyOriginatorKeyFile" />
   </ItemGroup>
 
 </Project>
