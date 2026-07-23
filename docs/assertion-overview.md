@@ -4,7 +4,7 @@
 
 This page groups the current public assertion families defined by the `Check.*.cs` files. Exact overloads, generic constraints, return annotations, and exception contracts are documented in the source XML comments and appear in IntelliSense.
 
-Names beginning with `Must` validate or throw and return the successfully validated value. `InvalidArgument`, `InvalidOperation`, and `InvalidState` are throwing condition checks. Other names return `bool`. Most throwing families offer a default-exception overload and an exception-factory overload; see [Structuring precondition checks](structuring-precondition-checks.md).
+Names beginning with `Must` validate or throw and return the successfully validated value. `InvalidArgument`, `InvalidOperation`, `InvalidState`, and `ObjectDisposed` are throwing condition checks. Other names return `bool`. Most throwing families offer a default-exception overload and an exception-factory overload; see [Structuring precondition checks](structuring-precondition-checks.md).
 
 ## Target-specific API
 
@@ -52,6 +52,7 @@ UUIDv7 validation checks the version-7 nibble and RFC/IETF `10xx` variant bits d
 | `InvalidArgument` | Throws `ArgumentException` when the condition is true |
 | `InvalidOperation` | Throws `InvalidOperationException` when the condition is true |
 | `InvalidState` | Throws `InvalidStateException` when the condition is true |
+| `ObjectDisposed` | Throws `ObjectDisposedException` when the condition is true |
 
 ## Comparable, range, and approximate assertions
 

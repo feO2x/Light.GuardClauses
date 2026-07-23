@@ -277,6 +277,8 @@ public sealed class AssertionWhitelist
 
     public AssertionEntry MustStartWith { get; init; } = new();
 
+    public AssertionEntry ObjectDisposed { get; init; } = new();
+
     internal IReadOnlyDictionary<string, AssertionEntry> GetEntriesByAssertionName() =>
         GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
                  .Where(property => property.PropertyType == typeof(AssertionEntry))
