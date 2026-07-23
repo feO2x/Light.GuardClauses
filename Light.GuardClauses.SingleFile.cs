@@ -1,5 +1,5 @@
 /* ------------------------------
-   Light.GuardClauses 15.0.0
+   Light.GuardClauses 15.1.0
    ------------------------------
 
 License information for Light.GuardClauses
@@ -5195,6 +5195,80 @@ namespace Light.GuardClauses
         public static ReadOnlyMemory<char> MustBeUpperCase(this ReadOnlyMemory<char> parameter, ReadOnlySpanExceptionFactory<char> exceptionFactory)
         {
             parameter.Span.MustBeUpperCase(exceptionFactory);
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified string is a valid URI of the supplied kind, or otherwise throws an
+        /// <see cref = "InvalidUriException"/>.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "uriKind">The kind of URI that the string must represent.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "InvalidUriException">
+        /// Thrown when <paramref name = "parameter"/> is not a valid URI of the supplied kind.
+        /// </exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeUri([NotNull][ValidatedNotNull] this string? parameter, UriKind uriKind = UriKind.RelativeOrAbsolute, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            parameter.MustNotBeNull(parameterName, message);
+            if (!Uri.TryCreate(parameter, uriKind, out _))
+            {
+                Throw.MustBeUri(parameter, uriKind, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified string is a valid URI of the supplied kind, or otherwise throws your custom
+        /// exception.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "uriKind">The kind of URI that the string must represent.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates the exception to be thrown. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <exception cref = "Exception">
+        /// Your custom exception thrown when <paramref name = "parameter"/> is null or not a valid URI of the supplied kind.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeUri([NotNull][ValidatedNotNull] this string? parameter, UriKind uriKind, Func<string?, Exception> exceptionFactory)
+        {
+            if (parameter is null || !Uri.TryCreate(parameter, uriKind, out _))
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified string is a valid URI of the supplied kind, or otherwise throws your custom
+        /// exception.
+        /// </summary>
+        /// <param name = "parameter">The string to be checked.</param>
+        /// <param name = "uriKind">The kind of URI that the string must represent.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates the exception to be thrown. <paramref name = "parameter"/> and
+        /// <paramref name = "uriKind"/> are passed to this delegate.
+        /// </param>
+        /// <exception cref = "Exception">
+        /// Your custom exception thrown when <paramref name = "parameter"/> is null or not a valid URI of the supplied kind.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static string MustBeUri([NotNull][ValidatedNotNull] this string? parameter, UriKind uriKind, Func<string?, UriKind, Exception> exceptionFactory)
+        {
+            if (parameter is null || !Uri.TryCreate(parameter, uriKind, out _))
+            {
+                Throw.CustomException(exceptionFactory, parameter, uriKind);
+            }
+
             return parameter;
         }
 
@@ -11051,6 +11125,27 @@ namespace Light.GuardClauses.Exceptions
     }
 
     /// <summary>
+    /// This exception indicates that a string is not a valid URI.
+    /// </summary>
+    [Serializable]
+    internal class InvalidUriException : UriException
+    {
+        /// <summary>
+        /// Creates a new instance of <see cref = "InvalidUriException"/>.
+        /// </summary>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message of the exception (optional).</param>
+        public InvalidUriException(string? parameterName = null, string? message = null) : base(parameterName, message)
+        {
+        }
+
+        /// <inheritdoc/>
+        protected InvalidUriException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+    }
+
+    /// <summary>
     /// This exception indicates that an URI has an invalid scheme.
     /// </summary>
     [Serializable]
@@ -12119,6 +12214,13 @@ namespace Light.GuardClauses.ExceptionFactory
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void Substring(string parameter, string other, StringComparison comparisonType, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new SubstringException(parameterName, message ?? $"{parameterName ?? "The string"} must not be a substring of \"{other}\" ({comparisonType}), but it actually is {parameter.ToStringOrNull()}.");
+        /// <summary>
+        /// Throws the default <see cref = "InvalidUriException"/> indicating that a string is not a valid URI of the
+        /// supplied kind, using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void MustBeUri(string parameter, UriKind uriKind, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new InvalidUriException(parameterName, message ?? $"{parameterName ?? "The string"} must be a valid URI ({uriKind}), but it actually is \"{parameter}\".");
         /// <summary>
         /// Throws the default <see cref = "RelativeUriException"/> indicating that a URI is relative instead of absolute,
         /// using the optional parameter name and message.

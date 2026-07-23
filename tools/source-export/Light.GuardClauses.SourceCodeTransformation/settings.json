@@ -101,6 +101,7 @@
     "MustBeTrimmedAtStart": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustBeUnspecified": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustBeUpperCase": { "Include": true, "IncludeExceptionFactoryOverload": true },
+    "MustBeUri": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustBeUtc": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustBeUuidVersion7": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustBeValidEnumValue": { "Include": true, "IncludeExceptionFactoryOverload": true },

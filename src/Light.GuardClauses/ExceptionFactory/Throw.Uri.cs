@@ -12,6 +12,24 @@ namespace Light.GuardClauses.ExceptionFactory;
 public static partial class Throw
 {
     /// <summary>
+    /// Throws the default <see cref="InvalidUriException" /> indicating that a string is not a valid URI of the
+    /// supplied kind, using the optional parameter name and message.
+    /// </summary>
+    [ContractAnnotation("=> halt")]
+    [DoesNotReturn]
+    public static void MustBeUri(
+        string parameter,
+        UriKind uriKind,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    ) =>
+        throw new InvalidUriException(
+            parameterName,
+            message ??
+            $"{parameterName ?? "The string"} must be a valid URI ({uriKind}), but it actually is \"{parameter}\"."
+        );
+
+    /// <summary>
     /// Throws the default <see cref="RelativeUriException" /> indicating that a URI is relative instead of absolute,
     /// using the optional parameter name and message.
     /// </summary>
