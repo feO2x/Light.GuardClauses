@@ -6,6 +6,56 @@ namespace Light.GuardClauses.Tests.ComparableAssertions;
 
 public static class MustBePositiveTests
 {
+    [Fact]
+    public static void PositiveSBytesAreAccepted()
+    {
+        ((sbyte) 1).MustBePositive().Should().Be((sbyte) 1);
+        sbyte.MaxValue.MustBePositive().Should().Be(sbyte.MaxValue);
+    }
+
+    [Fact]
+    public static void NonPositiveSBytesAreRejected()
+    {
+        CheckIntegralIsRejected((sbyte) 0, value => value.MustBePositive());
+        CheckIntegralIsRejected(sbyte.MinValue, value => value.MustBePositive());
+    }
+
+    [Fact]
+    public static void PositiveBytesAreAccepted()
+    {
+        ((byte) 1).MustBePositive().Should().Be((byte) 1);
+        byte.MaxValue.MustBePositive().Should().Be(byte.MaxValue);
+    }
+
+    [Fact]
+    public static void ZeroByteIsRejected() =>
+        CheckIntegralIsRejected((byte) 0, value => value.MustBePositive());
+
+    [Fact]
+    public static void PositiveInt16sAreAccepted()
+    {
+        ((short) 1).MustBePositive().Should().Be((short) 1);
+        short.MaxValue.MustBePositive().Should().Be(short.MaxValue);
+    }
+
+    [Fact]
+    public static void NonPositiveInt16sAreRejected()
+    {
+        CheckIntegralIsRejected((short) 0, value => value.MustBePositive());
+        CheckIntegralIsRejected(short.MinValue, value => value.MustBePositive());
+    }
+
+    [Fact]
+    public static void PositiveUInt16sAreAccepted()
+    {
+        ((ushort) 1).MustBePositive().Should().Be((ushort) 1);
+        ushort.MaxValue.MustBePositive().Should().Be(ushort.MaxValue);
+    }
+
+    [Fact]
+    public static void ZeroUInt16IsRejected() =>
+        CheckIntegralIsRejected((ushort) 0, value => value.MustBePositive());
+
     [Theory]
     [InlineData(1)]
     [InlineData(42)]
@@ -23,6 +73,17 @@ public static class MustBePositiveTests
         act.Should().Throw<ArgumentOutOfRangeException>().WithMessage("*must be positive*");
     }
 
+    [Fact]
+    public static void PositiveUInt32sAreAccepted()
+    {
+        1U.MustBePositive().Should().Be(1U);
+        uint.MaxValue.MustBePositive().Should().Be(uint.MaxValue);
+    }
+
+    [Fact]
+    public static void ZeroUInt32IsRejected() =>
+        CheckIntegralIsRejected(0U, value => value.MustBePositive());
+
     [Theory]
     [InlineData(1L)]
     [InlineData(long.MaxValue)]
@@ -38,6 +99,17 @@ public static class MustBePositiveTests
 
         act.Should().Throw<ArgumentOutOfRangeException>().WithMessage("*must be positive*");
     }
+
+    [Fact]
+    public static void PositiveUInt64sAreAccepted()
+    {
+        1UL.MustBePositive().Should().Be(1UL);
+        ulong.MaxValue.MustBePositive().Should().Be(ulong.MaxValue);
+    }
+
+    [Fact]
+    public static void ZeroUInt64IsRejected() =>
+        CheckIntegralIsRejected(0UL, value => value.MustBePositive());
 
     [Fact]
     public static void PositiveDecimalsAreAccepted()
@@ -136,32 +208,77 @@ public static class MustBePositiveTests
         Test.CustomMessage<ArgumentOutOfRangeException>(message => (-1).MustBePositive(message: message));
 
     [Fact]
+    public static void NewIntegralOverloadPropagatesParameterNameAndCustomMessage()
+    {
+        const uint invalidValue = 0U;
+
+        var act = () => invalidValue.MustBePositive("quantity", "A positive quantity is required.");
+
+        act.Should().Throw<ArgumentOutOfRangeException>()
+           .WithParameterName("quantity")
+           .WithMessage("A positive quantity is required.*");
+    }
+
+    [Fact]
     public static void CustomFactoriesReceiveValues()
     {
+        Test.CustomException((sbyte) -1, (value, factory) => value.MustBePositive(factory));
+        Test.CustomException((byte) 0, (value, factory) => value.MustBePositive(factory));
+        Test.CustomException((short) -1, (value, factory) => value.MustBePositive(factory));
+        Test.CustomException((ushort) 0, (value, factory) => value.MustBePositive(factory));
         Test.CustomException(0, (value, factory) => value.MustBePositive(factory));
+        Test.CustomException(0U, (value, factory) => value.MustBePositive(factory));
         Test.CustomException(-1L, (value, factory) => value.MustBePositive(factory));
+        Test.CustomException(0UL, (value, factory) => value.MustBePositive(factory));
         Test.CustomException(0m, (value, factory) => value.MustBePositive(factory));
         Test.CustomException(float.NaN, (value, factory) => value.MustBePositive(factory));
         Test.CustomException(double.NegativeInfinity, (value, factory) => value.MustBePositive(factory));
         Test.CustomException(TimeSpan.Zero, (value, factory) => value.MustBePositive(factory));
     }
 
+    [Fact]
+    public static void NullFactoriesThrowArgumentNullExceptionForNewIntegralOverloads()
+    {
+        CheckNullFactory(() => ((sbyte) 0).MustBePositive((Func<sbyte, Exception>) null!));
+        CheckNullFactory(() => ((byte) 0).MustBePositive((Func<byte, Exception>) null!));
+        CheckNullFactory(() => ((short) 0).MustBePositive((Func<short, Exception>) null!));
+        CheckNullFactory(() => ((ushort) 0).MustBePositive((Func<ushort, Exception>) null!));
+        CheckNullFactory(() => 0U.MustBePositive((Func<uint, Exception>) null!));
+        CheckNullFactory(() => 0UL.MustBePositive((Func<ulong, Exception>) null!));
+    }
+
 #if NET8_0_OR_GREATER
     [Fact]
-    public static void GenericOverloadsCoverTypesWithoutConcreteOverloads()
+    public static void ExplicitGenericOverloadsRemainAvailable()
     {
-        ((short) 5).MustBePositive().Should().Be((short) 5);
-        ((byte) 3).MustBePositive().Should().Be((byte) 3);
+        Check.MustBePositive<short>((short) 5).Should().Be((short) 5);
+        Check.MustBePositive<byte>((byte) 3).Should().Be((byte) 3);
         ((Half) 1.5f).MustBePositive().Should().Be((Half) 1.5f);
 
-        var zeroShort = () => ((short) 0).MustBePositive();
+        var zeroShort = () => Check.MustBePositive<short>((short) 0);
         var nanHalf = () => Half.NaN.MustBePositive();
         zeroShort.Should().Throw<ArgumentOutOfRangeException>().WithMessage("*must be positive*");
         nanHalf.Should().Throw<ArgumentOutOfRangeException>().WithMessage("*must be positive*");
 
-        Test.CustomException((short) -3, (value, factory) => value.MustBePositive(factory));
+        Test.CustomException(
+            (short) -3,
+            (value, factory) => Check.MustBePositive<short>(value, factory)
+        );
     }
 #endif
+
+    private static void CheckIntegralIsRejected<T>(T value, Func<T, T> guard)
+    {
+        var act = () => guard(value);
+
+        act.Should().Throw<ArgumentOutOfRangeException>()
+           .WithParameterName(nameof(value))
+           .WithMessage($"*value must be positive, but it actually is {value}*");
+    }
+
+    private static void CheckNullFactory(Action act) =>
+        act.Should().Throw<ArgumentNullException>()
+           .WithParameterName("exceptionFactory");
 
     private static void CheckDecimalIsRejected(decimal value)
     {

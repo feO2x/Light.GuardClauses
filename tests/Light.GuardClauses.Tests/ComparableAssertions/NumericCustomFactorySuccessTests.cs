@@ -12,32 +12,56 @@ public static class NumericCustomFactorySuccessTests
         throw new InvalidOperationException("The factory must not be invoked.");
 
     [Fact]
+    public static void MustBePositive_SByte() =>
+        ((sbyte) 1).MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be((sbyte) 1);
+
+    [Fact]
+    public static void MustBePositive_Byte() =>
+        ((byte) 2).MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be((byte) 2);
+
+    [Fact]
+    public static void MustBePositive_Short() =>
+        ((short) 3).MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be((short) 3);
+
+    [Fact]
+    public static void MustBePositive_UShort() =>
+        ((ushort) 4).MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be((ushort) 4);
+
+    [Fact]
     public static void MustBePositive_Int() =>
-        1.MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(1);
+        5.MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(5);
+
+    [Fact]
+    public static void MustBePositive_UInt() =>
+        6U.MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(6U);
 
     [Fact]
     public static void MustBePositive_Long() =>
-        2L.MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(2L);
+        7L.MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(7L);
+
+    [Fact]
+    public static void MustBePositive_ULong() =>
+        8UL.MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(8UL);
 
     [Fact]
     public static void MustBePositive_Decimal() =>
-        3m.MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(3m);
+        9m.MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(9m);
 
     [Fact]
     public static void MustBePositive_Float() =>
-        4f.MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(4f);
+        10f.MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(10f);
 
     [Fact]
     public static void MustBePositive_Double() =>
-        5d.MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(5d);
+        11d.MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(11d);
 
     [Fact]
     public static void MustBePositive_TimeSpan() =>
-        TimeSpan.FromTicks(6).MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(TimeSpan.FromTicks(6));
+        TimeSpan.FromTicks(12).MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(TimeSpan.FromTicks(12));
 
     [Fact]
     public static void MustBePositive_Generic() =>
-        ((short) 7).MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(7);
+        Check.MustBePositive<short>((short) 13, _ => FactoryMustNotBeInvoked()).Should().Be(13);
 
     [Fact]
     public static void MustBeNegative_Int() =>

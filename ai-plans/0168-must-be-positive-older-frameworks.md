@@ -8,14 +8,14 @@ Add concrete overloads for the complete missing signed and unsigned integral set
 
 ## Acceptance Criteria
 
-- [ ] `MustBePositive` has concrete overloads for `sbyte`, `byte`, `short`, `ushort`, `uint`, and `ulong` on .NET Standard 2.0, .NET Standard 2.1, and .NET 10; every overload returns the original value when it is greater than zero and throws `ArgumentOutOfRangeException` for zero and, for signed types, negative values.
-- [ ] Each new integral type has a custom-exception-factory overload accepting `Func<T, Exception>`; it passes the original value to the factory, invokes the factory only when validation fails, and a null factory on a failing value throws `ArgumentNullException` via the existing `Throw.CustomException` convention.
-- [ ] Default failures preserve the existing `MustBePositive` exception contract, including caller-argument-expression parameter names, optional custom messages, actual values, and the standard generated message.
-- [ ] Automated tests cover positive boundary values, zero for every new type, negative boundary values for the signed types, return values, parameter-name and custom-message propagation, custom factory values and exceptions, factories not invoked on success, and null-factory behavior.
-- [ ] The existing `MustBePositive` source-export whitelist entry includes all new concrete overloads in portable and modern exports, preserves the generic `INumber<T>` overloads only in the modern export, and continues to trim every custom-exception-factory overload when that option is disabled.
-- [ ] The committed .NET Standard 2.0 single-file distribution is regenerated with the new overloads and validates for both supported source-export targets.
-- [ ] The comparable/range documentation no longer describes the new concrete integral types as modern-target-only, and the package release notes mention the expanded `MustBePositive` support.
-- [ ] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
+- [x] `MustBePositive` has concrete overloads for `sbyte`, `byte`, `short`, `ushort`, `uint`, and `ulong` on .NET Standard 2.0, .NET Standard 2.1, and .NET 10; every overload returns the original value when it is greater than zero and throws `ArgumentOutOfRangeException` for zero and, for signed types, negative values.
+- [x] Each new integral type has a custom-exception-factory overload accepting `Func<T, Exception>`; it passes the original value to the factory, invokes the factory only when validation fails, and a null factory on a failing value throws `ArgumentNullException` via the existing `Throw.CustomException` convention.
+- [x] Default failures preserve the existing `MustBePositive` exception contract, including caller-argument-expression parameter names, optional custom messages, actual values, and the standard generated message.
+- [x] Automated tests cover positive boundary values, zero for every new type, negative boundary values for the signed types, return values, parameter-name and custom-message propagation, custom factory values and exceptions, factories not invoked on success, and null-factory behavior.
+- [x] The existing `MustBePositive` source-export whitelist entry includes all new concrete overloads in portable and modern exports, preserves the generic `INumber<T>` overloads only in the modern export, and continues to trim every custom-exception-factory overload when that option is disabled.
+- [x] The committed .NET Standard 2.0 single-file distribution is regenerated with the new overloads and validates for both supported source-export targets.
+- [x] The comparable/range documentation no longer describes the new concrete integral types as modern-target-only, and the package release notes mention the expanded `MustBePositive` support.
+- [x] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
 
 ## Technical Details
 

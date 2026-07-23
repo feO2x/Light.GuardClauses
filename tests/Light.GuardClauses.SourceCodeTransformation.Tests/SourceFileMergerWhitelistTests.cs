@@ -248,6 +248,10 @@ public static class SourceFileMergerWhitelistTests
         using var temporaryDirectory = new TemporaryDirectory();
         var portableFile = Path.Combine(temporaryDirectory.DirectoryPath, "SignGuardsPortable.cs");
         var modernFile = Path.Combine(temporaryDirectory.DirectoryPath, "SignGuardsModern.cs");
+        var portableWithoutFactoriesFile =
+            Path.Combine(temporaryDirectory.DirectoryPath, "MustBePositivePortableWithoutFactories.cs");
+        var modernWithoutFactoriesFile =
+            Path.Combine(temporaryDirectory.DirectoryPath, "MustBePositiveModernWithoutFactories.cs");
         var whitelist = CreateWhitelist(
             includedAssertions:
             [
@@ -263,15 +267,68 @@ public static class SourceFileMergerWhitelistTests
         SourceFileMerger.CreateSingleSourceFile(
             CreateOptions(modernFile, whitelist, SourceTargetFramework.Net10_0)
         );
+        var withoutFactoriesWhitelist = CreateWhitelist(
+            includedAssertions: [new ("MustBePositive", false)]
+        );
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(portableWithoutFactoriesFile, withoutFactoriesWhitelist)
+        );
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                modernWithoutFactoriesFile,
+                withoutFactoriesWhitelist,
+                SourceTargetFramework.Net10_0
+            )
+        );
         var portableCode = File.ReadAllText(portableFile);
         var modernCode = File.ReadAllText(modernFile);
+        var portableWithoutFactoriesCode = File.ReadAllText(portableWithoutFactoriesFile);
+        var modernWithoutFactoriesCode = File.ReadAllText(modernWithoutFactoriesFile);
+        string[] concreteMustBePositiveTypes =
+        [
+            "sbyte",
+            "byte",
+            "short",
+            "ushort",
+            "int",
+            "uint",
+            "long",
+            "ulong",
+            "decimal",
+            "float",
+            "double",
+            "TimeSpan",
+        ];
 
-        portableCode.Should().Contain("public static int MustBePositive(");
+        foreach (var type in concreteMustBePositiveTypes)
+        {
+            portableCode.Should().Contain($"public static {type} MustBePositive(");
+            modernCode.Should().Contain($"public static {type} MustBePositive(");
+            portableCode.Should()
+                        .Contain(
+                             $"MustBePositive(this {type} parameter, Func<{type}, Exception> exceptionFactory)"
+                         );
+            modernCode.Should()
+                      .Contain(
+                           $"MustBePositive(this {type} parameter, Func<{type}, Exception> exceptionFactory)"
+                       );
+            portableWithoutFactoriesCode.Should().Contain($"public static {type} MustBePositive(");
+            modernWithoutFactoriesCode.Should().Contain($"public static {type} MustBePositive(");
+            portableWithoutFactoriesCode.Should()
+                                        .NotContain(
+                                             $"MustBePositive(this {type} parameter, Func<{type}, Exception> exceptionFactory)"
+                                         );
+            modernWithoutFactoriesCode.Should()
+                                      .NotContain(
+                                           $"MustBePositive(this {type} parameter, Func<{type}, Exception> exceptionFactory)"
+                                       );
+        }
+
         portableCode.Should().Contain("public static decimal MustBeNegative(");
         portableCode.Should().Contain("public static TimeSpan MustNotBeNegative(");
         portableCode.Should().Contain("public static double MustNotBeZero(");
-        portableCode.Should().Contain("MustBePositive(this int parameter, Func<int, Exception> exceptionFactory)");
         portableCode.Should().NotContain("MustNotBeZero(this int parameter, Func<int, Exception> exceptionFactory)");
+        portableCode.Should().NotContain("public static T MustBePositive<T>(");
         portableCode.Should().NotContain("INumber<T>");
         modernCode.Should().Contain("MustBePositive<T>");
         modernCode.Should().Contain("MustBeNegative<T>");
@@ -279,6 +336,12 @@ public static class SourceFileMergerWhitelistTests
         modernCode.Should().Contain("MustNotBeNegative<T>");
         modernCode.Should().Contain("MustNotBeZero<T>");
         modernCode.Should().Contain("INumber<T>");
+        portableWithoutFactoriesCode.Should().NotContain("public static T MustBePositive<T>(");
+        modernWithoutFactoriesCode.Should().Contain("public static T MustBePositive<T>(");
+        modernWithoutFactoriesCode.Should()
+                                  .NotContain(
+                                       "MustBePositive<T>(this T parameter, Func<T, Exception> exceptionFactory)"
+                                   );
     }
 
     [Fact]
