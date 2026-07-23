@@ -1063,6 +1063,34 @@ public static class Issue72NotNullAttributeTests
     }
 
     [Fact]
+    public static void CheckMustBeAssignableTo()
+    {
+        TestMustBeAssignableTo(typeof(FileStream), typeof(Stream))
+           .Should().Be((typeof(FileStream), typeof(Stream)));
+        TestMustBeAssignableToWithDelegate(typeof(FileStream), typeof(Stream))
+           .Should().Be((typeof(FileStream), typeof(Stream)));
+        return;
+
+        static (Type CandidateType, Type RequiredType) TestMustBeAssignableTo(
+            Type? candidateType,
+            Type? requiredType
+        )
+        {
+            candidateType.MustBeAssignableTo(requiredType);
+            return (candidateType, requiredType);
+        }
+
+        static (Type CandidateType, Type RequiredType) TestMustBeAssignableToWithDelegate(
+            Type? candidateType,
+            Type? requiredType
+        )
+        {
+            candidateType.MustBeAssignableTo(requiredType, (_, _) => new Exception());
+            return (candidateType, requiredType);
+        }
+    }
+
+    [Fact]
     public static void CheckMustBeAbsoluteUri()
     {
         TestMustBeAbsoluteUri(new Uri("https://example.com")).Should().Be(new Uri("https://example.com"));

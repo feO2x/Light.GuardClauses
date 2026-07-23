@@ -67,6 +67,7 @@
     "MustBe": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustBeAbsoluteUri": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustBeApproximately": { "Include": true, "IncludeExceptionFactoryOverload": true },
+    "MustBeAssignableTo": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustBeEmailAddress": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustBeFileExtension": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustBeFinite": { "Include": true, "IncludeExceptionFactoryOverload": true },

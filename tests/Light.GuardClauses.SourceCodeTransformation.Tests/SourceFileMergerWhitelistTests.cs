@@ -529,6 +529,51 @@ public static class SourceFileMergerWhitelistTests
     }
 
     [Fact]
+    public static void MustBeAssignableToWhitelistExportsGuardThrowHelperAndFactoryOnBothTargets()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var portableFile = Path.Combine(temporaryDirectory.DirectoryPath, "MustBeAssignableToPortable.cs");
+        var modernFile = Path.Combine(temporaryDirectory.DirectoryPath, "MustBeAssignableToModern.cs");
+        var whitelist = CreateWhitelist(
+            includedAssertions: [new ("MustBeAssignableTo", true)]
+        );
+
+        SourceFileMerger.CreateSingleSourceFile(CreateOptions(portableFile, whitelist));
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(modernFile, whitelist, SourceTargetFramework.Net10_0)
+        );
+
+        foreach (var sourceCode in new[] { File.ReadAllText(portableFile), File.ReadAllText(modernFile) })
+        {
+            sourceCode.Should().Contain("public static Type MustBeAssignableTo(");
+            sourceCode.Should().Contain("public static void MustBeAssignableTo(");
+            sourceCode.Should().Contain("Func<Type?, Type?, Exception> exceptionFactory");
+            sourceCode.Should().Contain("public static void CustomException<T1, T2>(");
+            sourceCode.Should().NotContain("public static bool IsEquivalentTypeTo(");
+        }
+    }
+
+    [Fact]
+    public static void MustBeAssignableToWhitelistTrimsExceptionFactoryOverload()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "MustBeAssignableToWithoutFactory.cs");
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(includedAssertions: [new ("MustBeAssignableTo", false)])
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("public static Type MustBeAssignableTo(");
+        sourceCode.Should().Contain("public static void MustBeAssignableTo(");
+        sourceCode.Should().NotContain("Func<Type?, Type?, Exception> exceptionFactory");
+        sourceCode.Should().NotContain("public static void CustomException<T1, T2>(");
+    }
+
+    [Fact]
     public static void MustBeUriWhitelistExportsGuardThrowHelperExceptionAndFactories()
     {
         using var temporaryDirectory = new TemporaryDirectory();
