@@ -175,6 +175,8 @@ public sealed class AssertionWhitelist
 
     public AssertionEntry MustBeUpperCase { get; init; } = new();
 
+    public AssertionEntry MustBeUri { get; init; } = new();
+
     public AssertionEntry MustBeUtc { get; init; } = new();
 
     public AssertionEntry MustBeUuidVersion7 { get; init; } = new();

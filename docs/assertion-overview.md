@@ -181,6 +181,7 @@ The relation methods provide comparer overloads where applicable.
 
 | Assertion | Behavior |
 | --- | --- |
+| `MustBeUri` | Require a string parsable as a relative, absolute, or either kind of URI |
 | `MustBeAbsoluteUri`, `MustBeRelativeUri` | Require an absolute or relative URI |
 | `MustHaveScheme`, `MustHaveOneSchemeOf` | Require one specific scheme or one of several schemes |
 | `MustBeHttpUrl`, `MustBeHttpsUrl`, `MustBeHttpOrHttpsUrl` | Require an absolute HTTP/HTTPS URI with the named allowed scheme |

@@ -1103,6 +1103,33 @@ public static class Issue72NotNullAttributeTests
     }
 
     [Fact]
+    public static void CheckMustBeUri()
+    {
+        TestMustBeUri("https://example.com").Should().Be("https://example.com");
+        TestMustBeUriWithDelegate("https://example.com").Should().Be("https://example.com");
+        TestMustBeUriWithSecondDelegate("https://example.com").Should().Be("https://example.com");
+        return;
+
+        static string TestMustBeUri(string? input)
+        {
+            input.MustBeUri();
+            return input;
+        }
+
+        static string TestMustBeUriWithDelegate(string? input)
+        {
+            input.MustBeUri(UriKind.Absolute, _ => new Exception());
+            return input;
+        }
+
+        static string TestMustBeUriWithSecondDelegate(string? input)
+        {
+            input.MustBeUri(UriKind.Absolute, (_, _) => new Exception());
+            return input;
+        }
+    }
+
+    [Fact]
     public static void CheckMustHaveScheme()
     {
         TestMustHaveScheme(new Uri("https://example.com"), "https").Should().Be(new Uri("https://example.com"));

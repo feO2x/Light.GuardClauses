@@ -529,6 +529,55 @@ public static class SourceFileMergerWhitelistTests
     }
 
     [Fact]
+    public static void MustBeUriWhitelistExportsGuardThrowHelperExceptionAndFactories()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "MustBeUri.cs");
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(includedAssertions: [new ("MustBeUri", true)])
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("public static string MustBeUri(");
+        sourceCode.Should().Contain("public static void MustBeUri(");
+        sourceCode.Should().Contain("class InvalidUriException : UriException");
+        sourceCode.Should().Contain("class UriException : ArgumentException");
+        sourceCode.Should().Contain("Func<string?, Exception> exceptionFactory");
+        sourceCode.Should().Contain("Func<string?, UriKind, Exception> exceptionFactory");
+        sourceCode.Should().Contain("public static void CustomException<T>(");
+        sourceCode.Should().Contain("public static void CustomException<T1, T2>(");
+        sourceCode.Should().NotContain("public static void MustBeAbsoluteUri(");
+        sourceCode.Should().NotContain("class RelativeUriException : UriException");
+    }
+
+    [Fact]
+    public static void MustBeUriWhitelistTrimsExceptionFactoryOverloads()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "MustBeUriWithoutFactories.cs");
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(includedAssertions: [new ("MustBeUri", false)])
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("public static string MustBeUri(");
+        sourceCode.Should().Contain("public static void MustBeUri(");
+        sourceCode.Should().Contain("class InvalidUriException : UriException");
+        sourceCode.Should().NotContain("Func<string?, Exception> exceptionFactory");
+        sourceCode.Should().NotContain("Func<string?, UriKind, Exception> exceptionFactory");
+        sourceCode.Should().NotContain("public static void CustomException<T>(");
+        sourceCode.Should().NotContain("public static void CustomException<T1, T2>(");
+    }
+
+    [Fact]
     public static void ObjectDisposedWhitelistTrimsExceptionFactoryOverloads()
     {
         using var temporaryDirectory = new TemporaryDirectory();
