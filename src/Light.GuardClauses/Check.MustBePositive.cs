@@ -21,6 +21,198 @@ public static partial class Check
     /// Thrown when <paramref name="parameter" /> is zero or negative.
     /// </exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static sbyte MustBePositive(
+        this sbyte parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (!(parameter > (sbyte) 0))
+        {
+            Throw.MustBePositive(parameter, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is positive (greater than zero), or otherwise
+    /// throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="exceptionFactory">
+    /// The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.
+    /// </param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> is zero or negative.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("exceptionFactory:null => halt")]
+    public static sbyte MustBePositive(this sbyte parameter, Func<sbyte, Exception> exceptionFactory)
+    {
+        if (!(parameter > (sbyte) 0))
+        {
+            Throw.CustomException(exceptionFactory, parameter);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is positive (greater than zero), or otherwise
+    /// throws an <see cref="ArgumentOutOfRangeException" />.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static byte MustBePositive(
+        this byte parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (!(parameter > (byte) 0))
+        {
+            Throw.MustBePositive(parameter, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is positive (greater than zero), or otherwise
+    /// throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="exceptionFactory">
+    /// The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.
+    /// </param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("exceptionFactory:null => halt")]
+    public static byte MustBePositive(this byte parameter, Func<byte, Exception> exceptionFactory)
+    {
+        if (!(parameter > (byte) 0))
+        {
+            Throw.CustomException(exceptionFactory, parameter);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is positive (greater than zero), or otherwise
+    /// throws an <see cref="ArgumentOutOfRangeException" />.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="parameter" /> is zero or negative.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static short MustBePositive(
+        this short parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (!(parameter > (short) 0))
+        {
+            Throw.MustBePositive(parameter, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is positive (greater than zero), or otherwise
+    /// throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="exceptionFactory">
+    /// The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.
+    /// </param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> is zero or negative.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("exceptionFactory:null => halt")]
+    public static short MustBePositive(this short parameter, Func<short, Exception> exceptionFactory)
+    {
+        if (!(parameter > (short) 0))
+        {
+            Throw.CustomException(exceptionFactory, parameter);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is positive (greater than zero), or otherwise
+    /// throws an <see cref="ArgumentOutOfRangeException" />.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ushort MustBePositive(
+        this ushort parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (!(parameter > (ushort) 0))
+        {
+            Throw.MustBePositive(parameter, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is positive (greater than zero), or otherwise
+    /// throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="exceptionFactory">
+    /// The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.
+    /// </param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("exceptionFactory:null => halt")]
+    public static ushort MustBePositive(this ushort parameter, Func<ushort, Exception> exceptionFactory)
+    {
+        if (!(parameter > (ushort) 0))
+        {
+            Throw.CustomException(exceptionFactory, parameter);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is positive (greater than zero), or otherwise
+    /// throws an <see cref="ArgumentOutOfRangeException" />.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="parameter" /> is zero or negative.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int MustBePositive(
         this int parameter,
         [CallerArgumentExpression("parameter")] string? parameterName = null,
@@ -51,6 +243,54 @@ public static partial class Check
     public static int MustBePositive(this int parameter, Func<int, Exception> exceptionFactory)
     {
         if (!(parameter > 0))
+        {
+            Throw.CustomException(exceptionFactory, parameter);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is positive (greater than zero), or otherwise
+    /// throws an <see cref="ArgumentOutOfRangeException" />.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static uint MustBePositive(
+        this uint parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (!(parameter > 0U))
+        {
+            Throw.MustBePositive(parameter, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is positive (greater than zero), or otherwise
+    /// throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="exceptionFactory">
+    /// The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.
+    /// </param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("exceptionFactory:null => halt")]
+    public static uint MustBePositive(this uint parameter, Func<uint, Exception> exceptionFactory)
+    {
+        if (!(parameter > 0U))
         {
             Throw.CustomException(exceptionFactory, parameter);
         }
@@ -99,6 +339,54 @@ public static partial class Check
     public static long MustBePositive(this long parameter, Func<long, Exception> exceptionFactory)
     {
         if (!(parameter > 0L))
+        {
+            Throw.CustomException(exceptionFactory, parameter);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is positive (greater than zero), or otherwise
+    /// throws an <see cref="ArgumentOutOfRangeException" />.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ulong MustBePositive(
+        this ulong parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (!(parameter > 0UL))
+        {
+            Throw.MustBePositive(parameter, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is positive (greater than zero), or otherwise
+    /// throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="exceptionFactory">
+    /// The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.
+    /// </param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("exceptionFactory:null => halt")]
+    public static ulong MustBePositive(this ulong parameter, Func<ulong, Exception> exceptionFactory)
+    {
+        if (!(parameter > 0UL))
         {
             Throw.CustomException(exceptionFactory, parameter);
         }

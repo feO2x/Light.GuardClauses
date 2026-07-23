@@ -21,6 +21,7 @@
       --------------------------------
 
       - new assertions: MustBeAssignableTo, MustBeUri, ObjectDisposed
+      - expanded MustBePositive support for sbyte, byte, short, ushort, uint, and ulong on all target frameworks
     </PackageReleaseNotes>
   </PropertyGroup>
 
