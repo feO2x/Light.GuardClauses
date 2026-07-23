@@ -6,13 +6,13 @@ Parent issue #162 identifies disposal guards as a recurring need (five call site
 
 ## Acceptance Criteria
 
-- [ ] `Check.ObjectDisposed(condition, objectName, message)` throws `ObjectDisposedException` only when `condition` is true, identically on .NET Standard 2.0, .NET Standard 2.1, and .NET 10; the supplied object name is exposed via `ObjectName`, the optional message via `Message`, and omitted arguments fall back to the BCL default message.
-- [ ] Two custom-exception-factory overloads follow the `InvalidArgument` convention (plain `Func<Exception>` and generic `Func<T, Exception>` receiving a caller-supplied parameter); they throw the factory's exception only when the condition is true, never invoke the factory otherwise, and a null factory on a true condition throws `ArgumentNullException` via the existing `Throw.CustomException` convention.
-- [ ] Automated tests cover: condition true/false, object-name and message propagation, the BCL default message, both factory overloads (including concrete custom exception instances and the passed parameter), factories not invoked on a false condition, and null-factory behavior.
-- [ ] The source-export whitelist catalog and committed settings contain `ObjectDisposed`, and focused source-export tests cover retention of the guard and its `Throw.ObjectDisposed` helper as well as trimming of the exception-factory overloads when configured.
-- [ ] The committed .NET Standard 2.0 single-file distribution is regenerated with the new guard and validates for both supported source-export targets.
-- [ ] The "Condition and state assertions" table in `docs/assertion-overview.md` lists `ObjectDisposed`, and the 15.0.0 package release notes in `src/Directory.Build.props` mention the new guard.
-- [ ] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
+- [x] `Check.ObjectDisposed(condition, objectName, message)` throws `ObjectDisposedException` only when `condition` is true, identically on .NET Standard 2.0, .NET Standard 2.1, and .NET 10; the supplied object name is exposed via `ObjectName`, the optional message via `Message`, and omitted arguments fall back to the BCL default message.
+- [x] Two custom-exception-factory overloads follow the `InvalidArgument` convention (plain `Func<Exception>` and generic `Func<T, Exception>` receiving a caller-supplied parameter); they throw the factory's exception only when the condition is true, never invoke the factory otherwise, and a null factory on a true condition throws `ArgumentNullException` via the existing `Throw.CustomException` convention.
+- [x] Automated tests cover: condition true/false, object-name and message propagation, the BCL default message, both factory overloads (including concrete custom exception instances and the passed parameter), factories not invoked on a false condition, and null-factory behavior.
+- [x] The source-export whitelist catalog and committed settings contain `ObjectDisposed`, and focused source-export tests cover retention of the guard and its `Throw.ObjectDisposed` helper as well as trimming of the exception-factory overloads when configured.
+- [x] The committed .NET Standard 2.0 single-file distribution is regenerated with the new guard and validates for both supported source-export targets.
+- [x] The "Condition and state assertions" table in `docs/assertion-overview.md` lists `ObjectDisposed`, and the 15.0.0 package release notes in `src/Directory.Build.props` mention the new guard.
+- [x] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
 
 ## Technical Details
 

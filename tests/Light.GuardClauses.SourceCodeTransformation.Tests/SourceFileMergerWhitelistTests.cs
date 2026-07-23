@@ -504,6 +504,51 @@ public static class SourceFileMergerWhitelistTests
         sourceCode.Should().NotContain("public static void MustBeSeekable(");
     }
 
+    [Fact]
+    public static void ObjectDisposedWhitelistExportsGuardThrowHelperAndExceptionFactories()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "ObjectDisposed.cs");
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(
+                    includedAssertions: [new ("ObjectDisposed", true)]
+                )
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("public static void ObjectDisposed(bool condition, string? objectName = null, string? message = null)");
+        sourceCode.Should().Contain("public static void ObjectDisposed(bool condition, Func<Exception> exceptionFactory)");
+        sourceCode.Should().Contain("public static void ObjectDisposed<T>(bool condition, T parameter, Func<T, Exception> exceptionFactory)");
+        sourceCode.Should().Contain("public static void ObjectDisposed(string? objectName = null, string? message = null) => throw new ObjectDisposedException(objectName, message);");
+        sourceCode.Should().Contain("public static void CustomException(Func<Exception> exceptionFactory)");
+        sourceCode.Should().NotContain("public static void InvalidOperation(");
+    }
+
+    [Fact]
+    public static void ObjectDisposedWhitelistTrimsExceptionFactoryOverloads()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "ObjectDisposedWithoutFactories.cs");
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(includedAssertions: [new ("ObjectDisposed", false)])
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("public static void ObjectDisposed(bool condition, string? objectName = null, string? message = null)");
+        sourceCode.Should().Contain("public static void ObjectDisposed(string? objectName = null, string? message = null) => throw new ObjectDisposedException(objectName, message);");
+        sourceCode.Should().NotContain("Func<Exception> exceptionFactory");
+        sourceCode.Should().NotContain("ObjectDisposed<T>");
+        sourceCode.Should().NotContain("public static void CustomException(");
+    }
+
     private static SourceFileMergeOptions CreateOptions(
         string targetFile,
         AssertionWhitelist assertionWhitelist = null,

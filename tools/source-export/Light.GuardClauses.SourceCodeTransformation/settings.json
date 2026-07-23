@@ -151,6 +151,7 @@
     "MustNotContainWhiteSpace": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustNotEndWith": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustNotStartWith": { "Include": true, "IncludeExceptionFactoryOverload": true },
-    "MustStartWith": { "Include": true, "IncludeExceptionFactoryOverload": true }
+    "MustStartWith": { "Include": true, "IncludeExceptionFactoryOverload": true },
+    "ObjectDisposed": { "Include": true, "IncludeExceptionFactoryOverload": true }
   }
 }

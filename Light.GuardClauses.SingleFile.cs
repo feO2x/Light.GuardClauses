@@ -10134,6 +10134,55 @@ namespace Light.GuardClauses
 
             return parameter;
         }
+
+        /// <summary>
+        /// Checks if the specified <paramref name = "condition"/> is true and throws an <see cref = "ObjectDisposedException"/> in this case.
+        /// </summary>
+        /// <param name = "condition">The condition to be checked. The exception is thrown when it is true.</param>
+        /// <param name = "objectName">The name of the disposed object (optional).</param>
+        /// <param name = "message">The message that will be passed to the <see cref = "ObjectDisposedException"/> (optional).</param>
+        /// <exception cref = "ObjectDisposedException">Thrown when <paramref name = "condition"/> is true.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ObjectDisposed(bool condition, string? objectName = null, string? message = null)
+        {
+            if (condition)
+            {
+                Throw.ObjectDisposed(objectName, message);
+            }
+        }
+
+        /// <summary>
+        /// Checks if the specified <paramref name = "condition"/> is true and throws your custom exception in this case.
+        /// </summary>
+        /// <param name = "condition">The condition to be checked. The exception is thrown when it is true.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "condition"/> is true.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("exceptionFactory:null => halt")]
+        public static void ObjectDisposed(bool condition, Func<Exception> exceptionFactory)
+        {
+            if (condition)
+            {
+                Throw.CustomException(exceptionFactory);
+            }
+        }
+
+        /// <summary>
+        /// Checks if the specified <paramref name = "condition"/> is true and throws your custom exception in this case.
+        /// </summary>
+        /// <param name = "condition">The condition to be checked. The exception is thrown when it is true.</param>
+        /// <param name = "parameter">The value that is checked in the <paramref name = "condition"/>. This value is passed to the <paramref name = "exceptionFactory"/>.</param>
+        /// <param name = "exceptionFactory">The delegate that creates your custom exception. The <paramref name = "parameter"/> is passed to this delegate.</param>
+        /// <exception cref = "Exception">Your custom exception thrown when <paramref name = "condition"/> is true.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("exceptionFactory:null => halt")]
+        public static void ObjectDisposed<T>(bool condition, T parameter, Func<T, Exception> exceptionFactory)
+        {
+            if (condition)
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+        }
     }
 
     /// <summary>
@@ -11838,6 +11887,12 @@ namespace Light.GuardClauses.ExceptionFactory
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void NullableHasNoValue(string? parameterName = null, string? message = null) => throw new NullableHasNoValueException(parameterName, message ?? $"{parameterName ?? "The nullable"} must have a value, but it actually is null.");
+        /// <summary>
+        /// Throws an <see cref = "ObjectDisposedException"/> using the optional object name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void ObjectDisposed(string? objectName = null, string? message = null) => throw new ObjectDisposedException(objectName, message);
         /// <summary>
         /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that a value is not within a specified
         /// range, using the optional parameter name and message.

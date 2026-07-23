@@ -26,6 +26,7 @@
       - new collection content guards: MustNotContainNull and MustNotContainNullOrWhiteSpace
       - new string inspection assertions: ContainsOnlyDigits, MustContainOnlyDigits, ContainsOnlyLettersOrDigits, MustContainOnlyLettersOrDigits, IsUpperCase, MustBeUpperCase, IsLowerCase, MustBeLowerCase, IsBase64, MustBeBase64, IsHexadecimal, MustBeHexadecimal, and MustNotContainWhiteSpace
       - new stream capability guards: MustBeReadable, MustBeWritable, and MustBeSeekable
+      - new condition guard: ObjectDisposed, which throws an ObjectDisposedException
       - new collection count guard: MustHaveSameCountAs
       - expanded span and memory support for MustNotBeEmpty, MustHaveLength, MustHaveLengthIn, and MustNotBeEmptyOrWhiteSpace, plus DateTimeOffset support for MustBeUtc
       - breaking: the modern package target was updated from .NET 8 to .NET 10; .NET Standard 2.0 and 2.1 remain supported
