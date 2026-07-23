@@ -8,15 +8,15 @@ Add `MustBeAssignableTo` with the exact semantics of `Type.IsAssignableFrom`, ex
 
 ## Acceptance Criteria
 
-- [ ] `candidateType.MustBeAssignableTo(requiredType, parameterName, message)` returns the original candidate `Type` when `requiredType.IsAssignableFrom(candidateType)` is true and throws `ArgumentException` when it is false, identically on .NET Standard 2.0, .NET Standard 2.1, and .NET 10; the exception exposes the candidate parameter name and honors an optional custom message.
-- [ ] The default overload throws `ArgumentNullException` when either the candidate or required type is null, attributing a null candidate to the caller-captured parameter name and a null required type to `requiredType`; no new public exception type is introduced.
-- [ ] A custom-exception-factory overload accepts `Func<Type?, Type?, Exception>`, passes the original candidate and required types to the factory, invokes it only when either input is null or the assignability check fails, and a null factory on a failing check throws `ArgumentNullException` via the existing `Throw.CustomException` convention.
-- [ ] Automated tests cover identity, direct and indirect base-class relationships, interface implementation, value types, variant generics, and representative open-generic BCL semantics; reversed and unrelated failure cases; both null inputs; return-value identity; parameter-name and custom-message propagation; the factory arguments and concrete exception; no factory invocation on success; null-factory behavior; and nullable-flow analysis.
-- [ ] No `MustImplement` convenience assertion is added; interface assignability is documented and tested through `MustBeAssignableTo`.
-- [ ] The source-export whitelist catalog and committed settings contain `MustBeAssignableTo`, and focused source-export tests cover retention of the guard, its throw helper, and the two-argument custom-exception helper as well as trimming of the exception-factory overload when configured.
-- [ ] The committed .NET Standard 2.0 single-file distribution is regenerated with the assertion and validates for both supported source-export targets.
-- [ ] The type-relation assertion documentation lists `MustBeAssignableTo`, and the package release notes mention the new guard.
-- [ ] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
+- [x] `candidateType.MustBeAssignableTo(requiredType, parameterName, message)` returns the original candidate `Type` when `requiredType.IsAssignableFrom(candidateType)` is true and throws `ArgumentException` when it is false, identically on .NET Standard 2.0, .NET Standard 2.1, and .NET 10; the exception exposes the candidate parameter name and honors an optional custom message.
+- [x] The default overload throws `ArgumentNullException` when either the candidate or required type is null, attributing a null candidate to the caller-captured parameter name and a null required type to `requiredType`; no new public exception type is introduced.
+- [x] A custom-exception-factory overload accepts `Func<Type?, Type?, Exception>`, passes the original candidate and required types to the factory, invokes it only when either input is null or the assignability check fails, and a null factory on a failing check throws `ArgumentNullException` via the existing `Throw.CustomException` convention.
+- [x] Automated tests cover identity, direct and indirect base-class relationships, interface implementation, value types, variant generics, and representative open-generic BCL semantics; reversed and unrelated failure cases; both null inputs; return-value identity; parameter-name and custom-message propagation; the factory arguments and concrete exception; no factory invocation on success; null-factory behavior; and nullable-flow analysis.
+- [x] No `MustImplement` convenience assertion is added; interface assignability is documented and tested through `MustBeAssignableTo`.
+- [x] The source-export whitelist catalog and committed settings contain `MustBeAssignableTo`, and focused source-export tests cover retention of the guard, its throw helper, and the two-argument custom-exception helper as well as trimming of the exception-factory overload when configured.
+- [x] The committed .NET Standard 2.0 single-file distribution is regenerated with the assertion and validates for both supported source-export targets.
+- [x] The type-relation assertion documentation lists `MustBeAssignableTo`, and the package release notes mention the new guard.
+- [x] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
 
 ## Technical Details
 

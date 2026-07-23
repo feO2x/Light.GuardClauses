@@ -169,13 +169,16 @@ while preserving its concrete stream type, and all three guards support custom m
 
 | Assertion | Behavior |
 | --- | --- |
+| `MustBeAssignableTo` | Requires CLR assignability from a candidate type to a required base type or interface |
 | `IsEquivalentTypeTo` | Treats equal types and constructed-generic/definition pairs as equivalent |
 | `Implements`, `IsOrImplements` | Test interface implementation, optionally allowing equality |
 | `DerivesFrom`, `IsOrDerivesFrom` | Test base-class derivation, optionally allowing equality |
 | `InheritsFrom`, `IsOrInheritsFrom` | Test derivation or interface implementation, optionally allowing equality |
 | `IsOpenConstructedGenericType` | Tests for a constructed generic type that still has open parameters |
 
-The relation methods provide comparer overloads where applicable.
+`MustBeAssignableTo` uses `requiredType.IsAssignableFrom(candidateType)` directly, so it covers interface
+assignability, generic variance, and the BCL's open-generic behavior. The other relation methods provide comparer
+overloads where applicable.
 
 ## URI assertions
 

@@ -20,7 +20,7 @@
       Light.GuardClauses 15.1.0
       --------------------------------
 
-      - new assertions: MustBeUri, ObjectDisposed
+      - new assertions: MustBeAssignableTo, MustBeUri, ObjectDisposed
     </PackageReleaseNotes>
   </PropertyGroup>
 
