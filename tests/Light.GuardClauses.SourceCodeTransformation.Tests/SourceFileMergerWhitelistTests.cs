@@ -637,6 +637,51 @@ public static class SourceFileMergerWhitelistTests
     }
 
     [Fact]
+    public static void MustBeConcreteClassWhitelistExportsGuardThrowHelperAndFactoryOnBothTargets()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var portableFile = Path.Combine(temporaryDirectory.DirectoryPath, "MustBeConcreteClassPortable.cs");
+        var modernFile = Path.Combine(temporaryDirectory.DirectoryPath, "MustBeConcreteClassModern.cs");
+        var whitelist = CreateWhitelist(
+            includedAssertions: [new ("MustBeConcreteClass", true)]
+        );
+
+        SourceFileMerger.CreateSingleSourceFile(CreateOptions(portableFile, whitelist));
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(modernFile, whitelist, SourceTargetFramework.Net10_0)
+        );
+
+        foreach (var sourceCode in new[] { File.ReadAllText(portableFile), File.ReadAllText(modernFile) })
+        {
+            sourceCode.Should().Contain("public static Type MustBeConcreteClass(");
+            sourceCode.Should().Contain("public static void MustBeConcreteClass(");
+            sourceCode.Should().Contain("Func<Type?, Exception> exceptionFactory");
+            sourceCode.Should().Contain("public static void CustomException<T>(");
+            sourceCode.Should().NotContain("public static Type MustBeAssignableTo(");
+        }
+    }
+
+    [Fact]
+    public static void MustBeConcreteClassWhitelistTrimsExceptionFactoryOverload()
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(temporaryDirectory.DirectoryPath, "MustBeConcreteClassWithoutFactory.cs");
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(includedAssertions: [new ("MustBeConcreteClass", false)])
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("public static Type MustBeConcreteClass(");
+        sourceCode.Should().Contain("public static void MustBeConcreteClass(");
+        sourceCode.Should().NotContain("Func<Type?, Exception> exceptionFactory");
+        sourceCode.Should().NotContain("public static void CustomException<T>(");
+    }
+
+    [Fact]
     public static void MustBeUriWhitelistExportsGuardThrowHelperExceptionAndFactories()
     {
         using var temporaryDirectory = new TemporaryDirectory();

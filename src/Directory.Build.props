@@ -20,7 +20,7 @@
       Light.GuardClauses 15.1.0
       --------------------------------
 
-      - new assertions: MustBeAssignableTo, MustBeUri, ObjectDisposed
+      - new assertions: MustBeAssignableTo, MustBeConcreteClass, MustBeUri, ObjectDisposed
       - expanded MustBePositive support for sbyte, byte, short, ushort, uint, and ulong on all target frameworks
     </PackageReleaseNotes>
   </PropertyGroup>

@@ -109,6 +109,8 @@ public sealed class AssertionWhitelist
 
     public AssertionEntry MustBeAssignableTo { get; init; } = new();
 
+    public AssertionEntry MustBeConcreteClass { get; init; } = new();
+
     public AssertionEntry MustBeEmailAddress { get; init; } = new();
 
     public AssertionEntry MustBeFileExtension { get; init; } = new();

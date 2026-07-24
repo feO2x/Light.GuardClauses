@@ -2306,6 +2306,54 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Ensures that <paramref name = "parameter"/> is a non-abstract class, or otherwise throws an
+        /// <see cref = "ArgumentException"/>.
+        /// </summary>
+        /// <param name = "parameter">The type to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <returns>The original type.</returns>
+        /// <exception cref = "ArgumentException">
+        /// Thrown when <paramref name = "parameter"/> is not a class or is abstract.
+        /// </exception>
+        /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "parameter"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull")]
+        public static Type MustBeConcreteClass([NotNull][ValidatedNotNull] this Type? parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            parameter.MustNotBeNull(parameterName, message);
+            if (!(parameter.IsClass && !parameter.IsAbstract))
+            {
+                Throw.MustBeConcreteClass(parameter, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that <paramref name = "parameter"/> is a non-abstract class, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The type to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. The original type is passed to this delegate.
+        /// </param>
+        /// <returns>The original type.</returns>
+        /// <exception cref = "Exception">
+        /// Your custom exception thrown when <paramref name = "parameter"/> is null, is not a class, or is abstract.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("parameter:null => halt; parameter:notnull => notnull; exceptionFactory:null => halt")]
+        public static Type MustBeConcreteClass([NotNull][ValidatedNotNull] this Type? parameter, Func<Type?, Exception> exceptionFactory)
+        {
+            if (parameter is null || !(parameter.IsClass && !parameter.IsAbstract))
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
         /// Ensures that the string is a valid email address using the default email regular expression
         /// defined in <see cref = "RegularExpressions.EmailRegex"/>, or otherwise throws an <see cref = "InvalidEmailAddressException"/>.
         /// </summary>
@@ -12127,6 +12175,13 @@ namespace Light.GuardClauses.ExceptionFactory
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void MustBeAssignableTo(Type parameter, Type requiredType, string? parameterName = null, string? message = null) => throw new ArgumentException(message ?? $"Values of type \"{parameter}\" must be assignable to variables of type \"{requiredType}\", but they are not.", parameterName);
+        /// <summary>
+        /// Throws the default <see cref = "ArgumentException"/> indicating that the specified type is not a concrete class,
+        /// using the optional parameter name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void MustBeConcreteClass(Type parameter, string? parameterName = null, string? message = null) => throw new ArgumentException(message ?? $"Type \"{parameter}\" must be a non-abstract class, but it is not.", parameterName);
         /// <summary>
         /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that a comparable value must be greater
         /// than the given boundary value, using the optional parameter name and message.

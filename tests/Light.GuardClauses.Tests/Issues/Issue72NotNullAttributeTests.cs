@@ -1091,6 +1091,26 @@ public static class Issue72NotNullAttributeTests
     }
 
     [Fact]
+    public static void CheckMustBeConcreteClass()
+    {
+        TestMustBeConcreteClass(typeof(MemoryStream)).Should().Be(typeof(MemoryStream));
+        TestMustBeConcreteClassWithDelegate(typeof(MemoryStream)).Should().Be(typeof(MemoryStream));
+        return;
+
+        static Type TestMustBeConcreteClass(Type? type)
+        {
+            type.MustBeConcreteClass();
+            return type;
+        }
+
+        static Type TestMustBeConcreteClassWithDelegate(Type? type)
+        {
+            type.MustBeConcreteClass(_ => new Exception());
+            return type;
+        }
+    }
+
+    [Fact]
     public static void CheckMustBeAbsoluteUri()
     {
         TestMustBeAbsoluteUri(new Uri("https://example.com")).Should().Be(new Uri("https://example.com"));
