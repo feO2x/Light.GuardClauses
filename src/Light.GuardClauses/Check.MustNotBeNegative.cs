@@ -1,15 +1,111 @@
 using System;
-#if NET8_0_OR_GREATER
-using System.Numerics;
-#endif
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Light.GuardClauses.ExceptionFactory;
+#if NET8_0_OR_GREATER
+using System.Numerics;
+#endif
 
 namespace Light.GuardClauses;
 
 public static partial class Check
 {
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is not negative (greater than or equal to zero), or otherwise
+    /// throws an <see cref="ArgumentOutOfRangeException" />.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="parameter" /> is less than zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static sbyte MustNotBeNegative(
+        this sbyte parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (!(parameter >= 0))
+        {
+            Throw.MustNotBeNegative(parameter, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is not negative (greater than or equal to zero), or otherwise
+    /// throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="exceptionFactory">
+    /// The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.
+    /// </param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> is less than zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("exceptionFactory:null => halt")]
+    public static sbyte MustNotBeNegative(this sbyte parameter, Func<sbyte, Exception> exceptionFactory)
+    {
+        if (!(parameter >= 0))
+        {
+            Throw.CustomException(exceptionFactory, parameter);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is not negative (greater than or equal to zero), or otherwise
+    /// throws an <see cref="ArgumentOutOfRangeException" />.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="parameter" /> is less than zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static short MustNotBeNegative(
+        this short parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (!(parameter >= 0))
+        {
+            Throw.MustNotBeNegative(parameter, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is not negative (greater than or equal to zero), or otherwise
+    /// throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="exceptionFactory">
+    /// The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.
+    /// </param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> is less than zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("exceptionFactory:null => halt")]
+    public static short MustNotBeNegative(this short parameter, Func<short, Exception> exceptionFactory)
+    {
+        if (!(parameter >= 0))
+        {
+            Throw.CustomException(exceptionFactory, parameter);
+        }
+
+        return parameter;
+    }
+
     /// <summary>
     /// Ensures that the specified <paramref name="parameter" /> is not negative (greater than or equal to zero), or otherwise
     /// throws an <see cref="ArgumentOutOfRangeException" />.

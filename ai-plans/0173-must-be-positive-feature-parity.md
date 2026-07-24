@@ -8,16 +8,16 @@ Extend the concrete integral surface of `MustBeNegative`, `MustNotBeNegative`, `
 
 ## Acceptance Criteria
 
-- [ ] `MustBeNegative` and `MustNotBeNegative` each have default and custom-exception-factory overloads for `sbyte` and `short`, but do not add concrete unsigned overloads whose checks would always fail or always succeed.
-- [ ] `MustNotBePositive` and `MustNotBeZero` each have default and custom-exception-factory overloads for `sbyte`, `byte`, `short`, `ushort`, `uint`, and `ulong`.
-- [ ] Every new overload is available on .NET Standard 2.0, .NET Standard 2.1, and .NET 10, returns the original exactly typed value when its predicate succeeds, and matches the corresponding existing .NET 10 generic semantics.
-- [ ] Default failures preserve each guard family's existing `ArgumentOutOfRangeException` contract, including caller-argument-expression parameter names, optional custom messages, and the standard generated message containing the rejected value.
-- [ ] Each new factory overload passes the original value with its exact integral type, invokes the factory only when validation fails, propagates the factory's exception, and throws `ArgumentNullException` through the existing `Throw.CustomException` convention when a failing check receives a null factory.
-- [ ] Automated tests cover signed and applicable unsigned boundary behavior for every new overload, return values, exception parameter names and messages, factory arguments and exceptions, factories not invoked on success, and null-factory failures.
-- [ ] Source-export tests verify the exact per-family concrete type matrix in portable and modern exports, including the deliberate omission of unsigned `MustBeNegative` and `MustNotBeNegative` overloads; generic `INumber<T>` overloads appear only in modern exports; and every custom-exception-factory overload is trimmed when that option is disabled.
-- [ ] The committed .NET Standard 2.0 `Light.GuardClauses.SingleFile.cs` distribution is regenerated with the expanded APIs, and generated source validates for both supported source-export targets.
-- [ ] The sign-guard documentation describes the per-family concrete integral surface, and the package release notes mention the expanded support across all five sign-guard families.
-- [ ] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
+- [x] `MustBeNegative` and `MustNotBeNegative` each have default and custom-exception-factory overloads for `sbyte` and `short`, but do not add concrete unsigned overloads whose checks would always fail or always succeed.
+- [x] `MustNotBePositive` and `MustNotBeZero` each have default and custom-exception-factory overloads for `sbyte`, `byte`, `short`, `ushort`, `uint`, and `ulong`.
+- [x] Every new overload is available on .NET Standard 2.0, .NET Standard 2.1, and .NET 10, returns the original exactly typed value when its predicate succeeds, and matches the corresponding existing .NET 10 generic semantics.
+- [x] Default failures preserve each guard family's existing `ArgumentOutOfRangeException` contract, including caller-argument-expression parameter names, optional custom messages, and the standard generated message containing the rejected value.
+- [x] Each new factory overload passes the original value with its exact integral type, invokes the factory only when validation fails, propagates the factory's exception, and throws `ArgumentNullException` through the existing `Throw.CustomException` convention when a failing check receives a null factory.
+- [x] Automated tests cover signed and applicable unsigned boundary behavior for every new overload, return values, exception parameter names and messages, factory arguments and exceptions, factories not invoked on success, and null-factory failures.
+- [x] Source-export tests verify the exact per-family concrete type matrix in portable and modern exports, including the deliberate omission of unsigned `MustBeNegative` and `MustNotBeNegative` overloads; generic `INumber<T>` overloads appear only in modern exports; and every custom-exception-factory overload is trimmed when that option is disabled.
+- [x] The committed .NET Standard 2.0 `Light.GuardClauses.SingleFile.cs` distribution is regenerated with the expanded APIs, and generated source validates for both supported source-export targets.
+- [x] The sign-guard documentation describes the per-family concrete integral surface, and the package release notes mention the expanded support across all five sign-guard families.
+- [x] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
 
 ## Technical Details
 

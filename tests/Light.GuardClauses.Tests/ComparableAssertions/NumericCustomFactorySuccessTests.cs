@@ -13,19 +13,19 @@ public static class NumericCustomFactorySuccessTests
 
     [Fact]
     public static void MustBePositive_SByte() =>
-        ((sbyte) 1).MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be((sbyte) 1);
+        ((sbyte) 1).MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(1);
 
     [Fact]
     public static void MustBePositive_Byte() =>
-        ((byte) 2).MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be((byte) 2);
+        ((byte) 2).MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(2);
 
     [Fact]
     public static void MustBePositive_Short() =>
-        ((short) 3).MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be((short) 3);
+        ((short) 3).MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(3);
 
     [Fact]
     public static void MustBePositive_UShort() =>
-        ((ushort) 4).MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be((ushort) 4);
+        ((ushort) 4).MustBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(4);
 
     [Fact]
     public static void MustBePositive_Int() =>
@@ -61,43 +61,75 @@ public static class NumericCustomFactorySuccessTests
 
     [Fact]
     public static void MustBePositive_Generic() =>
-        Check.MustBePositive<short>((short) 13, _ => FactoryMustNotBeInvoked()).Should().Be(13);
+        ((short) 13).MustBePositive<short>(_ => FactoryMustNotBeInvoked()).Should().Be(13);
+
+    [Fact]
+    public static void MustBeNegative_SByte() =>
+        ((sbyte) -1).MustBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(-1);
+
+    [Fact]
+    public static void MustBeNegative_Short() =>
+        ((short) -2).MustBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(-2);
 
     [Fact]
     public static void MustBeNegative_Int() =>
-        (-1).MustBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(-1);
+        (-3).MustBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(-3);
 
     [Fact]
     public static void MustBeNegative_Long() =>
-        (-2L).MustBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(-2L);
+        (-4L).MustBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(-4L);
 
     [Fact]
     public static void MustBeNegative_Decimal() =>
-        (-3m).MustBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(-3m);
+        (-5m).MustBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(-5m);
 
     [Fact]
     public static void MustBeNegative_Float() =>
-        (-4f).MustBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(-4f);
+        (-6f).MustBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(-6f);
 
     [Fact]
     public static void MustBeNegative_Double() =>
-        (-5d).MustBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(-5d);
+        (-7d).MustBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(-7d);
 
     [Fact]
     public static void MustBeNegative_TimeSpan() =>
-        TimeSpan.FromTicks(-6).MustBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(TimeSpan.FromTicks(-6));
+        TimeSpan.FromTicks(-8).MustBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(TimeSpan.FromTicks(-8));
 
     [Fact]
     public static void MustBeNegative_Generic() =>
-        ((short) -7).MustBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(-7);
+        ((short) -9).MustBeNegative<short>(_ => FactoryMustNotBeInvoked()).Should().Be(-9);
+
+    [Fact]
+    public static void MustNotBePositive_SByte() =>
+        ((sbyte) 0).MustNotBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(0);
+
+    [Fact]
+    public static void MustNotBePositive_Byte() =>
+        ((byte) 0).MustNotBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(0);
+
+    [Fact]
+    public static void MustNotBePositive_Short() =>
+        ((short) 0).MustNotBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(0);
+
+    [Fact]
+    public static void MustNotBePositive_UShort() =>
+        ((ushort) 0).MustNotBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(0);
 
     [Fact]
     public static void MustNotBePositive_Int() =>
         0.MustNotBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(0);
 
     [Fact]
+    public static void MustNotBePositive_UInt() =>
+        0U.MustNotBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(0U);
+
+    [Fact]
     public static void MustNotBePositive_Long() =>
         0L.MustNotBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(0L);
+
+    [Fact]
+    public static void MustNotBePositive_ULong() =>
+        0UL.MustNotBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(0UL);
 
     [Fact]
     public static void MustNotBePositive_Decimal() =>
@@ -117,7 +149,15 @@ public static class NumericCustomFactorySuccessTests
 
     [Fact]
     public static void MustNotBePositive_Generic() =>
-        ((short) 0).MustNotBePositive(_ => FactoryMustNotBeInvoked()).Should().Be(0);
+        ((short) 0).MustNotBePositive<short>(_ => FactoryMustNotBeInvoked()).Should().Be(0);
+
+    [Fact]
+    public static void MustNotBeNegative_SByte() =>
+        ((sbyte) 0).MustNotBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(0);
+
+    [Fact]
+    public static void MustNotBeNegative_Short() =>
+        ((short) 0).MustNotBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(0);
 
     [Fact]
     public static void MustNotBeNegative_Int() =>
@@ -145,33 +185,57 @@ public static class NumericCustomFactorySuccessTests
 
     [Fact]
     public static void MustNotBeNegative_Generic() =>
-        ((short) 0).MustNotBeNegative(_ => FactoryMustNotBeInvoked()).Should().Be(0);
+        ((short) 0).MustNotBeNegative<short>(_ => FactoryMustNotBeInvoked()).Should().Be(0);
+
+    [Fact]
+    public static void MustNotBeZero_SByte() =>
+        ((sbyte) 1).MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(1);
+
+    [Fact]
+    public static void MustNotBeZero_Byte() =>
+        ((byte) 2).MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(2);
+
+    [Fact]
+    public static void MustNotBeZero_Short() =>
+        ((short) 3).MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(3);
+
+    [Fact]
+    public static void MustNotBeZero_UShort() =>
+        ((ushort) 4).MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(4);
 
     [Fact]
     public static void MustNotBeZero_Int() =>
-        1.MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(1);
+        5.MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(5);
+
+    [Fact]
+    public static void MustNotBeZero_UInt() =>
+        6U.MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(6U);
 
     [Fact]
     public static void MustNotBeZero_Long() =>
-        2L.MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(2L);
+        7L.MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(7L);
+
+    [Fact]
+    public static void MustNotBeZero_ULong() =>
+        8UL.MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(8UL);
 
     [Fact]
     public static void MustNotBeZero_Decimal() =>
-        3m.MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(3m);
+        9m.MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(9m);
 
     [Fact]
     public static void MustNotBeZero_Float() =>
-        4f.MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(4f);
+        10f.MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(10f);
 
     [Fact]
     public static void MustNotBeZero_Double() =>
-        5d.MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(5d);
+        11d.MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(11d);
 
     [Fact]
     public static void MustNotBeZero_TimeSpan() =>
-        TimeSpan.FromTicks(6).MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(TimeSpan.FromTicks(6));
+        TimeSpan.FromTicks(12).MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(TimeSpan.FromTicks(12));
 
     [Fact]
     public static void MustNotBeZero_Generic() =>
-        ((short) 7).MustNotBeZero(_ => FactoryMustNotBeInvoked()).Should().Be(7);
+        ((short) 13).MustNotBeZero<short>(_ => FactoryMustNotBeInvoked()).Should().Be(13);
 }
