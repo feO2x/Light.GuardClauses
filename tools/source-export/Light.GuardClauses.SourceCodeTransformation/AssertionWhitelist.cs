@@ -157,6 +157,8 @@ public sealed class AssertionWhitelist
 
     public AssertionEntry MustBePositive { get; init; } = new();
 
+    public AssertionEntry MustBePositiveOrInfinite { get; init; } = new();
+
     public AssertionEntry MustBeReadable { get; init; } = new();
 
     public AssertionEntry MustBeRelativeUri { get; init; } = new();

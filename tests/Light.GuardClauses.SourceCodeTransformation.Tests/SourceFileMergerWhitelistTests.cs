@@ -388,6 +388,70 @@ public static class SourceFileMergerWhitelistTests
                                    );
     }
 
+    [Theory]
+    [InlineData(SourceTargetFramework.NetStandard2_0)]
+    [InlineData(SourceTargetFramework.Net10_0)]
+    public static void MustBePositiveOrInfiniteWhitelistRetainsGuardAndThrowHelper(
+        SourceTargetFramework targetFramework
+    )
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(
+            temporaryDirectory.DirectoryPath,
+            $"MustBePositiveOrInfinite-{targetFramework}.cs"
+        );
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(includedAssertions: [new ("MustBePositiveOrInfinite", true)]),
+                targetFramework
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("public static TimeSpan MustBePositiveOrInfinite(");
+        sourceCode.Should().Contain("public static void MustBePositiveOrInfinite(");
+        sourceCode.Should()
+                  .Contain(
+                       "MustBePositiveOrInfinite(this TimeSpan parameter, Func<TimeSpan, Exception> exceptionFactory)"
+                   );
+        sourceCode.Should().Contain("public static void CustomException<T>(");
+        sourceCode.Should().NotContain("public static TimeSpan MustBePositive(");
+        sourceCode.Should().NotContain("public static void MustBePositive<T>(");
+    }
+
+    [Theory]
+    [InlineData(SourceTargetFramework.NetStandard2_0)]
+    [InlineData(SourceTargetFramework.Net10_0)]
+    public static void MustBePositiveOrInfiniteWhitelistTrimsCustomExceptionFactory(
+        SourceTargetFramework targetFramework
+    )
+    {
+        using var temporaryDirectory = new TemporaryDirectory();
+        var targetFile = Path.Combine(
+            temporaryDirectory.DirectoryPath,
+            $"MustBePositiveOrInfiniteWithoutFactory-{targetFramework}.cs"
+        );
+
+        SourceFileMerger.CreateSingleSourceFile(
+            CreateOptions(
+                targetFile,
+                CreateWhitelist(includedAssertions: [new ("MustBePositiveOrInfinite", false)]),
+                targetFramework
+            )
+        );
+        var sourceCode = File.ReadAllText(targetFile);
+
+        sourceCode.Should().Contain("public static TimeSpan MustBePositiveOrInfinite(");
+        sourceCode.Should().Contain("public static void MustBePositiveOrInfinite(");
+        sourceCode.Should()
+                  .NotContain(
+                       "MustBePositiveOrInfinite(this TimeSpan parameter, Func<TimeSpan, Exception> exceptionFactory)"
+                   );
+        sourceCode.Should().NotContain("public static void CustomException<T>(");
+    }
+
     [Fact]
     public static void MustContainKeyWhitelistExportsGuardWithExceptionAndThrowHelper()
     {

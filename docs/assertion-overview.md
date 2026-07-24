@@ -63,6 +63,7 @@ UUIDv7 validation checks the version-7 nibble and RFC/IETF `10xx` variant bits d
 | `MustNotBeGreaterThan`, `MustNotBeGreaterThanOrEqualTo` | Reject values above or at an upper boundary |
 | `MustNotBeLessThan`, `MustNotBeLessThanOrEqualTo` | Reject values below or at a lower boundary |
 | `MustBePositive`, `MustBeNegative` | Require a value greater than, or less than, zero |
+| `MustBePositiveOrInfinite` | Requires a positive `TimeSpan` or exact equality with `Timeout.InfiniteTimeSpan` |
 | `MustNotBePositive`, `MustNotBeNegative` | Require a value less than or equal to, or greater than or equal to, zero |
 | `MustNotBeZero` | Rejects a value that compares equal to zero |
 | `IsIn`, `MustBeIn` | Test or require membership in a `Range<T>` |
@@ -73,6 +74,8 @@ UUIDv7 validation checks the version-7 nibble and RFC/IETF `10xx` variant bits d
 | `IsLessThanOrApproximately`, `MustBeLessThanOrApproximately` | Accept values less than or within tolerance of the comparison value |
 
 The five sign guard families have concrete overloads for `int`, `long`, `decimal`, `float`, `double`, and `TimeSpan` on all package targets. `MustBePositive`, `MustNotBePositive`, and `MustNotBeZero` additionally have concrete `sbyte`, `byte`, `short`, `ushort`, `uint`, and `ulong` overloads on every target, while `MustBeNegative` and `MustNotBeNegative` add concrete `sbyte` and `short` overloads — unsigned overloads are omitted for these two families because their predicates would be constant. The .NET 10 asset adds the generic `INumber<T>` overloads listed above. All checks compare the value against zero with the type's comparison operators. Consequently, `NaN` is rejected by the four sign guards and accepted by `MustNotBeZero`, positive and negative infinity satisfy the guards matching their sign (compose with `MustBeFinite` to reject non-finite values), and negative zero — including `decimal`'s signed zero representations — behaves exactly like zero. `MustNotBeZero` uses exact equality; tolerance-based comparisons remain the domain of the approximation guards.
+
+`MustBePositiveOrInfinite` is available for `TimeSpan` on every package target. “Infinite” means exact value equality with `Timeout.InfiniteTimeSpan` (negative one millisecond); values even one tick above or below that sentinel are rejected unless they are positive.
 
 Create ranges with the `Range<T>` fluent API:
 

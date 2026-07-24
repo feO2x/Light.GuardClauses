@@ -8,14 +8,14 @@ Add `MustBePositiveOrInfinite` as a fluent `TimeSpan` assertion on every support
 
 ## Acceptance Criteria
 
-- [ ] `MustBePositiveOrInfinite` returns the original `TimeSpan` when it is greater than `TimeSpan.Zero` or exactly equals `Timeout.InfiniteTimeSpan`, and rejects zero and every other negative value identically on .NET Standard 2.0, .NET Standard 2.1, and .NET 10.
-- [ ] Default failures throw `ArgumentOutOfRangeException` and preserve the existing sign-guard contract: caller-argument-expression parameter names, optional custom messages, and a generated message that identifies the rejected value and the two accepted forms.
-- [ ] A custom-exception-factory overload accepts `Func<TimeSpan, Exception>`, passes the original value to the factory, invokes it only for an invalid value, and throws `ArgumentNullException` through the existing `Throw.CustomException` convention when a failing check receives a null factory.
-- [ ] Automated tests cover positive boundary values, the exact infinite sentinel, zero, representative negative values on both sides of the sentinel, `TimeSpan.MinValue`, return values, default exception details, custom factory behavior, factories not invoked on success, and null-factory behavior.
-- [ ] The source-export whitelist catalog and committed settings contain `MustBePositiveOrInfinite`; focused source-export tests verify the assertion and its throw-helper dependency in portable and modern output, as well as trimming of the custom-exception-factory overload when configured.
-- [ ] The committed .NET Standard 2.0 single-file distribution is regenerated with the assertion and validates for both supported source-export targets.
-- [ ] The comparable/range assertion documentation lists `MustBePositiveOrInfinite` and defines “infinite” as exact equality with `Timeout.InfiniteTimeSpan`; the package release notes mention the new assertion.
-- [ ] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
+- [x] `MustBePositiveOrInfinite` returns the original `TimeSpan` when it is greater than `TimeSpan.Zero` or exactly equals `Timeout.InfiniteTimeSpan`, and rejects zero and every other negative value identically on .NET Standard 2.0, .NET Standard 2.1, and .NET 10.
+- [x] Default failures throw `ArgumentOutOfRangeException` and preserve the existing sign-guard contract: caller-argument-expression parameter names, optional custom messages, and a generated message that identifies the rejected value and the two accepted forms.
+- [x] A custom-exception-factory overload accepts `Func<TimeSpan, Exception>`, passes the original value to the factory, invokes it only for an invalid value, and throws `ArgumentNullException` through the existing `Throw.CustomException` convention when a failing check receives a null factory.
+- [x] Automated tests cover positive boundary values, the exact infinite sentinel, zero, representative negative values on both sides of the sentinel, `TimeSpan.MinValue`, return values, default exception details, custom factory behavior, factories not invoked on success, and null-factory behavior.
+- [x] The source-export whitelist catalog and committed settings contain `MustBePositiveOrInfinite`; focused source-export tests verify the assertion and its throw-helper dependency in portable and modern output, as well as trimming of the custom-exception-factory overload when configured.
+- [x] The committed .NET Standard 2.0 single-file distribution is regenerated with the assertion and validates for both supported source-export targets.
+- [x] The comparable/range assertion documentation lists `MustBePositiveOrInfinite` and defines “infinite” as exact equality with `Timeout.InfiniteTimeSpan`; the package release notes mention the new assertion.
+- [x] The complete solution restores and builds without warnings in Release configuration, and all automated tests pass on the pinned SDK.
 
 ## Technical Details
 
