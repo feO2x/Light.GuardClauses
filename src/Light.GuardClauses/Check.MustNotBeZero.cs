@@ -1,15 +1,207 @@
 using System;
-#if NET8_0_OR_GREATER
-using System.Numerics;
-#endif
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Light.GuardClauses.ExceptionFactory;
+#if NET8_0_OR_GREATER
+using System.Numerics;
+#endif
 
 namespace Light.GuardClauses;
 
 public static partial class Check
 {
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is not zero, or otherwise
+    /// throws an <see cref="ArgumentOutOfRangeException" />.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static sbyte MustNotBeZero(
+        this sbyte parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (parameter == 0)
+        {
+            Throw.MustNotBeZero(parameter, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is not zero, or otherwise
+    /// throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="exceptionFactory">
+    /// The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.
+    /// </param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("exceptionFactory:null => halt")]
+    public static sbyte MustNotBeZero(this sbyte parameter, Func<sbyte, Exception> exceptionFactory)
+    {
+        if (parameter == 0)
+        {
+            Throw.CustomException(exceptionFactory, parameter);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is not zero, or otherwise
+    /// throws an <see cref="ArgumentOutOfRangeException" />.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static byte MustNotBeZero(
+        this byte parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (parameter == 0)
+        {
+            Throw.MustNotBeZero(parameter, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is not zero, or otherwise
+    /// throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="exceptionFactory">
+    /// The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.
+    /// </param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("exceptionFactory:null => halt")]
+    public static byte MustNotBeZero(this byte parameter, Func<byte, Exception> exceptionFactory)
+    {
+        if (parameter == 0)
+        {
+            Throw.CustomException(exceptionFactory, parameter);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is not zero, or otherwise
+    /// throws an <see cref="ArgumentOutOfRangeException" />.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static short MustNotBeZero(
+        this short parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (parameter == 0)
+        {
+            Throw.MustNotBeZero(parameter, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is not zero, or otherwise
+    /// throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="exceptionFactory">
+    /// The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.
+    /// </param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("exceptionFactory:null => halt")]
+    public static short MustNotBeZero(this short parameter, Func<short, Exception> exceptionFactory)
+    {
+        if (parameter == 0)
+        {
+            Throw.CustomException(exceptionFactory, parameter);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is not zero, or otherwise
+    /// throws an <see cref="ArgumentOutOfRangeException" />.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ushort MustNotBeZero(
+        this ushort parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (parameter == 0)
+        {
+            Throw.MustNotBeZero(parameter, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is not zero, or otherwise
+    /// throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="exceptionFactory">
+    /// The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.
+    /// </param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("exceptionFactory:null => halt")]
+    public static ushort MustNotBeZero(this ushort parameter, Func<ushort, Exception> exceptionFactory)
+    {
+        if (parameter == 0)
+        {
+            Throw.CustomException(exceptionFactory, parameter);
+        }
+
+        return parameter;
+    }
+
     /// <summary>
     /// Ensures that the specified <paramref name="parameter" /> is not zero, or otherwise
     /// throws an <see cref="ArgumentOutOfRangeException" />.
@@ -69,6 +261,54 @@ public static partial class Check
     /// Thrown when <paramref name="parameter" /> is zero.
     /// </exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static uint MustNotBeZero(
+        this uint parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (parameter == 0U)
+        {
+            Throw.MustNotBeZero(parameter, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is not zero, or otherwise
+    /// throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="exceptionFactory">
+    /// The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.
+    /// </param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("exceptionFactory:null => halt")]
+    public static uint MustNotBeZero(this uint parameter, Func<uint, Exception> exceptionFactory)
+    {
+        if (parameter == 0U)
+        {
+            Throw.CustomException(exceptionFactory, parameter);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is not zero, or otherwise
+    /// throws an <see cref="ArgumentOutOfRangeException" />.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static long MustNotBeZero(
         this long parameter,
         [CallerArgumentExpression("parameter")] string? parameterName = null,
@@ -99,6 +339,54 @@ public static partial class Check
     public static long MustNotBeZero(this long parameter, Func<long, Exception> exceptionFactory)
     {
         if (parameter == 0L)
+        {
+            Throw.CustomException(exceptionFactory, parameter);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is not zero, or otherwise
+    /// throws an <see cref="ArgumentOutOfRangeException" />.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="parameterName">The name of the parameter (optional).</param>
+    /// <param name="message">The message that will be passed to the resulting exception (optional).</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ulong MustNotBeZero(
+        this ulong parameter,
+        [CallerArgumentExpression("parameter")] string? parameterName = null,
+        string? message = null
+    )
+    {
+        if (parameter == 0UL)
+        {
+            Throw.MustNotBeZero(parameter, parameterName, message);
+        }
+
+        return parameter;
+    }
+
+    /// <summary>
+    /// Ensures that the specified <paramref name="parameter" /> is not zero, or otherwise
+    /// throws your custom exception.
+    /// </summary>
+    /// <param name="parameter">The value to be checked.</param>
+    /// <param name="exceptionFactory">
+    /// The delegate that creates your custom exception. <paramref name="parameter" /> is passed to this delegate.
+    /// </param>
+    /// <exception cref="Exception">
+    /// Your custom exception thrown when <paramref name="parameter" /> is zero.
+    /// </exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [ContractAnnotation("exceptionFactory:null => halt")]
+    public static ulong MustNotBeZero(this ulong parameter, Func<ulong, Exception> exceptionFactory)
+    {
+        if (parameter == 0UL)
         {
             Throw.CustomException(exceptionFactory, parameter);
         }

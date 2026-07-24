@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -284,34 +285,75 @@ public static class SourceFileMergerWhitelistTests
         var modernCode = File.ReadAllText(modernFile);
         var portableWithoutFactoriesCode = File.ReadAllText(portableWithoutFactoriesFile);
         var modernWithoutFactoriesCode = File.ReadAllText(modernWithoutFactoriesFile);
-        string[] concreteMustBePositiveTypes =
-        [
-            "sbyte",
-            "byte",
-            "short",
-            "ushort",
-            "int",
-            "uint",
-            "long",
-            "ulong",
-            "decimal",
-            "float",
-            "double",
-            "TimeSpan",
-        ];
-
-        foreach (var type in concreteMustBePositiveTypes)
+        var concreteTypesByAssertion = new Dictionary<string, string[]>
         {
-            portableCode.Should().Contain($"public static {type} MustBePositive(");
-            modernCode.Should().Contain($"public static {type} MustBePositive(");
-            portableCode.Should()
-                        .Contain(
-                             $"MustBePositive(this {type} parameter, Func<{type}, Exception> exceptionFactory)"
-                         );
-            modernCode.Should()
-                      .Contain(
-                           $"MustBePositive(this {type} parameter, Func<{type}, Exception> exceptionFactory)"
-                       );
+            ["MustBePositive"] =
+            [
+                "sbyte", "byte", "short", "ushort", "int", "uint",
+                "long", "ulong", "decimal", "float", "double", "TimeSpan",
+            ],
+            ["MustBeNegative"] =
+            [
+                "sbyte", "short", "int", "long", "decimal", "float", "double", "TimeSpan",
+            ],
+            ["MustNotBePositive"] =
+            [
+                "sbyte", "byte", "short", "ushort", "int", "uint",
+                "long", "ulong", "decimal", "float", "double", "TimeSpan",
+            ],
+            ["MustNotBeNegative"] =
+            [
+                "sbyte", "short", "int", "long", "decimal", "float", "double", "TimeSpan",
+            ],
+            ["MustNotBeZero"] =
+            [
+                "sbyte", "byte", "short", "ushort", "int", "uint",
+                "long", "ulong", "decimal", "float", "double", "TimeSpan",
+            ],
+        };
+        string[] omittedUnsignedTypes = ["byte", "ushort", "uint", "ulong"];
+
+        foreach (var (assertion, concreteTypes) in concreteTypesByAssertion)
+        {
+            foreach (var type in concreteTypes)
+            {
+                portableCode.Should().Contain($"public static {type} {assertion}(");
+                modernCode.Should().Contain($"public static {type} {assertion}(");
+                if (assertion == "MustNotBeZero")
+                {
+                    portableCode.Should()
+                                .NotContain(
+                                     $"{assertion}(this {type} parameter, Func<{type}, Exception> exceptionFactory)"
+                                 );
+                    modernCode.Should()
+                              .NotContain(
+                                   $"{assertion}(this {type} parameter, Func<{type}, Exception> exceptionFactory)"
+                               );
+                }
+                else
+                {
+                    portableCode.Should()
+                                .Contain(
+                                     $"{assertion}(this {type} parameter, Func<{type}, Exception> exceptionFactory)"
+                                 );
+                    modernCode.Should()
+                              .Contain(
+                                   $"{assertion}(this {type} parameter, Func<{type}, Exception> exceptionFactory)"
+                               );
+                }
+            }
+        }
+
+        foreach (var type in omittedUnsignedTypes)
+        {
+            portableCode.Should().NotContain($"public static {type} MustBeNegative(");
+            modernCode.Should().NotContain($"public static {type} MustBeNegative(");
+            portableCode.Should().NotContain($"public static {type} MustNotBeNegative(");
+            modernCode.Should().NotContain($"public static {type} MustNotBeNegative(");
+        }
+
+        foreach (var type in concreteTypesByAssertion["MustBePositive"])
+        {
             portableWithoutFactoriesCode.Should().Contain($"public static {type} MustBePositive(");
             modernWithoutFactoriesCode.Should().Contain($"public static {type} MustBePositive(");
             portableWithoutFactoriesCode.Should()
@@ -324,11 +366,11 @@ public static class SourceFileMergerWhitelistTests
                                        );
         }
 
-        portableCode.Should().Contain("public static decimal MustBeNegative(");
-        portableCode.Should().Contain("public static TimeSpan MustNotBeNegative(");
-        portableCode.Should().Contain("public static double MustNotBeZero(");
-        portableCode.Should().NotContain("MustNotBeZero(this int parameter, Func<int, Exception> exceptionFactory)");
         portableCode.Should().NotContain("public static T MustBePositive<T>(");
+        portableCode.Should().NotContain("public static T MustBeNegative<T>(");
+        portableCode.Should().NotContain("public static T MustNotBePositive<T>(");
+        portableCode.Should().NotContain("public static T MustNotBeNegative<T>(");
+        portableCode.Should().NotContain("public static T MustNotBeZero<T>(");
         portableCode.Should().NotContain("INumber<T>");
         modernCode.Should().Contain("MustBePositive<T>");
         modernCode.Should().Contain("MustBeNegative<T>");
@@ -336,6 +378,8 @@ public static class SourceFileMergerWhitelistTests
         modernCode.Should().Contain("MustNotBeNegative<T>");
         modernCode.Should().Contain("MustNotBeZero<T>");
         modernCode.Should().Contain("INumber<T>");
+        modernCode.Should()
+                  .NotContain("MustNotBeZero<T>(this T parameter, Func<T, Exception> exceptionFactory)");
         portableWithoutFactoriesCode.Should().NotContain("public static T MustBePositive<T>(");
         modernWithoutFactoriesCode.Should().Contain("public static T MustBePositive<T>(");
         modernWithoutFactoriesCode.Should()
@@ -583,10 +627,18 @@ public static class SourceFileMergerWhitelistTests
         );
         var sourceCode = File.ReadAllText(targetFile);
 
-        sourceCode.Should().Contain("public static void ObjectDisposed(bool condition, string? objectName = null, string? message = null)");
-        sourceCode.Should().Contain("public static void ObjectDisposed(bool condition, Func<Exception> exceptionFactory)");
-        sourceCode.Should().Contain("public static void ObjectDisposed<T>(bool condition, T parameter, Func<T, Exception> exceptionFactory)");
-        sourceCode.Should().Contain("public static void ObjectDisposed(string? objectName = null, string? message = null) => throw new ObjectDisposedException(objectName, message);");
+        sourceCode.Should().Contain(
+            "public static void ObjectDisposed(bool condition, string? objectName = null, string? message = null)"
+        );
+        sourceCode.Should().Contain(
+            "public static void ObjectDisposed(bool condition, Func<Exception> exceptionFactory)"
+        );
+        sourceCode.Should().Contain(
+            "public static void ObjectDisposed<T>(bool condition, T parameter, Func<T, Exception> exceptionFactory)"
+        );
+        sourceCode.Should().Contain(
+            "public static void ObjectDisposed(string? objectName = null, string? message = null) => throw new ObjectDisposedException(objectName, message);"
+        );
         sourceCode.Should().Contain("public static void CustomException(Func<Exception> exceptionFactory)");
         sourceCode.Should().NotContain("public static void InvalidOperation(");
     }
@@ -744,8 +796,12 @@ public static class SourceFileMergerWhitelistTests
         );
         var sourceCode = File.ReadAllText(targetFile);
 
-        sourceCode.Should().Contain("public static void ObjectDisposed(bool condition, string? objectName = null, string? message = null)");
-        sourceCode.Should().Contain("public static void ObjectDisposed(string? objectName = null, string? message = null) => throw new ObjectDisposedException(objectName, message);");
+        sourceCode.Should().Contain(
+            "public static void ObjectDisposed(bool condition, string? objectName = null, string? message = null)"
+        );
+        sourceCode.Should().Contain(
+            "public static void ObjectDisposed(string? objectName = null, string? message = null) => throw new ObjectDisposedException(objectName, message);"
+        );
         sourceCode.Should().NotContain("Func<Exception> exceptionFactory");
         sourceCode.Should().NotContain("ObjectDisposed<T>");
         sourceCode.Should().NotContain("public static void CustomException(");

@@ -21,7 +21,7 @@
       --------------------------------
 
       - new assertions: MustBeAssignableTo, MustBeConcreteClass, MustBeUri, ObjectDisposed
-      - expanded MustBePositive support for sbyte, byte, short, ushort, uint, and ulong on all target frameworks
+      - expanded sign-guard support on all target frameworks: MustBePositive, MustNotBePositive, and MustNotBeZero for sbyte, byte, short, ushort, uint, and ulong; MustBeNegative and MustNotBeNegative for sbyte and short
     </PackageReleaseNotes>
   </PropertyGroup>
 

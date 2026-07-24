@@ -6,6 +6,34 @@ namespace Light.GuardClauses.Tests.ComparableAssertions;
 
 public static class MustBeNegativeTests
 {
+    [Fact]
+    public static void NegativeSBytesAreAccepted()
+    {
+        ((sbyte) -1).MustBeNegative().Should().Be(-1);
+        sbyte.MinValue.MustBeNegative().Should().Be(sbyte.MinValue);
+    }
+
+    [Fact]
+    public static void NonNegativeSBytesAreRejected()
+    {
+        CheckIntegralIsRejected((sbyte) 0, value => value.MustBeNegative());
+        CheckIntegralIsRejected(sbyte.MaxValue, value => value.MustBeNegative());
+    }
+
+    [Fact]
+    public static void NegativeInt16sAreAccepted()
+    {
+        ((short) -1).MustBeNegative().Should().Be(-1);
+        short.MinValue.MustBeNegative().Should().Be(short.MinValue);
+    }
+
+    [Fact]
+    public static void NonNegativeInt16sAreRejected()
+    {
+        CheckIntegralIsRejected((short) 0, value => value.MustBeNegative());
+        CheckIntegralIsRejected(short.MaxValue, value => value.MustBeNegative());
+    }
+
     [Theory]
     [InlineData(-1)]
     [InlineData(-42)]
@@ -100,7 +128,7 @@ public static class MustBeNegativeTests
         negativeZeroFloat.Should().Throw<ArgumentOutOfRangeException>();
         negativeZeroDouble.Should().Throw<ArgumentOutOfRangeException>();
 
-        CheckDecimalIsRejected(new decimal(0, 0, 0, true, 0));
+        CheckDecimalIsRejected(new (0, 0, 0, true, 0));
         CheckDecimalIsRejected(0.000m);
     }
 
@@ -136,8 +164,22 @@ public static class MustBeNegativeTests
         Test.CustomMessage<ArgumentOutOfRangeException>(message => 1.MustBeNegative(message: message));
 
     [Fact]
+    public static void NewIntegralOverloadPropagatesParameterNameAndCustomMessage()
+    {
+        const sbyte invalidValue = 0;
+
+        var act = () => invalidValue.MustBeNegative("quantity", "A negative quantity is required.");
+
+        act.Should().Throw<ArgumentOutOfRangeException>()
+           .WithParameterName("quantity")
+           .WithMessage("A negative quantity is required.*");
+    }
+
+    [Fact]
     public static void CustomFactoriesReceiveValues()
     {
+        Test.CustomException((sbyte) 0, (value, factory) => value.MustBeNegative(factory));
+        Test.CustomException((short) 0, (value, factory) => value.MustBeNegative(factory));
         Test.CustomException(0, (value, factory) => value.MustBeNegative(factory));
         Test.CustomException(1L, (value, factory) => value.MustBeNegative(factory));
         Test.CustomException(0m, (value, factory) => value.MustBeNegative(factory));
@@ -146,23 +188,46 @@ public static class MustBeNegativeTests
         Test.CustomException(TimeSpan.Zero, (value, factory) => value.MustBeNegative(factory));
     }
 
+    [Fact]
+    public static void NullFactoriesThrowArgumentNullExceptionForNewIntegralOverloads()
+    {
+        CheckNullFactory(() => ((sbyte) 0).MustBeNegative(null!));
+        CheckNullFactory(() => ((short) 0).MustBeNegative(null!));
+    }
+
 #if NET8_0_OR_GREATER
     [Fact]
-    public static void GenericOverloadsCoverTypesWithoutConcreteOverloads()
+    public static void ExplicitGenericOverloadsRemainAvailable()
     {
-        ((short) -5).MustBeNegative().Should().Be((short) -5);
+        ((short) -5).MustBeNegative<short>().Should().Be(-5);
         ((Half) (-1.5f)).MustBeNegative().Should().Be((Half) (-1.5f));
 
-        var zeroShort = () => ((short) 0).MustBeNegative();
+        var zeroShort = () => ((short) 0).MustBeNegative<short>();
         var unsignedByte = () => ((byte) 3).MustBeNegative();
         var nanHalf = () => Half.NaN.MustBeNegative();
         zeroShort.Should().Throw<ArgumentOutOfRangeException>().WithMessage("*must be negative*");
         unsignedByte.Should().Throw<ArgumentOutOfRangeException>().WithMessage("*must be negative*");
         nanHalf.Should().Throw<ArgumentOutOfRangeException>().WithMessage("*must be negative*");
 
-        Test.CustomException((short) 3, (value, factory) => value.MustBeNegative(factory));
+        Test.CustomException(
+            (short) 3,
+            (value, factory) => value.MustBeNegative<short>(factory)
+        );
     }
 #endif
+
+    private static void CheckIntegralIsRejected<T>(T value, Func<T, T> guard)
+    {
+        var act = () => guard(value);
+
+        act.Should().Throw<ArgumentOutOfRangeException>()
+           .WithParameterName(nameof(value))
+           .WithMessage($"*value must be negative, but it actually is {value}*");
+    }
+
+    private static void CheckNullFactory(Action act) =>
+        act.Should().Throw<ArgumentNullException>()
+           .WithParameterName("exceptionFactory");
 
     private static void CheckDecimalIsRejected(decimal value)
     {

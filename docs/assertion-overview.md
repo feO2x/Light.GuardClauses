@@ -13,7 +13,7 @@ The package has .NET Standard 2.0, .NET Standard 2.1, and .NET 10 assets. The co
 The .NET 10 asset additionally provides:
 
 - generic `INumber<T>` overloads for `IsApproximately`, `MustBeApproximately`, `MustNotBeApproximately`, `IsGreaterThanOrApproximately`, `MustBeGreaterThanOrApproximately`, `IsLessThanOrApproximately`, and `MustBeLessThanOrApproximately`;
-- generic `INumber<T>` overloads for `MustBePositive`, `MustBeNegative`, `MustNotBePositive`, `MustNotBeNegative`, and `MustNotBeZero`; for `MustBePositive`, these extend the common concrete integral overloads to remaining numeric types such as `Half`;
+- generic `INumber<T>` overloads for `MustBePositive`, `MustBeNegative`, `MustNotBePositive`, `MustNotBeNegative`, and `MustNotBeZero`, extending the common concrete integral overloads to remaining numeric types such as `Half`;
 - generic `IFloatingPointIeee754<T>` overloads for `IsFinite` and `MustBeFinite`, including `Half` but excluding `decimal`;
 - `Span<char>`, `ReadOnlySpan<char>`, `Memory<char>`, and `ReadOnlyMemory<char>` overloads for `IsEmailAddress` and `MustBeEmailAddress`; and
 - trimming annotations on the type-relation helpers where supported by the framework.
@@ -72,7 +72,7 @@ UUIDv7 validation checks the version-7 nibble and RFC/IETF `10xx` variant bits d
 | `IsGreaterThanOrApproximately`, `MustBeGreaterThanOrApproximately` | Accept values greater than or within tolerance of the comparison value |
 | `IsLessThanOrApproximately`, `MustBeLessThanOrApproximately` | Accept values less than or within tolerance of the comparison value |
 
-The five sign guard families have concrete overloads for `int`, `long`, `decimal`, `float`, `double`, and `TimeSpan` on all package targets. `MustBePositive` additionally has concrete `sbyte`, `byte`, `short`, `ushort`, `uint`, and `ulong` overloads on every target. The .NET 10 asset adds the generic `INumber<T>` overloads listed above. All checks compare the value against zero with the type's comparison operators. Consequently, `NaN` is rejected by the four sign guards and accepted by `MustNotBeZero`, positive and negative infinity satisfy the guards matching their sign (compose with `MustBeFinite` to reject non-finite values), and negative zero — including `decimal`'s signed zero representations — behaves exactly like zero. `MustNotBeZero` uses exact equality; tolerance-based comparisons remain the domain of the approximation guards.
+The five sign guard families have concrete overloads for `int`, `long`, `decimal`, `float`, `double`, and `TimeSpan` on all package targets. `MustBePositive`, `MustNotBePositive`, and `MustNotBeZero` additionally have concrete `sbyte`, `byte`, `short`, `ushort`, `uint`, and `ulong` overloads on every target, while `MustBeNegative` and `MustNotBeNegative` add concrete `sbyte` and `short` overloads — unsigned overloads are omitted for these two families because their predicates would be constant. The .NET 10 asset adds the generic `INumber<T>` overloads listed above. All checks compare the value against zero with the type's comparison operators. Consequently, `NaN` is rejected by the four sign guards and accepted by `MustNotBeZero`, positive and negative infinity satisfy the guards matching their sign (compose with `MustBeFinite` to reject non-finite values), and negative zero — including `decimal`'s signed zero representations — behaves exactly like zero. `MustNotBeZero` uses exact equality; tolerance-based comparisons remain the domain of the approximation guards.
 
 Create ranges with the `Range<T>` fluent API:
 
