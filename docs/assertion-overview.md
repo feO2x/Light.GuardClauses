@@ -170,6 +170,7 @@ while preserving its concrete stream type, and all three guards support custom m
 | Assertion | Behavior |
 | --- | --- |
 | `MustBeAssignableTo` | Requires CLR assignability from a candidate type to a required base type or interface |
+| `MustBeConcreteClass` | Requires a type whose reflection flags report a non-abstract class |
 | `IsEquivalentTypeTo` | Treats equal types and constructed-generic/definition pairs as equivalent |
 | `Implements`, `IsOrImplements` | Test interface implementation, optionally allowing equality |
 | `DerivesFrom`, `IsOrDerivesFrom` | Test base-class derivation, optionally allowing equality |
@@ -177,8 +178,9 @@ while preserving its concrete stream type, and all three guards support custom m
 | `IsOpenConstructedGenericType` | Tests for a constructed generic type that still has open parameters |
 
 `MustBeAssignableTo` uses `requiredType.IsAssignableFrom(candidateType)` directly, so it covers interface
-assignability, generic variance, and the BCL's open-generic behavior. The other relation methods provide comparer
-overloads where applicable.
+assignability, generic variance, and the BCL's open-generic behavior. `MustBeConcreteClass` uses
+`type.IsClass && !type.IsAbstract` directly; delegates, arrays, and open generic classes therefore pass, while static
+classes fail. The other relation methods provide comparer overloads where applicable.
 
 ## URI assertions
 
