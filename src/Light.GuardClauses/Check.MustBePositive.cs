@@ -1,10 +1,10 @@
 using System;
-#if NET8_0_OR_GREATER
-using System.Numerics;
-#endif
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Light.GuardClauses.ExceptionFactory;
+#if NET8_0_OR_GREATER
+using System.Numerics;
+#endif
 
 namespace Light.GuardClauses;
 
@@ -27,7 +27,7 @@ public static partial class Check
         string? message = null
     )
     {
-        if (!(parameter > (sbyte) 0))
+        if (!(parameter > 0))
         {
             Throw.MustBePositive(parameter, parameterName, message);
         }
@@ -50,7 +50,7 @@ public static partial class Check
     [ContractAnnotation("exceptionFactory:null => halt")]
     public static sbyte MustBePositive(this sbyte parameter, Func<sbyte, Exception> exceptionFactory)
     {
-        if (!(parameter > (sbyte) 0))
+        if (!(parameter > 0))
         {
             Throw.CustomException(exceptionFactory, parameter);
         }
@@ -75,7 +75,7 @@ public static partial class Check
         string? message = null
     )
     {
-        if (!(parameter > (byte) 0))
+        if (!(parameter > 0))
         {
             Throw.MustBePositive(parameter, parameterName, message);
         }
@@ -98,7 +98,7 @@ public static partial class Check
     [ContractAnnotation("exceptionFactory:null => halt")]
     public static byte MustBePositive(this byte parameter, Func<byte, Exception> exceptionFactory)
     {
-        if (!(parameter > (byte) 0))
+        if (!(parameter > 0))
         {
             Throw.CustomException(exceptionFactory, parameter);
         }
@@ -123,7 +123,7 @@ public static partial class Check
         string? message = null
     )
     {
-        if (!(parameter > (short) 0))
+        if (!(parameter > 0))
         {
             Throw.MustBePositive(parameter, parameterName, message);
         }
@@ -146,7 +146,7 @@ public static partial class Check
     [ContractAnnotation("exceptionFactory:null => halt")]
     public static short MustBePositive(this short parameter, Func<short, Exception> exceptionFactory)
     {
-        if (!(parameter > (short) 0))
+        if (!(parameter > 0))
         {
             Throw.CustomException(exceptionFactory, parameter);
         }
@@ -171,7 +171,7 @@ public static partial class Check
         string? message = null
     )
     {
-        if (!(parameter > (ushort) 0))
+        if (!(parameter > 0))
         {
             Throw.MustBePositive(parameter, parameterName, message);
         }
@@ -194,7 +194,7 @@ public static partial class Check
     [ContractAnnotation("exceptionFactory:null => halt")]
     public static ushort MustBePositive(this ushort parameter, Func<ushort, Exception> exceptionFactory)
     {
-        if (!(parameter > (ushort) 0))
+        if (!(parameter > 0))
         {
             Throw.CustomException(exceptionFactory, parameter);
         }
