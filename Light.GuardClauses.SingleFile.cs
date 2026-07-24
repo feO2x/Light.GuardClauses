@@ -4879,6 +4879,53 @@ namespace Light.GuardClauses
         }
 
         /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> is positive (greater than zero) or exactly equals
+        /// <see cref = "System.Threading.Timeout.InfiniteTimeSpan"/>, or otherwise throws an
+        /// <see cref = "ArgumentOutOfRangeException"/>.
+        /// </summary>
+        /// <param name = "parameter">The value to be checked.</param>
+        /// <param name = "parameterName">The name of the parameter (optional).</param>
+        /// <param name = "message">The message that will be passed to the resulting exception (optional).</param>
+        /// <exception cref = "ArgumentOutOfRangeException">
+        /// Thrown when <paramref name = "parameter"/> is neither positive nor exactly equal to
+        /// <see cref = "System.Threading.Timeout.InfiniteTimeSpan"/>.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TimeSpan MustBePositiveOrInfinite(this TimeSpan parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null)
+        {
+            if (!(parameter > TimeSpan.Zero || parameter == System.Threading.Timeout.InfiniteTimeSpan))
+            {
+                Throw.MustBePositiveOrInfinite(parameter, parameterName, message);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
+        /// Ensures that the specified <paramref name = "parameter"/> is positive (greater than zero) or exactly equals
+        /// <see cref = "System.Threading.Timeout.InfiniteTimeSpan"/>, or otherwise throws your custom exception.
+        /// </summary>
+        /// <param name = "parameter">The value to be checked.</param>
+        /// <param name = "exceptionFactory">
+        /// The delegate that creates your custom exception. <paramref name = "parameter"/> is passed to this delegate.
+        /// </param>
+        /// <exception cref = "Exception">
+        /// Your custom exception thrown when <paramref name = "parameter"/> is neither positive nor exactly equal to
+        /// <see cref = "System.Threading.Timeout.InfiniteTimeSpan"/>.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [ContractAnnotation("exceptionFactory:null => halt")]
+        public static TimeSpan MustBePositiveOrInfinite(this TimeSpan parameter, Func<TimeSpan, Exception> exceptionFactory)
+        {
+            if (!(parameter > TimeSpan.Zero || parameter == System.Threading.Timeout.InfiniteTimeSpan))
+            {
+                Throw.CustomException(exceptionFactory, parameter);
+            }
+
+            return parameter;
+        }
+
+        /// <summary>
         /// Ensures that the specified stream supports reading and returns the original stream, or otherwise throws an
         /// <see cref = "ArgumentException"/>. Validation reads only <see cref = "Stream.CanRead"/> and performs no I/O.
         /// </summary>
@@ -12946,6 +12993,14 @@ namespace Light.GuardClauses.ExceptionFactory
         [ContractAnnotation("=> halt")]
         [DoesNotReturn]
         public static void MustBePositive<T>(T parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be positive, but it actually is {parameter}.");
+        /// <summary>
+        /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that a <see cref = "TimeSpan"/> must
+        /// be positive or equal to <see cref = "System.Threading.Timeout.InfiniteTimeSpan"/>, using the optional parameter
+        /// name and message.
+        /// </summary>
+        [ContractAnnotation("=> halt")]
+        [DoesNotReturn]
+        public static void MustBePositiveOrInfinite(TimeSpan parameter, [CallerArgumentExpression("parameter")] string? parameterName = null, string? message = null) => throw new ArgumentOutOfRangeException(parameterName, message ?? $"{parameterName ?? "The value"} must be positive or equal to Timeout.InfiniteTimeSpan, but it actually is {parameter}.");
         /// <summary>
         /// Throws the default <see cref = "ArgumentOutOfRangeException"/> indicating that a value must not be approximately
         /// equal to another value within a specified tolerance, using the optional parameter name and message.

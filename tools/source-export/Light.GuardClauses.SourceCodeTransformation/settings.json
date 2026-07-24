@@ -92,6 +92,7 @@
     "MustBeOfType": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustBeOneOf": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustBePositive": { "Include": true, "IncludeExceptionFactoryOverload": true },
+    "MustBePositiveOrInfinite": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustBeReadable": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustBeRelativeUri": { "Include": true, "IncludeExceptionFactoryOverload": true },
     "MustBeSeekable": { "Include": true, "IncludeExceptionFactoryOverload": true },

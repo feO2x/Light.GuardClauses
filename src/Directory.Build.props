@@ -21,6 +21,7 @@
       --------------------------------
 
       - new assertions: MustBeAssignableTo, MustBeConcreteClass, MustBeUri, ObjectDisposed
+      - new TimeSpan assertion: MustBePositiveOrInfinite accepts positive durations or Timeout.InfiniteTimeSpan
       - expanded sign-guard support on all target frameworks: MustBePositive, MustNotBePositive, and MustNotBeZero for sbyte, byte, short, ushort, uint, and ulong; MustBeNegative and MustNotBeNegative for sbyte and short
     </PackageReleaseNotes>
   </PropertyGroup>
